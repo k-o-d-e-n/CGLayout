@@ -1,0 +1,29 @@
+# CGLayout
+
+[![CI Status](http://img.shields.io/travis/k-o-d-e-n/CGLayout.svg?style=flat)](https://travis-ci.org/k-o-d-e-n/CGLayout)
+[![Version](https://img.shields.io/cocoapods/v/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
+[![License](https://img.shields.io/cocoapods/l/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
+[![Platform](https://img.shields.io/cocoapods/p/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
+
+## Example
+
+To run the example project, clone the repo, and run `pod install` from the Example directory first.
+
+## Requirements
+
+## Installation
+
+CGLayout is available through [CocoaPods](http://cocoapods.org). To install
+it, simply add the following line to your Podfile:
+
+```ruby
+pod "CGLayout"
+```
+
+## Author
+
+k-o-d-e-n, koden.u8800@gmail.com
+
+## License
+
+CGLayout is available under the MIT license. See the LICENSE file for more info.
