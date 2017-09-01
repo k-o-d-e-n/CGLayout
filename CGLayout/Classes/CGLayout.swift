@@ -116,24 +116,25 @@ public struct LayoutAnchor {
         }
 
         static private func alignInside(sourceRect: inout CGRect, byConstrained rect: CGRect) {
-            sourceRect.origin.x = rect.maxY - sourceRect.height
+            sourceRect.origin.y = rect.maxY - sourceRect.height
         }
         static private func align(sourceRect: inout CGRect, byConstrained rect: CGRect) {
             sourceRect.origin.y = rect.maxY
         }
         static private func cropInside(sourceRect: inout CGRect, byConstrained rect: CGRect) {
-            sourceRect.size.height = min(sourceRect.height, sourceRect.height - space(fromFarEdgeOf: sourceRect, toConstrained: rect))
+            sourceRect.size.height = max(0, min(sourceRect.height, sourceRect.height - space(fromFarEdgeOf: sourceRect, toConstrained: rect)))
+            sourceRect.origin.y = min(sourceRect.origin.y, rect.maxY)
         }
         static private func crop(sourceRect: inout CGRect, byConstrained rect: CGRect) {
-            sourceRect.size.height = min(sourceRect.height, space(fromFarEdgeOf: sourceRect, toConstrained: rect))
+            sourceRect.size.height = max(0, min(sourceRect.height, space(fromFarEdgeOf: sourceRect, toConstrained: rect)))
             sourceRect.origin.y = max(sourceRect.origin.y, rect.maxY)
         }
         static private func pullInside(sourceRect: inout CGRect, toConstrained rect: CGRect) {
             sourceRect.size.height = max(0, rect.maxY - sourceRect.origin.y)
-            alignInside(sourceRect: &sourceRect, byConstrained: rect)
+            sourceRect.origin.y = max(sourceRect.origin.y, rect.maxY - sourceRect.height)
         }
         static private func pull(sourceRect: inout CGRect, toConstrained rect: CGRect) {
-            sourceRect.size.height = space(fromFarEdgeOf: sourceRect, toConstrained: rect)
+            sourceRect.size.height = max(0, space(fromFarEdgeOf: sourceRect, toConstrained: rect))
             align(sourceRect: &sourceRect, byConstrained: rect)
         }
         static private func space(fromFarEdgeOf sourceRect: CGRect, toConstrained rect: CGRect) -> CGFloat {
