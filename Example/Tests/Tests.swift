@@ -196,13 +196,14 @@ extension Tests {
 
 // MARK: LayoutAnchor
 
+// TODO: Separate inner and outer, also positions frames to yourself tests
 extension Tests {
     func testAnchorBottomAlign() {
-        let outer = LayoutAnchor.Bottom.alignBy(inner: false)
+        let outer = LayoutAnchor.Bottom.align(by: .outer)
         var rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
 
-        let inner = LayoutAnchor.Bottom.alignBy(inner: true)
+        let inner = LayoutAnchor.Bottom.align(by: .inner)
         var rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
 
@@ -213,13 +214,13 @@ extension Tests {
         XCTAssertTrue(rect3.maxY == rect4.maxY)
     }
     func testAnchorBottomLimit() {
-        let outer = LayoutAnchor.Bottom.limitOn(inner: false)
+        let outer = LayoutAnchor.Bottom.limit(on: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isRect1AboveBottomRect2 = rect1.maxY <= rect2.maxY
         let isRect1BelowBottomRect2 = rect1.minY >= rect2.maxY
 
-        let inner = LayoutAnchor.Bottom.limitOn(inner: true)
+        let inner = LayoutAnchor.Bottom.limit(on: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isRect3AboveBottomRect4 = rect3.maxY <= rect4.maxY
@@ -231,6 +232,7 @@ extension Tests {
         inner.constrain(sourceRect: &resultRect3, by: rect4)
 
         if isRect1AboveBottomRect2 {
+            XCTAssertTrue(resultRect1.maxY == rect2.maxY)
             XCTAssertTrue(resultRect1.minY == rect2.maxY)
         } else if isRect1BelowBottomRect2 {
             XCTAssertTrue(resultRect1 == rect1)
@@ -241,6 +243,7 @@ extension Tests {
         if isRect3AboveBottomRect4 {
             XCTAssertTrue(resultRect3 == rect3)
         } else if isRect3BelowBottomRect4 {
+            XCTAssertTrue(resultRect3.minY == rect4.maxY)
             XCTAssertTrue(resultRect3.maxY == rect4.maxY)
         } else {
             XCTAssertTrue(resultRect3.maxY == rect4.maxY)
@@ -248,12 +251,12 @@ extension Tests {
         }
     }
     func testAnchorBottomPull() {
-        let outer = LayoutAnchor.Bottom.pullFrom(inner: false)
+        let outer = LayoutAnchor.Bottom.pull(from: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isBottomRect1BelowBottomRect2 = rect1.maxY > rect2.maxY
 
-        let inner = LayoutAnchor.Bottom.pullFrom(inner: true)
+        let inner = LayoutAnchor.Bottom.pull(from: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isTopRect3AboveBottomRect4 = rect3.minY < rect4.maxY
@@ -263,7 +266,7 @@ extension Tests {
         outer.constrain(sourceRect: &resultRect1, by: rect2)
         inner.constrain(sourceRect: &resultRect3, by: rect4)
 
-        XCTAssertTrue(resultRect1.minY == rect2.maxY, "\(resultRect1, rect1, rect2)")
+        XCTAssertTrue(resultRect1.minY == rect2.maxY)
         if isBottomRect1BelowBottomRect2 {
             XCTAssertTrue(resultRect1.height == rect1.maxY - rect2.maxY)
         }
@@ -272,6 +275,251 @@ extension Tests {
         if isTopRect3AboveBottomRect4 {
             XCTAssertTrue(resultRect3.minY == rect3.minY)
         }
+    }
+    
+    func testAnchorRightAlign() {
+        let outer = LayoutAnchor.Right.align(by: .outer)
+        var rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+
+        let inner = LayoutAnchor.Right.align(by: .inner)
+        var rect3 = CGRect.random(in: bounds)
+        let rect4 = CGRect.random(in: bounds)
+
+        outer.constrain(sourceRect: &rect1, by: rect2)
+        inner.constrain(sourceRect: &rect3, by: rect4)
+
+        XCTAssertTrue(rect1.minX == rect2.maxX)
+        XCTAssertTrue(rect3.maxX == rect4.maxX)
+    }
+    func testAnchorRightLimit() {
+        let outer = LayoutAnchor.Right.limit(on: .outer)
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+        let isRect1BeforeRightRect2 = rect1.maxX <= rect2.maxX
+        let isRect1AfterRightRect2 = rect1.minX >= rect2.maxX
+
+        let inner = LayoutAnchor.Right.limit(on: .inner)
+        let rect3 = CGRect.random(in: bounds)
+        let rect4 = CGRect.random(in: bounds)
+        let isRect3BeforeRightRect4 = rect3.maxX <= rect4.maxX
+        let isRect3AfterRightRect4 = rect3.minX >= rect4.maxX
+
+        var resultRect1 = rect1
+        var resultRect3 = rect3
+        outer.constrain(sourceRect: &resultRect1, by: rect2)
+        inner.constrain(sourceRect: &resultRect3, by: rect4)
+
+        if isRect1BeforeRightRect2 {
+            XCTAssertTrue(resultRect1.maxX == rect2.maxX)
+            XCTAssertTrue(resultRect1.minX == rect2.maxX)
+        } else if isRect1AfterRightRect2 {
+            XCTAssertTrue(resultRect1 == rect1)
+        } else {
+            XCTAssertTrue(resultRect1.minX == rect2.maxX)
+            XCTAssertTrue(resultRect1.width == rect1.maxX - rect2.maxX)
+        }
+        if isRect3BeforeRightRect4 {
+            XCTAssertTrue(resultRect3 == rect3)
+        } else if isRect3AfterRightRect4 {
+            XCTAssertTrue(resultRect3.minX == rect4.maxX)
+            XCTAssertTrue(resultRect3.maxX == rect4.maxX)
+        } else {
+            XCTAssertTrue(resultRect3.maxX == rect4.maxX)
+            XCTAssertTrue(resultRect3.width == rect3.divided(atDistance: rect3.maxX - rect4.maxX, from: .maxXEdge).remainder.width)
+        }
+    }
+    func testAnchorRightPull() {
+        let outer = LayoutAnchor.Right.pull(from: .outer)
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+        let isRightRect1AfterRightRect2 = rect1.maxX > rect2.maxX
+
+        let inner = LayoutAnchor.Right.pull(from: .inner)
+        let rect3 = CGRect.random(in: bounds)
+        let rect4 = CGRect.random(in: bounds)
+        let isLeftRect3BeforeRightRect4 = rect3.minX < rect4.maxX
+
+        var resultRect1 = rect1
+        var resultRect3 = rect3
+        outer.constrain(sourceRect: &resultRect1, by: rect2)
+        inner.constrain(sourceRect: &resultRect3, by: rect4)
+
+        XCTAssertTrue(resultRect1.minX == rect2.maxX, "\(resultRect1, rect1, rect2)")
+        if isRightRect1AfterRightRect2 {
+            XCTAssertTrue(resultRect1.width == rect1.maxX - rect2.maxX)
+        }
+        XCTAssertTrue(resultRect3.maxX == rect4.maxX)
+        XCTAssertTrue(resultRect3.width == max(0, rect4.maxX - rect3.minX))
+        if isLeftRect3BeforeRightRect4 {
+            XCTAssertTrue(resultRect3.minX == rect3.minX)
+        }
+    }
+
+    func testAnchorLeftAlign() {
+        let outer = LayoutAnchor.Left.align(by: .outer)
+        var rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+
+        let inner = LayoutAnchor.Left.align(by: .inner)
+        var rect3 = CGRect.random(in: bounds)
+        let rect4 = CGRect.random(in: bounds)
+
+        outer.constrain(sourceRect: &rect1, by: rect2)
+        inner.constrain(sourceRect: &rect3, by: rect4)
+
+        XCTAssertTrue(rect1.maxX == rect2.minX)
+        XCTAssertTrue(rect3.minX == rect4.minX)
+    }
+    func testAnchorLeftLimit() {
+        let outer = LayoutAnchor.Left.limit(on: .outer)
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+        let isRect1BeforeLeftRect2 = rect1.maxX <= rect2.minX
+        let isRect1AfterLeftRect2 = rect1.minX >= rect2.minX
+
+        let inner = LayoutAnchor.Left.limit(on: .inner)
+        let rect3 = CGRect.random(in: bounds)
+        let rect4 = CGRect.random(in: bounds)
+        let isRect3BeforeLeftRect4 = rect3.maxX <= rect4.minX
+        let isRect3AfterLeftRect4 = rect3.minX >= rect4.minX
+
+        var resultRect1 = rect1
+        var resultRect3 = rect3
+        outer.constrain(sourceRect: &resultRect1, by: rect2)
+        inner.constrain(sourceRect: &resultRect3, by: rect4)
+
+        if isRect1AfterLeftRect2 {
+            XCTAssertTrue(resultRect1.maxX == rect2.minX)
+            XCTAssertTrue(resultRect1.minX == rect2.minX)
+        } else if isRect1BeforeLeftRect2 {
+            XCTAssertTrue(resultRect1 == rect1)
+        } else {
+            XCTAssertTrue(resultRect1.maxX == rect2.minX)
+            XCTAssertTrue(resultRect1.width == rect2.minX - rect1.minX)
+        }
+        if isRect3AfterLeftRect4 {
+            XCTAssertTrue(resultRect3 == rect3)
+        } else if isRect3BeforeLeftRect4 {
+            XCTAssertTrue(resultRect3.minX == rect4.minX)
+            XCTAssertTrue(resultRect3.maxX == rect4.minX)
+        } else {
+            XCTAssertTrue(resultRect3.minX == rect4.minX)
+            XCTAssertTrue(resultRect3.width == rect3.divided(atDistance: rect4.minX - rect3.minX, from: .minXEdge).remainder.width)
+        }
+    }
+    func testAnchorLeftPull() {
+        let outer = LayoutAnchor.Left.pull(from: .outer)
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+        let isLeftRect1BeforeLeftRect2 = rect1.minX < rect2.minX
+
+        let inner = LayoutAnchor.Left.pull(from: .inner)
+        let rect3 = CGRect.random(in: bounds)
+        let rect4 = CGRect.random(in: bounds)
+        let isRightRect3BeforeLeftRect4 = rect3.maxX < rect4.minX
+
+        var resultRect1 = rect1
+        var resultRect3 = rect3
+        outer.constrain(sourceRect: &resultRect1, by: rect2)
+        inner.constrain(sourceRect: &resultRect3, by: rect4)
+
+        XCTAssertTrue(resultRect1.maxX == rect2.minX)
+        if isLeftRect1BeforeLeftRect2 {
+            XCTAssertTrue(resultRect1.width == rect2.minX - rect1.minX)
+        }
+        XCTAssertTrue(resultRect3.minX == rect4.minX)
+        XCTAssertTrue(resultRect3.width == max(0, rect3.maxX - rect4.minX))
+        if isRightRect3BeforeLeftRect4 {
+            XCTAssertTrue(resultRect3.maxX == rect3.minX)
+        }
+    }
+
+    func testAnchorTopAlign() {
+        let outer = LayoutAnchor.Top.align(by: .outer)
+        var rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+
+        let inner = LayoutAnchor.Top.align(by: .inner)
+        var rect3 = CGRect.random(in: bounds)
+        let rect4 = CGRect.random(in: bounds)
+
+        outer.constrain(sourceRect: &rect1, by: rect2)
+        inner.constrain(sourceRect: &rect3, by: rect4)
+
+        XCTAssertTrue(rect1.bottom == rect2.top)
+        XCTAssertTrue(rect3.top == rect4.top)
+    }
+    func testAnchorTopLimit() {
+        let outer = LayoutAnchor.Top.limit(on: .outer)
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+        let isRect1AboveTopRect2 = rect1.bottom <= rect2.top
+        let isRect1BelowTopRect2 = rect1.top >= rect2.top
+
+        let inner = LayoutAnchor.Top.limit(on: .inner)
+        let rect3 = CGRect.random(in: bounds)
+        let rect4 = CGRect.random(in: bounds)
+        let isRect3AboveTopRect4 = rect3.bottom <= rect4.top
+        let isRect3BelowTopRect4 = rect3.top >= rect4.top
+
+        var resultRect1 = rect1
+        var resultRect3 = rect3
+        outer.constrain(sourceRect: &resultRect1, by: rect2)
+        inner.constrain(sourceRect: &resultRect3, by: rect4)
+
+        if isRect1BelowTopRect2 {
+            XCTAssertTrue(resultRect1.maxY == rect2.minY)
+            XCTAssertTrue(resultRect1.minY == rect2.minY)
+        } else if isRect1AboveTopRect2 {
+            XCTAssertTrue(resultRect1 == rect1)
+        } else {
+            XCTAssertTrue(resultRect1.maxY == rect2.minY)
+            XCTAssertTrue(resultRect1.height == rect2.minY - rect1.minY)
+        }
+        if isRect3BelowTopRect4 {
+            XCTAssertTrue(resultRect3 == rect3)
+        } else if isRect3AboveTopRect4 {
+            XCTAssertTrue(resultRect3.minY == rect4.minY)
+            XCTAssertTrue(resultRect3.maxY == rect4.minY)
+        } else {
+            XCTAssertTrue(resultRect3.minY == rect4.minY)
+            XCTAssertTrue(resultRect3.height == rect3.divided(atDistance: rect4.minY - rect3.minY, from: .minYEdge).remainder.height)
+        }
+    }
+    func testAnchorTopPull() {
+        let outer = LayoutAnchor.Top.pull(from: .outer)
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+        let isTopRect1AboveTopRect2 = rect1.top < rect2.top
+
+        let inner = LayoutAnchor.Top.pull(from: .inner)
+        let rect3 = CGRect.random(in: bounds)
+        let rect4 = CGRect.random(in: bounds)
+        let isBottomRect3AboveTopRect4 = rect3.bottom < rect4.top
+
+        var resultRect1 = rect1
+        var resultRect3 = rect3
+        outer.constrain(sourceRect: &resultRect1, by: rect2)
+        inner.constrain(sourceRect: &resultRect3, by: rect4)
+
+        XCTAssertTrue(resultRect1.maxY == rect2.minY)
+        if isTopRect1AboveTopRect2 {
+            XCTAssertTrue(resultRect1.height == rect2.minY - rect1.minY)
+        }
+        XCTAssertTrue(resultRect3.minY == rect4.minY)
+        XCTAssertTrue(resultRect3.height == max(0, rect3.maxY - rect4.minY))
+        if isBottomRect3AboveTopRect4 {
+            XCTAssertTrue(resultRect3.maxY == rect3.minY)
+        }
+    }
+}
+
+extension Tests {
+    func testMemorySize() {
+        let memoryLayout = MemoryLayout<LayoutAnchor>.self
+
+        XCTAssertTrue(memoryLayout.size == 0)
     }
 }
 

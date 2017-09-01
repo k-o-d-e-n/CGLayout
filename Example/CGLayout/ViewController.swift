@@ -20,8 +20,8 @@ class ViewController: UIViewController {
                                        horizontal: (.left(15), .constantly(30)))
     lazy var pulledLayout = Layout(alignmentV: .top(10), fillingV: .boxed(UIEdgeInsets.Vertical(top: 10, bottom: 10)),
                                    alignmentH: .left(15), fillingH: .boxed(.init(left: 15, right: 10)))
-    lazy var bottomConstraint = LayoutAnchor.Bottom.limitOn(inner: true)
-    lazy var rightConstraint = LayoutAnchor.Right.limitOn(inner: false)
+    lazy var bottomConstraint = LayoutAnchor.Bottom.limit(on: .inner)
+    lazy var rightConstraint = LayoutAnchor.Right.limit(on: .outer)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,11 +54,11 @@ class ViewController: UIViewController {
             preview = subview
         }
 
-        let topConstraint: LayoutAnchor.Top = traitCollection.verticalSizeClass == .compact ? .pullFrom(inner: false) : .limitOn(inner: false)
+        let topConstraint: LayoutAnchor.Top = traitCollection.verticalSizeClass == .compact ? .pull(from: .outer) : .limit(on: .outer)
         let topRect = CGRect(x: 0, y: 0, width: 0, height: 300)
         let rightRect = CGRect(x: self.view.bounds.width - 300, y: 0, width: 300, height: 0)
 
-        pulledLayout.apply(for: pulledView, use: [(topRect, LayoutAnchor.Bottom.limitOn(inner: false)), (rightRect, LayoutAnchor.Left.limitOn(inner: false)),
-                                                  (subviews[1].frame, LayoutAnchor.Left.limitOn(inner: false)), (subviews.first!.frame, topConstraint)])
+        pulledLayout.apply(for: pulledView, use: [(topRect, LayoutAnchor.Bottom.limit(on: .outer)), (rightRect, LayoutAnchor.Left.limit(on: .outer)),
+                                                  (subviews[1].frame, LayoutAnchor.Left.limit(on: .outer)), (subviews.first!.frame, topConstraint)])
     }
 }

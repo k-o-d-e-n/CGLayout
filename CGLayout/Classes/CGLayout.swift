@@ -24,6 +24,12 @@ extension CALayer: LayoutItem {
     public var superItem: LayoutItem? { return superlayer }
 }
 
+extension LayoutItem {
+    public func constraint(for anchor: RectBasedConstraint) -> ConstraintItem {
+        return (frame, anchor)
+    }
+}
+
 public protocol RectBasedLayout {
     /// Performing layout of given rect inside available rect
     /// Warning: Apply layout for view frame (as layout(rect: &view.frame,...)) has side effect and called setFrame method on view.
@@ -70,8 +76,14 @@ extension RectBasedConstraint {
     }
 }
 
+extension CGRect {
+    var left: CGFloat { return minX }
+    var right: CGFloat { return maxX }
+    var top: CGFloat { return minY }
+    var bottom: CGFloat { return maxY }
+}
+
 // TODO: Add center and other behaviors
-// TODO: Add extension CGRect for calculate spaces between edges of frames, and replace calculations inside behaviors
 public struct LayoutAnchor {
     public struct Bottom: RectBasedConstraint {
         private let base: RectBasedConstraint
@@ -81,37 +93,72 @@ public struct LayoutAnchor {
             base.constrain(sourceRect: &sourceRect, by: rect)
         }
 
-        public static func alignBy(inner: Bool) -> Bottom { return Bottom(base: inner ? AlignInner() : Align()) } // TODO: May be need to make it static let
-        private struct Align: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Bottom.align(sourceRect: &sourceRect, byConstrained: rect)
+        public static func align(by dependency: Align.Dependence) -> Bottom { return Bottom(base: dependency) }
+        public struct Align {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Bottom.alignInside(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
+
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Bottom.align(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
             }
         }
-        private struct AlignInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Bottom.alignInside(sourceRect: &sourceRect, byConstrained: rect)
+
+        public static func limit(on dependency: Limit.Dependence) -> Bottom { return Bottom(base: dependency) }
+        public struct Limit {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Bottom.cropInside(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Bottom.crop(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
             }
         }
-        public static func limitOn(inner: Bool) -> Bottom { return Bottom(base: inner ? LimitInner() : Limit()) }
-        private struct Limit: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Bottom.crop(sourceRect: &sourceRect, byConstrained: rect)
-            }
-        }
-        private struct LimitInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Bottom.cropInside(sourceRect: &sourceRect, byConstrained: rect)
-            }
-        }
-        public static func pullFrom(inner: Bool) -> Bottom { return Bottom(base: inner ? PullInner() : Pull()) }
-        private struct Pull: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Bottom.pull(sourceRect: &sourceRect, toConstrained: rect)
-            }
-        }
-        private struct PullInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Bottom.pullInside(sourceRect: &sourceRect, toConstrained: rect)
+        public static func pull(from dependency: Pull.Dependence) -> Bottom { return Bottom(base: dependency) }
+        public struct Pull {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Bottom.pullInside(sourceRect: &sourceRect, toConstrained: rect)
+                    }
+                }
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Bottom.pull(sourceRect: &sourceRect, toConstrained: rect)
+                    }
+                }
             }
         }
 
@@ -131,7 +178,7 @@ public struct LayoutAnchor {
         }
         static private func pullInside(sourceRect: inout CGRect, toConstrained rect: CGRect) {
             sourceRect.size.height = max(0, rect.maxY - sourceRect.origin.y)
-            sourceRect.origin.y = max(sourceRect.origin.y, rect.maxY - sourceRect.height)
+            alignInside(sourceRect: &sourceRect, byConstrained: rect)
         }
         static private func pull(sourceRect: inout CGRect, toConstrained rect: CGRect) {
             sourceRect.size.height = max(0, space(fromFarEdgeOf: sourceRect, toConstrained: rect))
@@ -150,37 +197,72 @@ public struct LayoutAnchor {
             base.constrain(sourceRect: &sourceRect, by: rect)
         }
 
-        public static func alignBy(inner: Bool) -> Right { return Right(base: inner ? AlignInner() : Align()) }
-        private struct Align: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Right.align(sourceRect: &sourceRect, byConstrained: rect)
+        public static func align(by dependency: Align.Dependence) -> Right { return Right(base: dependency) }
+        public struct Align {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Right.alignInside(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
+
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Right.align(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
             }
         }
-        private struct AlignInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Right.alignInside(sourceRect: &sourceRect, byConstrained: rect)
+
+        public static func limit(on dependency: Limit.Dependence) -> Right { return Right(base: dependency) }
+        public struct Limit {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Right.cropInside(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Right.crop(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
             }
         }
-        public static func limitOn(inner: Bool) -> Right { return Right(base: inner ? LimitInner() : Limit()) }
-        private struct Limit: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Right.crop(sourceRect: &sourceRect, byConstrained: rect)
-            }
-        }
-        private struct LimitInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Right.cropInside(sourceRect: &sourceRect, byConstrained: rect)
-            }
-        }
-        public static func pullFrom(inner: Bool) -> Right { return Right(base: inner ? PullInner() : Pull()) }
-        private struct Pull: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Right.pull(sourceRect: &sourceRect, toConstrained: rect)
-            }
-        }
-        private struct PullInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Right.pullInside(sourceRect: &sourceRect, toConstrained: rect)
+        public static func pull(from dependency: Pull.Dependence) -> Right { return Right(base: dependency) }
+        public struct Pull {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Right.pullInside(sourceRect: &sourceRect, toConstrained: rect)
+                    }
+                }
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Right.pull(sourceRect: &sourceRect, toConstrained: rect)
+                    }
+                }
             }
         }
 
@@ -191,10 +273,11 @@ public struct LayoutAnchor {
             sourceRect.origin.x = rect.maxX
         }
         static private func cropInside(sourceRect: inout CGRect, byConstrained rect: CGRect) {
-            sourceRect.size.width = min(sourceRect.width, sourceRect.width - space(fromFarEdgeOf: sourceRect, toConstrained: rect))
+            sourceRect.size.width = max(0, min(sourceRect.width, sourceRect.width - space(fromFarEdgeOf: sourceRect, toConstrained: rect)))
+            sourceRect.origin.x = min(sourceRect.origin.x, rect.maxX)
         }
         static private func crop(sourceRect: inout CGRect, byConstrained rect: CGRect) {
-            sourceRect.size.width = min(sourceRect.width, space(fromFarEdgeOf: sourceRect, toConstrained: rect))
+            sourceRect.size.width = max(0, min(sourceRect.width, space(fromFarEdgeOf: sourceRect, toConstrained: rect)))
             sourceRect.origin.x = max(sourceRect.origin.x, rect.maxX)
         }
         static private func pullInside(sourceRect: inout CGRect, toConstrained rect: CGRect) {
@@ -202,7 +285,7 @@ public struct LayoutAnchor {
             alignInside(sourceRect: &sourceRect, byConstrained: rect)
         }
         static private func pull(sourceRect: inout CGRect, toConstrained rect: CGRect) {
-            sourceRect.size.width = space(fromFarEdgeOf: sourceRect, toConstrained: rect)
+            sourceRect.size.width = max(0, space(fromFarEdgeOf: sourceRect, toConstrained: rect))
             align(sourceRect: &sourceRect, byConstrained: rect)
         }
         static private func space(fromFarEdgeOf sourceRect: CGRect, toConstrained rect: CGRect) -> CGFloat {
@@ -218,37 +301,72 @@ public struct LayoutAnchor {
             base.constrain(sourceRect: &sourceRect, by: rect)
         }
 
-        public static func alignBy(inner: Bool) -> Left { return Left(base: inner ? AlignInner() : Align()) }
-        private struct Align: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Left.align(sourceRect: &sourceRect, byConstrained: rect)
+        public static func align(by dependency: Align.Dependence) -> Left { return Left(base: dependency) }
+        public struct Align {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Left.alignInside(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
+
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Left.align(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
             }
         }
-        private struct AlignInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Left.alignInside(sourceRect: &sourceRect, byConstrained: rect)
+
+        public static func limit(on dependency: Limit.Dependence) -> Left { return Left(base: dependency) }
+        public struct Limit {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Left.cropInside(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Left.crop(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
             }
         }
-        public static func limitOn(inner: Bool) -> Left { return Left(base: inner ? LimitInner() : Limit()) }
-        private struct Limit: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Left.crop(sourceRect: &sourceRect, byConstrained: rect)
-            }
-        }
-        private struct LimitInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Left.cropInside(sourceRect: &sourceRect, byConstrained: rect)
-            }
-        }
-        public static func pullFrom(inner: Bool) -> Left { return Left(base: inner ? PullInner() : Pull()) }
-        private struct Pull: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Left.pull(sourceRect: &sourceRect, toConstrained: rect)
-            }
-        }
-        private struct PullInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Left.pullInside(sourceRect: &sourceRect, toConstrained: rect)
+        public static func pull(from dependency: Pull.Dependence) -> Left { return Left(base: dependency) }
+        public struct Pull {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Left.pullInside(sourceRect: &sourceRect, toConstrained: rect)
+                    }
+                }
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Left.pull(sourceRect: &sourceRect, toConstrained: rect)
+                    }
+                }
             }
         }
 
@@ -259,11 +377,11 @@ public struct LayoutAnchor {
             sourceRect.origin.x = rect.minX - sourceRect.width
         }
         static private func cropInside(sourceRect: inout CGRect, byConstrained rect: CGRect) {
-            sourceRect.size.width = min(sourceRect.width, sourceRect.width - space(fromFarEdgeOf: sourceRect, toConstrained: rect))
+            sourceRect.size.width = max(0, min(sourceRect.width, sourceRect.width - space(fromFarEdgeOf: sourceRect, toConstrained: rect)))
             sourceRect.origin.x = max(sourceRect.origin.x, rect.minX)
         }
         static private func crop(sourceRect: inout CGRect, byConstrained rect: CGRect) {
-            sourceRect.size.width = min(sourceRect.width, space(fromFarEdgeOf: sourceRect, toConstrained: rect))
+            sourceRect.size.width = max(0, min(sourceRect.width, space(fromFarEdgeOf: sourceRect, toConstrained: rect)))
             sourceRect.origin.x = min(sourceRect.origin.x, rect.minX)
         }
         static private func pullInside(sourceRect: inout CGRect, toConstrained rect: CGRect) {
@@ -271,7 +389,7 @@ public struct LayoutAnchor {
             alignInside(sourceRect: &sourceRect, byConstrained: rect)
         }
         static private func pull(sourceRect: inout CGRect, toConstrained rect: CGRect) {
-            sourceRect.size.width = space(fromFarEdgeOf: sourceRect, toConstrained: rect)
+            sourceRect.size.width = max(0, space(fromFarEdgeOf: sourceRect, toConstrained: rect))
             align(sourceRect: &sourceRect, byConstrained: rect)
         }
         static private func space(fromFarEdgeOf sourceRect: CGRect, toConstrained rect: CGRect) -> CGFloat {
@@ -287,37 +405,72 @@ public struct LayoutAnchor {
             base.constrain(sourceRect: &sourceRect, by: rect)
         }
 
-        public static func alignBy(inner: Bool) -> Top { return Top(base: inner ? AlignInner() : Align()) }
-        private struct Align: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Top.align(sourceRect: &sourceRect, byConstrained: rect)
+        public static func align(by dependency: Align.Dependence) -> Top { return Top(base: dependency) }
+        public struct Align {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Top.alignInside(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
+
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Top.align(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
             }
         }
-        private struct AlignInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Top.alignInside(sourceRect: &sourceRect, byConstrained: rect)
+
+        public static func limit(on dependency: Limit.Dependence) -> Top { return Top(base: dependency) }
+        public struct Limit {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Top.cropInside(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Top.crop(sourceRect: &sourceRect, byConstrained: rect)
+                    }
+                }
             }
         }
-        public static func limitOn(inner: Bool) -> Top { return Top(base: inner ? LimitInner() : Limit()) }
-        private struct Limit: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Top.crop(sourceRect: &sourceRect, byConstrained: rect)
-            }
-        }
-        private struct LimitInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Top.cropInside(sourceRect: &sourceRect, byConstrained: rect)
-            }
-        }
-        public static func pullFrom(inner: Bool) -> Top { return Top(base: inner ? PullInner() : Pull()) }
-        private struct Pull: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Top.pull(sourceRect: &sourceRect, toConstrained: rect)
-            }
-        }
-        private struct PullInner: RectBasedConstraint {
-            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-                Top.pull(sourceRect: &sourceRect, toConstrained: rect)
+        public static func pull(from dependency: Pull.Dependence) -> Top { return Top(base: dependency) }
+        public struct Pull {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+
+                public static var inner: Dependence { return Dependence(base: Inner()) }
+                private struct Inner: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Top.pullInside(sourceRect: &sourceRect, toConstrained: rect)
+                    }
+                }
+                public static var outer: Dependence { return Dependence(base: Outer()) }
+                private struct Outer: RectBasedConstraint {
+                    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        Top.pull(sourceRect: &sourceRect, toConstrained: rect)
+                    }
+                }
             }
         }
 
@@ -328,11 +481,11 @@ public struct LayoutAnchor {
             sourceRect.origin.y = rect.minY - sourceRect.height
         }
         static private func cropInside(sourceRect: inout CGRect, byConstrained rect: CGRect) {
-            sourceRect.size.height = min(sourceRect.height, sourceRect.height - space(fromFarEdgeOf: sourceRect, toConstrained: rect))
+            sourceRect.size.height = max(0, min(sourceRect.height, sourceRect.height - space(fromFarEdgeOf: sourceRect, toConstrained: rect)))
             sourceRect.origin.y = max(sourceRect.origin.y, rect.minY)
         }
         static private func crop(sourceRect: inout CGRect, byConstrained rect: CGRect) {
-            sourceRect.size.height = min(sourceRect.height, space(fromFarEdgeOf: sourceRect, toConstrained: rect))
+            sourceRect.size.height = max(0, min(sourceRect.height, space(fromFarEdgeOf: sourceRect, toConstrained: rect)))
             sourceRect.origin.y = min(sourceRect.origin.y, rect.minY)
         }
         static private func pullInside(sourceRect: inout CGRect, toConstrained rect: CGRect) {
@@ -340,7 +493,7 @@ public struct LayoutAnchor {
             alignInside(sourceRect: &sourceRect, byConstrained: rect)
         }
         static private func pull(sourceRect: inout CGRect, toConstrained rect: CGRect) {
-            sourceRect.size.height = space(fromFarEdgeOf: sourceRect, toConstrained: rect)
+            sourceRect.size.height = max(0, space(fromFarEdgeOf: sourceRect, toConstrained: rect))
             align(sourceRect: &sourceRect, byConstrained: rect)
         }
         static private func space(fromFarEdgeOf sourceRect: CGRect, toConstrained rect: CGRect) -> CGFloat {
@@ -550,6 +703,7 @@ public struct Layout: RectBasedLayout {
     }
 }
 
+// TODO: Remove first second initializers
 public extension Layout {
     public init(vertical: (alignment: Alignment.Vertical, filling: Filling.Vertical), horizontal: (alignment: Alignment.Horizontal, filling: Filling.Horizontal)) {
         self.init(alignment: Alignment(vertical: vertical.alignment, horizontal: horizontal.alignment),
@@ -559,4 +713,83 @@ public extension Layout {
         self.init(alignment: Alignment(vertical: alignmentV, horizontal: alignmentH),
                   filling: Filling(vertical: fillingV, horizontal: fillingH))
     }
+    public init(x: Alignment.Horizontal, y: Alignment.Vertical, width: Filling.Horizontal, height: Filling.Vertical) {
+        self.init(alignment: Alignment(vertical: y, horizontal: x),
+                  filling: Filling(vertical: height, horizontal: width))
+    }
 }
+
+
+// MARK: Attempts, not used
+
+/*
+protocol CGRectAxis {
+    func set(size: CGFloat, for rect: inout CGRect)
+    func get(sizeAt rect: CGRect) -> CGFloat
+    func set(origin: CGFloat, for rect: inout CGRect)
+    func get(originAt rect: CGRect) -> CGFloat
+
+    func get(maxOf rect: CGRect) -> CGFloat
+    func get(minOf rect: CGRect) -> CGFloat
+    //    func get(midOf rect: CGRect) -> CGFloat
+}
+
+extension CGRect {
+    struct Horizontal: CGRectAxis {
+        func set(size: CGFloat, for rect: inout CGRect) { rect.size.width = size }
+        func set(origin: CGFloat, for rect: inout CGRect) { rect.origin.x = origin }
+        func get(originAt rect: CGRect) -> CGFloat { return rect.origin.x }
+        func get(sizeAt rect: CGRect) -> CGFloat { return rect.width }
+        func get(maxOf rect: CGRect) -> CGFloat { return rect.maxX }
+        func get(minOf rect: CGRect) -> CGFloat { return rect.minX }
+    }
+    struct Vertical: CGRectAxis {
+        func set(size: CGFloat, for rect: inout CGRect) { rect.size.height = size }
+        func set(origin: CGFloat, for rect: inout CGRect) { rect.origin.y = origin }
+        func get(sizeAt rect: CGRect) -> CGFloat { return rect.height }
+        func get(originAt rect: CGRect) -> CGFloat { return rect.origin.y }
+        func get(maxOf rect: CGRect) -> CGFloat { return rect.maxY }
+        func get(minOf rect: CGRect) -> CGFloat { return rect.minY }
+    }
+    struct WorkingSpace {
+        struct After {
+            func align(rect: inout CGRect, by position: CGFloat, in axis: CGRectAxis) {
+                axis.set(origin: position, for: &rect)
+            }
+            func crop(rect: inout CGRect, by position: CGFloat, in axis: CGRectAxis) {
+                axis.set(size: max(0, min(axis.get(sizeAt: rect), axis.get(sizeAt: rect) - (axis.get(maxOf: rect) - position))),
+                         for: &rect)
+                axis.set(origin: min(axis.get(originAt: rect), position), for: &rect)
+            }
+            func pull(rect: inout CGRect, to position: CGFloat, in axis: CGRectAxis) {
+                axis.set(size: max(0, axis.get(maxOf: rect) - position), for: &rect)
+                align(rect: &rect, by: position, in: axis)
+            }
+        }
+        struct Before {
+            func align(rect: inout CGRect, by position: CGFloat, in axis: CGRectAxis) {
+                axis.set(origin: position - axis.get(sizeAt: rect), for: &rect)
+            }
+            func crop(rect: inout CGRect, by position: CGFloat, in axis: CGRectAxis) {
+                axis.set(size: max(0, min(axis.get(sizeAt: rect), axis.get(sizeAt: rect) - (axis.get(maxOf: rect) - position))),
+                         for: &rect)
+                axis.set(origin: min(axis.get(originAt: rect), position), for: &rect)
+            }
+            func pull(rect: inout CGRect, to position: CGFloat, in axis: CGRectAxis) {
+                axis.set(size: max(0, position - axis.get(minOf: rect)), for: &rect)
+                align(rect: &rect, by: position, in: axis)
+            }
+        }
+    }
+}
+
+extension CGRect {
+    struct AnchorDependence {
+        struct Inner {
+            func align(rect: inout CGRect, by position: CGFloat, in axis: CGRectAxis) {
+                axis.set(origin: position, to: &rect)
+            }
+        }
+    }
+}
+*/
