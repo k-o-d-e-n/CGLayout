@@ -516,10 +516,23 @@ extension Tests {
 }
 
 extension Tests {
-    func testMemorySize() {
-        let memoryLayout = MemoryLayout<LayoutAnchor>.self
+    func testPerformanceLayoutSecondViewController() {
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewController")
+        controller.loadViewIfNeeded()
 
-        XCTAssertTrue(memoryLayout.size == 0)
+        self.measure {
+            controller.view.setNeedsLayout()
+            controller.view.layoutIfNeeded()
+        }
+    }
+    func testPerformanceAutoLayoutSecondViewController() {
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewControllerAutoLayout")
+        controller.loadViewIfNeeded()
+
+        self.measure {
+            controller.view.setNeedsLayout()
+            controller.view.layoutIfNeeded()
+        }
     }
 }
 

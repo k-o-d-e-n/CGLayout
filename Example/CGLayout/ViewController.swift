@@ -14,12 +14,12 @@ import CGLayout
 class ViewController: UIViewController {
     var subviews: [UIView] = []
     let pulledView: UIView = UIView()
-    lazy var itemLayout = Layout(alignmentV: .bottom(10), fillingV: .constantly(50),
-                                 alignmentH: .left(15), fillingH: .boxed(.init(left: 15, right: 20)))
+    let centeredView: UIView = UIView()
+    lazy var itemLayout = Layout(x: .left(15), y: .bottom(10), width: .boxed(.init(left: 15, right: 20)), height: .constantly(50))
     lazy var latestItemLayout = Layout(vertical: (.top(10), .boxed(.init(top: 10, bottom: 10))),
                                        horizontal: (.left(15), .constantly(30)))
-    lazy var pulledLayout = Layout(alignmentV: .top(10), fillingV: .boxed(UIEdgeInsets.Vertical(top: 10, bottom: 10)),
-                                   alignmentH: .left(15), fillingH: .boxed(.init(left: 15, right: 10)))
+    lazy var pulledLayout = Layout(x: .left(15), y: .top(10),
+                                   width: .boxed(.init(left: 15, right: 10)), height: .boxed(UIEdgeInsets.Vertical(top: 10, bottom: 10)))
     lazy var bottomConstraint = LayoutAnchor.Bottom.limit(on: .inner)
     lazy var rightConstraint = LayoutAnchor.Right.limit(on: .outer)
 
@@ -34,6 +34,8 @@ class ViewController: UIViewController {
         subviews.forEach(view.addSubview)
         view.addSubview(pulledView)
         pulledView.backgroundColor = .red
+        view.addSubview(centeredView)
+        centeredView.backgroundColor = .yellow
     }
 
     override func viewDidLayoutSubviews() {
@@ -42,14 +44,14 @@ class ViewController: UIViewController {
         var preview: UIView?
         let constrainedRect = CGRect(origin: .zero, size: CGSize(width: 200, height: 0))
         subviews[0..<7].forEach { subview in
-            let constraints: [ConstraintItem] = preview.map { [($0.frame, bottomConstraint), (constrainedRect, rightConstraint)] } ?? []
+            let constraints: [ConstrainRect] = preview.map { [($0.frame, bottomConstraint), (constrainedRect, rightConstraint)] } ?? []
             itemLayout.apply(for: subview, use: constraints)
             preview = subview
         }
         let lastPreview = preview
         subviews[7..<10].forEach { subview in
-            let constraints: [ConstraintItem] = [(lastPreview!.frame, bottomConstraint), (constrainedRect, rightConstraint)]
-            let constraint: [ConstraintItem] = preview === lastPreview ? [] : [(preview!.frame, rightConstraint)]
+            let constraints: [ConstrainRect] = [(lastPreview!.frame, bottomConstraint), (constrainedRect, rightConstraint)]
+            let constraint: [ConstrainRect] = preview === lastPreview ? [] : [(preview!.frame, rightConstraint)]
             latestItemLayout.apply(for: subview, use: constraints + constraint)
             preview = subview
         }
@@ -60,5 +62,8 @@ class ViewController: UIViewController {
 
         pulledLayout.apply(for: pulledView, use: [(topRect, LayoutAnchor.Bottom.limit(on: .outer)), (rightRect, LayoutAnchor.Left.limit(on: .outer)),
                                                   (subviews[1].frame, LayoutAnchor.Left.limit(on: .outer)), (subviews.first!.frame, topConstraint)])
+
+        centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .constantly(20), height: .constantly(30)),
+                                 constraints: [subviews[7].constraintItem(for: [LayoutAnchor.Center.align(by: .center)])]).layout()
     }
 }

@@ -8,25 +8,146 @@
 
 import UIKit
 
+// TODO: Comment all code
 // TODO: Add behaviors with UIView size that fits and others
 // TODO: Add auto resized behaviors in Filling set. // SizeBasedConstraint
 // TODO: Think how can be use OptionSet type.
+// TODO: Create interface for calculate layout without set result to LayoutItem, which will be return rect (size) of full scheme. Useful for dynamic UITableViewCell.
+// TODO: Add RTL (right to left language)
+// TODO: Fix on remove view from hierarchy
 
 public protocol LayoutItem: class { // TODO: should be avoid limit only on class types
     var frame: CGRect { get set }
     var bounds: CGRect { get set }
     var superItem: LayoutItem? { get }
 }
-extension UIView: LayoutItem {
+extension UIView: AdjustableLayoutItem {
     public var superItem: LayoutItem? { return superview }
 }
 extension CALayer: LayoutItem {
     public var superItem: LayoutItem? { return superlayer }
 }
 
+public protocol AdjustableLayoutItem: LayoutItem {
+    func sizeThatFits(_ size: CGSize) -> CGSize
+}
+extension AdjustableLayoutItem {
+    public func adjustedConstraintItem(for anchors: [LayoutAnchor.Size]) -> AdjustedConstraintItem {
+        return AdjustedConstraintItem(item: self, constraints: anchors)
+    }
+}
+
+// TODO: Try use LayoutItem as not rendered "layout view", which only make layout for subItems(?). Example as UIStackView
+// TODO: Add extension to LayoutItem with anchor getters
 extension LayoutItem {
-    public func constraint(for anchor: RectBasedConstraint) -> ConstraintItem {
+    public func frameConstraint(for anchor: RectBasedConstraint) -> ConstrainRect {
         return (frame, anchor)
+    }
+    public func boundsConstraint(for anchor: RectBasedConstraint) -> ConstrainRect {
+        return (bounds, anchor)
+    }
+    public func constraintItem(for anchors: [RectBasedConstraint]) -> ConstraintItem {
+        return ConstraintItem(item: self, constraints: anchors)
+    }
+    public func layoutBlock(with layout: Layout, constraints: [ConstraintItemProtocol] = []) -> LayoutBlock {
+        return LayoutBlock(item: self, layout: layout, constraints: constraints)
+    }
+}
+
+public struct StringLayoutConstraint: ConstraintItemProtocol {
+    let string: String?
+    let attributes: [String: Any]?
+    let context: NSStringDrawingContext?
+
+    public init(string: String?, attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) {
+        self.string = string
+        self.attributes = attributes
+        self.context = context
+    }
+
+    public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+        sourceRect.size = string?.boundingRect(with: rect.size, options: .usesLineFragmentOrigin, attributes: attributes, context: context).size ?? .zero
+    }
+
+    public func constrainRect(current: CGRect) -> CGRect {
+        return current
+    }
+}
+extension String {
+    func layoutConstraint(with attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutConstraint {
+        return StringLayoutConstraint(string: self, attributes: attributes, context: context)
+    }
+}
+
+public protocol ConstraintItemProtocol: RectBasedConstraint {
+    // TODO: Think normal it or not
+    func constrainRect(current: CGRect) -> CGRect
+}
+
+public struct ConstraintItem {
+    let constraints: [RectBasedConstraint]
+    weak var item: LayoutItem!
+
+    public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
+        self.item = item
+        self.constraints = constraints
+    }
+}
+extension ConstraintItem: ConstraintItemProtocol {
+    public func constrainRect(current: CGRect) -> CGRect {
+        return item.frame
+    }
+    public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+        sourceRect = constraints.reduce(sourceRect) { $1.constrained(sourceRect: $0, by: rect) }
+    }
+}
+
+public struct AdjustedConstraintItem {
+    let constraints: [LayoutAnchor.Size]
+    weak var item: AdjustableLayoutItem!
+
+    public init(item: AdjustableLayoutItem, constraints: [LayoutAnchor.Size]) {
+        self.item = item
+        self.constraints = constraints
+    }
+}
+extension AdjustedConstraintItem: ConstraintItemProtocol {
+    public func constrainRect(current: CGRect) -> CGRect {
+        return CGRect(origin: current.origin, size: item.sizeThatFits(current.size))
+    }
+    public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+        sourceRect = constraints.reduce(sourceRect) { $1.constrained(sourceRect: $0, by: rect) }
+    }
+}
+
+public struct LayoutBlock {
+    let itemLayout: RectBasedLayout
+    let constraints: [ConstraintItemProtocol]
+    weak var item: LayoutItem!
+
+    public init(item: LayoutItem, layout: RectBasedLayout, constraints: [ConstraintItemProtocol] = []) {
+        self.item = item
+        self.itemLayout = layout
+        self.constraints = constraints
+    }
+
+    public func layout() {
+        itemLayout.apply(for: item, use: constraints)
+    }
+}
+
+// TODO: Add LayoutGuide as in SDK. It is constraint represented as simple rect with constraints (like ConstraintItem). Should implement LayoutItem protocol.
+// TODO: Add support UITraitCollection to LayoutScheme
+// TODO: Layout scheme - main layout entity for make up. Contain full layout process
+public struct LayoutScheme {
+    let blocks: [LayoutBlock]
+
+    public init(blocks: [LayoutBlock]) {
+        self.blocks = blocks
+    }
+
+    public func layout() {
+        blocks.forEach { $0.layout() }
     }
 }
 
@@ -40,7 +161,7 @@ public protocol RectBasedLayout {
     func layout(rect: inout CGRect, in source: CGRect)
 }
 
-public typealias ConstraintItem = (rect: CGRect, constraint: RectBasedConstraint)
+public typealias ConstrainRect = (rect: CGRect, constraint: RectBasedConstraint)
 public extension RectBasedLayout {
     func layout(rect: CGRect, in source: CGRect) -> CGRect {
         var rect = rect
@@ -48,28 +169,38 @@ public extension RectBasedLayout {
         return rect
     }
 
-    // TODO: Make ConstraintItem is more conviently
     // TODO: `constraints` has not priority, because conflicted constraints will be replaced result previous constraints
-    func apply(for item: LayoutItem, use constraints: [ConstraintItem] = []) {
+    func apply(for item: LayoutItem, use constraints: [ConstrainRect] = []) {
         let source = constraints.reduce(item.superItem!.bounds) { (result, constrained) -> CGRect in
             return result.constrainedBy(rect: constrained.rect, use: constrained.constraint)
         }
         item.frame = layout(rect: item.frame, in: source)
     }
+
+    func apply(for item: LayoutItem, use constraints: [ConstraintItemProtocol] = []) {
+        let source = constraints.reduce(item.superItem!.bounds) { (result, constraint) -> CGRect in
+            return result.constrainedBy(rect: constraint.constrainRect(current: result), use: constraint)
+        }
+        item.frame = layout(rect: item.frame, in: source)
+    }
 }
 
-// TODO: Add tests for RectBasedConstraint
 public protocol RectBasedConstraint {
     func constrain(sourceRect: inout CGRect, by rect: CGRect)
 }
 
-/// Using for constraint size
-public protocol SizeBasedConstraint {
-    // TODO:
+/// Using for constraint size ???
+public protocol SizeBasedConstraint: RectBasedConstraint {
+    func constrain(sourceSize: inout CGSize)
+}
+extension SizeBasedConstraint {
+    public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+        constrain(sourceSize: &sourceRect.size)
+    }
 }
 
 extension RectBasedConstraint {
-    func constrained(sourceRect: CGRect, by rect: CGRect) -> CGRect {
+    public func constrained(sourceRect: CGRect, by rect: CGRect) -> CGRect {
         var sourceRect = sourceRect
         constrain(sourceRect: &sourceRect, by: rect)
         return sourceRect
@@ -83,8 +214,103 @@ extension CGRect {
     var bottom: CGFloat { return maxY }
 }
 
-// TODO: Add center and other behaviors
+extension UIEdgeInsets {
+    var horizontal: CGFloat { return left + right }
+    var vertical: CGFloat { return top + bottom }
+
+    public struct Vertical {
+        var top: CGFloat
+        var bottom: CGFloat
+        var full: CGFloat { return top + bottom }
+
+        public init(top: CGFloat, bottom: CGFloat) {
+            self.top = top
+            self.bottom = bottom
+        }
+    }
+    public struct Horizontal {
+        var left: CGFloat
+        var right: CGFloat
+        var full: CGFloat { return left + right }
+
+        public init(left: CGFloat, right: CGFloat) {
+            self.left = left
+            self.right = right
+        }
+    }
+    public init(vertical: Vertical, horizontal: Horizontal) {
+        self.init(top: vertical.top, left: horizontal.left, bottom: vertical.bottom, right: horizontal.right)
+    }
+}
+
+extension CGRect {
+    func constrainedBy(rect: CGRect, use constraints: RectBasedConstraint...) -> CGRect {
+        return constraints.reduce(self) { $1.constrained(sourceRect: $0, by: rect) }
+    }
+}
+
+// TODO: Add center, baseline and other behaviors
+// TODO: Hide types that not used directly
 public struct LayoutAnchor {
+    public struct Center: RectBasedConstraint {
+        private let base: RectBasedConstraint
+        private init(base: RectBasedConstraint) { self.base = base }
+
+        public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+            base.constrain(sourceRect: &sourceRect, by: rect)
+        }
+
+        public static func align(by dependency: Align.Dependence) -> Center { return Center(base: dependency) }
+        public struct Align {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+                public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                    base.constrain(sourceRect: &sourceRect, by: rect)
+                }
+                public static var origin: Dependence { return Dependence(base: Origin()) }
+                public struct Origin: RectBasedConstraint {
+                    public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        sourceRect.origin.x = rect.midX
+                        sourceRect.origin.y = rect.midY
+                    }
+                }
+                public static var center: Dependence { return Dependence(base: Center()) }
+                public struct Center: RectBasedConstraint {
+                    private let alignment = Layout.Alignment(vertical: .center(), horizontal: .center())
+                    public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                        alignment.layout(rect: &sourceRect, in: rect)
+//                        sourceRect.origin.x = rect.midX - (sourceRect.)
+//                        sourceRect.origin.y = rect.midY
+                    }
+                }
+            }
+        }
+    }
+
+    public struct Size: RectBasedConstraint {
+        private let base: RectBasedConstraint
+        private init(base: RectBasedConstraint) { self.base = base }
+
+        public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+            base.constrain(sourceRect: &sourceRect, by: rect)
+        }
+
+        public static func height(_ multiplier: CGFloat = 1) -> Size { return Size(base: Height(multiplier: multiplier)) }
+        private struct Height: RectBasedConstraint {
+            let multiplier: CGFloat
+            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                sourceRect.size.height = rect.height.multiplied(by: multiplier)
+            }
+        }
+        public static func width(_ multiplier: CGFloat = 1) -> Size { return Size(base: Width(multiplier: multiplier)) }
+        private struct Width: RectBasedConstraint {
+            let multiplier: CGFloat
+            func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+                sourceRect.size.width = rect.width.multiplied(by: multiplier)
+            }
+        }
+    }
+
     public struct Bottom: RectBasedConstraint {
         private let base: RectBasedConstraint
         private init(base: RectBasedConstraint) { self.base = base }
@@ -117,9 +343,11 @@ public struct LayoutAnchor {
             }
         }
 
+        // TODO: May be need use Limit as returned type to have strong type.
+        // TODO: May be need rename to Crop.
         public static func limit(on dependency: Limit.Dependence) -> Bottom { return Bottom(base: dependency) }
         public struct Limit {
-            public struct Dependence: RectBasedConstraint {
+            public struct Dependence: RectBasedConstraint { // TODO: May be need implement inner/outer behaviors inside Limit space.
                 private let base: RectBasedConstraint
                 public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
                     base.constrain(sourceRect: &sourceRect, by: rect)
@@ -502,42 +730,7 @@ public struct LayoutAnchor {
     }
 }
 
-extension UIEdgeInsets {
-    var horizontal: CGFloat { return left + right }
-    var vertical: CGFloat { return top + bottom }
-
-    public struct Vertical {
-        var top: CGFloat
-        var bottom: CGFloat
-        var full: CGFloat { return top + bottom }
-
-        public init(top: CGFloat, bottom: CGFloat) {
-            self.top = top
-            self.bottom = bottom
-        }
-    }
-    public struct Horizontal {
-        var left: CGFloat
-        var right: CGFloat
-        var full: CGFloat { return left + right }
-
-        public init(left: CGFloat, right: CGFloat) {
-            self.left = left
-            self.right = right
-        }
-    }
-    public init(vertical: Vertical, horizontal: Horizontal) {
-        self.init(top: vertical.top, left: horizontal.left, bottom: vertical.bottom, right: horizontal.right)
-    }
-}
-
-extension CGRect {
-    func constrainedBy(rect: CGRect, use constraints: RectBasedConstraint...) -> CGRect {
-        return constraints.reduce(self) { $1.constrained(sourceRect: $0, by: rect) }
-    }
-}
-
-// TODO: Add type wrapper for layout parameter for representation as literal or calculation
+// TODO: Add type wrapper for layout parameter for representation as literal or calculation. Or move behavior (like as .scaled, .boxed) to `ValueType`
 public struct Layout: RectBasedLayout {
     private let alignment: Alignment
     private let filling: Filling
@@ -625,7 +818,8 @@ public struct Layout: RectBasedLayout {
             }
         }
     }
-    // TODO: Boxed behavior is misleading with edge insets values, but change size metric in fact
+    // TODO: Boxed behavior is misleading with edge insets values, because change size metric in fact
+    // TODO: Add ratio behavior
     public struct Filling: RectBasedLayout {
         private let vertical: Vertical
         private let horizontal: Horizontal
@@ -647,6 +841,12 @@ public struct Layout: RectBasedLayout {
                 return base.layout(rect: &rect, in: source)
             }
 
+//            public static var identity: Horizontal { return Horizontal(base: Identity()) }
+//            private struct Identity: RectBasedLayout {
+//                func layout(rect: inout CGRect, in source: CGRect) {}
+//            }
+
+            // TODO: May be rename to fixed ?
             public static func constantly(_ value: CGFloat) -> Horizontal { return Horizontal(base: Constantly(value: value)) }
             private struct Constantly: RectBasedLayout {
                 let value: CGFloat
@@ -677,6 +877,11 @@ public struct Layout: RectBasedLayout {
                 return base.layout(rect: &rect, in: source)
             }
 
+//            public static var identity: Vertical { return Vertical(base: Identity()) }
+//            private struct Identity: RectBasedLayout {
+//                func layout(rect: inout CGRect, in source: CGRect) {}
+//            }
+
             public static func constantly(_ value: CGFloat) -> Vertical { return Vertical(base: Constantly(value: value)) }
             private struct Constantly: RectBasedLayout {
                 let value: CGFloat
@@ -703,19 +908,28 @@ public struct Layout: RectBasedLayout {
     }
 }
 
-// TODO: Remove first second initializers
 public extension Layout {
     public init(vertical: (alignment: Alignment.Vertical, filling: Filling.Vertical), horizontal: (alignment: Alignment.Horizontal, filling: Filling.Horizontal)) {
         self.init(alignment: Alignment(vertical: vertical.alignment, horizontal: horizontal.alignment),
                   filling: Filling(vertical: vertical.filling, horizontal: horizontal.filling))
     }
-    public init(alignmentV: Alignment.Vertical, fillingV: Filling.Vertical, alignmentH: Alignment.Horizontal, fillingH: Filling.Horizontal) {
-        self.init(alignment: Alignment(vertical: alignmentV, horizontal: alignmentH),
-                  filling: Filling(vertical: fillingV, horizontal: fillingH))
-    }
     public init(x: Alignment.Horizontal, y: Alignment.Vertical, width: Filling.Horizontal, height: Filling.Vertical) {
         self.init(alignment: Alignment(vertical: y, horizontal: x),
                   filling: Filling(vertical: height, horizontal: width))
+    }
+}
+
+extension Layout.Alignment {
+    public func apply(with filling: Layout.Filling, for item: LayoutItem, use constraints: [ConstrainRect]) {
+        filling.apply(for: item, use: constraints)
+        apply(for: item, use: constraints)
+    }
+}
+
+extension Layout.Filling {
+    public func apply(with alignment: Layout.Alignment, for item: LayoutItem, use constraints: [ConstrainRect]) {
+        apply(for: item, use: constraints)
+        alignment.apply(for: item, use: constraints)
     }
 }
 
