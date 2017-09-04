@@ -510,7 +510,7 @@ extension Tests {
         XCTAssertTrue(resultRect3.minY == rect4.minY)
         XCTAssertTrue(resultRect3.height == max(0, rect3.maxY - rect4.minY))
         if isBottomRect3AboveTopRect4 {
-            XCTAssertTrue(resultRect3.maxY == rect3.minY)
+            XCTAssertTrue(resultRect3.maxY == rect4.minY)
         }
     }
 }

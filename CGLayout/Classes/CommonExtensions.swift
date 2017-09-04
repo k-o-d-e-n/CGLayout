@@ -20,8 +20,8 @@ extension UIEdgeInsets {
     var vertical: CGFloat { return top + bottom }
 
     public struct Vertical {
-        var top: CGFloat
-        var bottom: CGFloat
+        public var top: CGFloat
+        public var bottom: CGFloat
         var full: CGFloat { return top + bottom }
 
         public init(top: CGFloat, bottom: CGFloat) {
@@ -30,8 +30,8 @@ extension UIEdgeInsets {
         }
     }
     public struct Horizontal {
-        var left: CGFloat
-        var right: CGFloat
+        public var left: CGFloat
+        public var right: CGFloat
         var full: CGFloat { return left + right }
 
         public init(left: CGFloat, right: CGFloat) {
