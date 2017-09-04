@@ -26,12 +26,13 @@ class SecondViewController: UIViewController {
     let leftLimit = LayoutAnchor.Left.limit(on: .outer)
     let bottomLimit = LayoutAnchor.Bottom.limit(on: .outer)
     let topLimit = LayoutAnchor.Top.limit(on: .inner)
+    let bottomInnerAlign = LayoutAnchor.Bottom.align(by: .inner)
     let heightEqual = LayoutAnchor.Size.height()
     let widthEqual = LayoutAnchor.Size.width()
 
     let separatorSize = Layout.Filling(vertical: .scaled(1), horizontal: .constantly(1))
     let separator1Align = Layout.Alignment(vertical: .top(), horizontal: .right(25))
-    let separator2Align = Layout.Alignment(vertical: .top(), horizontal: .left(25))
+    let separator2Align = Layout.Alignment(vertical: .bottom(), horizontal: .left(25))
 
     lazy var layoutScheme: LayoutScheme = {
         return LayoutScheme(blocks: [
@@ -39,16 +40,16 @@ class SecondViewController: UIViewController {
             self.separator1View.layoutBlock(with: Layout(alignment: self.separator1Align, filling: self.separatorSize),
                                             constraints: [self.distanceLabel.constraintItem(for: [self.leftLimit, self.topLimit, self.heightEqual])]),
             self.separator2View.layoutBlock(with: Layout(alignment: self.separator2Align, filling: self.separatorSize),
-                                            constraints: [self.distanceLabel.constraintItem(for: [self.rightLimit, self.topLimit, self.heightEqual])]),
+                                            constraints: [self.distanceLabel.constraintItem(for: [self.heightEqual, self.rightLimit, self.bottomInnerAlign])]),
             self.weatherImageView.layoutBlock(with: Layout(x: .left(20), y: .top(), width: .constantly(30), height: .constantly(30)),
                                               constraints: [self.separator2View.constraintItem(for: [self.rightLimit, self.topLimit])]),
             self.weatherLabel.layoutBlock(with: Layout(x: .left(10), y: .top(), width: .scaled(1), height: .scaled(1)),
                                           constraints: [self.weatherImageView.constraintItem(for: [self.topLimit, self.rightLimit, self.heightEqual]),
-                                                        self.weatherLabel.adjustedConstraintItem(for: [self.widthEqual]) // TODO: adjust constraint has unexpected behavior
+                                                        self.weatherLabel.adjustConstraintItem(for: [self.widthEqual])
                                             /*StringLayoutConstraint(string: self.weatherLabel.text, attributes: [NSFontAttributeName: self.weatherLabel.font])*/]),
             self.rainLabel.layoutBlock(with: Layout(x: .right(20), y: .top(), width: .scaled(1), height: .constantly(30)),
-                                       constraints: [self.separator1View.constraintItem(for: [self.leftLimit, self.topLimit]),
-                                                     self.rainLabel.adjustedConstraintItem(for: [self.widthEqual])]),
+                                       constraints: [self.rainLabel.adjustConstraintItem(for: [self.widthEqual]),
+                                                     self.separator1View.constraintItem(for: [self.topLimit, LayoutAnchor.Left.align(by: .outer)])]),
             self.rainImageView.layoutBlock(with: Layout(x: .right(10), y: .top(), width: .constantly(30), height: .constantly(30)),
                                            constraints: [self.rainLabel.constraintItem(for: [self.leftLimit, self.topLimit])]),
             self.nameLabel.layoutBlock(with: Layout(x: .center(), y: .center(20), width: .scaled(1), height: .constantly(30))),
@@ -66,6 +67,7 @@ class SecondViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        // TODO: Add layout in background thread
 
         layoutScheme.layout()
     }

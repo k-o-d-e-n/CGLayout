@@ -9,8 +9,6 @@
 import UIKit
 import CGLayout
 
-// TODO: Add UIScrollView
-
 class ViewController: UIViewController {
     var subviews: [UIView] = []
     let pulledView: UIView = UIView()

@@ -412,12 +412,12 @@ extension Tests {
         let outer = LayoutAnchor.Left.pull(from: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
-        let isLeftRect1BeforeLeftRect2 = rect1.minX < rect2.minX
+        let isLeftRect1BeforeLeftRect2 = rect1.left < rect2.left
 
         let inner = LayoutAnchor.Left.pull(from: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
-        let isRightRect3BeforeLeftRect4 = rect3.maxX < rect4.minX
+        let isRightRect3BeforeLeftRect4 = rect3.right < rect4.left
 
         var resultRect1 = rect1
         var resultRect3 = rect3
@@ -431,7 +431,7 @@ extension Tests {
         XCTAssertTrue(resultRect3.minX == rect4.minX)
         XCTAssertTrue(resultRect3.width == max(0, rect3.maxX - rect4.minX))
         if isRightRect3BeforeLeftRect4 {
-            XCTAssertTrue(resultRect3.maxX == rect3.minX)
+            XCTAssertTrue(resultRect3.right == rect4.left)
         }
     }
 
