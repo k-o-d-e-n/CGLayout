@@ -216,7 +216,8 @@ extension AdjustableLayoutItem {
 
 /// Provides rect for constrain source space. Used for related constraints.
 public protocol ConstraintItemProtocol: RectBasedConstraint {
-    var layoutItem: AnyObject? { get } // TODO: Bad decision
+    /// `LayoutItem` object associated with this constraint
+    var layoutItem: AnyObject? { get } // TODO: Bad decision, replace
     /// Return rectangle for constrain source rect
     ///
     /// - Parameter currentSpace: Source rect in current state
@@ -266,8 +267,11 @@ extension AdjustConstraintItem: ConstraintItemProtocol {
 
 // MARK: LayoutBlock
 
+/// Defines frame of layout block, and child blocks
 public protocol LayoutSnapshotProtocol {
+    /// Frame of layout block represented as snapshot
     var snapshotFrame: CGRect { get }
+    /// Snapshots of child layout blocks
     var childSnapshots: [LayoutSnapshotProtocol] { get }
 }
 extension LayoutSnapshotProtocol {
@@ -280,6 +284,7 @@ extension CGRect: LayoutSnapshotProtocol {
     public var childSnapshots: [LayoutSnapshotProtocol] { return [] }
 }
 
+/// Represents frame of block where was received. Contains snapshots for child blocks.
 public struct LayoutSnapshot: LayoutSnapshotProtocol {
     public var childSnapshots: [LayoutSnapshotProtocol]
 
@@ -288,11 +293,13 @@ public struct LayoutSnapshot: LayoutSnapshotProtocol {
     }
 }
 
+/// Defines general methods for any layout block
 public protocol LayoutBlockProtocol {
-    /// Calculate and apply frames layout items
+    /// Calculate and apply frames layout items.
+    /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout()
 
-    /// Returns snapshot (aka [CGRect]) for all `LayoutItem` items in block
+    /// Returns snapshot for all `LayoutItem` items in block
     ///
     /// - Parameter sourceRect: Source space for layout
     /// - Returns: Snapshot contained frames layout items
@@ -305,21 +312,8 @@ public protocol LayoutBlockProtocol {
     /// - Parameter snapshot: Snapshot represented as array of frames.
     func apply(snapshot: LayoutSnapshotProtocol)
 }
-extension LayoutBlockProtocol {
-    /// Calculating frame of block
-    ///
-    /// - Parameter sourceRect: Source space for calculating
-    /// - Returns: Calculated frame
-    func calculate(in sourceRect: CGRect) -> CGRect {
-        return snapshot(for: sourceRect).snapshotFrame
-    }
-}
-
-// TODO: ! May be create protocol for any layout blocks with single method `func layout()`
-// TODO: !! `func layout()` should be call when `superItem` has corrected bounds. Else result unexpected. Because need create method `calculate` for calculate size of block (sizeThatFits!).
 
 /// Makes full layout for `LayoutItem` entity. Contains main layout, related anchor constrains and item for layout.
-/// Has single method for performing layout.
 public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol where Item.SuperLayoutItem: LayoutItem {
     let itemLayout: RectBasedLayout
     let constraints: [ConstraintItemProtocol]
@@ -369,11 +363,6 @@ public struct LayoutScheme: LayoutBlockProtocol {
     public func layout() {
         blocks.forEach { $0.layout() }
     }
-
-//    public func calculate(in sourceRect: CGRect) -> CGRect {
-////        var completedFrames: [(LayoutItem, CGRect)] = []
-//        return blocks.reduce(.zero) { $0.union($1.calculate(in: sourceRect)) }
-//    }
 
     public func apply(snapshot: LayoutSnapshotProtocol) {
         for (i, child) in snapshot.childSnapshots.enumerated() {

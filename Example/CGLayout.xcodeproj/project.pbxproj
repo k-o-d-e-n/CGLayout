@@ -14,6 +14,7 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		A4579C351F59E86800893AB2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
+		A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		AA207DB93A95FD0B83A04761 /* Pods_CGLayout_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AF282E152D179C9353E356 /* Pods_CGLayout_Tests.framework */; };
 		B647708983ED594F2B47B59F /* Pods_CGLayout_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8DB75E422B488E64064C358 /* Pods_CGLayout_Example.framework */; };
 /* End PBXBuildFile section */
@@ -385,6 +386,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

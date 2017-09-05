@@ -9,7 +9,7 @@
 import UIKit
 import CGLayout
 
-class SecondViewController: UIViewController {
+public class SecondViewController: UIViewController {
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
@@ -64,7 +64,7 @@ class SecondViewController: UIViewController {
     var portraitSnapshot: LayoutSnapshotProtocol!
     var landscapeSnapshot: LayoutSnapshotProtocol!
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         let bounds = view.bounds
         DispatchQueue.global(qos: .background).async {
@@ -78,7 +78,7 @@ class SecondViewController: UIViewController {
         }
     }
 
-    override func viewDidLayoutSubviews() {
+    override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         // layout directly

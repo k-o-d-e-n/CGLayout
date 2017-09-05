@@ -25,8 +25,16 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem {
     }
 }
 public extension LayoutGuide where Super: UIView {
-    @discardableResult
+    /// Fabric method for generation view with any type
+    ///
+    /// - Parameter type: Type of view
+    /// - Returns: Generated view
     func build<V: UIView>(_ type: V.Type) -> V { return V(frame: frame) }
+    /// Generates view and adds to `superItem` hierarchy
+    ///
+    /// - Parameter type: Type of view
+    /// - Returns: Added view
+    @discardableResult
     func add<V: UIView>(_ type: V.Type) -> V? {
         guard let superItem = superItem else { return nil }
 
@@ -36,12 +44,20 @@ public extension LayoutGuide where Super: UIView {
     }
 }
 public extension LayoutGuide where Super: CALayer {
-    @discardableResult
+    /// Fabric method for generation layer with any type
+    ///
+    /// - Parameter type: Type of layer
+    /// - Returns: Generated layer
     func build<L: CALayer>(_ type: L.Type) -> L {
         let layer = L()
         layer.frame = frame
         return layer
     }
+    /// Generates layer and adds to `superItem` hierarchy
+    ///
+    /// - Parameter type: Type of layer
+    /// - Returns: Added layer
+    @discardableResult
     func add<L: CALayer>(_ type: L.Type) -> L? {
         guard let superItem = superItem else { return nil }
 
@@ -50,12 +66,17 @@ public extension LayoutGuide where Super: CALayer {
         return layer
     }
 }
-public extension UIView {
-    func add(layoutGuide: LayoutGuide<UIView>) {
+public extension LayoutItem {
+    /// Bind layout item to layout guide. Should call if layout guide will be applied RectBasedLayout.apply(for item:, use constraints:) method.
+    ///
+    /// - Parameter layoutGuide: Layout guide for binding
+    func add(layoutGuide: LayoutGuide<Self>) {
         layoutGuide.superItem = self
     }
 }
 
+/// Base class for any view placeholder that need dynamic position and/or size.
+/// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class ViewPlaceholder<View: UIView>: LayoutGuide<UIView> {
     private weak var _view: View?
     open weak var view: View! {
@@ -81,7 +102,9 @@ open class ViewPlaceholder<View: UIView>: LayoutGuide<UIView> {
     }
 }
 
-// TODO: Create constraint for attributed string
+// MARK: Additional constraints
+
+// TODO: Create constraint for attributed string and other data oriented constraints
 
 /// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
 public struct StringLayoutConstraint: ConstraintItemProtocol {
@@ -108,7 +131,17 @@ public struct StringLayoutConstraint: ConstraintItemProtocol {
     }
 }
 extension String {
+    /// Convenience getter for string layout constraint.
+    ///
+    /// - Parameters:
+    ///   - attributes: String attributes
+    ///   - context: Drawing context
+    /// - Returns: String-based constraint
     func layoutConstraint(with attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutConstraint {
         return StringLayoutConstraint(string: self, attributes: attributes, context: context)
     }
 }
+
+// MARK: Additional layout scheme
+
+// TODO: Implement stack layout scheme and others

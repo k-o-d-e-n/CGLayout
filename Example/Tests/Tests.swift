@@ -515,6 +515,8 @@ extension Tests {
     }
 }
 
+// MARK: Measures
+
 extension Tests {
     func testPerformanceLayoutSecondViewController() {
         let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewController")
@@ -526,12 +528,21 @@ extension Tests {
         }
     }
     func testPerformanceAutoLayoutSecondViewController() {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewControllerAutoLayout")
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewControllerAutoLayout") 
         controller.loadViewIfNeeded()
 
         self.measure {
             controller.view.setNeedsLayout()
             controller.view.layoutIfNeeded()
+        }
+    }
+    func testPerformanceDropFirst() {
+        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewController") as! SecondViewController
+        controller.loadViewIfNeeded()
+        let snapshot = controller.layoutScheme.snapshot(for: UIScreen.main.bounds)
+
+        self.measure {
+            _ = snapshot.childSnapshots.dropFirst().reduce(snapshot.childSnapshots.first!.snapshotFrame) { $0.union($1.snapshotFrame) }
         }
     }
 }
