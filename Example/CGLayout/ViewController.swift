@@ -9,6 +9,30 @@
 import UIKit
 import CGLayout
 
+class LabelPlaceholder: ViewPlaceholder<UILabel> {
+    var font: UIFont?
+    var textColor: UIColor?
+    override var frame: CGRect {
+        didSet { viewIfLoaded?.frame = frame }
+    }
+
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+
+        view.font = font
+        view.textColor = textColor
+    }
+
+    convenience init() {
+        self.init(frame: .zero)
+    }
+    convenience init(font: UIFont, textColor: UIColor) {
+        self.init()
+        self.font = font
+        self.textColor = textColor
+    }
+}
+
 class ViewController: UIViewController {
     var subviews: [UIView] = []
     let pulledView: UIView = UIView()
@@ -20,6 +44,8 @@ class ViewController: UIViewController {
                                    width: .boxed(.init(left: 15, right: 10)), height: .boxed(UIEdgeInsets.Vertical(top: 10, bottom: 10)))
     lazy var bottomConstraint = LayoutAnchor.Bottom.limit(on: .inner)
     lazy var rightConstraint = LayoutAnchor.Right.limit(on: .outer)
+
+    lazy var labelPlaceholder: LabelPlaceholder = LabelPlaceholder(font: .systemFont(ofSize: 24), textColor: .red)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +60,8 @@ class ViewController: UIViewController {
         pulledView.backgroundColor = .red
         view.addSubview(centeredView)
         centeredView.backgroundColor = .yellow
+
+        view.add(layoutGuide: labelPlaceholder)
     }
 
     override func viewDidLayoutSubviews() {
@@ -55,13 +83,18 @@ class ViewController: UIViewController {
         }
 
         let topConstraint: LayoutAnchor.Top = traitCollection.verticalSizeClass == .compact ? .pull(from: .outer) : .limit(on: .outer)
-        let topRect = CGRect(x: 0, y: 0, width: 0, height: 300)
-        let rightRect = CGRect(x: self.view.bounds.width - 300, y: 0, width: 300, height: 0)
 
-        pulledLayout.apply(for: pulledView, use: [(topRect, LayoutAnchor.Bottom.limit(on: .outer)), (rightRect, LayoutAnchor.Left.limit(on: .outer)),
+        labelPlaceholder.layoutBlock(with: Layout(x: .right(), y: .top(), width: .scaled(0.6), height: .constantly(100)), constraints: [(topLayoutGuide as! UIView).constraintItem(for: [LayoutAnchor.Bottom.align(by: .outer)])]).layout()
+
+        pulledLayout.apply(for: pulledView, use: [((topLayoutGuide as! UIView).frame, LayoutAnchor.Bottom.limit(on: .outer)), (labelPlaceholder.frame, LayoutAnchor.Left.limit(on: .outer)),
                                                   (subviews[1].frame, LayoutAnchor.Left.limit(on: .outer)), (subviews.first!.frame, topConstraint)])
 
         centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .constantly(20), height: .constantly(30)),
                                  constraints: [subviews[7].constraintItem(for: [LayoutAnchor.Center.align(by: .center)])]).layout()
+    }
+
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        labelPlaceholder.view.text = "Placeholder label"
     }
 }

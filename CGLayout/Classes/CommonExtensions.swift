@@ -43,3 +43,11 @@ extension UIEdgeInsets {
         self.init(top: vertical.top, left: horizontal.left, bottom: vertical.bottom, right: horizontal.right)
     }
 }
+
+@available(iOS 9.0, *)
+extension UILayoutGuide: LayoutItem {
+    public typealias SuperLayoutItem = UIView
+    public var frame: CGRect { get { return layoutFrame} set {} }
+    public var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }
+    public var superItem: UIView? { return owningView }
+}

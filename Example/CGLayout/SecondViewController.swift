@@ -61,14 +61,43 @@ class SecondViewController: UIViewController {
         ])
     }()
 
+    var portraitSnapshot: LayoutSnapshotProtocol!
+    var landscapeSnapshot: LayoutSnapshotProtocol!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        let bounds = view.bounds
+        DispatchQueue.global(qos: .background).async {
+            let portraitSnapshot = self.layoutScheme.snapshot(for: bounds)
+            let landscapeSnapshot = self.layoutScheme.snapshot(for: CGRect(x: 0, y: 0, width: bounds.height, height: bounds.width))
+            DispatchQueue.main.sync {
+                self.portraitSnapshot = portraitSnapshot
+                self.landscapeSnapshot = landscapeSnapshot
+                self.layoutScheme.apply(snapshot: UIDevice.current.orientation.isPortrait ? portraitSnapshot : landscapeSnapshot)
+            }
+        }
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        // TODO: Add layout in background thread
 
-        layoutScheme.layout()
+        // layout directly
+//        layoutScheme.layout()
+
+        // layout in background
+//        let bounds = view.bounds
+//        DispatchQueue.global(qos: .background).async {
+//            let snapshot = self.layoutScheme.snapshot(for: bounds)
+//            DispatchQueue.main.sync {
+//                self.layoutScheme.apply(snapshot: snapshot)
+//            }
+//        }
+
+        // cached layout
+        if UIDevice.current.orientation.isPortrait, let snapshot = portraitSnapshot {
+            layoutScheme.apply(snapshot: snapshot)
+        } else if UIDevice.current.orientation.isLandscape, let snapshot = landscapeSnapshot {
+            layoutScheme.apply(snapshot: snapshot)
+        }
     }
 }
