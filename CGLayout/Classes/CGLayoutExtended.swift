@@ -153,7 +153,7 @@ public struct StringLayoutConstraint: ConstraintItemProtocol {
         sourceRect.size = string?.boundingRect(with: rect.size, options: options, attributes: attributes, context: context).size ?? .zero
     }
 
-    public func constrainRect(for currentSpace: CGRect) -> CGRect {
+    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: CoordinateConvertable & AnyObject) -> CGRect {
         return currentSpace
     }
 }

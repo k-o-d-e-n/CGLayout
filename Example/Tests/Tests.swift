@@ -670,17 +670,17 @@ extension Tests {
 
         XCTAssertTrue(rect2.left == rect1.right)
     }
-    func testNewAnchors2() {
-        let leftAnchor = LeftAnchor.alignOuter
-        let rightAnchor = RightAnchor()
-
-        let rect1 = CGRect.random(in: bounds)
-        var rect2 = CGRect.random(in: bounds)
-
-        leftAnchor.set(anchor: rightAnchor, of: rect1, to: &rect2)
-
-        XCTAssertTrue(rect2.left == rect1.right)
-    }
+//    func testNewAnchors2() {
+//        let leftAnchor = LeftAnchor.alignOuter
+//        let rightAnchor = RightAnchor()
+//
+//        let rect1 = CGRect.random(in: bounds)
+//        var rect2 = CGRect.random(in: bounds)
+//
+//        leftAnchor.set(anchor: rightAnchor, of: rect1, to: &rect2)
+//
+//        XCTAssertTrue(rect2.left == rect1.right)
+//    }
 }
 
 extension CGRect {
