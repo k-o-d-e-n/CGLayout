@@ -30,33 +30,33 @@ public class SecondViewController: UIViewController {
     let heightEqual = LayoutAnchor.Size.height()
     let widthEqual = LayoutAnchor.Size.width()
 
-    let separatorSize = Layout.Filling(vertical: .scaled(1), horizontal: .constantly(1))
+    let separatorSize = Layout.Filling(vertical: .scaled(1), horizontal: .fixed(1))
     let separator1Align = Layout.Alignment(vertical: .top(), horizontal: .right(25))
     let separator2Align = Layout.Alignment(vertical: .bottom(), horizontal: .left(25))
 
     lazy var layoutScheme: LayoutScheme = {
         return LayoutScheme(blocks: [
-            self.distanceLabel.layoutBlock(with: Layout(x: .center(), y: .bottom(50), width: .constantly(70), height: .constantly(30))),
+            self.distanceLabel.layoutBlock(with: Layout(x: .center(), y: .bottom(50), width: .fixed(70), height: .fixed(30))),
             self.separator1View.layoutBlock(with: Layout(alignment: self.separator1Align, filling: self.separatorSize),
                                             constraints: [self.distanceLabel.constraintItem(for: [self.leftLimit, self.topLimit, self.heightEqual])]),
             self.separator2View.layoutBlock(with: Layout(alignment: self.separator2Align, filling: self.separatorSize),
                                             constraints: [self.distanceLabel.constraintItem(for: [self.heightEqual, self.rightLimit, self.bottomInnerAlign])]),
-            self.weatherImageView.layoutBlock(with: Layout(x: .left(20), y: .top(), width: .constantly(30), height: .constantly(30)),
+            self.weatherImageView.layoutBlock(with: Layout(x: .left(20), y: .top(), width: .fixed(30), height: .fixed(30)),
                                               constraints: [self.separator2View.constraintItem(for: [self.rightLimit, self.topLimit])]),
             self.weatherLabel.layoutBlock(with: Layout(x: .left(10), y: .top(), width: .scaled(1), height: .scaled(1)),
                                           constraints: [self.weatherImageView.constraintItem(for: [self.topLimit, self.rightLimit, self.heightEqual]),
                                                         self.weatherLabel.adjustConstraintItem(for: [self.widthEqual])
                                             /*StringLayoutConstraint(string: self.weatherLabel.text, attributes: [NSFontAttributeName: self.weatherLabel.font])*/]),
-            self.rainLabel.layoutBlock(with: Layout(x: .right(20), y: .top(), width: .scaled(1), height: .constantly(30)),
+            self.rainLabel.layoutBlock(with: Layout(x: .right(20), y: .top(), width: .scaled(1), height: .fixed(30)),
                                        constraints: [self.rainLabel.adjustConstraintItem(for: [self.widthEqual]),
                                                      self.separator1View.constraintItem(for: [self.topLimit, LayoutAnchor.Left.align(by: .outer)])]),
-            self.rainImageView.layoutBlock(with: Layout(x: .right(10), y: .top(), width: .constantly(30), height: .constantly(30)),
+            self.rainImageView.layoutBlock(with: Layout(x: .right(10), y: .top(), width: .fixed(30), height: .fixed(30)),
                                            constraints: [self.rainLabel.constraintItem(for: [self.leftLimit, self.topLimit])]),
-            self.nameLabel.layoutBlock(with: Layout(x: .center(), y: .center(20), width: .scaled(1), height: .constantly(30))),
-            self.presentationLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .constantly(50)),
+            self.nameLabel.layoutBlock(with: Layout(x: .center(), y: .center(20), width: .scaled(1), height: .fixed(30))),
+            self.presentationLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(50)),
                                                constraints: [self.nameLabel.constraintItem(for: [self.bottomLimit])]),
-            self.logoImageView.layoutBlock(with: Layout(x: .center(), y: .top(80), width: .constantly(70), height: .constantly(70))),
-            self.titleLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .constantly(120)),
+            self.logoImageView.layoutBlock(with: Layout(x: .center(), y: .top(80), width: .fixed(70), height: .fixed(70))),
+            self.titleLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(120)),
                                         constraints: [self.logoImageView.constraintItem(for: [self.bottomLimit])])
         ])
     }()

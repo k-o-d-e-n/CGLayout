@@ -20,19 +20,19 @@ class Tests: XCTestCase {
         let leftOffset: CGFloat = 15
         let centerOffset: CGFloat = 10
         let horizontalScale: CGFloat = 1.5
-        let verticalEdges = UIEdgeInsets.Vertical(top: 20, bottom: 100)
+        let edges = UIEdgeInsets(top: 20, left: 0, bottom: 100, right: 0)
 
         let itemRect = CGRect(x: 400, y: 300, width: 200, height: 100)
         let sourceRect = CGRect(x: 0, y: 0, width: 1000, height: 500)
 
         let layout = Layout(alignment: .init(vertical: .center(centerOffset), horizontal: .left(leftOffset)),
-                            filling: .init(vertical: .boxed(verticalEdges), horizontal: .scaled(horizontalScale)))
+                            filling: .init(vertical: .boxed(edges.vertical), horizontal: .scaled(horizontalScale)))
 
         let resultRect = layout.layout(rect: itemRect, in: sourceRect)
         XCTAssertTrue(resultRect.origin.x == leftOffset)
         XCTAssertTrue(resultRect.origin.y == ((sourceRect.height - resultRect.height) / 2) + centerOffset)
         XCTAssertTrue(resultRect.width == sourceRect.width * horizontalScale)
-        XCTAssertTrue(resultRect.height == sourceRect.height - verticalEdges.full)
+        XCTAssertTrue(resultRect.height == sourceRect.height - edges.vertical)
         print(resultRect)
     }
 
@@ -40,12 +40,12 @@ class Tests: XCTestCase {
         let leftOffset: CGFloat = 15
         let centerOffset: CGFloat = 10
         let horizontalScale: CGFloat = 1.5
-        let verticalEdges = UIEdgeInsets.Vertical(top: 20, bottom: 100)
+        let edges = UIEdgeInsets(top: 20, left: 0, bottom: 100, right: 0)
 
         let sourceRect = CGRect(x: 0, y: 0, width: 1000, height: 500)
 
         let layout = Layout(alignment: .init(vertical: .center(centerOffset), horizontal: .left(leftOffset)),
-                            filling: .init(vertical: .boxed(verticalEdges), horizontal: .scaled(horizontalScale)))
+                            filling: .init(vertical: .boxed(edges.vertical), horizontal: .scaled(horizontalScale)))
 
         let frames = (0..<1000).map { _ in CGRect.random(in: sourceRect) }
 
@@ -144,13 +144,13 @@ extension Tests {
 // MARK: Filling
 
 extension Tests {
-    func testFillingConstantly() {
+    func testFillingFixed() {
         let widthConstant: CGFloat = 45.7
         let heightConstant: CGFloat = 99.0
         var rect1 = CGRect.random(in: bounds)
         var rect2 = CGRect.random(in: bounds)
-        let vertical = Layout.Filling.Vertical.constantly(heightConstant)
-        let horizontal = Layout.Filling.Horizontal.constantly(widthConstant)
+        let vertical = Layout.Filling.Vertical.fixed(heightConstant)
+        let horizontal = Layout.Filling.Horizontal.fixed(widthConstant)
 
         vertical.layout(rect: &rect1, in: bounds) // second parameter has no effect in this case
         horizontal.layout(rect: &rect2, in: bounds) // second parameter has no effect in this case
@@ -177,20 +177,19 @@ extension Tests {
     }
 
     func testFillingBoxed() {
-        let widthBox = UIEdgeInsets.Horizontal(left: 20, right: -15)
-        let heightBox = UIEdgeInsets.Vertical(top: 20, bottom: -30)
+        let box = UIEdgeInsets(top: 20, left: 20, bottom: -30, right: -15)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
-        let vertical = Layout.Filling.Vertical.boxed(heightBox)
-        let horizontal = Layout.Filling.Horizontal.boxed(widthBox)
+        let vertical = Layout.Filling.Vertical.boxed(box.vertical)
+        let horizontal = Layout.Filling.Horizontal.boxed(box.horizontal)
 
         var resultRect1 = rect1
         var resultRect2 = rect2
         vertical.layout(rect: &resultRect1, in: rect2)
         horizontal.layout(rect: &resultRect2, in: rect1)
 
-        XCTAssertTrue(resultRect1.height == max(0, rect2.height - heightBox.full))
-        XCTAssertTrue(resultRect2.width == max(0, rect1.width - widthBox.full))
+        XCTAssertTrue(resultRect1.height == max(0, rect2.height - box.vertical))
+        XCTAssertTrue(resultRect2.width == max(0, rect1.width - box.horizontal))
     }
 }
 
@@ -513,6 +512,116 @@ extension Tests {
             XCTAssertTrue(resultRect3.maxY == rect4.minY)
         }
     }
+
+    func testCenterToCenterAnchor() {
+        let centerAnchor = LayoutAnchor.Center.align(by: .center)
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+
+        let resultRect1 = centerAnchor.constrained(sourceRect: rect1, by: rect2)
+
+        XCTAssertTrue(resultRect1.midX == rect2.midX)
+        XCTAssertTrue(resultRect1.midY == rect2.midY)
+    }
+
+    func testCenterToOriginAnchor() {
+        let centerAnchor = LayoutAnchor.Center.align(by: .origin)
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+
+        let resultRect1 = centerAnchor.constrained(sourceRect: rect1, by: rect2)
+
+        XCTAssertTrue(resultRect1.minX == rect2.midX)
+        XCTAssertTrue(resultRect1.minY == rect2.midY)
+    }
+
+    func testHeightAnchor() {
+        let heightAnchor = LayoutAnchor.Size.height()
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+
+        XCTAssertFalse(rect1.height == rect2.height)
+
+        let resultRect1 = heightAnchor.constrained(sourceRect: rect1, by: rect2)
+
+        XCTAssertTrue(resultRect1.height == rect2.height)
+    }
+
+    func testWidthAnchor() {
+        let widthAnchor = LayoutAnchor.Size.width(2)
+        let rect1 = CGRect.random(in: bounds)
+        let rect2 = CGRect.random(in: bounds)
+
+        XCTAssertFalse(rect1.width == rect2.width)
+
+        let resultRect1 = widthAnchor.constrained(sourceRect: rect1, by: rect2)
+
+        XCTAssertTrue(resultRect1.width == rect2.width * 2)
+    }
+
+    func testInsetAnchor() {
+        let insets = UIEdgeInsets(top: -20, left: 0, bottom: 10, right: 5)
+        let insetAnchor = LayoutAnchor.insets(insets)
+        let rect1 = CGRect.random(in: bounds)
+
+        let resultRect1 = insetAnchor.constrained(sourceRect: rect1, by: .zero) // second rect has no effect
+
+        XCTAssertTrue(UIEdgeInsetsInsetRect(rect1, insets) == resultRect1)
+    }
+}
+
+// MARK: Snapshot
+
+extension Tests {
+    func testSnapshotEqualLayoutDirectly() {
+        let superview = UIView(frame: bounds)
+        let initialFrames = (0..<5).map { _ in CGRect.random(in: bounds) }
+        let subviews = initialFrames.map(UIView.init)
+        subviews.forEach(UIView.addSubview(superview))
+        let blocks = (0..<5).map { i in
+            subviews[i].layoutBlock(with: Layout(x: .center(), y: .top(2), width: .scaled(0.9), height: .fixed(20)),
+                                    constraints: i == 0 ? [] : [subviews[i - 1].constraintItem(for: [LayoutAnchor.Bottom.align(by: .outer)])])
+        }
+        let scheme = LayoutScheme(blocks: blocks)
+
+        let snapshot = scheme.snapshot(for: bounds)
+
+        XCTAssertFalse(snapshot.childSnapshots.map { $0.snapshotFrame } == subviews.map { $0.frame })
+
+        scheme.layout()
+
+        XCTAssertTrue(snapshot.childSnapshots.map { $0.snapshotFrame } == subviews.map { $0.frame })
+    }
+
+    func testApplyingSnapshotEqualLayoutDirectly() {
+        var framesAfterLayoutDirectly: [CGRect]!
+        var framesAfterApplyingSnapshot: [CGRect]!
+        let initialFrames = (0..<5).map { _ in CGRect.random(in: bounds) }
+
+        for i in 0..<2 {
+            let superview = UIView(frame: bounds)
+            let subviews = initialFrames.map(UIView.init)
+            subviews.forEach(UIView.addSubview(superview))
+
+            let blocks = (0..<5).map { i in
+                subviews[i].layoutBlock(with: Layout(x: .center(), y: .top(2), width: .scaled(0.9), height: .fixed(20)),
+                                        constraints: i == 0 ? [] : [subviews[i - 1].constraintItem(for: [LayoutAnchor.Bottom.align(by: .outer)])])
+            }
+
+            let scheme = LayoutScheme(blocks: blocks)
+
+            if i == 0 {
+                scheme.layout()
+                framesAfterLayoutDirectly = subviews.map { $0.frame }
+            } else {
+                let snapshot = scheme.snapshot(for: bounds)
+                scheme.apply(snapshot: snapshot)
+                framesAfterApplyingSnapshot = subviews.map { $0.frame }
+            }
+        }
+
+        XCTAssertTrue(framesAfterLayoutDirectly == framesAfterApplyingSnapshot)
+    }
 }
 
 // MARK: Measures
@@ -536,14 +645,41 @@ extension Tests {
             controller.view.layoutIfNeeded()
         }
     }
-    func testPerformanceDropFirst() {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewController") as! SecondViewController
-        controller.loadViewIfNeeded()
-        let snapshot = controller.layoutScheme.snapshot(for: UIScreen.main.bounds)
+//    func testPerformanceDropFirst() {
+//        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewController") as! SecondViewController
+//        controller.loadViewIfNeeded()
+//        let snapshot = controller.layoutScheme.snapshot(for: UIScreen.main.bounds)
+//
+//        self.measure {
+//            _ = snapshot.childSnapshots.dropFirst().reduce(snapshot.childSnapshots.first!.snapshotFrame) { $0.union($1.snapshotFrame) }
+//        }
+//    }
+}
 
-        self.measure {
-            _ = snapshot.childSnapshots.dropFirst().reduce(snapshot.childSnapshots.first!.snapshotFrame) { $0.union($1.snapshotFrame) }
-        }
+// MARK: Beta improvements
+
+extension Tests {
+    func testNewAnchors() {
+        let leftAnchor = LeftAnchor.align
+        let rightAnchor = RightAnchor()
+
+        let rect1 = CGRect.random(in: bounds)
+        var rect2 = CGRect.random(in: bounds)
+
+        leftAnchor.set(anchor: rightAnchor, of: rect1, to: &rect2)
+
+        XCTAssertTrue(rect2.left == rect1.right)
+    }
+    func testNewAnchors2() {
+        let leftAnchor = LeftAnchor.alignOuter
+        let rightAnchor = RightAnchor()
+
+        let rect1 = CGRect.random(in: bounds)
+        var rect2 = CGRect.random(in: bounds)
+
+        leftAnchor.set(anchor: rightAnchor, of: rect1, to: &rect2)
+
+        XCTAssertTrue(rect2.left == rect1.right)
     }
 }
 

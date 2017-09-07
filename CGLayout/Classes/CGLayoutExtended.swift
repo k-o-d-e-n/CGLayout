@@ -24,6 +24,33 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem {
         self.bounds = CGRect(origin: .zero, size: frame.size)
     }
 }
+// TODO: Test it
+extension LayoutGuide where Super: UICoordinateSpace {
+    @available(iOS 8.0, *)
+    public func convert(_ point: CGPoint, to coordinateSpace: UICoordinateSpace) -> CGPoint {
+        let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
+        return superItem!.convert(pointInSuper, to: coordinateSpace)
+    }
+
+    @available(iOS 8.0, *)
+    public func convert(_ point: CGPoint, from coordinateSpace: UICoordinateSpace) -> CGPoint {
+        let pointInSuper = superItem!.convert(point, from: coordinateSpace)
+        return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
+    }
+
+    @available(iOS 8.0, *)
+    public func convert(_ rect: CGRect, to coordinateSpace: UICoordinateSpace) -> CGRect {
+        let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
+        return superItem!.convert(rectInSuper, to: coordinateSpace)
+    }
+
+    @available(iOS 8.0, *)
+    public func convert(_ rect: CGRect, from coordinateSpace: UICoordinateSpace) -> CGRect {
+        let rectInSuper = superItem!.convert(rect, from: coordinateSpace)
+        return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
+    }
+}
+
 public extension LayoutGuide where Super: UIView {
     /// Fabric method for generation view with any type
     ///

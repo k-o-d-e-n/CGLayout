@@ -9,15 +9,24 @@
 import UIKit
 
 // TODO: !! Comment all code
-// TODO: !! Create interface for calculate layout without set result to LayoutItem, which will be return rect (size) of full scheme. Useful for dynamic UITableViewCell.
 // TODO: ! Add RTL (right to left language)
 // TODO: !! Implement behavior on remove view from hierarchy (Unwrapped LayoutItem, break result in ConstraintsItem). Probably need add `isActive` property.
-// TODO: !! Check performance in layout benchmarks
 // TODO: ! Add support UITraitCollection
-// TODO: ! Add common interface for extensible behaviors
+// TODO: ! Add parameters to ConstraintItem for layout item subview/superview relationships (for use converting rects to source coordinate space)
 
 // TODO: !!! Tests for new code
 // TODO: Think how can be use OptionSet type.
+
+
+/// Defines method for wrapping entity with base behavior to this type.
+public protocol Extended {
+    associatedtype Conformed
+    /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: Conformed) -> Self
+}
 
 // MARK: RectBasedLayout
 
@@ -238,7 +247,7 @@ public struct ConstraintItem<Item: LayoutItem> {
 extension ConstraintItem: ConstraintItemProtocol {
     public var layoutItem: AnyObject? { return item }
     public func constrainRect(for currentSpace: CGRect) -> CGRect {
-        return item.frame
+        return item.frame // TODO: ! For parent layout item need use bounds
     }
     public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect = sourceRect.constrainedBy(rect: rect, use: constraints)
@@ -394,13 +403,12 @@ public struct LayoutScheme: LayoutBlockProtocol {
 /// Provides set of anchor constraints
 public struct LayoutAnchor {
     /// Set of constraints related to center of restrictive rect
-    public struct Center: RectBasedConstraint {
+    public struct Center: RectBasedConstraint, Extended {
+        public typealias Conformed = RectBasedConstraint
         private let base: RectBasedConstraint
         private init(base: RectBasedConstraint) { self.base = base }
-
-        public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-            base.constrain(sourceRect: &sourceRect, by: rect)
-        }
+        public func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+        public static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Center { return .init(base: base) }
 
         public static func align(by dependency: Align.Dependence) -> Center { return Center(base: dependency) }
         public struct Align {
@@ -427,16 +435,30 @@ public struct LayoutAnchor {
         }
     }
 
+    public static func insets(_ value: UIEdgeInsets) -> RectBasedConstraint { return Inset(insets: value) }
+    private struct Inset: RectBasedConstraint {
+        let insets: UIEdgeInsets
+        func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+            sourceRect.apply(edgeInsets: insets)
+        }
+    }
+
+    public static var equal: RectBasedConstraint { return Equal() }
+    private struct Equal: RectBasedConstraint {
+        func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+            sourceRect = rect
+        }
+    }
+
     // TODO: !!! adjust constraint has unexpected behavior with align is right or with Layout.Filling different from .scaled(1) or .boxed(0) (alignment is left, size is more/less expected)
     // TODO: !!! adjust constraint makes not possible insets for view - wrong size (Example: adjusted UILabel with insets in source rect).
     /// Set of size-based constraints
-    public struct Size: RectBasedConstraint {
+    public struct Size: RectBasedConstraint, Extended {
+        public typealias Conformed = RectBasedConstraint
         private let base: RectBasedConstraint
         private init(base: RectBasedConstraint) { self.base = base }
-
-        public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-            base.constrain(sourceRect: &sourceRect, by: rect)
-        }
+        public func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+        public static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Size { return .init(base: base) }
 
         public static func height(_ multiplier: CGFloat = 1) -> Size { return Size(base: Height(multiplier: multiplier)) }
         private struct Height: RectBasedConstraint {
@@ -455,13 +477,12 @@ public struct LayoutAnchor {
     }
 
     /// Set of constraints related to bottom of restrictive rect
-    public struct Bottom: RectBasedConstraint {
+    public struct Bottom: RectBasedConstraint, Extended {
+        public typealias Conformed = RectBasedConstraint
         private let base: RectBasedConstraint
         private init(base: RectBasedConstraint) { self.base = base }
-
-        public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-            base.constrain(sourceRect: &sourceRect, by: rect)
-        }
+        public func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+        public static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Bottom { return .init(base: base) }
 
         public static func align(by dependency: Align.Dependence) -> Bottom { return Bottom(base: dependency) }
         public struct Align {
@@ -562,13 +583,12 @@ public struct LayoutAnchor {
     }
 
     /// Set of constraints related to right of restrictive rect
-    public struct Right: RectBasedConstraint {
+    public struct Right: RectBasedConstraint, Extended {
+        public typealias Conformed = RectBasedConstraint
         private let base: RectBasedConstraint
         private init(base: RectBasedConstraint) { self.base = base }
-
-        public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-            base.constrain(sourceRect: &sourceRect, by: rect)
-        }
+        public func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+        public static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Right { return .init(base: base) }
 
         public static func align(by dependency: Align.Dependence) -> Right { return Right(base: dependency) }
         public struct Align {
@@ -667,13 +687,12 @@ public struct LayoutAnchor {
     }
 
     /// Set of constraints related to left of restrictive rect
-    public struct Left: RectBasedConstraint {
+    public struct Left: RectBasedConstraint, Extended {
+        public typealias Conformed = RectBasedConstraint
         private let base: RectBasedConstraint
         private init(base: RectBasedConstraint) { self.base = base }
-
-        public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-            base.constrain(sourceRect: &sourceRect, by: rect)
-        }
+        public func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+        public static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Left { return .init(base: base) }
 
         public static func align(by dependency: Align.Dependence) -> Left { return Left(base: dependency) }
         public struct Align {
@@ -772,13 +791,12 @@ public struct LayoutAnchor {
     }
 
     /// Set of constraints related to top of restrictive rect
-    public struct Top: RectBasedConstraint {
+    public struct Top: RectBasedConstraint, Extended {
+        public typealias Conformed = RectBasedConstraint
         private let base: RectBasedConstraint
         private init(base: RectBasedConstraint) { self.base = base }
-
-        public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-            base.constrain(sourceRect: &sourceRect, by: rect)
-        }
+        public func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+        public static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Top { return .init(base: base) }
 
         public static func align(by dependency: Align.Dependence) -> Top { return Top(base: dependency) }
         public struct Align {
@@ -879,7 +897,6 @@ public struct LayoutAnchor {
 
 // MARK: Layout
 
-// TODO: !! Add type wrapper for layout parameter for representation as literal or calculation. Or move behavior (like as .scaled, .boxed) to `ValueType`
 /// Main layout structure. Use his for positioning and filling in source rect (which can be constrained using `RectBasedConstraint` constraints).
 public struct Layout: RectBasedLayout {
     private let alignment: Alignment
@@ -910,12 +927,12 @@ public struct Layout: RectBasedLayout {
             horizontal.layout(rect: &rect, in: source)
         }
 
-        public struct Horizontal: RectBasedLayout {
+        public struct Horizontal: RectBasedLayout, Extended {
+            public typealias Conformed = RectBasedLayout
             private let base: RectBasedLayout
             private init(base: RectBasedLayout) { self.base = base }
-            public func layout(rect: inout CGRect, in source: CGRect) {
-                base.layout(rect: &rect, in: source)
-            }
+            public func layout(rect: inout CGRect, in source: CGRect) { base.layout(rect: &rect, in: source) }
+            public static func build(_ base: RectBasedLayout) -> Layout.Alignment.Horizontal { return .init(base: base) }
 
             public static func center(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Center(offset: offset)) }
             private struct Center: RectBasedLayout {
@@ -939,12 +956,12 @@ public struct Layout: RectBasedLayout {
                 }
             }
         }
-        public struct Vertical: RectBasedLayout {
+        public struct Vertical: RectBasedLayout, Extended {
+            public typealias Conformed = RectBasedLayout
             private let base: RectBasedLayout
             private init(base: RectBasedLayout) { self.base = base }
-            public func layout(rect: inout CGRect, in source: CGRect) {
-                return base.layout(rect: &rect, in: source)
-            }
+            public func layout(rect: inout CGRect, in source: CGRect) { return base.layout(rect: &rect, in: source) }
+            public static func build(_ base: RectBasedLayout) -> Layout.Alignment.Vertical { return .init(base: base) }
 
             public static func center(_ offset: CGFloat = 0) -> Vertical { return Vertical(base: Center(offset: offset)) }
             private struct Center: RectBasedLayout {
@@ -969,7 +986,7 @@ public struct Layout: RectBasedLayout {
             }
         }
     }
-    // TODO: !! Boxed behavior is misleading with edge insets values, because change size metric in fact
+
     // TODO: ! Add ratio behavior
     /// Filling part of main layout
     public struct Filling: RectBasedLayout {
@@ -986,21 +1003,20 @@ public struct Layout: RectBasedLayout {
             self.horizontal = horizontal
         }
 
-        public struct Horizontal: RectBasedLayout {
-            private let base: RectBasedLayout
-            private init(base: RectBasedLayout) { self.base = base }
-            public func layout(rect: inout CGRect, in source: CGRect) {
-                return base.layout(rect: &rect, in: source)
-            }
+        public struct Horizontal: RectBasedLayout, Extended {
+            public typealias Conformed = RectBasedLayout
+            fileprivate let base: RectBasedLayout
+            fileprivate init(base: RectBasedLayout) { self.base = base }
+            public func layout(rect: inout CGRect, in source: CGRect) { return base.layout(rect: &rect, in: source) }
+            public static func build(_ base: RectBasedLayout) -> Layout.Filling.Horizontal { return .init(base: base) }
 
 //            public static var identity: Horizontal { return Horizontal(base: Identity()) }
 //            private struct Identity: RectBasedLayout {
 //                func layout(rect: inout CGRect, in source: CGRect) {}
 //            }
 
-            // TODO: May be rename to fixed ?
-            public static func constantly(_ value: CGFloat) -> Horizontal { return Horizontal(base: Constantly(value: value)) }
-            private struct Constantly: RectBasedLayout {
+            public static func fixed(_ value: CGFloat) -> Horizontal { return Horizontal(base: Fixed(value: value)) }
+            private struct Fixed: RectBasedLayout {
                 let value: CGFloat
                 func layout(rect: inout CGRect, in source: CGRect) {
                     rect.size.width = value
@@ -1014,28 +1030,28 @@ public struct Layout: RectBasedLayout {
                     rect.size.width = source.width.multiplied(by: scale)
                 }
             }
-            public static func boxed(_ edges: UIEdgeInsets.Horizontal) -> Horizontal { return Horizontal(base: Boxed(edges: edges)) }
+            public static func boxed(_ insets: CGFloat) -> Horizontal { return Horizontal(base: Boxed(insets: insets)) }
             private struct Boxed: RectBasedLayout {
-                let edges: UIEdgeInsets.Horizontal
+                let insets: CGFloat
                 func layout(rect: inout CGRect, in source: CGRect) {
-                    rect.size.width = max(0, source.width.subtracting(edges.full))
+                    rect.size.width = max(0, source.width.subtracting(insets))
                 }
             }
         }
-        public struct Vertical: RectBasedLayout {
-            private let base: RectBasedLayout
-            private init(base: RectBasedLayout) { self.base = base }
-            public func layout(rect: inout CGRect, in source: CGRect) {
-                return base.layout(rect: &rect, in: source)
-            }
+        public struct Vertical: RectBasedLayout, Extended {
+            public typealias Conformed = RectBasedLayout
+            fileprivate let base: RectBasedLayout
+            fileprivate init(base: RectBasedLayout) { self.base = base }
+            public func layout(rect: inout CGRect, in source: CGRect) { return base.layout(rect: &rect, in: source) }
+            public static func build(_ base: RectBasedLayout) -> Layout.Filling.Vertical { return .init(base: base) }
 
 //            public static var identity: Vertical { return Vertical(base: Identity()) }
 //            private struct Identity: RectBasedLayout {
 //                func layout(rect: inout CGRect, in source: CGRect) {}
 //            }
 
-            public static func constantly(_ value: CGFloat) -> Vertical { return Vertical(base: Constantly(value: value)) }
-            private struct Constantly: RectBasedLayout {
+            public static func fixed(_ value: CGFloat) -> Vertical { return Vertical(base: Fixed(value: value)) }
+            private struct Fixed: RectBasedLayout {
                 let value: CGFloat
                 func layout(rect: inout CGRect, in source: CGRect) {
                     rect.size.height = value
@@ -1049,13 +1065,22 @@ public struct Layout: RectBasedLayout {
                     rect.size.height = source.height.multiplied(by: scale)
                 }
             }
-            public static func boxed(_ edges: UIEdgeInsets.Vertical) -> Vertical { return Vertical(base: Boxed(edges: edges)) }
+            public static func boxed(_ insets: CGFloat) -> Vertical { return Vertical(base: Boxed(insets: insets)) }
             private struct Boxed: RectBasedLayout {
-                let edges: UIEdgeInsets.Vertical
+                let insets: CGFloat
                 func layout(rect: inout CGRect, in source: CGRect) {
-                    rect.size.height = max(0, source.height.subtracting(edges.full))
+                    rect.size.height = max(0, source.height.subtracting(insets))
                 }
             }
+        }
+    }
+}
+
+public extension Layout {
+    public static var equal: RectBasedLayout { return Equal() }
+    private struct Equal: RectBasedLayout {
+        func layout(rect: inout CGRect, in source: CGRect) {
+            rect = source
         }
     }
 }
@@ -1099,6 +1124,89 @@ extension Layout.Filling {
 
 
 // MARK: Attempts, not used
+
+// Value wrapper for possibility use calculated values. Status: blocked Referred in:
+// TODO: Add type wrapper for layout parameter for representation as literal or calculation. Or move behavior (like as .scaled, .boxed) to `ValueType`
+protocol CGLayoutValue {
+    associatedtype CGLayoutValue
+    var cgLayoutValue: CGLayoutValue { get }
+}
+extension CGFloat: CGLayoutValue {
+    var cgLayoutValue: CGFloat { return self }
+}
+struct AnyLayoutValue<Value>: CGLayoutValue {
+    private let getter: () -> Value
+    var cgLayoutValue: Value { return getter() }
+}
+
+// New anchors
+// Target: Add possibility to connect two anchors into one constraint. Question: This is improvement?
+typealias Setter<Anchor: LayoutAnchorGetter> = (_ anchor: Anchor, _ rect: CGRect, _ targetRect: inout CGRect) -> Void
+protocol LayoutAnchorSetter {
+    associatedtype AnchorMetric
+    func set<Anchor: LayoutAnchorGetter>(anchor: Anchor, of rect: CGRect, to targetRect: inout CGRect) where Anchor.AnchorMetric == AnchorMetric
+}
+
+protocol LayoutAnchorGetter {
+    associatedtype AnchorMetric
+    func get(for rect: CGRect) -> AnchorMetric
+}
+
+protocol LayoutAnchorProtocol: LayoutAnchorSetter, LayoutAnchorGetter {}
+
+struct AnyAnchorGetter<Metric>: LayoutAnchorGetter {
+    typealias AnchorMetric = Metric
+    let getter: (_ rect: CGRect) -> Metric
+
+    init<Anchor: LayoutAnchorGetter>(_ base: Anchor) where Anchor.AnchorMetric == AnchorMetric {
+        self.getter = base.get
+    }
+
+    func get(for rect: CGRect) -> Metric {
+        return getter(rect)
+    }
+}
+
+struct LeftAnchor: LayoutAnchorProtocol {
+    typealias AnchorMetric = CGFloat
+
+    private let setter: Setter<AnyAnchorGetter<AnchorMetric>>
+    private init<Setter: LayoutAnchorSetter>(setter: Setter) where Setter.AnchorMetric == AnchorMetric { self.setter = setter.set }
+
+    static var align: LeftAnchor { return LeftAnchor(setter: Align()) }
+    struct Align: LayoutAnchorSetter {
+        typealias AnchorMetric = CGFloat
+        func set<Anchor>(anchor: Anchor, of rect: CGRect, to targetRect: inout CGRect) where Anchor : LayoutAnchorGetter, Anchor.AnchorMetric == Align.AnchorMetric {
+            targetRect.origin.x = anchor.get(for: rect)
+        }
+    }
+    static var alignOuter: LeftAnchor { return LeftAnchor(setter: AlignOuter()) }
+    struct AlignOuter: LayoutAnchorSetter {
+        typealias AnchorMetric = CGFloat
+        func set<Anchor>(anchor: Anchor, of rect: CGRect, to targetRect: inout CGRect) where Anchor : LayoutAnchorGetter, Anchor.AnchorMetric == Align.AnchorMetric {
+            targetRect.origin.x = anchor.get(for: rect) + targetRect.width
+        }
+    }
+
+    func set<Anchor>(anchor: Anchor, of rect: CGRect, to targetRect: inout CGRect) where Anchor : LayoutAnchorGetter, Anchor.AnchorMetric == CGFloat {
+        setter(AnyAnchorGetter(anchor), rect, &targetRect)
+    }
+
+    func get(for rect: CGRect) -> CGFloat {
+        return rect.left
+    }
+}
+
+struct RightAnchor: LayoutAnchorProtocol {
+    typealias AnchorMetric = CGFloat
+    func set<Anchor>(anchor: Anchor, of rect: CGRect, to targetRect: inout CGRect) where Anchor : LayoutAnchorGetter, Anchor.AnchorMetric == CGFloat {
+        targetRect.origin.x = anchor.get(for: rect)
+    }
+
+    func get(for rect: CGRect) -> CGFloat {
+        return rect.right
+    }
+}
 
 /*
 protocol CGRectAxis {
