@@ -9,6 +9,16 @@
 import UIKit
 import CGLayout
 
+/// Example extending
+extension LayoutAnchor.Size {
+    static func stringSize(_ string: String?,
+                           options: NSStringDrawingOptions = .usesLineFragmentOrigin,
+                           attributes: [String: Any],
+                           context: NSStringDrawingContext? = nil) -> LayoutAnchor.Size {
+        return .build(StringLayoutConstraint(string: string, options: options, attributes: attributes, context: context))
+    }
+}
+
 public class SecondViewController: UIViewController {
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -38,26 +48,26 @@ public class SecondViewController: UIViewController {
         return LayoutScheme(blocks: [
             self.distanceLabel.layoutBlock(with: Layout(x: .center(), y: .bottom(50), width: .fixed(70), height: .fixed(30))),
             self.separator1View.layoutBlock(with: Layout(alignment: self.separator1Align, filling: self.separatorSize),
-                                            constraints: [self.distanceLabel.constraintItem(for: [self.leftLimit, self.topLimit, self.heightEqual])]),
+                                            constraints: [self.distanceLabel.layoutConstraint(for: [self.leftLimit, self.topLimit, self.heightEqual])]),
             self.separator2View.layoutBlock(with: Layout(alignment: self.separator2Align, filling: self.separatorSize),
-                                            constraints: [self.distanceLabel.constraintItem(for: [self.heightEqual, self.rightLimit, self.bottomInnerAlign])]),
+                                            constraints: [self.distanceLabel.layoutConstraint(for: [self.heightEqual, self.rightLimit, self.bottomInnerAlign])]),
             self.weatherImageView.layoutBlock(with: Layout(x: .left(20), y: .top(), width: .fixed(30), height: .fixed(30)),
-                                              constraints: [self.separator2View.constraintItem(for: [self.rightLimit, self.topLimit])]),
+                                              constraints: [self.separator2View.layoutConstraint(for: [self.rightLimit, self.topLimit])]),
             self.weatherLabel.layoutBlock(with: Layout(x: .left(10), y: .top(), width: .scaled(1), height: .scaled(1)),
-                                          constraints: [self.weatherImageView.constraintItem(for: [self.topLimit, self.rightLimit, self.heightEqual]),
-                                                        self.weatherLabel.adjustConstraintItem(for: [self.widthEqual])
-                                            /*StringLayoutConstraint(string: self.weatherLabel.text, attributes: [NSFontAttributeName: self.weatherLabel.font])*/]),
+                                          constraints: [self.weatherImageView.layoutConstraint(for: [self.topLimit, self.rightLimit, self.heightEqual]),
+                                                        self.weatherLabel.adjustLayoutConstraint(for: [self.widthEqual])]),
+//                                            self.weatherLabel.adjustLayoutConstraint(for: [.stringSize(self.weatherLabel.text, attributes: [NSFontAttributeName: self.weatherLabel.font])])]),
             self.rainLabel.layoutBlock(with: Layout(x: .right(20), y: .top(), width: .scaled(1), height: .fixed(30)),
-                                       constraints: [self.rainLabel.adjustConstraintItem(for: [self.widthEqual]),
-                                                     self.separator1View.constraintItem(for: [self.topLimit, LayoutAnchor.Left.align(by: .outer)])]),
+                                       constraints: [self.rainLabel.adjustLayoutConstraint(for: [self.widthEqual]),
+                                                     self.separator1View.layoutConstraint(for: [self.topLimit, LayoutAnchor.Left.align(by: .outer)])]),
             self.rainImageView.layoutBlock(with: Layout(x: .right(10), y: .top(), width: .fixed(30), height: .fixed(30)),
-                                           constraints: [self.rainLabel.constraintItem(for: [self.leftLimit, self.topLimit])]),
+                                           constraints: [self.rainLabel.layoutConstraint(for: [self.leftLimit, self.topLimit])]),
             self.nameLabel.layoutBlock(with: Layout(x: .center(), y: .center(20), width: .scaled(1), height: .fixed(30))),
             self.presentationLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(50)),
-                                               constraints: [self.nameLabel.constraintItem(for: [self.bottomLimit])]),
+                                               constraints: [self.nameLabel.layoutConstraint(for: [self.bottomLimit])]),
             self.logoImageView.layoutBlock(with: Layout(x: .center(), y: .top(80), width: .fixed(70), height: .fixed(70))),
             self.titleLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(120)),
-                                        constraints: [self.logoImageView.constraintItem(for: [self.bottomLimit])])
+                                        constraints: [self.logoImageView.layoutConstraint(for: [self.bottomLimit])])
         ])
     }()
 
@@ -73,7 +83,7 @@ public class SecondViewController: UIViewController {
             DispatchQueue.main.sync {
                 self.portraitSnapshot = portraitSnapshot
                 self.landscapeSnapshot = landscapeSnapshot
-                self.layoutScheme.apply(snapshot: UIDevice.current.orientation.isPortrait ? portraitSnapshot : landscapeSnapshot)
+                self.layoutScheme.apply(snapshot: UIDevice.current.orientation.isLandscape ? landscapeSnapshot : portraitSnapshot)
             }
         }
     }

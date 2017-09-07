@@ -24,7 +24,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem {
         self.bounds = CGRect(origin: .zero, size: frame.size)
     }
 }
-// TODO: Test it
+
 extension LayoutGuide where Super: UICoordinateSpace {
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, to coordinateSpace: UICoordinateSpace) -> CGPoint {
@@ -134,9 +134,7 @@ open class ViewPlaceholder<View: UIView>: LayoutGuide<UIView> {
 // TODO: Create constraint for attributed string and other data oriented constraints
 
 /// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
-public struct StringLayoutConstraint: ConstraintItemProtocol {
-    public var layoutItem: AnyObject? { return nil }
-
+public struct StringLayoutConstraint: RectBasedConstraint {
     let string: String?
     let attributes: [String: Any]?
     let options: NSStringDrawingOptions
@@ -151,10 +149,6 @@ public struct StringLayoutConstraint: ConstraintItemProtocol {
 
     public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect.size = string?.boundingRect(with: rect.size, options: options, attributes: attributes, context: context).size ?? .zero
-    }
-
-    public func constrainRect(for currentSpace: CGRect) -> CGRect {
-        return currentSpace
     }
 }
 extension String {
