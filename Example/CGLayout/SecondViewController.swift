@@ -67,13 +67,14 @@ public class SecondViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         let bounds = view.bounds
+        let isLandscape = UIDevice.current.orientation.isLandscape
         DispatchQueue.global(qos: .background).async {
-            let portraitSnapshot = self.layoutScheme.snapshot(for: bounds)
-            let landscapeSnapshot = self.layoutScheme.snapshot(for: CGRect(x: 0, y: 0, width: bounds.height, height: bounds.width))
+            let portraitSnapshot = self.layoutScheme.snapshot(for: isLandscape ? CGRect(x: 0, y: 0, width: bounds.height, height: bounds.width) : bounds)
+            let landscapeSnapshot = self.layoutScheme.snapshot(for: isLandscape ? bounds : CGRect(x: 0, y: 0, width: bounds.height, height: bounds.width))
             DispatchQueue.main.sync {
                 self.portraitSnapshot = portraitSnapshot
                 self.landscapeSnapshot = landscapeSnapshot
-                self.layoutScheme.apply(snapshot: UIDevice.current.orientation.isPortrait ? portraitSnapshot : landscapeSnapshot)
+                self.layoutScheme.apply(snapshot: UIDevice.current.orientation.isLandscape ? landscapeSnapshot : portraitSnapshot)
             }
         }
     }

@@ -12,10 +12,8 @@ import UIKit
 // TODO: ! Add RTL (right to left language)
 // TODO: !! Implement behavior on remove view from hierarchy (Unwrapped LayoutItem, break result in ConstraintsItem). Probably need add `isActive` property.
 // TODO: ! Add support UITraitCollection
-// TODO: ! Add parameters to ConstraintItem for layout item subview/superview relationships (for use converting rects to source coordinate space)
 
 // TODO: !!! Tests for new code
-// TODO: Think how can be use OptionSet type.
 
 
 /// Defines method for wrapping entity with base behavior to this type.
@@ -26,62 +24,6 @@ public protocol Extended {
     /// - Parameter base: Entity implements required behavior
     /// - Returns: Initialized entity
     static func build(_ base: Conformed) -> Self
-}
-
-// TODO: CoordinateConvertable makes limit on use constraints with different `LayotItem` type.
-// Has decision in create custom `LayoutItem` type which combined CALayer and UIView type, but it bad decision.
-
-/// Common protocol for anyone `LayoutItem` item that coordinates can be converted to other space.
-/// Used for converting coordinates of UIView and CALayer.
-/// Converting from UIView coordinate space to CALayer (or conversely) coordinate while not possible.
-/// Therefore can use constraints only from same `LayoutItem` type space.
-public protocol CoordinateConvertable {
-    @available(iOS 8.0, *)
-    func convert(_ point: CGPoint, to item: CoordinateConvertable?) -> CGPoint
-
-    @available(iOS 8.0, *)
-    func convert(_ point: CGPoint, from item: CoordinateConvertable?) -> CGPoint
-
-    @available(iOS 8.0, *)
-    func convert(_ rect: CGRect, to item: CoordinateConvertable?) -> CGRect
-
-    @available(iOS 8.0, *)
-    func convert(_ rect: CGRect, from item: CoordinateConvertable?) -> CGRect
-}
-
-extension UIView: CoordinateConvertable {
-    public func convert(_ point: CGPoint, to item: CoordinateConvertable?) -> CGPoint {
-        return convert(point, to: item as! UIView?)
-    }
-
-    public func convert(_ point: CGPoint, from item: CoordinateConvertable?) -> CGPoint {
-        return convert(point, from: item as! UIView?)
-    }
-
-    public func convert(_ rect: CGRect, to item: CoordinateConvertable?) -> CGRect {
-        return convert(rect, to: item as! UIView?)
-    }
-
-    public func convert(_ rect: CGRect, from item: CoordinateConvertable?) -> CGRect {
-        return convert(rect, from: item as! UIView?)
-    }
-}
-extension CALayer: CoordinateConvertable {
-    public func convert(_ point: CGPoint, to item: CoordinateConvertable?) -> CGPoint {
-        return convert(point, to: item as! CALayer?)
-    }
-
-    public func convert(_ point: CGPoint, from item: CoordinateConvertable?) -> CGPoint {
-        return convert(point, from: item as! CALayer?)
-    }
-
-    public func convert(_ rect: CGRect, to item: CoordinateConvertable?) -> CGRect {
-        return convert(rect, to: item as! CALayer?)
-    }
-
-    public func convert(_ rect: CGRect, from item: CoordinateConvertable?) -> CGRect {
-        return convert(rect, from: item as! CALayer?)
-    }
 }
 
 // MARK: RectBasedLayout
@@ -118,7 +60,7 @@ public extension RectBasedLayout {
     /// - Parameters:
     ///   - item: Item for layout
     ///   - constraints: Array of tuples with rect and constraint
-    public func apply<Item: LayoutItem>(for item: Item, use constraints: [ConstrainRect] = []) where Item.SuperLayoutItem: LayoutItem {
+    public func apply<Item: LayoutItem>(for item: Item, use constraints: [ConstrainRect] = []) {
         item.frame = layout(rect: item.frame, in: item.superItem!.bounds, use: constraints)
     }
 
@@ -140,7 +82,7 @@ public extension RectBasedLayout {
     /// - Parameters:
     ///   - item: Item for layout
     ///   - constraints: Array of constraint items
-    public func apply<Item: LayoutItem>(for item: Item, use constraints: [ConstraintItemProtocol] = []) where Item.SuperLayoutItem: LayoutItem, Item.SuperLayoutItem: CoordinateConvertable {
+    public func apply(for item: LayoutItem, use constraints: [ConstraintItemProtocol] = []) {
         item.frame = layout(rect: item.frame, from: item.superItem!, in: item.superItem!.bounds, use: constraints)
     }
 
@@ -152,7 +94,7 @@ public extension RectBasedLayout {
     ///   - sourceRect: Space for layout
     ///   - constraints: Array of constraint items
     /// - Returns: Corrected frame of layout item
-    public func layout<Item: LayoutItem & CoordinateConvertable>(rect: CGRect, from item: Item, in sourceRect: CGRect, use constraints: [ConstraintItemProtocol] = []) -> CGRect {
+    public func layout(rect: CGRect, from item: LayoutItem, in sourceRect: CGRect, use constraints: [ConstraintItemProtocol] = []) -> CGRect {
         let source = constraints.reduce(sourceRect) { (result, constraint) -> CGRect in
             return result.constrainedBy(rect: constraint.constrainRect(for: result, in: item), use: constraint)
         }
@@ -212,18 +154,17 @@ extension CGRect {
 // MARK: LayoutItem
 
 /// Protocol for any layout element
-public protocol LayoutItem: class {
-    associatedtype SuperLayoutItem: AnyObject
+public protocol LayoutItem: class, LayoutCoordinateSpace {
     var frame: CGRect { get set }
     var bounds: CGRect { get set }
-    weak var superItem: SuperLayoutItem? { get }
+    weak var superItem: LayoutItem? { get }
     // TODO: Add subItems if will be need create layout sub elements. For instance, stack view.
 }
 extension UIView: AdjustableLayoutItem {
-    public weak var superItem: UIView? { return superview }
+    public weak var superItem: LayoutItem? { return superview }
 }
 extension CALayer: LayoutItem {
-    public weak var superItem: CALayer? { return superlayer }
+    public weak var superItem: LayoutItem? { return superlayer }
 }
 
 // TODO: Try use LayoutItem as not rendered "layout view", which only makes layout for subItems(?). Example as UIStackView
@@ -243,17 +184,13 @@ extension LayoutItem {
     func boundsConstraint(for anchor: RectBasedConstraint) -> ConstrainRect {
         return (bounds, anchor)
     }
-}
-extension LayoutItem where Self.SuperLayoutItem: CoordinateConvertable {
     /// Convenience getter for constraint item related to this entity
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related constraint item
-    public func constraintItem(for anchors: [RectBasedConstraint]) -> ConstraintItem<Self> {
+    public func constraintItem(for anchors: [RectBasedConstraint]) -> ConstraintItem {
         return ConstraintItem(item: self, constraints: anchors)
     }
-}
-extension LayoutItem where Self.SuperLayoutItem: LayoutItem, Self.SuperLayoutItem: CoordinateConvertable {
     /// Convenience getter for layout block related to this entity
     ///
     /// - Parameters:
@@ -276,7 +213,7 @@ extension AdjustableLayoutItem {
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related adjust constraint item
-    public func adjustConstraintItem(for anchors: [LayoutAnchor.Size]) -> AdjustConstraintItem<Self> {
+    public func adjustConstraintItem(for anchors: [LayoutAnchor.Size]) -> AdjustConstraintItem {
         return AdjustConstraintItem(item: self, constraints: anchors)
     }
 }
@@ -291,23 +228,23 @@ public protocol ConstraintItemProtocol: RectBasedConstraint {
     ///
     /// - Parameter currentSpace: Source rect in current state
     /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: CoordinateConvertable & AnyObject) -> CGRect
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect
 }
 
 /// Simple related constraint. Contains anchor constraints and layout item as source of frame for constrain
-public struct ConstraintItem<Item: LayoutItem> where Item.SuperLayoutItem: CoordinateConvertable {
+public struct ConstraintItem {
     let constraints: [RectBasedConstraint]
-    private(set) weak var item: Item!
+    private(set) weak var item: LayoutItem!
 
-    public init(item: Item, constraints: [RectBasedConstraint]) {
+    public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
         self.item = item
         self.constraints = constraints
     }
 }
 extension ConstraintItem: ConstraintItemProtocol {
     public var layoutItem: AnyObject? { return item }
-    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: CoordinateConvertable & AnyObject) -> CGRect {
-        return coordinateSpace === item.superItem ? item.frame : coordinateSpace.convert(item.frame, from: item.superItem) // TODO: ! For parent layout item need use bounds
+    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+        return coordinateSpace === item.superItem! ? item.frame : coordinateSpace.convert(rect: item.frame, from: item.superItem!)
     }
     public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect = sourceRect.constrainedBy(rect: rect, use: constraints)
@@ -315,18 +252,18 @@ extension ConstraintItem: ConstraintItemProtocol {
 }
 
 /// Related constraint for adjust size of source space. Contains size constraints and layout item for calculate size.
-public struct AdjustConstraintItem<Item: AdjustableLayoutItem> {
+public struct AdjustConstraintItem {
     let constraints: [LayoutAnchor.Size]
-    private(set) weak var item: Item!
+    private(set) weak var item: AdjustableLayoutItem!
 
-    public init(item: Item, constraints: [LayoutAnchor.Size]) {
+    public init(item: AdjustableLayoutItem, constraints: [LayoutAnchor.Size]) {
         self.item = item
         self.constraints = constraints
     }
 }
 extension AdjustConstraintItem: ConstraintItemProtocol {
     public var layoutItem: AnyObject? { return item }
-    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: CoordinateConvertable & AnyObject) -> CGRect {
+    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
         return currentSpace
     }
     public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
@@ -383,7 +320,7 @@ public protocol LayoutBlockProtocol {
 }
 
 /// Makes full layout for `LayoutItem` entity. Contains main layout, related anchor constrains and item for layout.
-public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol where Item.SuperLayoutItem: LayoutItem, Item.SuperLayoutItem: CoordinateConvertable {
+public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     let itemLayout: RectBasedLayout
     let constraints: [ConstraintItemProtocol]
     public private(set) weak var item: Item!
@@ -1163,7 +1100,7 @@ extension Layout.Alignment {
     ///   - filling: Filling layout
     ///   - item: Item for layout
     ///   - constraints: Required constraints
-    public func apply<Item: LayoutItem>(with filling: Layout.Filling, for item: Item, use constraints: [ConstrainRect]) where Item.SuperLayoutItem: LayoutItem {
+    public func apply<Item: LayoutItem>(with filling: Layout.Filling, for item: Item, use constraints: [ConstrainRect]) {
         filling.apply(for: item, use: constraints)
         apply(for: item, use: constraints)
     }
@@ -1176,7 +1113,7 @@ extension Layout.Filling {
     ///   - alignment: Alignment layout
     ///   - item: Item for layout
     ///   - constraints: Required constraints
-    public func apply<Item: LayoutItem>(with alignment: Layout.Alignment, for item: Item, use constraints: [ConstrainRect]) where Item.SuperLayoutItem: LayoutItem {
+    public func apply<Item: LayoutItem>(with alignment: Layout.Alignment, for item: Item, use constraints: [ConstrainRect]) {
         apply(for: item, use: constraints)
         alignment.apply(for: item, use: constraints)
     }
@@ -1184,39 +1121,6 @@ extension Layout.Filling {
 
 
 // MARK: Attempts, not used
-
-//public protocol CoordinateSpace {
-//
-//    @available(iOS 8.0, *)
-//    func convert(_ point: CGPoint, to item: CoordinateSpace) -> CGPoint
-//
-//    @available(iOS 8.0, *)
-//    func convert(_ point: CGPoint, from item: CoordinateSpace) -> CGPoint
-//
-//    @available(iOS 8.0, *)
-//    func convert(_ rect: CGRect, to item: CoordinateSpace) -> CGRect
-//
-//    @available(iOS 8.0, *)
-//    func convert(_ rect: CGRect, from item: CoordinateSpace) -> CGRect
-//
-//    @available(iOS 8.0, *)
-//    var bounds: CGRect { get }
-//}
-//extension CoordinateSpace where Self: LayoutItem, Self.SuperLayoutItem: LayoutItem {
-//    @available(iOS 8.0, *)
-//    func convert(_ point: CGPoint, to item: CoordinateSpace) -> CGPoint {
-//        UIScreen.main.coordinateSpace.con
-//    }
-//
-//    @available(iOS 8.0, *)
-//    func convert(_ point: CGPoint, from item: CoordinateSpace) -> CGPoint
-//
-//    @available(iOS 8.0, *)
-//    func convert(_ rect: CGRect, to item: CoordinateSpace) -> CGRect
-//
-//    @available(iOS 8.0, *)
-//    func convert(_ rect: CGRect, from item: CoordinateSpace) -> CGRect
-//}
 
 /* Swift 4(.1)+
 fileprivate protocol Absorbing {
