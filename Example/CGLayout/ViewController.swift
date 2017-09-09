@@ -97,7 +97,7 @@ class ViewController: UIViewController {
                                  constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])]).layout()
 
         // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space. 
-        navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.constraintItem(for: [LayoutAnchor.equal])]).layout()
+        navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.layoutConstraint(for: [LayoutAnchor.equal])]).layout()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

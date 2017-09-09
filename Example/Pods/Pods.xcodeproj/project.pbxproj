@@ -15,6 +15,7 @@
 		8C23D57EAC1F82584D008F61E9851D93 /* Pods-CGLayout_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF97F7707C5E7C8916CBE261AEA0277 /* Pods-CGLayout_Tests-dummy.m */; };
 		A4575B0A1F5CB847005C5D3E /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4575B091F5CB847005C5D3E /* CGLayoutExtended.swift */; };
 		A4575B0C1F5CBB1F005C5D3E /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4575B0B1F5CBB1F005C5D3E /* CommonExtensions.swift */; };
+		A4816BBD1F647B1100F897AD /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41D226C1F632F15009E3DBE /* MultiCoordinateSpace.swift */; };
 		BC94FB2E0A0F3C85B534033570EC4993 /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DB813835380783C5CFC32B91878219 /* CGLayout.swift */; };
 		BFD8C6ED1387195D910A7B0B6C000A98 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		CE76CAA8636B8FBCB557E71B416459EC /* Pods-CGLayout_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 189CB947CD4105324B2902F0B1B15451 /* Pods-CGLayout_Example-dummy.m */; };
@@ -340,6 +341,7 @@
 				151D5D4B45ECB7EDD61AC9D26FAB4FD6 /* CGLayout-dummy.m in Sources */,
 				A4575B0A1F5CB847005C5D3E /* CGLayoutExtended.swift in Sources */,
 				A4575B0C1F5CBB1F005C5D3E /* CommonExtensions.swift in Sources */,
+				A4816BBD1F647B1100F897AD /* MultiCoordinateSpace.swift in Sources */,
 				BC94FB2E0A0F3C85B534033570EC4993 /* CGLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

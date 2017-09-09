@@ -82,7 +82,7 @@ public extension RectBasedLayout {
     /// - Parameters:
     ///   - item: Item for layout
     ///   - constraints: Array of constraint items
-    public func apply(for item: LayoutItem, use constraints: [ConstraintItemProtocol] = []) {
+    public func apply(for item: LayoutItem, use constraints: [LayoutConstraintProtocol] = []) {
         item.frame = layout(rect: item.frame, from: item.superItem!, in: item.superItem!.bounds, use: constraints)
     }
 
@@ -94,11 +94,8 @@ public extension RectBasedLayout {
     ///   - sourceRect: Space for layout
     ///   - constraints: Array of constraint items
     /// - Returns: Corrected frame of layout item
-    public func layout(rect: CGRect, from item: LayoutItem, in sourceRect: CGRect, use constraints: [ConstraintItemProtocol] = []) -> CGRect {
-        let source = constraints.reduce(sourceRect) { (result, constraint) -> CGRect in
-            return result.constrainedBy(rect: constraint.constrainRect(for: result, in: item), use: constraint)
-        }
-        return layout(rect: rect, in: source)
+    public func layout(rect: CGRect, from item: LayoutItem, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol] = []) -> CGRect {
+        return layout(rect: rect, in: constraints.reduce(sourceRect) { $1.constrained(sourceRect: $0, in: item) })
     }
 }
 
@@ -188,8 +185,8 @@ extension LayoutItem {
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related constraint item
-    public func constraintItem(for anchors: [RectBasedConstraint]) -> ConstraintItem {
-        return ConstraintItem(item: self, constraints: anchors)
+    public func layoutConstraint(for anchors: [RectBasedConstraint]) -> LayoutConstraint {
+        return LayoutConstraint(item: self, constraints: anchors)
     }
     /// Convenience getter for layout block related to this entity
     ///
@@ -213,8 +210,8 @@ extension AdjustableLayoutItem {
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related adjust constraint item
-    public func adjustConstraintItem(for anchors: [LayoutAnchor.Size]) -> AdjustConstraintItem {
-        return AdjustConstraintItem(item: self, constraints: anchors)
+    public func adjustLayoutConstraint(for anchors: [LayoutAnchor.Size]) -> AdjustLayoutConstraint {
+        return AdjustLayoutConstraint(item: self, constraints: anchors)
     }
 }
 
@@ -231,13 +228,13 @@ public protocol LayoutConstraintProtocol: RectBasedConstraint {
     func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect
 }
 extension LayoutConstraintProtocol {
-    fileprivate func constrained(sourceRect: CGRect) -> CGRect {
-        return constrained(sourceRect: sourceRect, by: constrainRect(for: sourceRect))
+    fileprivate func constrained(sourceRect: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+        return constrained(sourceRect: sourceRect, by: constrainRect(for: sourceRect, in: coordinateSpace))
     }
 }
 
 /// Simple related constraint. Contains anchor constraints and layout item as source of frame for constrain
-public struct ConstraintItem {
+public struct LayoutConstraint {
     let constraints: [RectBasedConstraint]
     private(set) weak var item: LayoutItem!
 
@@ -246,8 +243,10 @@ public struct ConstraintItem {
         self.constraints = constraints
     }
 }
-extension ConstraintItem: ConstraintItemProtocol {
-    public var layoutItem: AnyObject? { return item }
+extension LayoutConstraint: LayoutConstraintProtocol {
+    public func layoutItem(is object: AnyObject) -> Bool {
+        return item === object
+    }
     public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
         return coordinateSpace === item.superItem! ? item.frame : coordinateSpace.convert(rect: item.frame, from: item.superItem!)
     }
@@ -257,7 +256,7 @@ extension ConstraintItem: ConstraintItemProtocol {
 }
 
 /// Related constraint for adjust size of source space. Contains size constraints and layout item for calculate size.
-public struct AdjustConstraintItem {
+public struct AdjustLayoutConstraint {
     let constraints: [LayoutAnchor.Size]
     private(set) weak var item: AdjustableLayoutItem!
 
@@ -266,8 +265,10 @@ public struct AdjustConstraintItem {
         self.constraints = constraints
     }
 }
-extension AdjustConstraintItem: ConstraintItemProtocol {
-    public var layoutItem: AnyObject? { return item }
+extension AdjustLayoutConstraint: LayoutConstraintProtocol {
+    public func layoutItem(is object: AnyObject) -> Bool {
+        return item === object
+    }
     public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
         return currentSpace
     }
@@ -340,16 +341,13 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     }
 
     public func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
-        return LayoutSnapshot(childs: [itemLayout.layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)])
+        return itemLayout.layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)
     }
 
-    // TODO: low performance
-    public func snapshot(for sourceRect: CGRect, constrainRects: [(AnyObject, CGRect)]) -> (AnyObject, LayoutSnapshotProtocol) {
-        let rects: [ConstrainRect] = constraints.map { constraintItem in
-            let rect: CGRect = constrainRects.first(where: { (item, _) -> Bool in
-                return item === constraintItem.layoutItem
-            })?.1 ?? constraintItem.constrainRect(for: sourceRect, in: item.superItem!)
-            return (rect, constraintItem)
+    public func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> CGRect {
+        let rects: [ConstrainRect] = constraints.map { constraint in
+            let rect = completedRects.first { constraint.layoutItem(is: $0.0) }?.1 ?? constraint.constrainRect(for: sourceRect, in: item.superItem!)
+            return (rect, constraint)
         }
         let frame = itemLayout.layout(rect: item.frame, in: sourceRect, use: rects)
         completedRects.insert((item, frame), at: 0)
