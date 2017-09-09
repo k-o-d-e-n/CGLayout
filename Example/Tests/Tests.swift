@@ -25,8 +25,8 @@ class Tests: XCTestCase {
         let itemRect = CGRect(x: 400, y: 300, width: 200, height: 100)
         let sourceRect = CGRect(x: 0, y: 0, width: 1000, height: 500)
 
-        let layout = Layout(alignment: .init(vertical: .center(centerOffset), horizontal: .left(leftOffset)),
-                            filling: .init(vertical: .boxed(edges.vertical), horizontal: .scaled(horizontalScale)))
+        let layout = Layout(alignment: .init(horizontal: .left(leftOffset), vertical: .center(centerOffset)),
+                            filling: .init(horizontal: .scaled(horizontalScale), vertical: .boxed(edges.vertical)))
 
         let resultRect = layout.layout(rect: itemRect, in: sourceRect)
         XCTAssertTrue(resultRect.origin.x == leftOffset)
@@ -44,8 +44,8 @@ class Tests: XCTestCase {
 
         let sourceRect = CGRect(x: 0, y: 0, width: 1000, height: 500)
 
-        let layout = Layout(alignment: .init(vertical: .center(centerOffset), horizontal: .left(leftOffset)),
-                            filling: .init(vertical: .boxed(edges.vertical), horizontal: .scaled(horizontalScale)))
+        let layout = Layout(alignment: .init(horizontal: .left(leftOffset), vertical: .center(centerOffset)),
+                            filling: .init(horizontal: .scaled(horizontalScale), vertical: .boxed(edges.vertical)))
 
         let frames = (0..<1000).map { _ in CGRect.random(in: sourceRect) }
 

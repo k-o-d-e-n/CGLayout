@@ -362,7 +362,6 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol where Item.Supe
     }
 }
 
-
 /// Layout scheme is main layout entity for make up. Contains full layout process.
 /// Represented as simple set of layout blocks with the right sequence, that means
 /// currently performed block has constraints related to `LayoutItem` items with corrected frame.
@@ -429,7 +428,7 @@ public struct LayoutAnchor {
                 }
                 public static var center: Dependence { return Dependence(base: Center()) }
                 public struct Center: RectBasedConstraint {
-                    private let alignment = Layout.Alignment(vertical: .center(), horizontal: .center())
+                    private let alignment = Layout.Alignment(horizontal: .center(), vertical: .center())
                     public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
                         alignment.layout(rect: &sourceRect, in: rect)
                     }
@@ -917,10 +916,10 @@ public struct Layout: RectBasedLayout {
 
     /// Alignment part of main layout.
     public struct Alignment: RectBasedLayout {
-        private let vertical: Vertical
         private let horizontal: Horizontal
+        private let vertical: Vertical
 
-        public init(vertical: Vertical, horizontal: Horizontal) {
+        public init(horizontal: Horizontal, vertical: Vertical) {
             self.vertical = vertical
             self.horizontal = horizontal
         }
@@ -993,15 +992,15 @@ public struct Layout: RectBasedLayout {
     // TODO: ! Add ratio behavior
     /// Filling part of main layout
     public struct Filling: RectBasedLayout {
-        private let vertical: Vertical
         private let horizontal: Horizontal
+        private let vertical: Vertical
 
         public func layout(rect: inout CGRect, in source: CGRect) {
             vertical.layout(rect: &rect, in: source)
             horizontal.layout(rect: &rect, in: source)
         }
 
-        public init(vertical: Vertical, horizontal: Horizontal) {
+        public init(horizontal: Horizontal, vertical: Vertical) {
             self.vertical = vertical
             self.horizontal = horizontal
         }
@@ -1090,12 +1089,12 @@ public extension Layout {
 
 public extension Layout {
     public init(vertical: (alignment: Alignment.Vertical, filling: Filling.Vertical), horizontal: (alignment: Alignment.Horizontal, filling: Filling.Horizontal)) {
-        self.init(alignment: Alignment(vertical: vertical.alignment, horizontal: horizontal.alignment),
-                  filling: Filling(vertical: vertical.filling, horizontal: horizontal.filling))
+        self.init(alignment: Alignment(horizontal: horizontal.alignment, vertical: vertical.alignment),
+                  filling: Filling(horizontal: horizontal.filling, vertical: vertical.filling))
     }
     public init(x: Alignment.Horizontal, y: Alignment.Vertical, width: Filling.Horizontal, height: Filling.Vertical) {
-        self.init(alignment: Alignment(vertical: y, horizontal: x),
-                  filling: Filling(vertical: height, horizontal: width))
+        self.init(alignment: Alignment(horizontal: x, vertical: y),
+                  filling: Filling(horizontal: width, vertical: height))
     }
 }
 
