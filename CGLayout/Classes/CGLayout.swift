@@ -197,7 +197,7 @@ extension LayoutItem {
     ///   - layout: Main layout for this entity
     ///   - constraints: Array of related constraint items
     /// - Returns: Related layout block
-    public func layoutBlock(with layout: RectBasedLayout, constraints: [ConstraintItemProtocol] = []) -> LayoutBlock<Self> {
+    public func layoutBlock(with layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
         return LayoutBlock(item: self, layout: layout, constraints: constraints)
     }
 }
@@ -218,17 +218,22 @@ extension AdjustableLayoutItem {
     }
 }
 
-// MARK: ConstraintItem
+// MARK: LayoutConstraint
 
 /// Provides rect for constrain source space. Used for related constraints.
-public protocol ConstraintItemProtocol: RectBasedConstraint {
+public protocol LayoutConstraintProtocol: RectBasedConstraint {
     /// `LayoutItem` object associated with this constraint
-    var layoutItem: AnyObject? { get } // TODO: Bad decision, replace
+    func layoutItem(is object: AnyObject) -> Bool
     /// Return rectangle for constrain source rect
     ///
     /// - Parameter currentSpace: Source rect in current state
     /// - Returns: Rect for constrain
     func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect
+}
+extension LayoutConstraintProtocol {
+    fileprivate func constrained(sourceRect: CGRect) -> CGRect {
+        return constrained(sourceRect: sourceRect, by: constrainRect(for: sourceRect))
+    }
 }
 
 /// Simple related constraint. Contains anchor constraints and layout item as source of frame for constrain
@@ -280,23 +285,15 @@ public protocol LayoutSnapshotProtocol {
     /// Snapshots of child layout blocks
     var childSnapshots: [LayoutSnapshotProtocol] { get }
 }
-extension LayoutSnapshotProtocol {
-    public var snapshotFrame: CGRect {
-        return childSnapshots.dropFirst().reduce(childSnapshots.first!.snapshotFrame) { $0.union($1.snapshotFrame) }
-    }
-}
 extension CGRect: LayoutSnapshotProtocol {
     public var snapshotFrame: CGRect { return self }
     public var childSnapshots: [LayoutSnapshotProtocol] { return [] }
 }
 
 /// Represents frame of block where was received. Contains snapshots for child blocks.
-public struct LayoutSnapshot: LayoutSnapshotProtocol {
-    public var childSnapshots: [LayoutSnapshotProtocol]
-
-    init(childs: [LayoutSnapshotProtocol]) {
-        self.childSnapshots = childs
-    }
+fileprivate struct LayoutSnapshot: LayoutSnapshotProtocol {
+    fileprivate let childSnapshots: [LayoutSnapshotProtocol]
+    fileprivate let snapshotFrame: CGRect
 }
 
 /// Defines general methods for any layout block
@@ -310,7 +307,14 @@ public protocol LayoutBlockProtocol {
     /// - Parameter sourceRect: Source space for layout
     /// - Returns: Snapshot contained frames layout items
     func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol
-    func snapshot(for sourceRect: CGRect, constrainRects: [(AnyObject, CGRect)]) -> (AnyObject, LayoutSnapshotProtocol)
+    /// Method for perform layout calculation in child blocks. Does not call this method directly outside `LayoutBlockProtocol` object.
+    /// Layout block should be insert contained `LayoutItem` items to completedRects
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space for layout. For not top level blocks rect should be define available bounds of block
+    ///   - completedRects: `LayoutItem` items with corrected frame
+    /// - Returns: Frame of this block
+    func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> CGRect
 
     /// Applying frames from snapshot to `LayoutItem` items in this block. 
     /// Snapshot array should be ordered such to match `LayoutItem` items sequence.
@@ -322,10 +326,10 @@ public protocol LayoutBlockProtocol {
 /// Makes full layout for `LayoutItem` entity. Contains main layout, related anchor constrains and item for layout.
 public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     let itemLayout: RectBasedLayout
-    let constraints: [ConstraintItemProtocol]
+    let constraints: [LayoutConstraintProtocol]
     public private(set) weak var item: Item!
 
-    public init(item: Item, layout: RectBasedLayout, constraints: [ConstraintItemProtocol] = []) {
+    public init(item: Item, layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) {
         self.item = item
         self.itemLayout = layout
         self.constraints = constraints
@@ -347,14 +351,15 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
             })?.1 ?? constraintItem.constrainRect(for: sourceRect, in: item.superItem!)
             return (rect, constraintItem)
         }
-        return (item, LayoutSnapshot(childs: [itemLayout.layout(rect: item.frame, in: sourceRect, use: rects)]))
+        let frame = itemLayout.layout(rect: item.frame, in: sourceRect, use: rects)
+        completedRects.insert((item, frame), at: 0)
+        return frame
     }
 
     public func apply(snapshot: LayoutSnapshotProtocol) {
         item.frame = snapshot.snapshotFrame
     }
 }
-
 
 /// Layout scheme is main layout entity for make up. Contains full layout process.
 /// Represented as simple set of layout blocks with the right sequence, that means
@@ -371,25 +376,24 @@ public struct LayoutScheme: LayoutBlockProtocol {
     }
 
     public func apply(snapshot: LayoutSnapshotProtocol) {
-        for (i, child) in snapshot.childSnapshots.enumerated() {
-            blocks[i].apply(snapshot: child)
+        var iterator = blocks.makeIterator()
+        for child in snapshot.childSnapshots {
+            iterator.next()?.apply(snapshot: child)
         }
     }
 
     // TODO: low performance
     public func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
+        var snapshotFrame: CGRect!
         var completedFrames: [(AnyObject, CGRect)] = []
-        return LayoutSnapshot(childs: blocks.map { block in
-            let associatedSnapshot = block.snapshot(for: sourceRect, constrainRects: completedFrames)
-            completedFrames.append((associatedSnapshot.0, associatedSnapshot.1.snapshotFrame))
-            return associatedSnapshot.1
-        })
+        return LayoutSnapshot(childSnapshots: blocks.map { block in
+            let blockFrame = block.snapshot(for: sourceRect, completedRects: &completedFrames)
+            snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
+            return blockFrame
+        }, snapshotFrame: snapshotFrame)
     }
 
-    // TODO: Replace
-    public func snapshot(for sourceRect: CGRect, constrainRects: [(AnyObject, CGRect)]) -> (AnyObject, LayoutSnapshotProtocol) {
-        return (UIApplication.shared.delegate!.window!!, snapshot(for: UIScreen.main.bounds))
-    }
+    public func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> CGRect { return .zero }//return snapshot(for: sourceRect).snapshotFrame }
 }
 
 // MARK: LayoutAnchor
@@ -423,7 +427,7 @@ public struct LayoutAnchor {
                 }
                 public static var center: Dependence { return Dependence(base: Center()) }
                 public struct Center: RectBasedConstraint {
-                    private let alignment = Layout.Alignment(vertical: .center(), horizontal: .center())
+                    private let alignment = Layout.Alignment(horizontal: .center(), vertical: .center())
                     public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
                         alignment.layout(rect: &sourceRect, in: rect)
                     }
@@ -911,10 +915,10 @@ public struct Layout: RectBasedLayout {
 
     /// Alignment part of main layout.
     public struct Alignment: RectBasedLayout {
-        private let vertical: Vertical
         private let horizontal: Horizontal
+        private let vertical: Vertical
 
-        public init(vertical: Vertical, horizontal: Horizontal) {
+        public init(horizontal: Horizontal, vertical: Vertical) {
             self.vertical = vertical
             self.horizontal = horizontal
         }
@@ -987,15 +991,15 @@ public struct Layout: RectBasedLayout {
     // TODO: ! Add ratio behavior
     /// Filling part of main layout
     public struct Filling: RectBasedLayout {
-        private let vertical: Vertical
         private let horizontal: Horizontal
+        private let vertical: Vertical
 
         public func layout(rect: inout CGRect, in source: CGRect) {
             vertical.layout(rect: &rect, in: source)
             horizontal.layout(rect: &rect, in: source)
         }
 
-        public init(vertical: Vertical, horizontal: Horizontal) {
+        public init(horizontal: Horizontal, vertical: Vertical) {
             self.vertical = vertical
             self.horizontal = horizontal
         }
@@ -1084,12 +1088,12 @@ public extension Layout {
 
 public extension Layout {
     public init(vertical: (alignment: Alignment.Vertical, filling: Filling.Vertical), horizontal: (alignment: Alignment.Horizontal, filling: Filling.Horizontal)) {
-        self.init(alignment: Alignment(vertical: vertical.alignment, horizontal: horizontal.alignment),
-                  filling: Filling(vertical: vertical.filling, horizontal: horizontal.filling))
+        self.init(alignment: Alignment(horizontal: horizontal.alignment, vertical: vertical.alignment),
+                  filling: Filling(horizontal: horizontal.filling, vertical: vertical.filling))
     }
     public init(x: Alignment.Horizontal, y: Alignment.Vertical, width: Filling.Horizontal, height: Filling.Vertical) {
-        self.init(alignment: Alignment(vertical: y, horizontal: x),
-                  filling: Filling(vertical: height, horizontal: width))
+        self.init(alignment: Alignment(horizontal: x, vertical: y),
+                  filling: Filling(horizontal: width, vertical: height))
     }
 }
 

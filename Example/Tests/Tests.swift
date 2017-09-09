@@ -25,8 +25,8 @@ class Tests: XCTestCase {
         let itemRect = CGRect(x: 400, y: 300, width: 200, height: 100)
         let sourceRect = CGRect(x: 0, y: 0, width: 1000, height: 500)
 
-        let layout = Layout(alignment: .init(vertical: .center(centerOffset), horizontal: .left(leftOffset)),
-                            filling: .init(vertical: .boxed(edges.vertical), horizontal: .scaled(horizontalScale)))
+        let layout = Layout(alignment: .init(horizontal: .left(leftOffset), vertical: .center(centerOffset)),
+                            filling: .init(horizontal: .scaled(horizontalScale), vertical: .boxed(edges.vertical)))
 
         let resultRect = layout.layout(rect: itemRect, in: sourceRect)
         XCTAssertTrue(resultRect.origin.x == leftOffset)
@@ -44,8 +44,8 @@ class Tests: XCTestCase {
 
         let sourceRect = CGRect(x: 0, y: 0, width: 1000, height: 500)
 
-        let layout = Layout(alignment: .init(vertical: .center(centerOffset), horizontal: .left(leftOffset)),
-                            filling: .init(vertical: .boxed(edges.vertical), horizontal: .scaled(horizontalScale)))
+        let layout = Layout(alignment: .init(horizontal: .left(leftOffset), vertical: .center(centerOffset)),
+                            filling: .init(horizontal: .scaled(horizontalScale), vertical: .boxed(edges.vertical)))
 
         let frames = (0..<1000).map { _ in CGRect.random(in: sourceRect) }
 
@@ -580,7 +580,7 @@ extension Tests {
         subviews.forEach(UIView.addSubview(superview))
         let blocks = (0..<5).map { i in
             subviews[i].layoutBlock(with: Layout(x: .center(), y: .top(2), width: .scaled(0.9), height: .fixed(20)),
-                                    constraints: i == 0 ? [] : [subviews[i - 1].constraintItem(for: [LayoutAnchor.Bottom.align(by: .outer)])])
+                                    constraints: i == 0 ? [] : [subviews[i - 1].layoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])])
         }
         let scheme = LayoutScheme(blocks: blocks)
 
@@ -605,7 +605,7 @@ extension Tests {
 
             let blocks = (0..<5).map { i in
                 subviews[i].layoutBlock(with: Layout(x: .center(), y: .top(2), width: .scaled(0.9), height: .fixed(20)),
-                                        constraints: i == 0 ? [] : [subviews[i - 1].constraintItem(for: [LayoutAnchor.Bottom.align(by: .outer)])])
+                                        constraints: i == 0 ? [] : [subviews[i - 1].layoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])])
             }
 
             let scheme = LayoutScheme(blocks: blocks)
@@ -737,6 +737,26 @@ extension Tests {
 // MARK: Beta improvements
 
 extension Tests {
+    func testLayoutGuideCoordinateConverting() {
+        let guideSuperview = UIView(frame: bounds.insetBy(dx: 100, dy: 100))
+        let guide = LayoutGuide<UIView>(frame: CGRect(x: 0, y: 0, width: 100, height: 200))
+        guideSuperview.add(layoutGuide: guide)
+
+        let convertedPointTo = guide.convert(CGPoint(x: 10, y: 10), to: UIScreen.main.coordinateSpace)
+        let convertedPointFrom = guide.convert(CGPoint(x: 10, y: 10), from: UIScreen.main.coordinateSpace)
+        let convertedRectTo = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), to: UIScreen.main.coordinateSpace)
+        let convertedRectFrom = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), from: UIScreen.main.coordinateSpace)
+
+        XCTAssertTrue(convertedPointTo.x == 110)
+        XCTAssertTrue(convertedPointTo.y == 110)
+        XCTAssertTrue(convertedRectTo.origin.x == 110)
+        XCTAssertTrue(convertedRectTo.origin.y == 110)
+
+        XCTAssertTrue(convertedPointFrom.x == -90)
+        XCTAssertTrue(convertedPointFrom.y == -90)
+        XCTAssertTrue(convertedRectFrom.origin.x == -90)
+        XCTAssertTrue(convertedRectFrom.origin.y == -90)
+    }
     func testNewAnchors() {
         let leftAnchor = LeftAnchor.align
         let rightAnchor = RightAnchor()

@@ -157,16 +157,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0l4-CS-qKl">
-                                <rect key="frame" x="139" y="519" width="1" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QYI-QI-3NQ">
-                                <rect key="frame" x="219" y="519" width="1" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="'NOVEMBER 5K'" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="man-Sy-dbi">
                                 <rect key="frame" x="166" y="400" width="42" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -207,8 +197,6 @@ TRACK</string>
                         <outlet property="presentationLabel" destination="man-Sy-dbi" id="u84-cQ-hee"/>
                         <outlet property="rainImageView" destination="nqo-hX-SyH" id="Dpy-gG-nR5"/>
                         <outlet property="rainLabel" destination="yZx-TS-IbG" id="heq-Ka-7XO"/>
-                        <outlet property="separator1View" destination="0l4-CS-qKl" id="IMT-UG-Hrw"/>
-                        <outlet property="separator2View" destination="QYI-QI-3NQ" id="Ecs-3Z-YYO"/>
                         <outlet property="titleLabel" destination="ygE-3G-0GD" id="5sd-LW-oaM"/>
                         <outlet property="weatherImageView" destination="5EU-JP-KtH" id="HGw-l2-xbf"/>
                         <outlet property="weatherLabel" destination="e6Y-qU-Swt" id="82N-4x-FGR"/>
