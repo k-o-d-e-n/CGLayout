@@ -3,7 +3,7 @@
 //  Pods
 //
 //  Created by Denis Koryttsev on 04/09/2017.
-//
+//  Copyright © 2017 K-o-D-e-N. All rights reserved.
 //
 
 import Foundation
@@ -15,42 +15,18 @@ import Foundation
 /// Create a LayoutGuide with -init
 /// Add to a view with UIView.add(layoutGuide:) if will be used him as item in RectBasedLayout.apply(for item:, use constraints:)
 open class LayoutGuide<Super: LayoutItem>: LayoutItem {
+    weak var superLayoutItem: Super? {
+        didSet { superItem = superLayoutItem }
+    }
     open var frame: CGRect
     open var bounds: CGRect
-    open weak var superItem: Super?
+    open weak var superItem: LayoutItem?
 
     public init(frame: CGRect) {
         self.frame = frame
         self.bounds = CGRect(origin: .zero, size: frame.size)
     }
 }
-
-extension LayoutGuide where Super: UICoordinateSpace {
-    @available(iOS 8.0, *)
-    public func convert(_ point: CGPoint, to coordinateSpace: UICoordinateSpace) -> CGPoint {
-        let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-        return superItem!.convert(pointInSuper, to: coordinateSpace)
-    }
-
-    @available(iOS 8.0, *)
-    public func convert(_ point: CGPoint, from coordinateSpace: UICoordinateSpace) -> CGPoint {
-        let pointInSuper = superItem!.convert(point, from: coordinateSpace)
-        return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
-    }
-
-    @available(iOS 8.0, *)
-    public func convert(_ rect: CGRect, to coordinateSpace: UICoordinateSpace) -> CGRect {
-        let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-        return superItem!.convert(rectInSuper, to: coordinateSpace)
-    }
-
-    @available(iOS 8.0, *)
-    public func convert(_ rect: CGRect, from coordinateSpace: UICoordinateSpace) -> CGRect {
-        let rectInSuper = superItem!.convert(rect, from: coordinateSpace)
-        return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
-    }
-}
-
 public extension LayoutGuide where Super: UIView {
     /// Fabric method for generation view with any type
     ///
@@ -63,7 +39,7 @@ public extension LayoutGuide where Super: UIView {
     /// - Returns: Added view
     @discardableResult
     func add<V: UIView>(_ type: V.Type) -> V? {
-        guard let superItem = superItem else { return nil }
+        guard let superItem = superLayoutItem else { return nil }
 
         let view = build(type)
         superItem.addSubview(view)
@@ -86,7 +62,7 @@ public extension LayoutGuide where Super: CALayer {
     /// - Returns: Added layer
     @discardableResult
     func add<L: CALayer>(_ type: L.Type) -> L? {
-        guard let superItem = superItem else { return nil }
+        guard let superItem = superLayoutItem else { return nil }
 
         let layer = build(type)
         superItem.addSublayer(layer)
@@ -98,7 +74,7 @@ public extension LayoutItem {
     ///
     /// - Parameter layoutGuide: Layout guide for binding
     func add(layoutGuide: LayoutGuide<Self>) {
-        layoutGuide.superItem = self
+        layoutGuide.superLayoutItem = self
     }
 }
 
@@ -158,8 +134,8 @@ extension String {
     ///   - attributes: String attributes
     ///   - context: Drawing context
     /// - Returns: String-based constraint
-    func layoutConstraint(with attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutConstraint {
-        return StringLayoutConstraint(string: self, attributes: attributes, context: context)
+    func layoutConstraint(with options: NSStringDrawingOptions = .usesLineFragmentOrigin, attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutConstraint {
+        return StringLayoutConstraint(string: self, options: options, attributes: attributes, context: context)
     }
 }
 

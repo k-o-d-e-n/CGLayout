@@ -12,10 +12,8 @@ import UIKit
 // TODO: ! Add RTL (right to left language)
 // TODO: !! Implement behavior on remove view from hierarchy (Unwrapped LayoutItem, break result in ConstraintsItem). Probably need add `isActive` property.
 // TODO: ! Add support UITraitCollection
-// TODO: ! Add parameters to LayoutConstraint for layout item subview/superview relationships (for use converting rects to source coordinate space)
 
 // TODO: !!! Tests for new code
-// TODO: Think how can be use OptionSet type.
 
 
 /// Defines method for wrapping entity with base behavior to this type.
@@ -62,7 +60,7 @@ public extension RectBasedLayout {
     /// - Parameters:
     ///   - item: Item for layout
     ///   - constraints: Array of tuples with rect and constraint
-    public func apply<Item: LayoutItem>(for item: Item, use constraints: [ConstrainRect] = []) where Item.SuperLayoutItem: LayoutItem {
+    public func apply<Item: LayoutItem>(for item: Item, use constraints: [ConstrainRect] = []) {
         item.frame = layout(rect: item.frame, in: item.superItem!.bounds, use: constraints)
     }
 
@@ -84,18 +82,20 @@ public extension RectBasedLayout {
     /// - Parameters:
     ///   - item: Item for layout
     ///   - constraints: Array of constraint items
-    public func apply<Item: LayoutItem>(for item: Item, use constraints: [LayoutConstraintProtocol] = []) where Item.SuperLayoutItem: LayoutItem {
-        item.frame = layout(rect: item.frame, in: item.superItem!.bounds, use: constraints)
+    public func apply(for item: LayoutItem, use constraints: [LayoutConstraintProtocol] = []) {
+        item.frame = layout(rect: item.frame, from: item.superItem!, in: item.superItem!.bounds, use: constraints)
     }
 
     /// Calculates frame of `LayoutItem` entity in constrained source space (bounds in parent) using constraints.
     ///
     /// - Parameters:
-    ///   - item: Item for layout
+    ///   - rect: Rect for layout
+    ///   - item: `LayoutItem` item contained `rect`
+    ///   - sourceRect: Space for layout
     ///   - constraints: Array of constraint items
     /// - Returns: Corrected frame of layout item
-    public func layout(rect: CGRect, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol] = []) -> CGRect {
-        return layout(rect: rect, in: constraints.reduce(sourceRect) { $1.constrained(sourceRect: $0) })
+    public func layout(rect: CGRect, from item: LayoutItem, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol] = []) -> CGRect {
+        return layout(rect: rect, in: constraints.reduce(sourceRect) { $1.constrained(sourceRect: $0, in: item) })
     }
 }
 
@@ -151,18 +151,17 @@ extension CGRect {
 // MARK: LayoutItem
 
 /// Protocol for any layout element
-public protocol LayoutItem: class {
-    associatedtype SuperLayoutItem: AnyObject
+public protocol LayoutItem: class, LayoutCoordinateSpace {
     var frame: CGRect { get set }
     var bounds: CGRect { get set }
-    weak var superItem: SuperLayoutItem? { get }
+    weak var superItem: LayoutItem? { get }
     // TODO: Add subItems if will be need create layout sub elements. For instance, stack view.
 }
 extension UIView: AdjustableLayoutItem {
-    public weak var superItem: UIView? { return superview }
+    public weak var superItem: LayoutItem? { return superview }
 }
 extension CALayer: LayoutItem {
-    public weak var superItem: CALayer? { return superlayer }
+    public weak var superItem: LayoutItem? { return superlayer }
 }
 
 // TODO: Try use LayoutItem as not rendered "layout view", which only makes layout for subItems(?). Example as UIStackView
@@ -186,11 +185,9 @@ extension LayoutItem {
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related constraint item
-    public func layoutConstraint(for anchors: [RectBasedConstraint]) -> LayoutConstraint<Self> {
+    public func layoutConstraint(for anchors: [RectBasedConstraint]) -> LayoutConstraint {
         return LayoutConstraint(item: self, constraints: anchors)
     }
-}
-extension LayoutItem where Self.SuperLayoutItem: LayoutItem {
     /// Convenience getter for layout block related to this entity
     ///
     /// - Parameters:
@@ -213,7 +210,7 @@ extension AdjustableLayoutItem {
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related adjust constraint item
-    public func adjustLayoutConstraint(for anchors: [LayoutAnchor.Size]) -> AdjustLayoutConstraint<Self> {
+    public func adjustLayoutConstraint(for anchors: [LayoutAnchor.Size]) -> AdjustLayoutConstraint {
         return AdjustLayoutConstraint(item: self, constraints: anchors)
     }
 }
@@ -228,20 +225,20 @@ public protocol LayoutConstraintProtocol: RectBasedConstraint {
     ///
     /// - Parameter currentSpace: Source rect in current state
     /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect) -> CGRect
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect
 }
 extension LayoutConstraintProtocol {
-    fileprivate func constrained(sourceRect: CGRect) -> CGRect {
-        return constrained(sourceRect: sourceRect, by: constrainRect(for: sourceRect))
+    fileprivate func constrained(sourceRect: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+        return constrained(sourceRect: sourceRect, by: constrainRect(for: sourceRect, in: coordinateSpace))
     }
 }
 
 /// Simple related constraint. Contains anchor constraints and layout item as source of frame for constrain
-public struct LayoutConstraint<Item: LayoutItem> {
+public struct LayoutConstraint {
     let constraints: [RectBasedConstraint]
-    private(set) weak var item: Item!
+    private(set) weak var item: LayoutItem!
 
-    public init(item: Item, constraints: [RectBasedConstraint]) {
+    public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
         self.item = item
         self.constraints = constraints
     }
@@ -250,8 +247,8 @@ extension LayoutConstraint: LayoutConstraintProtocol {
     public func layoutItem(is object: AnyObject) -> Bool {
         return item === object
     }
-    public func constrainRect(for currentSpace: CGRect) -> CGRect {
-        return item.frame // TODO: ! For parent layout item need use bounds
+    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+        return coordinateSpace === item.superItem! ? item.frame : coordinateSpace.convert(rect: item.frame, from: item.superItem!)
     }
     public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect = sourceRect.constrainedBy(rect: rect, use: constraints)
@@ -259,11 +256,11 @@ extension LayoutConstraint: LayoutConstraintProtocol {
 }
 
 /// Related constraint for adjust size of source space. Contains size constraints and layout item for calculate size.
-public struct AdjustLayoutConstraint<Item: AdjustableLayoutItem> {
+public struct AdjustLayoutConstraint {
     let constraints: [LayoutAnchor.Size]
-    private(set) weak var item: Item!
+    private(set) weak var item: AdjustableLayoutItem!
 
-    public init(item: Item, constraints: [LayoutAnchor.Size]) {
+    public init(item: AdjustableLayoutItem, constraints: [LayoutAnchor.Size]) {
         self.item = item
         self.constraints = constraints
     }
@@ -272,7 +269,7 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     public func layoutItem(is object: AnyObject) -> Bool {
         return item === object
     }
-    public func constrainRect(for currentSpace: CGRect) -> CGRect {
+    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
         return currentSpace
     }
     public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
@@ -328,7 +325,7 @@ public protocol LayoutBlockProtocol {
 }
 
 /// Makes full layout for `LayoutItem` entity. Contains main layout, related anchor constrains and item for layout.
-public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol where Item.SuperLayoutItem: LayoutItem {
+public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     let itemLayout: RectBasedLayout
     let constraints: [LayoutConstraintProtocol]
     public private(set) weak var item: Item!
@@ -344,12 +341,12 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol where Item.Supe
     }
 
     public func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
-        return itemLayout.layout(rect: item.frame, in: sourceRect, use: constraints)
+        return itemLayout.layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)
     }
 
     public func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> CGRect {
         let rects: [ConstrainRect] = constraints.map { constraint in
-            let rect = completedRects.first { constraint.layoutItem(is: $0.0) }?.1 ?? constraint.constrainRect(for: sourceRect)
+            let rect = completedRects.first { constraint.layoutItem(is: $0.0) }?.1 ?? constraint.constrainRect(for: sourceRect, in: item.superItem!)
             return (rect, constraint)
         }
         let frame = itemLayout.layout(rect: item.frame, in: sourceRect, use: rects)
@@ -1105,7 +1102,7 @@ extension Layout.Alignment {
     ///   - filling: Filling layout
     ///   - item: Item for layout
     ///   - constraints: Required constraints
-    public func apply<Item: LayoutItem>(with filling: Layout.Filling, for item: Item, use constraints: [ConstrainRect]) where Item.SuperLayoutItem: LayoutItem {
+    public func apply<Item: LayoutItem>(with filling: Layout.Filling, for item: Item, use constraints: [ConstrainRect]) {
         filling.apply(for: item, use: constraints)
         apply(for: item, use: constraints)
     }
@@ -1118,7 +1115,7 @@ extension Layout.Filling {
     ///   - alignment: Alignment layout
     ///   - item: Item for layout
     ///   - constraints: Required constraints
-    public func apply<Item: LayoutItem>(with alignment: Layout.Alignment, for item: Item, use constraints: [ConstrainRect]) where Item.SuperLayoutItem: LayoutItem {
+    public func apply<Item: LayoutItem>(with alignment: Layout.Alignment, for item: Item, use constraints: [ConstrainRect]) {
         apply(for: item, use: constraints)
         alignment.apply(for: item, use: constraints)
     }
@@ -1127,7 +1124,20 @@ extension Layout.Filling {
 
 // MARK: Attempts, not used
 
-// Value wrapper for possibility use calculated values. Status: blocked Referred in:
+/* Swift 4(.1)+
+fileprivate protocol Absorbing {
+    associatedtype Base
+    var base: Base { get }
+    init(base: Base)
+}
+
+extension Extended where Self: Absorbing, Self.Conformed == Self.Base {
+    fileprivate func build(_ base: Conformed) -> Self {
+        return .init(base: base)
+    }
+}*/
+
+// Value wrapper for possibility use calculated values. Status: 'blocked'. Referred in:
 // TODO: Add type wrapper for layout parameter for representation as literal or calculation. Or move behavior (like as .scaled, .boxed) to `ValueType`
 protocol CGLayoutValue {
     associatedtype CGLayoutValue

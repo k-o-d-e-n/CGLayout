@@ -96,7 +96,7 @@ class ViewController: UIViewController {
         centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(20), height: .fixed(30)),
                                  constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])]).layout()
 
-        // layout using only constraints; TODO: Add convert to view.bounds coordinate space 
+        // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space. 
         navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.layoutConstraint(for: [LayoutAnchor.equal])]).layout()
     }
 

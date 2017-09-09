@@ -35,7 +35,7 @@ struct AnonymConstraint: LayoutConstraintProtocol {
         return false // leads to fail search item, that has bad effect on performance. TODO: Create flag for anonym constraints
     }
 
-    func constrainRect(for currentSpace: CGRect) -> CGRect {
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
         return currentSpace
     }
 
@@ -117,10 +117,7 @@ public class SecondViewController: UIViewController {
             DispatchQueue.main.sync {
                 self.portraitSnapshot = portraitSnapshot
                 self.landscapeSnapshot = landscapeSnapshot
-//                CATransaction.begin()
-//                CATransaction.setDisableActions(true)
                 self.layoutScheme.apply(snapshot: UIDevice.current.orientation.isLandscape ? landscapeSnapshot : portraitSnapshot)
-//                CATransaction.commit()
             }
         }
     }

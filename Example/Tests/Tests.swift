@@ -624,6 +624,79 @@ extension Tests {
     }
 }
 
+// MARK: LayoutCoordinateSpace
+
+extension Tests {
+    func testCoordinateSpacePointLayoutGuide() {
+        let superview = UIView(frame: bounds.insetBy(dx: 100, dy: 100))
+        let guide = LayoutGuide<CALayer>(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
+        superview.layer.add(layoutGuide: guide)
+
+        let converted = superview.layer.convert(point: CGPoint(x: 10, y: -5), from: guide)
+        let converted2 = guide.convert(point: CGPoint(x: 150, y: 0), from: superview.layer)
+
+        XCTAssertTrue(converted.x == 30)
+        XCTAssertTrue(converted.y == 5)
+
+        XCTAssertTrue(converted2.x == 130)
+        XCTAssertTrue(converted2.y == -10)
+    }
+    func testCoordinateSpaceCGRect() {
+        let window = UIApplication.shared.delegate!.window!!
+        let superview = UIScrollView(frame: bounds.insetBy(dx: 100, dy: 100))
+        window.addSubview(superview)
+        superview.contentSize = bounds.size
+        superview.contentOffset.x = 150
+        let view = UIView(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
+        superview.addSubview(view)
+
+        let converted = view.convert(rect: CGRect(x: 10, y: -5, width: 20, height: 10), to: window)
+        let converted2 = view.convert(rect: CGRect(x: 150, y: 0, width: 30, height: 20), from: superview)
+
+        XCTAssertTrue(converted.origin.x == -20)
+        XCTAssertTrue(converted.origin.y == 105)
+
+        XCTAssertTrue(converted2.origin.x == 130)
+        XCTAssertTrue(converted2.origin.y == -10)
+    }
+    /// UILayoutGuide has valid layoutFrame only in layoutSubviews method.
+    func testCoordinateSpacePointUILayoutGuide() {
+        class LayoutView: UIView {
+            var layout: (() -> Void)?
+            override func layoutSubviews() {
+                super.layoutSubviews()
+                layout?()
+            }
+        }
+
+        let superview = LayoutView(frame: bounds.insetBy(dx: 100, dy: 100))
+        let guide = UILayoutGuide()
+        superview.translatesAutoresizingMaskIntoConstraints = false
+        superview.addLayoutGuide(guide)
+        NSLayoutConstraint.activate([
+            guide.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 20),
+            guide.topAnchor.constraint(equalTo: superview.topAnchor, constant: 10),
+            guide.heightAnchor.constraint(equalToConstant: 60),
+            guide.widthAnchor.constraint(equalToConstant: 40)
+        ])
+
+        var converted: CGPoint = .zero
+        var converted2: CGPoint = .zero
+        superview.layout = {
+            converted = superview.layer.convert(point: CGPoint(x: 10, y: -5), from: guide)
+            converted2 = guide.convert(point: CGPoint(x: 150, y: 0), from: superview.layer)
+        }
+        superview.setNeedsLayout()
+        superview.layoutIfNeeded()
+
+        XCTAssertTrue(converted.x == 30)
+        XCTAssertTrue(converted.y == 5)
+
+        XCTAssertTrue(converted2.x == 130)
+        XCTAssertTrue(converted2.y == -10)
+    }
+}
+
 // MARK: Measures
 
 extension Tests {
@@ -645,15 +718,20 @@ extension Tests {
             controller.view.layoutIfNeeded()
         }
     }
-//    func testPerformanceDropFirst() {
-//        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewController") as! SecondViewController
-//        controller.loadViewIfNeeded()
-//        let snapshot = controller.layoutScheme.snapshot(for: UIScreen.main.bounds)
-//
-//        self.measure {
-//            _ = snapshot.childSnapshots.dropFirst().reduce(snapshot.childSnapshots.first!.snapshotFrame) { $0.union($1.snapshotFrame) }
-//        }
-//    }
+    func testCoordinateSpacePerformance() {
+        let window = UIApplication.shared.delegate!.window!!
+        let superview = UIScrollView(frame: bounds.insetBy(dx: 100, dy: 100))
+        window.addSubview(superview)
+        superview.contentSize = bounds.size
+        superview.contentOffset.x = 150
+        let view = UIView(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
+        superview.addSubview(view)
+
+        self.measure {
+            _ = view.convert(rect: CGRect(x: 10, y: -5, width: 20, height: 10), to: window)
+            _ = view.convert(rect: CGRect(x: 150, y: 0, width: 30, height: 20), from: superview)
+        }
+    }
 }
 
 // MARK: Beta improvements
