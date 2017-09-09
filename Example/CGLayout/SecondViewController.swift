@@ -29,10 +29,12 @@ extension LayoutAnchor.Center {
 }
 
 struct AnonymConstraint: LayoutConstraintProtocol {
+    /// Flag that constraint not required other calculations. It`s true for size-based constraints.
+    var isIndependent: Bool { return true }
     let constraints: [RectBasedConstraint]
 
     func layoutItem(is object: AnyObject) -> Bool {
-        return false // leads to fail search item, that has bad effect on performance. TODO: Create flag for anonym constraints
+        return false
     }
 
     func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {

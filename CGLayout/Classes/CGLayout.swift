@@ -219,6 +219,8 @@ extension AdjustableLayoutItem {
 
 /// Provides rect for constrain source space. Used for related constraints.
 public protocol LayoutConstraintProtocol: RectBasedConstraint {
+    /// Flag that constraint not required other calculations. It`s true for size-based constraints.
+    var isIndependent: Bool { get }
     /// `LayoutItem` object associated with this constraint
     func layoutItem(is object: AnyObject) -> Bool
     /// Return rectangle for constrain source rect
@@ -244,6 +246,7 @@ public struct LayoutConstraint {
     }
 }
 extension LayoutConstraint: LayoutConstraintProtocol {
+    public var isIndependent: Bool { return false }
     public func layoutItem(is object: AnyObject) -> Bool {
         return item === object
     }
@@ -258,7 +261,7 @@ extension LayoutConstraint: LayoutConstraintProtocol {
 /// Related constraint for adjust size of source space. Contains size constraints and layout item for calculate size.
 public struct AdjustLayoutConstraint {
     let constraints: [LayoutAnchor.Size]
-    private(set) weak var item: AdjustableLayoutItem!
+    private(set) weak var item: AdjustableLayoutItem! // TODO: Not used in fact
 
     public init(item: AdjustableLayoutItem, constraints: [LayoutAnchor.Size]) {
         self.item = item
@@ -266,6 +269,7 @@ public struct AdjustLayoutConstraint {
     }
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
+    public var isIndependent: Bool { return true }
     public func layoutItem(is object: AnyObject) -> Bool {
         return item === object
     }
@@ -345,11 +349,11 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     }
 
     public func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> CGRect {
-        let rects: [ConstrainRect] = constraints.map { constraint in
-            let rect = completedRects.first { constraint.layoutItem(is: $0.0) }?.1 ?? constraint.constrainRect(for: sourceRect, in: item.superItem!)
-            return (rect, constraint)
+        let source = constraints.reduce(sourceRect) { (result, constrain) -> CGRect in
+            let rect = constrain.isIndependent ? nil : completedRects.first { constrain.layoutItem(is: $0.0) }?.1
+            return result.constrainedBy(rect: rect ?? constrain.constrainRect(for: sourceRect, in: item.superItem!), use: constrain)
         }
-        let frame = itemLayout.layout(rect: item.frame, in: sourceRect, use: rects)
+        let frame = itemLayout.layout(rect: item.frame, in: source)
         completedRects.insert((item, frame), at: 0)
         return frame
     }
