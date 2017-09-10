@@ -351,7 +351,7 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     public func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> CGRect {
         let source = constraints.reduce(sourceRect) { (result, constrain) -> CGRect in
             let rect = constrain.isIndependent ? nil : completedRects.first { constrain.layoutItem(is: $0.0) }?.1
-            return result.constrainedBy(rect: rect ?? constrain.constrainRect(for: sourceRect, in: item.superItem!), use: constrain)
+            return result.constrainedBy(rect: rect ?? constrain.constrainRect(for: result, in: item.superItem!), use: constrain)
         }
         let frame = itemLayout.layout(rect: item.frame, in: source)
         completedRects.insert((item, frame), at: 0)
