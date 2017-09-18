@@ -303,6 +303,9 @@ fileprivate struct LayoutSnapshot: LayoutSnapshotProtocol {
 
 /// Defines general methods for any layout block
 public protocol LayoutBlockProtocol {
+    /// Snapshot for current state without recalculating
+    var currentSnapshot: LayoutSnapshotProtocol { get }
+
     /// Calculate and apply frames layout items.
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout()
@@ -319,7 +322,7 @@ public protocol LayoutBlockProtocol {
     ///   - sourceRect: Source space for layout. For not top level blocks rect should be define available bounds of block
     ///   - completedRects: `LayoutItem` items with corrected frame
     /// - Returns: Frame of this block
-    func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> CGRect
+    func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol
 
     /// Applying frames from snapshot to `LayoutItem` items in this block. 
     /// Snapshot array should be ordered such to match `LayoutItem` items sequence.
@@ -329,10 +332,12 @@ public protocol LayoutBlockProtocol {
 }
 
 /// Makes full layout for `LayoutItem` entity. Contains main layout, related anchor constrains and item for layout.
-public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
-    let itemLayout: RectBasedLayout
-    let constraints: [LayoutConstraintProtocol]
+public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol { // TODO: Rename to LayoutElement
+    private let itemLayout: RectBasedLayout
+    private let constraints: [LayoutConstraintProtocol]
     public private(set) weak var item: Item!
+
+    public var currentSnapshot: LayoutSnapshotProtocol { return item.frame }
 
     public init(item: Item, layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) {
         self.item = item
@@ -348,7 +353,7 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
         return itemLayout.layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)
     }
 
-    public func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> CGRect {
+    public func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
         let source = constraints.reduce(sourceRect) { (result, constrain) -> CGRect in
             let rect = constrain.isIndependent ? nil : completedRects.first { constrain.layoutItem(is: $0.0) }?.1
             return result.constrainedBy(rect: rect ?? constrain.constrainRect(for: result, in: item.superItem!), use: constrain)
@@ -363,11 +368,20 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     }
 }
 
-/// Layout scheme is main layout entity for make up. Contains full layout process.
+/// LayoutScheme is top level layout entity for make up. Contains full layout process.
 /// Represented as simple set of layout blocks with the right sequence, that means
 /// currently performed block has constraints related to `LayoutItem` items with corrected frame.
 public struct LayoutScheme: LayoutBlockProtocol {
-    let blocks: [LayoutBlockProtocol]
+    private let blocks: [LayoutBlockProtocol]
+
+    public var currentSnapshot: LayoutSnapshotProtocol {
+        var snapshotFrame: CGRect!
+        return LayoutSnapshot(childSnapshots: blocks.map { block in
+            let blockFrame = block.currentSnapshot.snapshotFrame
+            snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
+            return blockFrame
+        }, snapshotFrame: snapshotFrame)
+    }
 
     public init(blocks: [LayoutBlockProtocol]) {
         self.blocks = blocks
@@ -384,18 +398,17 @@ public struct LayoutScheme: LayoutBlockProtocol {
         }
     }
 
-    // TODO: low performance
     public func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
         var snapshotFrame: CGRect!
         var completedFrames: [(AnyObject, CGRect)] = []
         return LayoutSnapshot(childSnapshots: blocks.map { block in
-            let blockFrame = block.snapshot(for: sourceRect, completedRects: &completedFrames)
-            snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
-            return blockFrame
+            let blockSnapshot = block.snapshot(for: sourceRect, completedRects: &completedFrames)
+            snapshotFrame = snapshotFrame?.union(blockSnapshot.snapshotFrame) ?? blockSnapshot.snapshotFrame
+            return blockSnapshot
         }, snapshotFrame: snapshotFrame)
     }
 
-    public func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> CGRect { return .zero }//return snapshot(for: sourceRect).snapshotFrame }
+    public func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol { return CGRect.zero }//return snapshot(for: sourceRect).snapshotFrame }
 }
 
 // MARK: LayoutAnchor

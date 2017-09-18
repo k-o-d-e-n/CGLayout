@@ -222,10 +222,10 @@ TRACK</string>
             </objects>
             <point key="canvasLocation" x="-348" y="61"/>
         </scene>
-        <!--View Controller-->
+        <!--Second View Controller Autolayout-->
         <scene sceneID="MZi-3h-bPn">
             <objects>
-                <viewController storyboardIdentifier="SecondViewControllerAutoLayout" id="ZHj-ds-sej" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SecondViewControllerAutoLayout" id="ZHj-ds-sej" customClass="SecondViewControllerAutolayout" customModule="CGLayout_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wTN-jO-BJ5"/>
                         <viewControllerLayoutGuide type="bottom" id="vue-ko-BfY"/>

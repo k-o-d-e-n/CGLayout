@@ -105,6 +105,56 @@ open class ViewPlaceholder<View: UIView>: LayoutGuide<UIView> {
     }
 }
 
+// MARK: UILayoutGuide -> UIViewPlaceholder
+
+@available(iOS 9.0, *)
+public extension UILayoutGuide {
+    /// Fabric method for generation view with any type
+    ///
+    /// - Parameter type: Type of view
+    /// - Returns: Generated view
+    func build<V: UIView>(_ type: V.Type) -> V { return V(frame: frame) }
+    /// Generates view and adds to `superItem` hierarchy
+    ///
+    /// - Parameter type: Type of view
+    /// - Returns: Added view
+    @discardableResult
+    func add<V: UIView>(_ type: V.Type) -> V? {
+        guard let superItem = owningView else { return nil }
+
+        let view = build(type)
+        superItem.addSubview(view)
+        return view
+    }
+}
+
+@available(iOS 9.0, *)
+open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
+    private weak var _view: View?
+    open weak var view: View! {
+        loadViewIfNeeded()
+        return viewIfLoaded
+    }
+    open var isViewLoaded: Bool { return _view != nil }
+    open var viewIfLoaded: View? { return _view }
+
+    open func loadView() {
+        _view = add(View.self)
+    }
+
+    open func viewDidLoad() {
+        // subclass override
+    }
+
+    open func loadViewIfNeeded() {
+        if !isViewLoaded {
+            loadView()
+            viewIfLoaded?.translatesAutoresizingMaskIntoConstraints = false
+            viewDidLoad()
+        }
+    }
+}
+
 // MARK: Additional constraints
 
 // TODO: Create constraint for attributed string and other data oriented constraints

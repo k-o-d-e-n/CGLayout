@@ -622,6 +622,24 @@ extension Tests {
 
         XCTAssertTrue(framesAfterLayoutDirectly == framesAfterApplyingSnapshot)
     }
+
+    func testCurrentSnapshotEqualLayoutDirectly() {
+        let superview = UIView(frame: bounds)
+        let initialFrames = (0..<5).map { _ in CGRect.random(in: bounds) }
+        let subviews = initialFrames.map(UIView.init)
+        subviews.forEach(UIView.addSubview(superview))
+        let blocks = (0..<5).map { i in
+            subviews[i].layoutBlock(with: Layout(x: .center(), y: .top(2), width: .scaled(0.9), height: .fixed(20)),
+                                    constraints: i == 0 ? [] : [subviews[i - 1].layoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])])
+        }
+        let scheme = LayoutScheme(blocks: blocks)
+
+        scheme.layout()
+
+        let snapshot = scheme.currentSnapshot
+
+        XCTAssertTrue(snapshot.childSnapshots.map { $0.snapshotFrame } == subviews.map { $0.frame })
+    }
 }
 
 // MARK: LayoutCoordinateSpace
