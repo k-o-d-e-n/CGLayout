@@ -78,6 +78,73 @@ public extension LayoutItem {
     }
 }
 
+public protocol LayoutItemContainer: LayoutItem {
+    var subLayoutItems: [LayoutItem]? { get }
+
+    func addSubLayoutItem<SubItem: LayoutItem>(_ subItem: SubItem)
+}
+
+public protocol LayoutItemCreation: LayoutItem {
+    init(frame: CGRect)
+}
+
+extension CALayer: LayoutItemContainer {
+    public var subLayoutItems: [LayoutItem]? { return sublayers }
+
+    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
+
+    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
+        addSublayer(subItem)
+    }
+}
+
+extension UIView: LayoutItemContainer {
+    public var subLayoutItems: [LayoutItem]? { return subviews }
+
+    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
+
+    @available(iOS 9.0, *)
+    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : UILayoutGuide {
+        addLayoutGuide(subItem)
+    }
+    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
+        layer.addSublayer(subItem)
+    }
+    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : UIView {
+        addSubview(subItem)
+    }
+}
+extension UIView: LayoutItemCreation {}
+
+open class _LayoutPlaceholder<Item: LayoutItemCreation, Super: LayoutItemContainer>: LayoutGuide<Super> {
+    private weak var _item: Item?
+    open weak var item: Item! {
+        loadItemIfNeeded()
+        return itemIfLoaded
+    }
+    open var isItemLoaded: Bool { return _item != nil }
+    open var itemIfLoaded: Item? { return _item }
+
+    open func loadItem() {
+        let item = Item(frame: frame)
+        superLayoutItem?.addSubLayoutItem(item)
+        _item = item
+    }
+
+    open func itemDidLoad() {
+        // subclass override
+    }
+
+    open func loadItemIfNeeded() {
+        if !isItemLoaded {
+            loadItem()
+            itemDidLoad()
+        }
+    }
+}
+
+open class _ViewPlaceholder<View: LayoutItemCreation>: _LayoutPlaceholder<View, UIView> {}
+
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class ViewPlaceholder<View: UIView>: LayoutGuide<UIView> {
@@ -192,3 +259,4 @@ extension String {
 // MARK: Additional layout scheme
 
 // TODO: Implement stack layout scheme and others
+// TODO: Add to stack layout scheme circle type
