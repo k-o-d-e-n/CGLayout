@@ -44,6 +44,9 @@ struct AnonymConstraint: LayoutConstraintProtocol {
     func constrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect = constraints.reduce(sourceRect) { $0.1.constrained(sourceRect: $0.0, by: rect) }
     }
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
+        return rect
+    }
 }
 
 public class SecondViewController: UIViewController {
@@ -90,12 +93,14 @@ public class SecondViewController: UIViewController {
             self.rainImageView.layoutBlock(with: Layout(x: .right(10), y: .top(), width: .fixed(30), height: .fixed(30)),
                                            constraints: [self.rainLabel.layoutConstraint(for: [self.leftLimit, self.topLimit])]),
             self.logoImageView.layoutBlock(with: Layout(x: .center(), y: .top(80), width: .fixed(70), height: .fixed(70))),
-            self.titleLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(120)),
-                                        constraints: [self.logoImageView.layoutConstraint(for: [self.bottomLimit])]),
-            self.nameLabel.layoutBlock(with: Layout(x: .center(), y: .center(20), width: .scaled(1), height: .fixed(30))),
-            self.presentationLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(50)),
-                                               constraints: [self.nameLabel.layoutConstraint(for: [self.bottomLimit])])
-        ])
+            /// example including other scheme to top level scheme
+            LayoutScheme(blocks: [
+                self.titleLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(120)),
+                                            constraints: [self.logoImageView.layoutConstraint(for: [self.bottomLimit])]),
+                self.nameLabel.layoutBlock(with: Layout(x: .center(), y: .center(20), width: .scaled(1), height: .fixed(30))),
+                self.presentationLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(50)),
+                                                   constraints: [self.nameLabel.layoutConstraint(for: [self.bottomLimit])])])
+            ])
     }()
 
     var portraitSnapshot: LayoutSnapshotProtocol!

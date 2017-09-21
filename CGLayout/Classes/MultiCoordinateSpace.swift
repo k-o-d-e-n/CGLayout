@@ -8,6 +8,8 @@
 
 import Foundation
 
+// TODO: !!! Add MacOS support (conversions more complex)
+
 // MARK: LayoutCoordinateSpace
 
 /// Common protocol for anyone `LayoutItem`.
@@ -166,6 +168,7 @@ fileprivate struct LinkedList<T>: Sequence {
     }
 }
 
+// TODO: Add search nearest common ancestor to implementation
 extension LayoutCoordinateSpace where Self: LayoutItem {
     fileprivate static func convert(point: CGPoint, from: LayoutItem, to: LayoutItem) -> CGPoint {
         let list1Iterator = LinkedList(start: from) { $0.superItem }.makeIterator()
