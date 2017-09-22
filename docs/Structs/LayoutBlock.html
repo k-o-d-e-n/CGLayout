@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>LayoutBlock Struct Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Struct/LayoutBlock" class="dashAnchor"></a>
+    <a title="LayoutBlock Struct Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">CGLayout Docs</a> (44% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">CGLayout Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        LayoutBlock Struct Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/LayoutGuide.html">LayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UIViewPlaceholder.html">UIViewPlaceholder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewPlaceholder.html">ViewPlaceholder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/CALayer.html">CALayer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CGRect.html">CGRect</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UILayoutGuide.html">UILayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIView.html">UIView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/AdjustableLayoutItem.html">AdjustableLayoutItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/Extended.html">Extended</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutConstraintProtocol.html">LayoutConstraintProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutCoordinateSpace.html">LayoutCoordinateSpace</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutItem.html">LayoutItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutSnapshotProtocol.html">LayoutSnapshotProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RectBasedConstraint.html">RectBasedConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AdjustLayoutConstraint.html">AdjustLayoutConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Layout.html">Layout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Layout/Alignment.html">– Alignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Layout/Filling.html">– Filling</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor.html">LayoutAnchor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Center.html">– Center</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Size.html">– Size</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Bottom.html">– Bottom</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Right.html">– Right</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Left.html">– Left</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Top.html">– Top</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutBlock.html">LayoutBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutConstraint.html">LayoutConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutScheme.html">LayoutScheme</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/StringLayoutConstraint.html">StringLayoutConstraint</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Typealiases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:8CGLayout13ConstrainRect">ConstrainRect</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>LayoutBlock</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LayoutBlock</span><span class="o">&lt;</span><span class="kt">Item</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutItem.html">LayoutItem</a></span><span class="o">&gt;</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>Makes full layout for <code><a href="../Protocols/LayoutItem.html">LayoutItem</a></code> entity. Contains main layout, related anchor constrains and item for layout.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TODO:%20Rename%20to%20LayoutElement%20???"></a>
+                <a name="//apple_ref/swift/Section/TODO: Rename to LayoutElement ???" class="dashAnchor"></a>
+                <a href="#/TODO:%20Rename%20to%20LayoutElement%20???">
+                  <h3 class="section-name">TODO: Rename to LayoutElement ???</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vV8CGLayout11LayoutBlock4itemXwGSQx_"></a>
+                    <a name="//apple_ref/swift/Property/item" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vV8CGLayout11LayoutBlock4itemXwGSQx_">item</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LayoutBlock</span><span class="o">&lt;</span><span class="kt">Item</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutItem.html">LayoutItem</a></span><span class="o">&gt;</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vP8CGLayout19LayoutBlockProtocol15currentSnapshotPS_22LayoutSnapshotProtocol_"></a>
+                    <a name="//apple_ref/swift/Property/currentSnapshot" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vP8CGLayout19LayoutBlockProtocol15currentSnapshotPS_22LayoutSnapshotProtocol_">currentSnapshot</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">currentSnapshot</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutSnapshotProtocol.html">LayoutSnapshotProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FV8CGLayout11LayoutBlockcFT4itemx6layoutPS_15RectBasedLayout_11constraintsGSaPS_24LayoutConstraintProtocol___GS0_x_"></a>
+                    <a name="//apple_ref/swift/Method/init(item:layout:constraints:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FV8CGLayout11LayoutBlockcFT4itemx6layoutPS_15RectBasedLayout_11constraintsGSaPS_24LayoutConstraintProtocol___GS0_x_">init(item:layout:constraints:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LayoutBlock</span><span class="o">&lt;</span><span class="kt">Item</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutItem.html">LayoutItem</a></span><span class="o">&gt;</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP8CGLayout19LayoutBlockProtocol6layoutFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/layout()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP8CGLayout19LayoutBlockProtocol6layoutFT_T_">layout()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">layout</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP8CGLayout19LayoutBlockProtocol8snapshotFT3forVSC6CGRect_PS_22LayoutSnapshotProtocol_"></a>
+                    <a name="//apple_ref/swift/Method/snapshot(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP8CGLayout19LayoutBlockProtocol8snapshotFT3forVSC6CGRect_PS_22LayoutSnapshotProtocol_">snapshot(for:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">snapshot</span><span class="p">(</span><span class="k">for</span> <span class="nv">sourceRect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Protocols/LayoutSnapshotProtocol.html">LayoutSnapshotProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sourceRect</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP8CGLayout19LayoutBlockProtocol8snapshotFT3forVSC6CGRect14completedRectsRGSaTPs9AnyObject_S1____PS_22LayoutSnapshotProtocol_"></a>
+                    <a name="//apple_ref/swift/Method/snapshot(for:completedRects:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP8CGLayout19LayoutBlockProtocol8snapshotFT3forVSC6CGRect14completedRectsRGSaTPs9AnyObject_S1____PS_22LayoutSnapshotProtocol_">snapshot(for:completedRects:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">snapshot</span><span class="p">(</span><span class="k">for</span> <span class="nv">sourceRect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="nv">completedRects</span><span class="p">:</span> <span class="k">inout</span> <span class="p">[(</span><span class="kt">AnyObject</span><span class="p">,</span> <span class="kt">CGRect</span><span class="p">)])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Protocols/LayoutSnapshotProtocol.html">LayoutSnapshotProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sourceRect</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completedRects</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP8CGLayout19LayoutBlockProtocol5applyFT8snapshotPS_22LayoutSnapshotProtocol__T_"></a>
+                    <a name="//apple_ref/swift/Method/apply(snapshot:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP8CGLayout19LayoutBlockProtocol5applyFT8snapshotPS_22LayoutSnapshotProtocol__T_">apply(snapshot:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>converts rect to current coordinate space if needed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">apply</span><span class="p">(</span><span class="nv">snapshot</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutSnapshotProtocol.html">LayoutSnapshotProtocol</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>snapshot</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-09-22)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

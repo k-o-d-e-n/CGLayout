@@ -15,6 +15,7 @@ class TextCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let label = UILabel()
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.systemFont(ofSize: 14)
         label.numberOfLines = 0
         contentView.addSubview(label)
@@ -26,17 +27,50 @@ class TextCell: UITableViewCell {
     }
 }
 
-class TableViewController: UITableViewController {
-    let strings = " Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной \"рыбой\" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых используется Lorem Ipsum".components(separatedBy: ".")
+// TODO: Add convenience entity for layout reuseable views, and calculation metrics based on content.
+struct ReuseLayoutBlock {
+    let layout: RectBasedLayout
+    let targetConstraints: [RectBasedConstraint]
+    let contentConstraints: [RectBasedConstraint]
 
-    let cellLayout: Layout = Layout(x: .left(), y: .top(), width: .scaled(1), height: .scaled(1))
+    func contentRect(fitting rect: CGRect) -> CGRect {
+        return contentConstraints.reduce(rect) { $1.constrained(sourceRect: $0, by: rect) }
+    }
+    func apply(for item: LayoutItem) {
+        layout.apply(for: item, use: targetConstraints.map { (item.superItem!.bounds, $0) })
+    }
+}
+
+class TableViewController: UITableViewController {
+    let strings = "Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной \"рыбой\" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых используется Lorem Ipsum".components(separatedBy: ". ")
+
+    let bottomView = UIView()
+    let layoutGuide = LayoutGuide<UITableView>(frame: UIScreen.main.bounds.insetBy(dx: 0, dy: 100))
+    lazy var bottomViewBlock: LayoutBlock<UIView> = self.bottomView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(100), height: .fixed(50)),
+                                                                        constraints: [self.layoutGuide.layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .inner)]),
+                                                                                      self.view.layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .inner)])])
+
+    lazy var blocks: [ReuseLayoutBlock] = self.strings.map {
+        ReuseLayoutBlock(layout: Layout.equal,
+                         targetConstraints: [LayoutAnchor.insets(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20))],
+                         contentConstraints: [LayoutAnchor.insets(UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)),
+                                              $0.layoutConstraint(attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)]),
+                                              LayoutAnchor.insets(UIEdgeInsets(top: -10, left: 0, bottom: -10, right: 0))])
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.register(TextCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        bottomView.backgroundColor = .red
+        tableView.addSubview(bottomView)
+        tableView.add(layoutGuide: layoutGuide)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        bottomViewBlock.layout()
+    }
 
     // MARK: - Table view data source
 
@@ -56,14 +90,16 @@ class TableViewController: UITableViewController {
         guard let cell = cell as? TextCell else { return }
 
         cell.label.text = strings[indexPath.row]
-        cellLayout.apply(for: cell.label)
+        blocks[indexPath.row].apply(for: cell.label)
+//        Layout.equal.apply(for: cell.label, use: [(cell.bounds, LayoutAnchor.insets(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)))])
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let stringConstraint = StringLayoutConstraint(string: strings[indexPath.row], attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)])
-        let expandedRect = CGRect(origin: .zero, size: CGSize(width: tableView.frame.width, height: CGFloat.greatestFiniteMagnitude))
-
-        return stringConstraint.constrained(sourceRect: .zero, by: expandedRect).height + 10
+//        let stringConstraint = strings[indexPath.row].layoutConstraint(attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)])
+//        let expandedRect = CGRect(origin: .zero, size: CGSize(width: tableView.frame.width - 40, height: CGFloat.greatestFiniteMagnitude))
+//
+//        return stringConstraint.constrained(sourceRect: .zero, by: expandedRect).height.rounded(.up) + 20
+        return blocks[indexPath.row].contentRect(fitting: CGRect(origin: .zero, size: CGSize(width: tableView.frame.width, height: CGFloat.greatestFiniteMagnitude))).height.rounded(.up)
     }
 
     /*

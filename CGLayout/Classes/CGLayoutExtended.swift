@@ -177,7 +177,7 @@ public struct StringLayoutConstraint: RectBasedConstraint {
         sourceRect.size = string?.boundingRect(with: rect.size, options: options, attributes: attributes, context: context).size ?? .zero
     }
 }
-extension String {
+public extension String {
     /// Convenience getter for string layout constraint.
     ///
     /// - Parameters:
