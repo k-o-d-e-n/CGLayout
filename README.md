@@ -11,6 +11,11 @@
 
 Powerful autolayout framework, that can manage UIView, CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. Fast, asynchronous, declarative, cacheable, extensible.
 
+<p align="center">
+    <img src="benchmark_result.png">
+Performed by [LayoutBenchmarkFramework](https://github.com/lucdion/LayoutFrameworkBenchmark)
+</p>
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
