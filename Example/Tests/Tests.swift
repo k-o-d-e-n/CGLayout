@@ -755,6 +755,36 @@ extension Tests {
 // MARK: Beta testing, improvements
 
 extension Tests {
+//    func testUICoordinateInBackgroundThread() {
+//        let window = UIApplication.shared.delegate!.window!!
+//        let superview = UIScrollView(frame: bounds.insetBy(dx: 100, dy: 100))
+//        window.addSubview(superview)
+//        superview.contentSize = bounds.size
+//        superview.contentOffset.x = 150
+//        let view = UIView(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
+//        superview.addSubview(view)
+//
+//        var converted: CGRect!
+//        var converted2: CGRect!
+//        let exp = expectation(description: "")
+//        DispatchQueue.global(qos: .background).async {
+//            converted = view.convert(rect: CGRect(x: 10, y: -5, width: 20, height: 10), to: window)
+//            converted2 = view.convert(rect: CGRect(x: 150, y: 0, width: 30, height: 20), from: superview)
+//
+//            XCTAssertTrue(converted.origin.x == -20)
+//            XCTAssertTrue(converted.origin.y == 105)
+//
+//            XCTAssertTrue(converted2.origin.x == 130)
+//            XCTAssertTrue(converted2.origin.y == -10)
+//            exp.fulfill()
+//        }
+//        DispatchQueue.main.async {
+//            superview.contentSize.height = view.frame.maxY
+//            superview.frame = self.bounds
+//        }
+//
+//        waitForExpectations(timeout: 2)
+//    }
     func testLayoutGuideCoordinateConverting() {
         let guideSuperview = UIView(frame: bounds.insetBy(dx: 100, dy: 100))
         let guide = LayoutGuide<UIView>(frame: CGRect(x: 0, y: 0, width: 100, height: 200))

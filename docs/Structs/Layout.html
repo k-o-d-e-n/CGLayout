@@ -14,7 +14,7 @@
     <a title="Layout Struct Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">CGLayout Docs</a> (44% documented)</p>
+        <p><a href="../index.html">CGLayout Docs</a> (55% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -182,16 +182,47 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Designed initializer</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Layout</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">alignment</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="p">,</span> <span class="nv">filling</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>alignment</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Alignment layout behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>filling</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Filling layout behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -209,13 +240,15 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Performing layout of given rect inside available rect.
+Attention: Apply layout for view frame using code as layout(rect: &amp;view.frame,&hellip;) has side effect and called setFrame method on view.</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">layout</span><span class="p">(</span><span class="nv">rect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="k">in</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">layout</span><span class="p">(</span><span class="nv">rect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="k">in</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -231,7 +264,7 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Rect for layout</p>
                                 </div>
                               </td>
                             </tr>
@@ -243,7 +276,7 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Available space for layout</p>
                                 </div>
                               </td>
                             </tr>
@@ -337,14 +370,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Layout behavior, that makes passed rect equally to space rect</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Layout</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">equal</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
 
                         </div>
                       </div>
@@ -395,16 +428,71 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Convinience initializer similar CGRect initializer.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Layout</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">,</span> <span class="nv">width</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>x</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Horizontal alignment behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>y</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Vertical alignment behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>width</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Width filling behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>height</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Height filling behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -414,7 +502,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-09-22)</p>
+          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-09-26)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

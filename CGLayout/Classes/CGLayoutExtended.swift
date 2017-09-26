@@ -166,6 +166,13 @@ public struct StringLayoutConstraint: RectBasedConstraint {
     let options: NSStringDrawingOptions
     let context: NSStringDrawingContext?
 
+    /// Designed initializer
+    ///
+    /// - Parameters:
+    ///   - string: String for size calculation
+    ///   - options: String drawing options.
+    ///   - attributes: A dictionary of text attributes to be applied to the string. These are the same attributes that can be applied to an NSAttributedString object, but in the case of NSString objects, the attributes apply to the entire string, rather than ranges within the string.
+    ///   - context: The string drawing context to use for the receiver, specifying minimum scale factor and tracking adjustments.
     public init(string: String?, options: NSStringDrawingOptions = .usesLineFragmentOrigin, attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) {
         self.string = string
         self.attributes = attributes
@@ -173,7 +180,12 @@ public struct StringLayoutConstraint: RectBasedConstraint {
         self.options = options
     }
 
-    public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect.size = string?.boundingRect(with: rect.size, options: options, attributes: attributes, context: context).size ?? .zero
     }
 }

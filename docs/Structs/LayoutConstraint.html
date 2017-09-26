@@ -14,7 +14,7 @@
     <a title="LayoutConstraint Struct Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">CGLayout Docs</a> (44% documented)</p>
+        <p><a href="../index.html">CGLayout Docs</a> (55% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -213,13 +213,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Flag that constraint not required other calculations. It`s true for size-based constraints.</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isIndependent</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">isIndependent</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -239,13 +240,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p><code><a href="../Protocols/LayoutItem.html">LayoutItem</a></code> object associated with this constraint</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">layoutItem</span><span class="p">(</span><span class="k">is</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">layoutItem</span><span class="p">(</span><span class="k">is</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -265,13 +267,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Return rectangle for constrain source rect</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainRect</span><span class="p">(</span><span class="k">for</span> <span class="nv">currentSpace</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="k">in</span> <span class="nv">coordinateSpace</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutItem.html">LayoutItem</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">constrainRect</span><span class="p">(</span><span class="k">for</span> <span class="nv">currentSpace</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="k">in</span> <span class="nv">coordinateSpace</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutItem.html">LayoutItem</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
 
                         </div>
                       </div>
@@ -287,7 +290,7 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Source rect in current state</p>
                                 </div>
                               </td>
                             </tr>
@@ -299,12 +302,16 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Working coordinate space</p>
                                 </div>
                               </td>
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Rect for constrain</p>
                       </div>
                     </section>
                   </div>
@@ -322,13 +329,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Main function for constrain source space by other rect</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrain</span><span class="p">(</span><span class="nv">sourceRect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">by</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">constrain</span><span class="p">(</span><span class="nv">sourceRect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">by</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -344,7 +352,7 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Source space</p>
                                 </div>
                               </td>
                             </tr>
@@ -356,7 +364,7 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Rect for constrain</p>
                                 </div>
                               </td>
                             </tr>
@@ -379,13 +387,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Converts rect from constraint coordinate space to destination coordinate space if needed.</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">convert</span><span class="p">(</span><span class="n">rectIfNeeded</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">to</span> <span class="nv">coordinateSpace</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutItem.html">LayoutItem</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">convert</span><span class="p">(</span><span class="n">rectIfNeeded</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">to</span> <span class="nv">coordinateSpace</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutItem.html">LayoutItem</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
 
                         </div>
                       </div>
@@ -401,7 +410,7 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Initial rect</p>
                                 </div>
                               </td>
                             </tr>
@@ -413,12 +422,16 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Destination coordinate space</p>
                                 </div>
                               </td>
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Converted rect</p>
                       </div>
                     </section>
                   </div>
@@ -428,7 +441,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-09-22)</p>
+          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-09-26)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

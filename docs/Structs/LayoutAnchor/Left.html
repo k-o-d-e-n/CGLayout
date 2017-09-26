@@ -14,7 +14,7 @@
     <a title="Left Struct Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../../index.html">CGLayout Docs</a> (44% documented)</p>
+        <p><a href="../../index.html">CGLayout Docs</a> (55% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -182,13 +182,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Main function for constrain source space by other rect</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrain</span><span class="p">(</span><span class="nv">sourceRect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">by</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">constrain</span><span class="p">(</span><span class="nv">sourceRect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">by</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -204,7 +205,7 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Source space</p>
                                 </div>
                               </td>
                             </tr>
@@ -216,7 +217,7 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Rect for constrain</p>
                                 </div>
                               </td>
                             </tr>
@@ -239,13 +240,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Common method for create entity of this type with base behavior.</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">build</span><span class="p">(</span><span class="n">_</span> <span class="nv">base</span><span class="p">:</span> <span class="kt"><a href="../../Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Structs/LayoutAnchor.html">LayoutAnchor</a></span><span class="o">.</span><span class="kt">Left</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">static</span> <span class="kd">func</span> <span class="nf">build</span><span class="p">(</span><span class="n">_</span> <span class="nv">base</span><span class="p">:</span> <span class="kt"><a href="../../Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../../Structs/LayoutAnchor.html">LayoutAnchor</a></span><span class="o">.</span><span class="kt">Left</span></code></pre>
 
                         </div>
                       </div>
@@ -261,12 +263,16 @@
                               </td>
                               <td>
                                 <div>
-                                  
+                                  <p>Entity implements required behavior</p>
                                 </div>
                               </td>
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Initialized entity</p>
                       </div>
                     </section>
                   </div>
@@ -284,16 +290,39 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Returns alignment constraint by left</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Left</span><span class="p">:</span> <span class="kt"><a href="../../Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="../../Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">align</span><span class="p">(</span><span class="n">by</span> <span class="nv">dependency</span><span class="p">:</span> <span class="kt"><a href="../../Structs/LayoutAnchor/Left/Align.html">Align</a></span><span class="o">.</span><span class="kt">Dependence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Left</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dependency</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Space dependency for target rect</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Alignment constraint typed by Left</p>
                       </div>
                     </section>
                   </div>
@@ -339,16 +368,39 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Returns constraint, that limits source rect by left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will not changed.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Left</span><span class="p">:</span> <span class="kt"><a href="../../Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="../../Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">limit</span><span class="p">(</span><span class="n">on</span> <span class="nv">dependency</span><span class="p">:</span> <span class="kt"><a href="../../Structs/LayoutAnchor/Left/Limit.html">Limit</a></span><span class="o">.</span><span class="kt">Dependence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Left</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dependency</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Space dependency for target rect</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Limit constraint typed by Left</p>
                       </div>
                     </section>
                   </div>
@@ -394,16 +446,39 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Returns constraint, that pulls source rect to left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will pulled with changing size.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Left</span><span class="p">:</span> <span class="kt"><a href="../../Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="../../Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">pull</span><span class="p">(</span><span class="n">from</span> <span class="nv">dependency</span><span class="p">:</span> <span class="kt"><a href="../../Structs/LayoutAnchor/Left/Pull.html">Pull</a></span><span class="o">.</span><span class="kt">Dependence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Left</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dependency</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Space dependency for target rect</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Pull constraint typed by Left</p>
                       </div>
                     </section>
                   </div>
@@ -441,7 +516,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-09-22)</p>
+          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-09-26)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
