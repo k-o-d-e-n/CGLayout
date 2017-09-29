@@ -13,8 +13,8 @@ Powerful autolayout framework, that can manage UIView, CALayer and not rendered 
 
 <p align="center">
     <img src="benchmark_result.png">
-Performed by [LayoutBenchmarkFramework](https://github.com/lucdion/LayoutFrameworkBenchmark)
 </p>
+Performed by [LayoutBenchmarkFramework](https://github.com/lucdion/LayoutFrameworkBenchmark)
 
 ## Example
 
@@ -32,6 +32,10 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "CGLayout"
 ```
+
+## Documentation and guides
+
+See [here](https://k-o-d-e-n.github.io/CGLayout/)
 
 ## Author
 
