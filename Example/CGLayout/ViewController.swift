@@ -13,14 +13,14 @@ class LabelPlaceholder: ViewPlaceholder<UILabel> {
     var font: UIFont?
     var textColor: UIColor?
     override var frame: CGRect {
-        didSet { viewIfLoaded?.frame = frame }
+        didSet { itemIfLoaded?.frame = frame }
     }
 
-    open override func viewDidLoad() {
-        super.viewDidLoad()
+    open override func itemDidLoad() {
+        super.itemDidLoad()
 
-        view.font = font
-        view.textColor = textColor
+        item.font = font
+        item.textColor = textColor
     }
 
     convenience init() {
@@ -41,10 +41,24 @@ class ViewController: UIViewController {
     let subview = UIView()
 
     lazy var stackScheme: StackLayoutScheme = { [unowned self] in
-        var stack = StackLayoutScheme(items: self.subviews[0..<7])
+        var stack = StackLayoutScheme { Array(self.subviews[0..<7]) }
         stack.axis = .vertical
         stack.direction = .toLeading
         stack.itemLayout = Layout(x: .left(215), y: .bottom(10), width: .boxed(235), height: .fixed(50))
+
+        return stack
+    }()
+    lazy var stackLayoutGuide: StackLayoutGuide<UIView> = {
+        let stack = StackLayoutGuide<UIView>(frame: .zero)
+        stack.scheme.axis = .vertical
+        stack.scheme.itemLayout = Layout(x: .left(5), y: .top(5), width: .boxed(10), height: .fixed(20))
+
+        return stack
+    }()
+    lazy var substackLayoutGuide: StackLayoutGuide<UIView> = {
+        let stack = StackLayoutGuide<UIView>(frame: .zero)
+        stack.scheme.axis = .horizontal
+        stack.scheme.itemLayout = Layout(x: .left(2), y: .top(2), width: .fixed(20), height: .boxed(2))
 
         return stack
     }()
@@ -76,21 +90,23 @@ class ViewController: UIViewController {
         pulledView.addSubview(subview)
 
         view.add(layoutGuide: labelPlaceholder)
+        pulledView.add(layoutGuide: stackLayoutGuide)
+        stackLayoutGuide.addArrangedItem(UIView(backgroundColor: .brown))
+        stackLayoutGuide.addArrangedItem(UIView(backgroundColor: .yellow))
+        stackLayoutGuide.addArrangedItem(CALayer(backgroundColor: .green))
+        stackLayoutGuide.addArrangedItem(substackLayoutGuide)
+        substackLayoutGuide.addArrangedItem(UIView(backgroundColor: .brown))
+        substackLayoutGuide.addArrangedItem(CALayer(backgroundColor: .yellow))
+        substackLayoutGuide.addArrangedItem(UIView(backgroundColor: .green))
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-//        var preview: UIView?
         let constrainedRect = CGRect(origin: .zero, size: CGSize(width: 200, height: 0))
-//        subviews[0..<7].forEach { subview in
-//            let constraints: [ConstrainRect] = preview.map { [($0.frame, bottomConstraint), (constrainedRect, rightConstraint)] } ?? []
-//            itemLayout.apply(for: subview, use: constraints)
-//            preview = subview
-//        }
         stackScheme.layout()
-        var preview = stackScheme.items.last
-        let lastPreview = stackScheme.items.last
+        var preview = self.subviews[0..<7].last
+        let lastPreview = self.subviews[0..<7].last
         subviews[7..<10].forEach { subview in
             let constraints: [ConstrainRect] = [(lastPreview!.frame, bottomConstraint), (constrainedRect, rightConstraint)]
             let constraint: [ConstrainRect] = preview === lastPreview ? [] : [(preview!.frame, rightConstraint)]
@@ -104,6 +120,7 @@ class ViewController: UIViewController {
 
         pulledLayout.apply(for: pulledView, use: [((topLayoutGuide as! UIView).frame, LayoutAnchor.Bottom.limit(on: .outer)), (labelPlaceholder.frame, LayoutAnchor.Left.limit(on: .outer)),
                                                   (subviews[1].frame, LayoutAnchor.Left.limit(on: .outer)), (subviews.first!.frame, topConstraint)])
+        Layout.equal.apply(for: stackLayoutGuide)
 
         let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(20), height: .fixed(30)),
                                  constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])])
@@ -120,6 +137,13 @@ class ViewController: UIViewController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        labelPlaceholder.view.text = "Placeholder label"
+        labelPlaceholder.item.text = "Placeholder label"
+    }
+}
+
+extension UIView {
+    convenience init(backgroundColor: UIColor) {
+        self.init()
+        self.backgroundColor = backgroundColor
     }
 }

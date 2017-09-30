@@ -69,74 +69,47 @@ public extension LayoutGuide where Super: CALayer {
         return layer
     }
 }
-public extension LayoutItem {
+public extension CALayer {
     /// Bind layout item to layout guide. Should call if layout guide will be applied RectBasedLayout.apply(for item:, use constraints:) method.
     ///
     /// - Parameter layoutGuide: Layout guide for binding
-    func add(layoutGuide: LayoutGuide<Self>) {
-        layoutGuide.ownerItem = self
+    func add<T: CALayer>(layoutGuide: LayoutGuide<T>) {
+        unsafeDowncast(layoutGuide, to: LayoutGuide<CALayer>.self).ownerItem = self
+    }
+}
+public extension UIView {
+    /// Bind layout item to layout guide. Should call if layout guide will be applied RectBasedLayout.apply(for item:, use constraints:) method.
+    ///
+    /// - Parameter layoutGuide: Layout guide for binding
+    func add<T: UIView>(layoutGuide: LayoutGuide<T>) {
+        unsafeDowncast(layoutGuide, to: LayoutGuide<UIView>.self).ownerItem = self
     }
 }
 extension LayoutGuide {
     func add(layoutGuide: LayoutGuide<Super>) {
         layoutGuide.ownerItem = self.ownerItem
     }
-    func removeFromSuperItem() {
+    func removeFromOwner() {
         ownerItem = nil
     }
 }
 
-public protocol LayoutItemContainer: LayoutItem {
-    var subLayoutItems: [LayoutItem]? { get }
+// MARK: Placeholders
 
-    func addSubLayoutItem<SubItem: LayoutItem>(_ subItem: SubItem)
-}
-
-public protocol LayoutItemCreation: LayoutItem {
-    init(frame: CGRect)
-}
-
-extension CALayer: LayoutItemContainer {
-    public var subLayoutItems: [LayoutItem]? { return sublayers }
-
-    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
-
-    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
-        addSublayer(subItem)
-    }
-}
-
-extension UIView: LayoutItemContainer {
-    public var subLayoutItems: [LayoutItem]? { return subviews }
-
-    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
-
-    @available(iOS 9.0, *)
-    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : UILayoutGuide {
-        addLayoutGuide(subItem)
-    }
-    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
-        layer.addSublayer(subItem)
-    }
-    public func addSubLayoutItem<SubItem>(_ subItem: SubItem) where SubItem : UIView {
-        addSubview(subItem)
-    }
-}
-extension UIView: LayoutItemCreation {}
-
-open class _LayoutPlaceholder<Item: LayoutItemCreation, Super: LayoutItemContainer>: LayoutGuide<Super> {
+open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
     private weak var _item: Item?
     open weak var item: Item! {
-        loadItemIfNeeded()
-        return itemIfLoaded
+        set { _item = newValue }
+        get {
+            loadItemIfNeeded()
+            return itemIfLoaded
+        }
     }
     open var isItemLoaded: Bool { return _item != nil }
     open var itemIfLoaded: Item? { return _item }
 
     open func loadItem() {
-        let item = Item(frame: frame)
-        ownerItem?.addSubLayoutItem(item)
-        _item = item
+        // subclass override
     }
 
     open func itemDidLoad() {
@@ -151,32 +124,11 @@ open class _LayoutPlaceholder<Item: LayoutItemCreation, Super: LayoutItemContain
     }
 }
 
-open class _ViewPlaceholder<View: LayoutItemCreation>: _LayoutPlaceholder<View, UIView> {}
-
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
-open class ViewPlaceholder<View: UIView>: LayoutGuide<UIView> {
-    private weak var _view: View?
-    open weak var view: View! {
-        loadViewIfNeeded()
-        return viewIfLoaded
-    }
-    open var isViewLoaded: Bool { return _view != nil }
-    open var viewIfLoaded: View? { return _view }
-
-    open func loadView() {
-        _view = add(View.self)
-    }
-
-    open func viewDidLoad() {
-        // subclass override
-    }
-
-    open func loadViewIfNeeded() {
-        if !isViewLoaded {
-            loadView()
-            viewDidLoad()
-        }
+open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
+    open override func loadItem() {
+        item = add(View.self)
     }
 }
 
@@ -276,7 +228,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
 // TODO: Create constraint for attributed string and other data oriented constraints
 
 /// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
-public struct StringLayoutConstraint: RectBasedConstraint {
+public struct StringLayoutAnchor: RectBasedConstraint {
     let string: String?
     let attributes: [String: Any]?
     let options: NSStringDrawingOptions
@@ -312,8 +264,8 @@ public extension String {
     ///   - attributes: String attributes
     ///   - context: Drawing context
     /// - Returns: String-based constraint
-    func layoutConstraint(with options: NSStringDrawingOptions = .usesLineFragmentOrigin, attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutConstraint {
-        return StringLayoutConstraint(string: self, options: options, attributes: attributes, context: context)
+    func layoutConstraint(with options: NSStringDrawingOptions = .usesLineFragmentOrigin, attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutAnchor {
+        return StringLayoutAnchor(string: self, options: options, attributes: attributes, context: context)
     }
 }
 
@@ -322,6 +274,10 @@ public extension String {
 // TODO: Implement stack layout scheme and others
 // TODO: Add to stack layout scheme circle type
 
+// TODO: StackLayoutScheme lost multihierarchy layout. Research this.
+// TODO: Self-sized items
+// TODO: Direction to Distribution (Fill, Center and other)
+// TODO: Move Axis and Direction to behaviors
 public struct StackLayoutScheme: LayoutBlockProtocol {
     public enum Axis {
         case horizontal
@@ -332,7 +288,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         case toLeading
     }
 
-    public var items: [LayoutItem] // TODO: May be using getter closure for receive items
+    private var items: () -> [LayoutItem]
     private var axisAnchor: RectBasedConstraint = LayoutAnchor.Right.align(by: .outer)
 
     public var itemLayout: RectBasedLayout = Layout(x: .left(), y: .top(), width: .scaled(1), height: .scaled(1))
@@ -352,8 +308,8 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }
     }
 
-    public init<S: Sequence>(items: S) where S.Iterator.Element: LayoutItem {
-        self.items = Array(items)
+    public init(items: @escaping () -> [LayoutItem]) {
+        self.items = items
     }
 
     // MARK: LayoutBlockProtocol
@@ -361,7 +317,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     public /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol {
         var snapshotFrame: CGRect!
-        return LayoutSnapshot(childSnapshots: items.map { block in
+        return LayoutSnapshot(childSnapshots: items().map { block in
             let blockFrame = block.frame
             snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
             return blockFrame
@@ -373,9 +329,21 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout() {
         var preview: LayoutItem?
-        items.forEach { subItem in
+        items().forEach { subItem in
             let constraints: [ConstrainRect] = preview.map { [($0.frame, axisAnchor)] } ?? []
             itemLayout.apply(for: subItem, use: constraints)
+            preview = subItem
+        }
+    }
+
+    public /// Calculate and apply frames layout items in custom space.
+    ///
+    /// - Parameter sourceRect: Source space
+    func layout(in sourceRect: CGRect) {
+        var preview: LayoutItem?
+        items().forEach { subItem in
+            let constraints: [ConstrainRect] = preview.map { [($0.frame, axisAnchor)] } ?? []
+            itemLayout.apply(for: subItem, in: sourceRect, use: constraints)
             preview = subItem
         }
     }
@@ -385,7 +353,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     ///
     /// - Parameter snapshot: Snapshot represented as array of frames.
     func apply(snapshot: LayoutSnapshotProtocol) {
-        var iterator = items.makeIterator()
+        var iterator = items().makeIterator()
         for child in snapshot.childSnapshots {
             iterator.next()?.frame = child.snapshotFrame
         }
@@ -410,7 +378,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
         var snapshotFrame: CGRect!
         var preview: LayoutItem?
-        return LayoutSnapshot(childSnapshots: items.map { item in
+        return LayoutSnapshot(childSnapshots: items().map { item in
             let constraints: [ConstrainRect] = preview.map { [($0.frame, axisAnchor)] } ?? []
             let itemFrame = itemLayout.layout(rect: item.frame, in: sourceRect, use: constraints)
             completedRects.insert((item, itemFrame), at: 0)
@@ -422,10 +390,34 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     }
 }
 
-public class StackLayoutGuide<Parent: LayoutItem>: LayoutGuide<Parent>, AdjustableLayoutItem {
-    var scheme: StackLayoutScheme = StackLayoutScheme(items: [Parent]())
+public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, AdjustableLayoutItem {
+    fileprivate var items: [LayoutItem] = []
+    public lazy var scheme: StackLayoutScheme = StackLayoutScheme { [unowned self] in self.items }
+    public var arrangedItems: [LayoutItem] { return items }
+    /// while stack layout guide cannot manage subitems
+//    public override var ownerItem: Parent? {
+//        willSet {
+//            if newValue == nil {
+//                ownerItem.map { owner in items.forEach { owner.removeSublayoutItem($0) } }
+//            }
+//        }
+//        didSet {
+//            if let owner = ownerItem {
+//                scheme.items.forEach { item in owner.addSublayoutItem(item) }
+//            }
+//        }
+//    }
+    public override var frame: CGRect {
+        didSet { bounds = CGRect(origin: .zero, size: frame.size) }
+    }
+    public override var bounds: CGRect {
+        didSet { scheme.layout(in: frame) } /// if bounds has origin not zero (such as UIScrollView) or size need converting coordinates
+    }
 
-    
+    fileprivate func removeItem(_ item: LayoutItem) {
+        guard let index = items.index(where: { $0 === item }) else { return }
+        items.remove(at: index)
+    }
 
     public /// Asks the layout item to calculate and return the size that best fits the specified size
     ///
@@ -433,5 +425,69 @@ public class StackLayoutGuide<Parent: LayoutItem>: LayoutGuide<Parent>, Adjustab
     /// - Returns: A new size that fits the receiver’s content
     func sizeThatFits(_ size: CGSize) -> CGSize {
         return scheme.snapshot(for: bounds).snapshotFrame.size
+    }
+}
+extension StackLayoutGuide where Parent: UIView {
+    public func addArrangedItem(_ item: LayoutGuide<UIView>) { insertArrangedItem(item, at: items.count) }
+    public func insertArrangedItem(_ item: LayoutGuide<UIView>, at index: Int) {
+        ownerItem?.addSublayoutItem(item)
+        items.insert(item, at: index)
+    }
+    public func removeArrangedItem(_ item: LayoutGuide<UIView>, at index: Int) {
+        removeItem(item)
+        guard ownerItem === item.superItem else { return }
+        ownerItem?.removeSublayoutItem(item)
+    }
+    public func addArrangedItem(_ item: LayoutGuide<CALayer>) { insertArrangedItem(item, at: items.count) }
+    public func insertArrangedItem(_ item: LayoutGuide<CALayer>, at index: Int) {
+        ownerItem?.addSublayoutItem(item)
+        items.insert(item, at: index)
+    }
+    public func removeArrangedItem(_ item: LayoutGuide<CALayer>, at index: Int) {
+        removeItem(item)
+        guard ownerItem === item.superItem else { return }
+        ownerItem?.removeSublayoutItem(item)
+    }
+    public func addArrangedItem(_ item: UIView) { insertArrangedItem(item, at: items.count) }
+    public func insertArrangedItem(_ item: UIView, at index: Int) {
+        ownerItem?.addSublayoutItem(item)
+        items.insert(item, at: index)
+    }
+    public func removeArrangedItem(_ item: UIView, at index: Int) {
+        removeItem(item)
+        guard ownerItem === item.superItem else { return }
+        ownerItem?.removeSublayoutItem(item)
+    }
+    public func addArrangedItem(_ item: CALayer) { insertArrangedItem(item, at: items.count) }
+    public func insertArrangedItem(_ item: CALayer, at index: Int) {
+        ownerItem?.addSublayoutItem(item)
+        items.insert(item, at: index)
+    }
+    public func removeArrangedItem(_ item: CALayer, at index: Int) {
+        removeItem(item)
+        guard ownerItem === item.superItem else { return }
+        ownerItem?.removeSublayoutItem(item)
+    }
+}
+extension StackLayoutGuide where Parent: CALayer {
+    public func addArrangedItem<T: CALayer>(_ item: LayoutGuide<T>) { insertArrangedItem(item, at: items.count) }
+    public func insertArrangedItem<T: CALayer>(_ item: LayoutGuide<T>, at index: Int) {
+        ownerItem?.addSublayoutItem(item)
+        items.insert(item, at: index)
+    }
+    public func removeArrangedItem<T: CALayer>(_ item: LayoutGuide<T>, at index: Int) {
+        removeItem(item)
+        guard ownerItem === item.superItem else { return }
+        ownerItem?.removeSublayoutItem(item)
+    }
+    public func addArrangedItem(_ item: CALayer) { insertArrangedItem(item, at: items.count) }
+    public func insertArrangedItem(_ item: CALayer, at index: Int) {
+        ownerItem?.addSublayoutItem(item)
+        items.insert(item, at: index)
+    }
+    public func removeArrangedItem(_ item: CALayer, at index: Int) {
+        removeItem(item)
+        guard ownerItem === item.superItem else { return }
+        ownerItem?.removeSublayoutItem(item)
     }
 }

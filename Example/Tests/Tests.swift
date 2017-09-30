@@ -665,8 +665,8 @@ extension Tests {
         window.addSubview(superview)
         superview.contentSize = bounds.size
         superview.contentOffset.x = 150
-        let view = UIView(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
-        superview.addSubview(view)
+        let view = ViewPlaceholder(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
+        superview.add(layoutGuide: view)
 
         let converted = view.convert(rect: CGRect(x: 10, y: -5, width: 20, height: 10), to: window)
         let converted2 = view.convert(rect: CGRect(x: 150, y: 0, width: 30, height: 20), from: superview)

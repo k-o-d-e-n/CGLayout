@@ -15,6 +15,7 @@
 		8C23D57EAC1F82584D008F61E9851D93 /* Pods-CGLayout_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BF97F7707C5E7C8916CBE261AEA0277 /* Pods-CGLayout_Tests-dummy.m */; };
 		A4575B0A1F5CB847005C5D3E /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4575B091F5CB847005C5D3E /* CGLayoutExtended.swift */; };
 		A4575B0C1F5CBB1F005C5D3E /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4575B0B1F5CBB1F005C5D3E /* CommonExtensions.swift */; };
+		A47B4ABD1F8043BA00395AD1 /* LayoutItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47B4ABC1F8043BA00395AD1 /* LayoutItemContainer.swift */; };
 		A4816BBD1F647B1100F897AD /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41D226C1F632F15009E3DBE /* MultiCoordinateSpace.swift */; };
 		BC94FB2E0A0F3C85B534033570EC4993 /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DB813835380783C5CFC32B91878219 /* CGLayout.swift */; };
 		BFD8C6ED1387195D910A7B0B6C000A98 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
@@ -55,6 +56,7 @@
 		A41D226C1F632F15009E3DBE /* MultiCoordinateSpace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MultiCoordinateSpace.swift; path = CGLayout/Classes/MultiCoordinateSpace.swift; sourceTree = "<group>"; };
 		A4575B091F5CB847005C5D3E /* CGLayoutExtended.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CGLayoutExtended.swift; path = CGLayout/Classes/CGLayoutExtended.swift; sourceTree = "<group>"; };
 		A4575B0B1F5CBB1F005C5D3E /* CommonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommonExtensions.swift; path = CGLayout/Classes/CommonExtensions.swift; sourceTree = "<group>"; };
+		A47B4ABC1F8043BA00395AD1 /* LayoutItemContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LayoutItemContainer.swift; path = CGLayout/Classes/LayoutItemContainer.swift; sourceTree = "<group>"; };
 		A4A48C29E5A96FEB704E4F9E96BFDF88 /* CGLayout.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CGLayout.xcconfig; sourceTree = "<group>"; };
 		A7B309FB88D674710888C721FCA88D10 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC1163F3F79A55F68A324B13C4029081 /* Pods-CGLayout_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout_Tests-resources.sh"; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 			children = (
 				A0DB813835380783C5CFC32B91878219 /* CGLayout.swift */,
 				A4575B091F5CB847005C5D3E /* CGLayoutExtended.swift */,
+				A47B4ABC1F8043BA00395AD1 /* LayoutItemContainer.swift */,
 				A41D226C1F632F15009E3DBE /* MultiCoordinateSpace.swift */,
 				A4575B0B1F5CBB1F005C5D3E /* CommonExtensions.swift */,
 				11ED54FC2A447015EDBF6B955D08F773 /* Support Files */,
@@ -342,6 +345,7 @@
 				A4575B0A1F5CB847005C5D3E /* CGLayoutExtended.swift in Sources */,
 				A4575B0C1F5CBB1F005C5D3E /* CommonExtensions.swift in Sources */,
 				A4816BBD1F647B1100F897AD /* MultiCoordinateSpace.swift in Sources */,
+				A47B4ABD1F8043BA00395AD1 /* LayoutItemContainer.swift in Sources */,
 				BC94FB2E0A0F3C85B534033570EC4993 /* CGLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

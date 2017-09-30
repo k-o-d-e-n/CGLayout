@@ -15,7 +15,7 @@ extension LayoutAnchor.Size {
                            options: NSStringDrawingOptions = .usesLineFragmentOrigin,
                            attributes: [String: Any],
                            context: NSStringDrawingContext? = nil) -> LayoutAnchor.Size {
-        return .build(StringLayoutConstraint(string: string, options: options, attributes: attributes, context: context))
+        return .build(StringLayoutAnchor(string: string, options: options, attributes: attributes, context: context))
     }
 }
 extension LayoutAnchor.Center {
@@ -134,7 +134,7 @@ public class SecondViewController: UIViewController {
     }
 }
 
-fileprivate extension CALayer {
+extension CALayer {
     convenience init(backgroundColor: UIColor) {
         self.init()
         self.backgroundColor = backgroundColor.cgColor

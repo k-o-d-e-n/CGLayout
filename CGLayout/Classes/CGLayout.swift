@@ -62,7 +62,7 @@ public extension RectBasedLayout {
         return rect
     }
 
-    /// Used for layout `LayoutItem` entity in constrained source space (bounds in parent) using constraints.
+    /// Used for layout `LayoutItem` entity in constrained bounds of parent item using constraints.
     ///
     /// - Parameters:
     ///   - item: Item for layout
@@ -70,8 +70,17 @@ public extension RectBasedLayout {
     public func apply(for item: LayoutItem, use constraints: [ConstrainRect] = []) {
         item.frame = layout(rect: item.frame, in: item.superItem!.bounds, use: constraints)
     }
+    /// Used for layout `LayoutItem` entity in constrained source space using constraints.
+    ///
+    /// - Parameters:
+    ///   - item: Item for layout
+    ///   - source: Source space
+    ///   - constraints: Array of tuples with rect and constraint
+    public func apply(for item: LayoutItem, in source: CGRect, use constraints: [ConstrainRect] = []) {
+        item.frame = layout(rect: item.frame, in: source, use: constraints)
+    }
 
-    /// Calculates frame of `LayoutItem` entity in constrained source space (bounds in parent) using constraints.
+    /// Calculates frame of `LayoutItem` entity in constrained source space using constraints.
     ///
     /// - Parameters:
     ///   - item: Item for layout
@@ -84,17 +93,26 @@ public extension RectBasedLayout {
         return layout(rect: rect, in: source)
     }
 
-    /// Use for layout `LayoutItem` entity in constrained source space (bounds in parent) using constraints.
+    /// Use for layout `LayoutItem` entity in constrained bounds of parent item using constraints.
     ///
     /// - Parameters:
     ///   - item: Item for layout
     ///   - constraints: Array of constraint items
     public func apply(for item: LayoutItem, use constraints: [LayoutConstraintProtocol]) {
         // TODO: ! Add flag for using layout margins. IMPL: Apply 'inset' constraint from LayotAnchor to super bounds.
-        item.frame = layout(rect: item.frame, from: item.superItem!, in: item.superItem!.bounds, use: constraints)
+        apply(for: item, in: item.superItem!.bounds, use: constraints)
+    }
+    /// Use for layout `LayoutItem` entity in constrained source space using constraints.
+    ///
+    /// - Parameters:
+    ///   - item: Item for layout
+    ///   - sourceRect: Source space
+    ///   - constraints: Array of constraint items
+    public func apply(for item: LayoutItem, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol]) {
+        item.frame = layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)
     }
 
-    /// Calculates frame of `LayoutItem` entity in constrained source space (bounds in parent) using constraints.
+    /// Calculates frame of `LayoutItem` entity in constrained source space using constraints.
     ///
     /// - Parameters:
     ///   - rect: Rect for layout
@@ -157,9 +175,6 @@ public protocol LayoutItem: class, LayoutCoordinateSpace {
 }
 extension UIView: AdjustableLayoutItem {
     public weak var superItem: LayoutItem? { return superview }
-}
-extension CALayer: LayoutItem {
-    public weak var superItem: LayoutItem? { return superlayer }
 }
 
 extension LayoutItem {
@@ -371,6 +386,11 @@ public protocol LayoutBlockProtocol {
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout()
 
+    /// Calculate and apply frames layout items in custom space.
+    ///
+    /// - Parameter sourceRect: Source space
+    func layout(in sourceRect: CGRect)
+
     /// Returns snapshot for all `LayoutItem` items in block. Attention: in during calculating snapshot frames of layout items must not changed. 
     ///
     /// - Parameter sourceRect: Source space for layout
@@ -412,6 +432,13 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol { // TODO: Rena
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout() {
         itemLayout.apply(for: item, use: constraints)
+    }
+
+    public /// Calculate and apply frames layout items in custom space.
+    ///
+    /// - Parameter sourceRect: Source space
+    func layout(in sourceRect: CGRect) {
+        itemLayout.apply(for: item, in: sourceRect, use: constraints)
     }
 
     public /// Returns snapshot for all `LayoutItem` items in block. Attention: in during calculating snapshot frames of layout items must not changed.
@@ -475,6 +502,13 @@ public struct LayoutScheme: LayoutBlockProtocol {
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout() {
         blocks.forEach { $0.layout() }
+    }
+
+    public /// Calculate and apply frames layout items.
+    ///
+    /// - Parameter sourceRect: Source space
+    func layout(in sourceRect: CGRect) {
+        blocks.forEach { $0.layout(in: sourceRect) }
     }
 
     public /// Applying frames from snapshot to `LayoutItem` items in this block.

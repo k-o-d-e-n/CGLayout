@@ -227,7 +227,7 @@ extension LayoutGuide where Super: UICoordinateSpace {
         return rect
     }
     public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-        guard !(item is UICoordinateSpace) else { return convert(rect, to: item as! UICoordinateSpace) }
+        guard !(item is UICoordinateSpace) else { return convert(rect, from: item as! UICoordinateSpace) }
 
         var rect = rect
         rect.origin = LayoutGuide.convert(point: rect.origin, from: item, to: self)
@@ -255,7 +255,7 @@ extension LayoutGuide where Super: UIView {
         return rect
     }
     public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-        guard !(item is UIView) else { return convert(rect, to: item as! UIView) }
+        guard !(item is UIView) else { return convert(rect, from: item as! UIView) }
 
         var rect = rect
         rect.origin = LayoutGuide.convert(point: rect.origin, from: item, to: self)
@@ -281,7 +281,7 @@ extension LayoutGuide where Super: CALayer {
         return rect
     }
     public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-        guard !(item is CALayer) else { return convert(rect, to: item as! CALayer) }
+        guard !(item is CALayer) else { return convert(rect, from: item as! CALayer) }
 
         var rect = rect
         rect.origin = LayoutGuide.convert(point: rect.origin, from: item, to: self)
@@ -314,50 +314,42 @@ extension LayoutGuide where Super: UICoordinateSpace {
     }
 }
 extension LayoutGuide where Super: UIView {
-    @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, to view: UIView) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
         return ownerItem!.convert(pointInSuper, to: view)
     }
 
-    @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, from view: UIView) -> CGPoint {
         let pointInSuper = ownerItem!.convert(point, from: view)
         return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
     }
 
-    @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, to view: UIView) -> CGRect {
         let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
         return ownerItem!.convert(rectInSuper, to: view)
     }
 
-    @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, from view: UIView) -> CGRect {
         let rectInSuper = ownerItem!.convert(rect, from: view)
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }
 extension LayoutGuide where Super: CALayer {
-    @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, to coordinateSpace: CALayer) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
         return ownerItem!.convert(pointInSuper, to: coordinateSpace)
     }
 
-    @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, from coordinateSpace: CALayer) -> CGPoint {
         let pointInSuper = ownerItem!.convert(point, from: coordinateSpace)
         return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
     }
 
-    @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, to coordinateSpace: CALayer) -> CGRect {
         let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
         return ownerItem!.convert(rectInSuper, to: coordinateSpace)
     }
 
-    @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, from coordinateSpace: CALayer) -> CGRect {
         let rectInSuper = ownerItem!.convert(rect, from: coordinateSpace)
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
