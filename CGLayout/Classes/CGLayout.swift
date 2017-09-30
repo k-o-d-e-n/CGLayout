@@ -13,6 +13,13 @@ import UIKit
 // TODO: !! Implement behavior on remove view from hierarchy (Unwrapped LayoutItem, break result in ConstraintsItem). Probably need add `isActive` property.
 // TODO: ! Add support UITraitCollection
 // TODO: !!! Add MacOS, tvOS support
+// TODO: !!! Resolve problem with create offset for adjusted views.
+// TODO: ! Add CGRect.integral
+
+// TODO: !! Add layout call to layout item, for invoke relayout when adjusted view changed size and other cases. 
+//public protocol LayoutItemContainer {
+//    func setNeedsLayout()
+//}
 
 // TODO: !!! Tests for new code
 
@@ -155,7 +162,6 @@ extension CALayer: LayoutItem {
     public weak var superItem: LayoutItem? { return superlayer }
 }
 
-// TODO: ! Add extension to LayoutItem with anchor getters ???
 extension LayoutItem {
     /// Convenience getter for tuple of item frame and anchor constraint
     ///
@@ -351,9 +357,9 @@ extension CGRect: LayoutSnapshotProtocol {
 }
 
 /// Represents frame of block where was received. Contains snapshots for child blocks.
-fileprivate struct LayoutSnapshot: LayoutSnapshotProtocol {
-    fileprivate let childSnapshots: [LayoutSnapshotProtocol]
-    fileprivate let snapshotFrame: CGRect
+struct LayoutSnapshot: LayoutSnapshotProtocol {
+    let childSnapshots: [LayoutSnapshotProtocol]
+    let snapshotFrame: CGRect
 }
 
 /// Defines general methods for any layout block

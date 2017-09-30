@@ -28,27 +28,6 @@ extension LayoutAnchor.Center {
     }
 }
 
-struct AnonymConstraint: LayoutConstraintProtocol {
-    /// Flag that constraint not required other calculations. It`s true for size-based constraints.
-    var isIndependent: Bool { return true }
-    let constraints: [RectBasedConstraint]
-
-    func layoutItem(is object: AnyObject) -> Bool {
-        return false
-    }
-
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
-        return currentSpace
-    }
-
-    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-        sourceRect = constraints.reduce(sourceRect) { $0.1.constrained(sourceRect: $0.0, by: rect) }
-    }
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
-        return rect
-    }
-}
-
 public class SecondViewController: UIViewController {
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!

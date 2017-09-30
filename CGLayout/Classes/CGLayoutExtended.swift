@@ -15,8 +15,8 @@ import Foundation
 /// Create a LayoutGuide with -init
 /// Add to a view with UIView.add(layoutGuide:) if will be used him as item in RectBasedLayout.apply(for item:, use constraints:)
 open class LayoutGuide<Super: LayoutItem>: LayoutItem {
-    weak var superLayoutItem: Super? {
-        didSet { superItem = superLayoutItem }
+    open fileprivate(set) weak var ownerItem: Super? {
+        didSet { superItem = ownerItem }
     }
     open var frame: CGRect
     open var bounds: CGRect
@@ -39,7 +39,7 @@ public extension LayoutGuide where Super: UIView {
     /// - Returns: Added view
     @discardableResult
     func add<V: UIView>(_ type: V.Type) -> V? {
-        guard let superItem = superLayoutItem else { return nil }
+        guard let superItem = ownerItem else { return nil }
 
         let view = build(type)
         superItem.addSubview(view)
@@ -62,7 +62,7 @@ public extension LayoutGuide where Super: CALayer {
     /// - Returns: Added layer
     @discardableResult
     func add<L: CALayer>(_ type: L.Type) -> L? {
-        guard let superItem = superLayoutItem else { return nil }
+        guard let superItem = ownerItem else { return nil }
 
         let layer = build(type)
         superItem.addSublayer(layer)
@@ -74,7 +74,15 @@ public extension LayoutItem {
     ///
     /// - Parameter layoutGuide: Layout guide for binding
     func add(layoutGuide: LayoutGuide<Self>) {
-        layoutGuide.superLayoutItem = self
+        layoutGuide.ownerItem = self
+    }
+}
+extension LayoutGuide {
+    func add(layoutGuide: LayoutGuide<Super>) {
+        layoutGuide.ownerItem = self.ownerItem
+    }
+    func removeFromSuperItem() {
+        ownerItem = nil
     }
 }
 
@@ -157,6 +165,47 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
 
 // MARK: Additional constraints
 
+/// Layout constraint for independent changing source space. Use him with anchors that not describes rect side (for example `LayoutAnchor.insets` or `LayoutAnchor.Size`).
+struct AnonymConstraint: LayoutConstraintProtocol {
+    let anchors: [RectBasedConstraint]
+
+    /// Flag that constraint not required other calculations. It`s true for size-based constraints.
+    var isIndependent: Bool { return true }
+
+    /// `LayoutItem` object associated with this constraint
+    func layoutItem(is object: AnyObject) -> Bool {
+        return false
+    }
+
+    /// Return rectangle for constrain source rect
+    ///
+    /// - Parameter currentSpace: Source rect in current state
+    /// - Parameter coordinateSpace: Working coordinate space
+    /// - Returns: Rect for constrain
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+        return currentSpace
+    }
+
+    /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+        sourceRect = anchors.reduce(sourceRect) { $0.1.constrained(sourceRect: $0.0, by: rect) }
+    }
+
+    /// Converts rect from constraint coordinate space to destination coordinate space if needed.
+    ///
+    /// - Parameters:
+    ///   - rect: Initial rect
+    ///   - coordinateSpace: Destination coordinate space
+    /// - Returns: Converted rect
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
+        return rect
+    }
+}
+
 // TODO: Create constraint for attributed string and other data oriented constraints
 
 /// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
@@ -204,3 +253,104 @@ public extension String {
 // MARK: Additional layout scheme
 
 // TODO: Implement stack layout scheme and others
+
+public struct StackLayoutScheme: LayoutBlockProtocol {
+    public enum Axis {
+        case horizontal
+        case vertical
+    }
+    public enum Direction {
+        case toTrailing
+        case toLeading
+    }
+
+    private var items: [LayoutItem]
+    private var axisAnchor: RectBasedConstraint = LayoutAnchor.Right.align(by: .outer)
+
+    public var arrangedItems: [LayoutItem] { return items }
+    public var itemLayout: RectBasedLayout = Layout(x: .left(), y: .top(), width: .scaled(1), height: .scaled(1))
+    public var axis: Axis = .horizontal {
+        didSet { setAxisAnchor(for: axis, direction: direction) }
+    }
+    public var direction: Direction = .toTrailing {
+        didSet { setAxisAnchor(for: axis, direction: direction) }
+    }
+
+    private mutating func setAxisAnchor(for axis: Axis, direction: Direction) {
+        switch axis {
+        case .horizontal:
+            axisAnchor = direction == .toTrailing ? LayoutAnchor.Right.align(by: .outer) : LayoutAnchor.Left.align(by: .outer)
+        case .vertical:
+            axisAnchor = direction == .toTrailing ? LayoutAnchor.Bottom.align(by: .outer) : LayoutAnchor.Top.align(by: .outer)
+        }
+    }
+
+    public init<S: Sequence>(arrangedItems: S) where S.Iterator.Element: LayoutItem {
+        self.items = Array(arrangedItems)
+    }
+
+    // MARK: LayoutBlockProtocol
+
+    public /// Snapshot for current state without recalculating
+    var currentSnapshot: LayoutSnapshotProtocol {
+        var snapshotFrame: CGRect!
+        return LayoutSnapshot(childSnapshots: items.map { block in
+            let blockFrame = block.frame
+            snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
+            return blockFrame
+        }, snapshotFrame: snapshotFrame)
+    }
+
+
+    public /// Calculate and apply frames layout items.
+    /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
+    func layout() {
+        var preview: LayoutItem?
+        items.forEach { subItem in
+            let constraints: [ConstrainRect] = preview.map { [($0.frame, axisAnchor)] } ?? []
+            itemLayout.apply(for: subItem, use: constraints)
+            preview = subItem
+        }
+    }
+
+    public /// Applying frames from snapshot to `LayoutItem` items in this block.
+    /// Snapshot array should be ordered such to match `LayoutItem` items sequence.
+    ///
+    /// - Parameter snapshot: Snapshot represented as array of frames.
+    func apply(snapshot: LayoutSnapshotProtocol) {
+        var iterator = items.makeIterator()
+        for child in snapshot.childSnapshots {
+            iterator.next()?.frame = child.snapshotFrame
+        }
+    }
+
+    public /// Returns snapshot for all `LayoutItem` items in block. Attention: in during calculating snapshot frames of layout items must not changed.
+    ///
+    /// - Parameter sourceRect: Source space for layout
+    /// - Returns: Snapshot contained frames layout items
+    func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
+        var completedFrames: [(AnyObject, CGRect)] = []
+        return snapshot(for: sourceRect, completedRects: &completedFrames)
+    }
+
+    public /// Method for perform layout calculation in child blocks. Does not call this method directly outside `LayoutBlockProtocol` object.
+    /// Layout block should be insert contained `LayoutItem` items to completedRects
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space for layout. For not top level blocks rect should be define available bounds of block
+    ///   - completedRects: `LayoutItem` items with corrected frame
+    /// - Returns: Frame of this block
+    func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
+        var snapshotFrame: CGRect!
+        var preview: LayoutItem?
+        return LayoutSnapshot(childSnapshots: items.map { item in
+            let constraints: [ConstrainRect] = preview.map { [($0.frame, axisAnchor)] } ?? []
+            let itemFrame = itemLayout.layout(rect: item.frame, in: sourceRect, use: constraints)
+            completedRects.insert((item, itemFrame), at: 0)
+            preview = item
+
+            snapshotFrame = snapshotFrame?.union(itemFrame) ?? itemFrame
+            return itemFrame
+        }, snapshotFrame: snapshotFrame)
+    }
+}

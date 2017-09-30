@@ -40,7 +40,14 @@ class ViewController: UIViewController {
     let navigationBarBackView = UIView()
     let subview = UIView()
 
-    lazy var itemLayout = Layout(x: .left(15), y: .bottom(10), width: .boxed(35), height: .fixed(50))
+    lazy var stackScheme: StackLayoutScheme = { [unowned self] in
+        var stack = StackLayoutScheme(arrangedItems: self.subviews[0..<7])
+        stack.axis = .vertical
+        stack.direction = .toLeading
+        stack.itemLayout = Layout(x: .left(215), y: .bottom(10), width: .boxed(235), height: .fixed(50))
+
+        return stack
+    }()
     lazy var latestItemLayout = Layout(vertical: (.top(10), .boxed(20)),
                                        horizontal: (.left(15), .fixed(30)))
     lazy var pulledLayout = Layout(x: .left(15), y: .top(10),
@@ -74,14 +81,16 @@ class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        var preview: UIView?
+//        var preview: UIView?
         let constrainedRect = CGRect(origin: .zero, size: CGSize(width: 200, height: 0))
-        subviews[0..<7].forEach { subview in
-            let constraints: [ConstrainRect] = preview.map { [($0.frame, bottomConstraint), (constrainedRect, rightConstraint)] } ?? []
-            itemLayout.apply(for: subview, use: constraints)
-            preview = subview
-        }
-        let lastPreview = preview
+//        subviews[0..<7].forEach { subview in
+//            let constraints: [ConstrainRect] = preview.map { [($0.frame, bottomConstraint), (constrainedRect, rightConstraint)] } ?? []
+//            itemLayout.apply(for: subview, use: constraints)
+//            preview = subview
+//        }
+        stackScheme.layout()
+        var preview = stackScheme.arrangedItems.last
+        let lastPreview = stackScheme.arrangedItems.last
         subviews[7..<10].forEach { subview in
             let constraints: [ConstrainRect] = [(lastPreview!.frame, bottomConstraint), (constrainedRect, rightConstraint)]
             let constraint: [ConstrainRect] = preview === lastPreview ? [] : [(preview!.frame, rightConstraint)]
