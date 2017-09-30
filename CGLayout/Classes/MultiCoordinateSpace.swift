@@ -8,6 +8,8 @@
 
 import Foundation
 
+// TODO: !!! Add MacOS support (conversions more complex)
+
 // MARK: LayoutCoordinateSpace
 
 /// Common protocol for anyone `LayoutItem`.
@@ -166,6 +168,7 @@ fileprivate struct LinkedList<T>: Sequence {
     }
 }
 
+// TODO: Add search nearest common ancestor to implementation
 extension LayoutCoordinateSpace where Self: LayoutItem {
     fileprivate static func convert(point: CGPoint, from: LayoutItem, to: LayoutItem) -> CGPoint {
         let list1Iterator = LinkedList(start: from) { $0.superItem }.makeIterator()
@@ -289,24 +292,24 @@ extension LayoutGuide where Super: UICoordinateSpace {
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, to coordinateSpace: UICoordinateSpace) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-        return superLayoutItem!.convert(pointInSuper, to: coordinateSpace)
+        return ownerItem!.convert(pointInSuper, to: coordinateSpace)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, from coordinateSpace: UICoordinateSpace) -> CGPoint {
-        let pointInSuper = superLayoutItem!.convert(point, from: coordinateSpace)
+        let pointInSuper = ownerItem!.convert(point, from: coordinateSpace)
         return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, to coordinateSpace: UICoordinateSpace) -> CGRect {
         let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-        return superLayoutItem!.convert(rectInSuper, to: coordinateSpace)
+        return ownerItem!.convert(rectInSuper, to: coordinateSpace)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, from coordinateSpace: UICoordinateSpace) -> CGRect {
-        let rectInSuper = superLayoutItem!.convert(rect, from: coordinateSpace)
+        let rectInSuper = ownerItem!.convert(rect, from: coordinateSpace)
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }
@@ -314,24 +317,24 @@ extension LayoutGuide where Super: UIView {
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, to view: UIView) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-        return superLayoutItem!.convert(pointInSuper, to: view)
+        return ownerItem!.convert(pointInSuper, to: view)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, from view: UIView) -> CGPoint {
-        let pointInSuper = superLayoutItem!.convert(point, from: view)
+        let pointInSuper = ownerItem!.convert(point, from: view)
         return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, to view: UIView) -> CGRect {
         let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-        return superLayoutItem!.convert(rectInSuper, to: view)
+        return ownerItem!.convert(rectInSuper, to: view)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, from view: UIView) -> CGRect {
-        let rectInSuper = superLayoutItem!.convert(rect, from: view)
+        let rectInSuper = ownerItem!.convert(rect, from: view)
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }
@@ -339,24 +342,24 @@ extension LayoutGuide where Super: CALayer {
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, to coordinateSpace: CALayer) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-        return superLayoutItem!.convert(pointInSuper, to: coordinateSpace)
+        return ownerItem!.convert(pointInSuper, to: coordinateSpace)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, from coordinateSpace: CALayer) -> CGPoint {
-        let pointInSuper = superLayoutItem!.convert(point, from: coordinateSpace)
+        let pointInSuper = ownerItem!.convert(point, from: coordinateSpace)
         return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, to coordinateSpace: CALayer) -> CGRect {
         let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-        return superLayoutItem!.convert(rectInSuper, to: coordinateSpace)
+        return ownerItem!.convert(rectInSuper, to: coordinateSpace)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, from coordinateSpace: CALayer) -> CGRect {
-        let rectInSuper = superLayoutItem!.convert(rect, from: coordinateSpace)
+        let rectInSuper = ownerItem!.convert(rect, from: coordinateSpace)
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }

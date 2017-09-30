@@ -5,11 +5,24 @@
 [![License](https://img.shields.io/cocoapods/l/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
 [![Platform](https://img.shields.io/cocoapods/p/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
 
+<p align="center">
+    <img src="logo.png">
+</p>
+
+Powerful autolayout framework, that can manage UIView, CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. Fast, asynchronous, declarative, cacheable, extensible.
+
+<p align="center">
+    <img src="benchmark_result.png">
+</p>
+Performed by [LayoutBenchmarkFramework](https://github.com/lucdion/LayoutFrameworkBenchmark)
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
+
+Xcode 8.3+
 
 ## Installation
 
@@ -19,6 +32,10 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "CGLayout"
 ```
+
+## Documentation and guides
+
+See [here](https://k-o-d-e-n.github.io/CGLayout/)
 
 ## Author
 

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Layout Struct Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Struct/Layout" class="dashAnchor"></a>
+    <a title="Layout Struct Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">CGLayout Docs</a> (55% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">CGLayout Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        Layout Struct Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/LayoutGuide.html">LayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/UIViewPlaceholder.html">UIViewPlaceholder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ViewPlaceholder.html">ViewPlaceholder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/CALayer.html">CALayer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/CGRect.html">CGRect</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UILayoutGuide.html">UILayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/UIView.html">UIView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/AdjustableLayoutItem.html">AdjustableLayoutItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/Extended.html">Extended</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutConstraintProtocol.html">LayoutConstraintProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutCoordinateSpace.html">LayoutCoordinateSpace</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutItem.html">LayoutItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/LayoutSnapshotProtocol.html">LayoutSnapshotProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RectBasedConstraint.html">RectBasedConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AdjustLayoutConstraint.html">AdjustLayoutConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Layout.html">Layout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Layout/Alignment.html">– Alignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Layout/Filling.html">– Filling</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor.html">LayoutAnchor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Center.html">– Center</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Size.html">– Size</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Bottom.html">– Bottom</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Right.html">– Right</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Left.html">– Left</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutAnchor/Top.html">– Top</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutBlock.html">LayoutBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutConstraint.html">LayoutConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LayoutScheme.html">LayoutScheme</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/StringLayoutConstraint.html">StringLayoutConstraint</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Typealiases.html">Typealiases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:8CGLayout13ConstrainRect">ConstrainRect</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Layout</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Layout</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>Main layout structure. Use his for positioning and filling in source rect (which can be constrained using <code><a href="../Protocols/RectBasedConstraint.html">RectBasedConstraint</a></code> constraints).</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FV8CGLayout6LayoutcFT9alignmentVS0_9Alignment7fillingVS0_7Filling_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(alignment:filling:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FV8CGLayout6LayoutcFT9alignmentVS0_9Alignment7fillingVS0_7Filling_S0_">init(alignment:filling:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Designed initializer</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">alignment</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="p">,</span> <span class="nv">filling</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>alignment</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Alignment layout behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>filling</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Filling layout behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP8CGLayout15RectBasedLayout6layoutFT4rectRVSC6CGRect2inS1__T_"></a>
+                    <a name="//apple_ref/swift/Method/layout(rect:in:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP8CGLayout15RectBasedLayout6layoutFT4rectRVSC6CGRect2inS1__T_">layout(rect:in:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Performing layout of given rect inside available rect.
+Attention: Apply layout for view frame using code as layout(rect: &amp;view.frame,&hellip;) has side effect and called setFrame method on view.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">layout</span><span class="p">(</span><span class="nv">rect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="k">in</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>rect</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Rect for layout</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>source</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Available space for layout</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:VV8CGLayout6Layout9Alignment"></a>
+                    <a name="//apple_ref/swift/Struct/Alignment" class="dashAnchor"></a>
+                    <a class="token" href="#/s:VV8CGLayout6Layout9Alignment">Alignment</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Alignment part of main layout.</p>
+
+                        <a href="../Structs/Layout/Alignment.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Alignment</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/TODO:%20!%20Add%20ratio%20behavior"></a>
+                <a name="//apple_ref/swift/Section/TODO: ! Add ratio behavior" class="dashAnchor"></a>
+                <a href="#/TODO:%20!%20Add%20ratio%20behavior">
+                  <h3 class="section-name">TODO: ! Add ratio behavior</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:VV8CGLayout6Layout7Filling"></a>
+                    <a name="//apple_ref/swift/Struct/Filling" class="dashAnchor"></a>
+                    <a class="token" href="#/s:VV8CGLayout6Layout7Filling">Filling</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Filling part of main layout</p>
+
+                        <a href="../Structs/Layout/Filling.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Filling</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZvV8CGLayout6Layout5equalPS_15RectBasedLayout_"></a>
+                    <a name="//apple_ref/swift/Variable/equal" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZvV8CGLayout6Layout5equalPS_15RectBasedLayout_">equal</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Layout behavior, that makes passed rect equally to space rect</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">equal</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FV8CGLayout6LayoutcFT8verticalT9alignmentVVS0_9Alignment8Vertical7fillingVVS0_7Filling8Vertical_10horizontalT9alignmentVS1_10Horizontal7fillingVS3_10Horizontal__S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(vertical:horizontal:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FV8CGLayout6LayoutcFT8verticalT9alignmentVVS0_9Alignment8Vertical7fillingVVS0_7Filling8Vertical_10horizontalT9alignmentVS1_10Horizontal7fillingVS3_10Horizontal__S0_">init(vertical:horizontal:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Layout</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FV8CGLayout6LayoutcFT1xVVS0_9Alignment10Horizontal1yVS1_8Vertical5widthVVS0_7Filling10Horizontal6heightVS4_8Vertical_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(x:y:width:height:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FV8CGLayout6LayoutcFT1xVVS0_9Alignment10Horizontal1yVS1_8Vertical5widthVVS0_7Filling10Horizontal6heightVS4_8Vertical_S0_">init(x:y:width:height:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Convinience initializer similar CGRect initializer.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">,</span> <span class="nv">width</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>x</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Horizontal alignment behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>y</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Vertical alignment behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>width</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Width filling behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>height</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Height filling behavior</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-09-26)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

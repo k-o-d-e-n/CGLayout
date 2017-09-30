@@ -38,8 +38,16 @@ class ViewController: UIViewController {
     let pulledView: UIView = UIView()
     let centeredView: UIView = UIView()
     let navigationBarBackView = UIView()
+    let subview = UIView()
 
-    lazy var itemLayout = Layout(x: .left(15), y: .bottom(10), width: .boxed(35), height: .fixed(50))
+    lazy var stackScheme: StackLayoutScheme = { [unowned self] in
+        var stack = StackLayoutScheme(items: self.subviews[0..<7])
+        stack.axis = .vertical
+        stack.direction = .toLeading
+        stack.itemLayout = Layout(x: .left(215), y: .bottom(10), width: .boxed(235), height: .fixed(50))
+
+        return stack
+    }()
     lazy var latestItemLayout = Layout(vertical: (.top(10), .boxed(20)),
                                        horizontal: (.left(15), .fixed(30)))
     lazy var pulledLayout = Layout(x: .left(15), y: .top(10),
@@ -64,6 +72,8 @@ class ViewController: UIViewController {
         centeredView.backgroundColor = .yellow
         view.addSubview(navigationBarBackView)
         navigationBarBackView.backgroundColor = .black
+        subview.backgroundColor = .red
+        pulledView.addSubview(subview)
 
         view.add(layoutGuide: labelPlaceholder)
     }
@@ -71,14 +81,16 @@ class ViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        var preview: UIView?
+//        var preview: UIView?
         let constrainedRect = CGRect(origin: .zero, size: CGSize(width: 200, height: 0))
-        subviews[0..<7].forEach { subview in
-            let constraints: [ConstrainRect] = preview.map { [($0.frame, bottomConstraint), (constrainedRect, rightConstraint)] } ?? []
-            itemLayout.apply(for: subview, use: constraints)
-            preview = subview
-        }
-        let lastPreview = preview
+//        subviews[0..<7].forEach { subview in
+//            let constraints: [ConstrainRect] = preview.map { [($0.frame, bottomConstraint), (constrainedRect, rightConstraint)] } ?? []
+//            itemLayout.apply(for: subview, use: constraints)
+//            preview = subview
+//        }
+        stackScheme.layout()
+        var preview = stackScheme.items.last
+        let lastPreview = stackScheme.items.last
         subviews[7..<10].forEach { subview in
             let constraints: [ConstrainRect] = [(lastPreview!.frame, bottomConstraint), (constrainedRect, rightConstraint)]
             let constraint: [ConstrainRect] = preview === lastPreview ? [] : [(preview!.frame, rightConstraint)]
@@ -93,11 +105,17 @@ class ViewController: UIViewController {
         pulledLayout.apply(for: pulledView, use: [((topLayoutGuide as! UIView).frame, LayoutAnchor.Bottom.limit(on: .outer)), (labelPlaceholder.frame, LayoutAnchor.Left.limit(on: .outer)),
                                                   (subviews[1].frame, LayoutAnchor.Left.limit(on: .outer)), (subviews.first!.frame, topConstraint)])
 
-        centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(20), height: .fixed(30)),
-                                 constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])]).layout()
+        let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(20), height: .fixed(30)),
+                                 constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])])
 
         // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space. 
         navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.layoutConstraint(for: [LayoutAnchor.equal])]).layout()
+
+        let subviewLayout = subview.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(50), height: .fixed(1)),
+                            constraints: [centeredView.layoutConstraint(for: [LayoutAnchor.equal])])
+        let subviewScheme = LayoutScheme(blocks: [centeredViewLayout, subviewLayout])
+        let snapshotSubview = subviewScheme.snapshot(for: view.bounds)
+        subviewScheme.apply(snapshot: snapshotSubview)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

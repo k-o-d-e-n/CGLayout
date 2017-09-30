@@ -28,24 +28,6 @@ extension LayoutAnchor.Center {
     }
 }
 
-struct AnonymConstraint: LayoutConstraintProtocol {
-    /// Flag that constraint not required other calculations. It`s true for size-based constraints.
-    var isIndependent: Bool { return true }
-    let constraints: [RectBasedConstraint]
-
-    func layoutItem(is object: AnyObject) -> Bool {
-        return false
-    }
-
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
-        return currentSpace
-    }
-
-    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-        sourceRect = constraints.reduce(sourceRect) { $0.1.constrained(sourceRect: $0.0, by: rect) }
-    }
-}
-
 public class SecondViewController: UIViewController {
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -90,12 +72,14 @@ public class SecondViewController: UIViewController {
             self.rainImageView.layoutBlock(with: Layout(x: .right(10), y: .top(), width: .fixed(30), height: .fixed(30)),
                                            constraints: [self.rainLabel.layoutConstraint(for: [self.leftLimit, self.topLimit])]),
             self.logoImageView.layoutBlock(with: Layout(x: .center(), y: .top(80), width: .fixed(70), height: .fixed(70))),
-            self.titleLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(120)),
-                                        constraints: [self.logoImageView.layoutConstraint(for: [self.bottomLimit])]),
-            self.nameLabel.layoutBlock(with: Layout(x: .center(), y: .center(20), width: .scaled(1), height: .fixed(30))),
-            self.presentationLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(50)),
-                                               constraints: [self.nameLabel.layoutConstraint(for: [self.bottomLimit])])
-        ])
+            /// example including other scheme to top level scheme
+            LayoutScheme(blocks: [
+                self.titleLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(120)),
+                                            constraints: [self.logoImageView.layoutConstraint(for: [self.bottomLimit])]),
+                self.nameLabel.layoutBlock(with: Layout(x: .center(), y: .center(20), width: .scaled(1), height: .fixed(30))),
+                self.presentationLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(50)),
+                                                   constraints: [self.nameLabel.layoutConstraint(for: [self.bottomLimit])])])
+            ])
     }()
 
     var portraitSnapshot: LayoutSnapshotProtocol!
@@ -144,6 +128,8 @@ public class SecondViewController: UIViewController {
             layoutScheme.apply(snapshot: snapshot)
         } else if UIDevice.current.orientation.isLandscape, let snapshot = landscapeSnapshot {
             layoutScheme.apply(snapshot: snapshot)
+        } else {
+            layoutScheme.layout()
         }
     }
 }
