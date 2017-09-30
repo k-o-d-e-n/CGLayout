@@ -166,14 +166,14 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
 // MARK: Additional constraints
 
 /// Layout constraint for independent changing source space. Use him with anchors that not describes rect side (for example `LayoutAnchor.insets` or `LayoutAnchor.Size`).
-struct AnonymConstraint: LayoutConstraintProtocol {
+public struct AnonymConstraint: LayoutConstraintProtocol {
     let anchors: [RectBasedConstraint]
 
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
-    var isIndependent: Bool { return true }
+    public var isIndependent: Bool { return true }
 
     /// `LayoutItem` object associated with this constraint
-    func layoutItem(is object: AnyObject) -> Bool {
+    public func layoutItem(is object: AnyObject) -> Bool {
         return false
     }
 
@@ -182,7 +182,7 @@ struct AnonymConstraint: LayoutConstraintProtocol {
     /// - Parameter currentSpace: Source rect in current state
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
         return currentSpace
     }
 
@@ -191,7 +191,7 @@ struct AnonymConstraint: LayoutConstraintProtocol {
     /// - Parameters:
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
-    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+    public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect = anchors.reduce(sourceRect) { $0.1.constrained(sourceRect: $0.0, by: rect) }
     }
 
@@ -201,7 +201,7 @@ struct AnonymConstraint: LayoutConstraintProtocol {
     ///   - rect: Initial rect
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
+    public func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
         return rect
     }
 }
@@ -264,10 +264,9 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         case toLeading
     }
 
-    private var items: [LayoutItem]
+    public var items: [LayoutItem] // TODO: May be using getter closure for receive items
     private var axisAnchor: RectBasedConstraint = LayoutAnchor.Right.align(by: .outer)
 
-    public var arrangedItems: [LayoutItem] { return items }
     public var itemLayout: RectBasedLayout = Layout(x: .left(), y: .top(), width: .scaled(1), height: .scaled(1))
     public var axis: Axis = .horizontal {
         didSet { setAxisAnchor(for: axis, direction: direction) }
@@ -285,8 +284,8 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }
     }
 
-    public init<S: Sequence>(arrangedItems: S) where S.Iterator.Element: LayoutItem {
-        self.items = Array(arrangedItems)
+    public init<S: Sequence>(items: S) where S.Iterator.Element: LayoutItem {
+        self.items = Array(items)
     }
 
     // MARK: LayoutBlockProtocol
@@ -352,5 +351,19 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             snapshotFrame = snapshotFrame?.union(itemFrame) ?? itemFrame
             return itemFrame
         }, snapshotFrame: snapshotFrame)
+    }
+}
+
+public class StackLayoutGuide<Parent: LayoutItem>: LayoutGuide<Parent>, AdjustableLayoutItem {
+    var scheme: StackLayoutScheme = StackLayoutScheme(items: [Parent]())
+
+    
+
+    public /// Asks the layout item to calculate and return the size that best fits the specified size
+    ///
+    /// - Parameter size: The size for which the view should calculate its best-fitting size
+    /// - Returns: A new size that fits the receiver’s content
+    func sizeThatFits(_ size: CGSize) -> CGSize {
+        return scheme.snapshot(for: bounds).snapshotFrame.size
     }
 }

@@ -41,7 +41,7 @@ class ViewController: UIViewController {
     let subview = UIView()
 
     lazy var stackScheme: StackLayoutScheme = { [unowned self] in
-        var stack = StackLayoutScheme(arrangedItems: self.subviews[0..<7])
+        var stack = StackLayoutScheme(items: self.subviews[0..<7])
         stack.axis = .vertical
         stack.direction = .toLeading
         stack.itemLayout = Layout(x: .left(215), y: .bottom(10), width: .boxed(235), height: .fixed(50))
@@ -89,8 +89,8 @@ class ViewController: UIViewController {
 //            preview = subview
 //        }
         stackScheme.layout()
-        var preview = stackScheme.arrangedItems.last
-        let lastPreview = stackScheme.arrangedItems.last
+        var preview = stackScheme.items.last
+        let lastPreview = stackScheme.items.last
         subviews[7..<10].forEach { subview in
             let constraints: [ConstrainRect] = [(lastPreview!.frame, bottomConstraint), (constrainedRect, rightConstraint)]
             let constraint: [ConstrainRect] = preview === lastPreview ? [] : [(preview!.frame, rightConstraint)]
