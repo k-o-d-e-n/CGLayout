@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '10.0'
-  s.macos.deployment_target = '10.10'
+  s.osx.deployment_target = '10.10'
 
   s.source_files = 'CGLayout/Classes/**/*'
   

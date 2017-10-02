@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "560A068A8AF669C4A38562ABEDEF0D8B"
-               BuildableName = "Pods_CGLayout_CGLayout_tvOS.framework"
-               BlueprintName = "Pods-CGLayout-CGLayout-tvOS"
+               BlueprintIdentifier = "316C346240A37416EEA77B0D4086A9CC"
+               BuildableName = "Pods_CGLayout_tvOS.framework"
+               BlueprintName = "Pods-CGLayout-tvOS"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "560A068A8AF669C4A38562ABEDEF0D8B"
-            BuildableName = "Pods_CGLayout_CGLayout_tvOS.framework"
-            BlueprintName = "Pods-CGLayout-CGLayout-tvOS"
+            BlueprintIdentifier = "316C346240A37416EEA77B0D4086A9CC"
+            BuildableName = "Pods_CGLayout_tvOS.framework"
+            BlueprintName = "Pods-CGLayout-tvOS"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

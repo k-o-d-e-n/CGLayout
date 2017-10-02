@@ -34,7 +34,9 @@
 		A4579C351F59E86800893AB2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		AA207DB93A95FD0B83A04761 /* Pods_CGLayout_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AF282E152D179C9353E356 /* Pods_CGLayout_Tests.framework */; };
+		B635776618CF077E9FE44524 /* Pods_CGLayout_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 229950F7B0B7736994BF5766 /* Pods_CGLayout_tvOS.framework */; };
 		B647708983ED594F2B47B59F /* Pods_CGLayout_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8DB75E422B488E64064C358 /* Pods_CGLayout_Example.framework */; };
+		E4827EFA55C54B6C161179CB /* Pods_CGLayout_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 330A42FA87474F26BC08EC6C /* Pods_CGLayout_macOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,8 +58,9 @@
 
 /* Begin PBXFileReference section */
 		18AF282E152D179C9353E356 /* Pods_CGLayout_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		229950F7B0B7736994BF5766 /* Pods_CGLayout_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27B52FB9B48634E2B93F98CA /* CGLayout.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = CGLayout.podspec; path = ../CGLayout.podspec; sourceTree = "<group>"; };
-		30C49F75C6CDB40B031BBBCB /* Pods-CGLayout-CGLayout-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-CGLayout-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-CGLayout-tvOS/Pods-CGLayout-CGLayout-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		330A42FA87474F26BC08EC6C /* Pods_CGLayout_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E0DEC4377566CB21DB9F879 /* Pods-CGLayout-macOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-macOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-macOSTests/Pods-CGLayout-macOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		3EBA77EEBD0196F171836E72 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		4A93A868E9800986C3C35748 /* Pods-CGLayout_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Tests/Pods-CGLayout_Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -74,10 +77,7 @@
 		62CF1CA328076DFAD55E59B6 /* Pods-CGLayout-macOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-macOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-macOSTests/Pods-CGLayout-macOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		630FC71E11F5799F80FC8116 /* Pods_CGLayout_macOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_macOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EBF0DDB4F980922FB75511F /* Pods_CGLayout_CGLayout_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_CGLayout_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		740D364548984F5BC10420CC /* Pods-CGLayout-CGLayout_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-CGLayout_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-CGLayout_Example/Pods-CGLayout-CGLayout_Example.release.xcconfig"; sourceTree = "<group>"; };
-		768B940DB32E08047C9636FB /* Pods-CGLayout_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.release.xcconfig"; sourceTree = "<group>"; };
-		774C8AEFB353134572E97EB9 /* Pods-CGLayout-CGLayout-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-CGLayout-macOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-CGLayout-macOS/Pods-CGLayout-CGLayout-macOS.release.xcconfig"; sourceTree = "<group>"; };
-		80C52CAFAE189A22BDC1A619 /* Pods-CGLayout_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		9B8BF7184AA959D9A6E3D5F0 /* Pods-CGLayout-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-macOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-macOS/Pods-CGLayout-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		A4232A231F82D58E00016A8A /* CGLayout-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CGLayout-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4232A251F82D58E00016A8A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A4232A271F82D58E00016A8A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -95,13 +95,15 @@
 		A44646BB1F74132A009601DA /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		A4579C341F59E86800893AB2 /* SecondViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A61BF78AC92FC0EEFA023B5B /* Pods_CGLayout_CGLayout_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_CGLayout_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA2C252CCB8A85B1276571C2 /* Pods-CGLayout-CGLayout-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-CGLayout-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-CGLayout-tvOS/Pods-CGLayout-CGLayout-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		A9D89FE715E08AC2499AAB82 /* Pods-CGLayout_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		B8458FAC7A74CBFBD7D58733 /* Pods-CGLayout_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.release.xcconfig"; sourceTree = "<group>"; };
+		C48A38620A72C16EC983ABC8 /* Pods-CGLayout-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		DD15EF6205EB6FEEA998E640 /* Pods_CGLayout_CGLayout_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_CGLayout_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E253A770A1B8FBB3F384B0E5 /* Pods-CGLayout_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Tests/Pods-CGLayout_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		F3C9FBBF1559BA97743B073D /* Pods-CGLayout-CGLayout_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-CGLayout_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-CGLayout_Example/Pods-CGLayout-CGLayout_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		EB56600672FCE348320E306C /* Pods-CGLayout-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		F8DB75E422B488E64064C358 /* Pods_CGLayout_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9EF02C1911902D3A9CA9BDC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		FAA88390FFDA77BA455B80E2 /* Pods-CGLayout-CGLayout-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-CGLayout-macOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-CGLayout-macOS/Pods-CGLayout-CGLayout-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		FB96B56100AA7FA8A8D268F9 /* Pods-CGLayout-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-macOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-macOS/Pods-CGLayout-macOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F1291055EBE4BB4AD0C12FB /* Pods_CGLayout_CGLayout_macOS.framework in Frameworks */,
+				E4827EFA55C54B6C161179CB /* Pods_CGLayout_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A7D0815C9D30D34F03AB504 /* Pods_CGLayout_CGLayout_tvOS.framework in Frameworks */,
+				B635776618CF077E9FE44524 /* Pods_CGLayout_tvOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,18 +156,16 @@
 		0507E605A02874E4C9E09F7E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				80C52CAFAE189A22BDC1A619 /* Pods-CGLayout_Example.debug.xcconfig */,
-				768B940DB32E08047C9636FB /* Pods-CGLayout_Example.release.xcconfig */,
 				E253A770A1B8FBB3F384B0E5 /* Pods-CGLayout_Tests.debug.xcconfig */,
 				4A93A868E9800986C3C35748 /* Pods-CGLayout_Tests.release.xcconfig */,
-				F3C9FBBF1559BA97743B073D /* Pods-CGLayout-CGLayout_Example.debug.xcconfig */,
-				740D364548984F5BC10420CC /* Pods-CGLayout-CGLayout_Example.release.xcconfig */,
-				30C49F75C6CDB40B031BBBCB /* Pods-CGLayout-CGLayout-tvOS.debug.xcconfig */,
-				AA2C252CCB8A85B1276571C2 /* Pods-CGLayout-CGLayout-tvOS.release.xcconfig */,
-				FAA88390FFDA77BA455B80E2 /* Pods-CGLayout-CGLayout-macOS.debug.xcconfig */,
-				774C8AEFB353134572E97EB9 /* Pods-CGLayout-CGLayout-macOS.release.xcconfig */,
 				62CF1CA328076DFAD55E59B6 /* Pods-CGLayout-macOSTests.debug.xcconfig */,
 				3E0DEC4377566CB21DB9F879 /* Pods-CGLayout-macOSTests.release.xcconfig */,
+				9B8BF7184AA959D9A6E3D5F0 /* Pods-CGLayout-macOS.debug.xcconfig */,
+				FB96B56100AA7FA8A8D268F9 /* Pods-CGLayout-macOS.release.xcconfig */,
+				EB56600672FCE348320E306C /* Pods-CGLayout-tvOS.debug.xcconfig */,
+				C48A38620A72C16EC983ABC8 /* Pods-CGLayout-tvOS.release.xcconfig */,
+				A9D89FE715E08AC2499AAB82 /* Pods-CGLayout_Example.debug.xcconfig */,
+				B8458FAC7A74CBFBD7D58733 /* Pods-CGLayout_Example.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -177,6 +179,8 @@
 				A61BF78AC92FC0EEFA023B5B /* Pods_CGLayout_CGLayout_tvOS.framework */,
 				DD15EF6205EB6FEEA998E640 /* Pods_CGLayout_CGLayout_macOS.framework */,
 				630FC71E11F5799F80FC8116 /* Pods_CGLayout_macOSTests.framework */,
+				330A42FA87474F26BC08EC6C /* Pods_CGLayout_macOS.framework */,
+				229950F7B0B7736994BF5766 /* Pods_CGLayout_tvOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -514,7 +518,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CGLayout-CGLayout-macOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-CGLayout-macOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -532,7 +536,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CGLayout-CGLayout-tvOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-CGLayout-tvOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -578,7 +582,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-CGLayout_Example/Pods-CGLayout-CGLayout_Example-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CGLayout-iOS/CGLayout.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -587,7 +591,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-CGLayout_Example/Pods-CGLayout-CGLayout_Example-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		68E674274DE6B623068B6F65 /* [CP] Copy Pods Resources */ = {
@@ -616,7 +620,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CGLayout-CGLayout_Example-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-CGLayout_Example-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -644,7 +648,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-CGLayout-tvOS/Pods-CGLayout-CGLayout-tvOS-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CGLayout-tvOS/CGLayout.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -653,7 +657,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-CGLayout-tvOS/Pods-CGLayout-CGLayout-tvOS-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B861038DF6872E4ADE5496F8 /* [CP] Copy Pods Resources */ = {
@@ -668,7 +672,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-CGLayout-tvOS/Pods-CGLayout-CGLayout-tvOS-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C213B76C15DB0CEC26854CFB /* [CP] Copy Pods Resources */ = {
@@ -683,7 +687,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-CGLayout_Example/Pods-CGLayout-CGLayout_Example-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D04DDEE2C6B6C943638DDD9C /* [CP] Embed Pods Frameworks */ = {
@@ -692,7 +696,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-CGLayout-macOS/Pods-CGLayout-CGLayout-macOS-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-macOS/Pods-CGLayout-macOS-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CGLayout-macOS/CGLayout.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -701,7 +705,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-CGLayout-macOS/Pods-CGLayout-CGLayout-macOS-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-macOS/Pods-CGLayout-macOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		DC0397DF5F3C1216AC47F6F2 /* [CP] Check Pods Manifest.lock */ = {
@@ -749,7 +753,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-CGLayout-macOS/Pods-CGLayout-CGLayout-macOS-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CGLayout-macOS/Pods-CGLayout-macOS-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -945,7 +949,7 @@
 		};
 		607FACF01AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F3C9FBBF1559BA97743B073D /* Pods-CGLayout-CGLayout_Example.debug.xcconfig */;
+			baseConfigurationReference = A9D89FE715E08AC2499AAB82 /* Pods-CGLayout_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 39RU298KG9;
@@ -961,7 +965,7 @@
 		};
 		607FACF11AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 740D364548984F5BC10420CC /* Pods-CGLayout-CGLayout_Example.release.xcconfig */;
+			baseConfigurationReference = B8458FAC7A74CBFBD7D58733 /* Pods-CGLayout_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 39RU298KG9;
@@ -1019,7 +1023,7 @@
 		};
 		A4232A301F82D58E00016A8A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FAA88390FFDA77BA455B80E2 /* Pods-CGLayout-CGLayout-macOS.debug.xcconfig */;
+			baseConfigurationReference = 9B8BF7184AA959D9A6E3D5F0 /* Pods-CGLayout-macOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1042,7 +1046,7 @@
 		};
 		A4232A311F82D58E00016A8A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 774C8AEFB353134572E97EB9 /* Pods-CGLayout-CGLayout-macOS.release.xcconfig */;
+			baseConfigurationReference = FB96B56100AA7FA8A8D268F9 /* Pods-CGLayout-macOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1109,7 +1113,7 @@
 		};
 		A42B700C1F828F7000633A10 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 30C49F75C6CDB40B031BBBCB /* Pods-CGLayout-CGLayout-tvOS.debug.xcconfig */;
+			baseConfigurationReference = EB56600672FCE348320E306C /* Pods-CGLayout-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1132,7 +1136,7 @@
 		};
 		A42B700D1F828F7000633A10 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AA2C252CCB8A85B1276571C2 /* Pods-CGLayout-CGLayout-tvOS.release.xcconfig */;
+			baseConfigurationReference = C48A38620A72C16EC983ABC8 /* Pods-CGLayout-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1197,6 +1201,7 @@
 				A4232A401F82E94500016A8A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A42B70101F828F7000633A10 /* Build configuration list for PBXNativeTarget "CGLayout-tvOS" */ = {
 			isa = XCConfigurationList;

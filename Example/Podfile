@@ -1,7 +1,6 @@
 use_frameworks!
 
-abstract_target 'CGLayout' do
-  pod 'CGLayout', :path => '../'
+pod 'CGLayout', :path => '../'
 
   target 'CGLayout_Example' do
 
@@ -17,4 +16,3 @@ abstract_target 'CGLayout' do
           inherit! :search_paths
       end
   end
-end
