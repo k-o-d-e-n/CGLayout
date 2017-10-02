@@ -9,7 +9,7 @@
 import Foundation
 
 #if os(iOS) || os(tvOS)
-    typealias EdgeInsets = UIEdgeInsets
+    public typealias EdgeInsets = UIEdgeInsets
 #endif
 
 extension CGRect {
