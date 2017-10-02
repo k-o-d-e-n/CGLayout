@@ -37,6 +37,10 @@ LayoutBlock(with: layoutElement,
             constraints: [element1.layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .outer), LayoutAnchor.Right.limit(on: .inner)]),
                           element2.layoutConstraint(for: [LayoutAnchor.Right.limit(on: .outer), LayoutAnchor.Bottom.limit(on: .inner)])])
 ```
+<p align="center">
+<img src="Resources/layout1.png">
+<img src="Resources/layout2.png">
+</p>
 You have to carefully approach the creation of blocks, because anchors and based on them constraints not have priority and is applying sequentially.
 Constraints should operate actual frames, therefore next layout block must have constraints with "views", that will not change frame.
 
