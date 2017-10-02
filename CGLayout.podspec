@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CGLayout'
-  s.version          = '0.5.3'
+  s.version          = '0.5.5'
   s.summary          = 'Constraint-based autolayout system written on Swift. Not Autolayout wrapper.'
 
 # This description is used to generate tags and improve search results.
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
-  s.description      = 'Powerful autolayout framework, that can manage UIView, CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. Fast, asynchronous, declarative, cacheable, extensible.'
+  s.description      = 'Powerful autolayout framework, that can manage UIView(NSView), CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. Fast, asynchronous, declarative, cacheable, extensible. Supported iOS, macOS, tvOS.'
 
   s.homepage         = 'https://github.com/k-o-d-e-n/CGLayout'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
@@ -27,6 +27,8 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/K_o_D_e_N'
 
   s.ios.deployment_target = '9.0'
+  s.tvos.deployment_target = '10.0'
+  s.macos.deployment_target = '10.10'
 
   s.source_files = 'CGLayout/Classes/**/*'
   

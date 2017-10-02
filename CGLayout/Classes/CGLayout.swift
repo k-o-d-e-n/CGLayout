@@ -6,13 +6,18 @@
 //  Copyright © 2017 K-o-D-e-N. All rights reserved.
 //
 
+#if os(iOS) || os(tvOS)
 import UIKit
+#endif
+#if os(macOS)
+import Cocoa
+#endif
 
 // TODO: !! Comment all code
 // TODO: ! Add RTL (right to left language)
 // TODO: !! Implement behavior on remove view from hierarchy (Unwrapped LayoutItem, break result in ConstraintsItem). Probably need add `isActive` property.
 // TODO: ! Add support UITraitCollection
-// TODO: !!! Add MacOS, tvOS support
+// TODO: !! Optimization for macOS API
 // TODO: !!! Resolve problem with create offset for adjusted views.
 // TODO: ! Add CGRect.integral
 
@@ -155,9 +160,17 @@ public protocol LayoutItem: class, LayoutCoordinateSpace {
     weak var superItem: LayoutItem? { get }
     // TODO: Add subItems if will be need create layout sub elements. For instance, stack view.
 }
-extension UIView: AdjustableLayoutItem {
-    public weak var superItem: LayoutItem? { return superview }
-}
+#if os(iOS) || os(tvOS)
+    extension UIView: AdjustableLayoutItem {
+        public weak var superItem: LayoutItem? { return superview }
+    }
+#endif
+#if os(macOS)
+    extension NSView: LayoutItem {
+        public weak var superItem: LayoutItem? { return superview }
+    }
+    extension NSControl: AdjustableLayoutItem {}
+#endif
 extension CALayer: LayoutItem {
     public weak var superItem: LayoutItem? { return superlayer }
 }
@@ -575,9 +588,9 @@ public struct LayoutAnchor {
     ///
     /// - Parameter value: UIEdgeInsets value
     /// - Returns: Inset constraint
-    public static func insets(_ value: UIEdgeInsets) -> RectBasedConstraint { return Inset(insets: value) }
+    public static func insets(_ value: EdgeInsets) -> RectBasedConstraint { return Inset(insets: value) }
     private struct Inset: RectBasedConstraint {
-        let insets: UIEdgeInsets
+        let insets: EdgeInsets
         /// Main function for constrain source space by other rect
         ///
         /// - Parameters:

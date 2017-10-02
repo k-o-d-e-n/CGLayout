@@ -9,7 +9,7 @@
     <img src="Resources/logo.png">
 </p>
 
-Powerful autolayout framework, that can manage UIView, CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. Fast, asynchronous, declarative, cacheable, extensible.
+Powerful autolayout framework, that can manage UIView(NSView), CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. Fast, asynchronous, declarative, cacheable, extensible. Supported iOS, macOS, tvOS.
 
 <p align="center">
     <img src="Resources/benchmark_result.png">
@@ -86,7 +86,7 @@ if UIDevice.current.orientation.isPortrait, let snapshot = portraitSnapshot {
 
 For implementing custom layout entities and save strong typed code, use `static func build(_ base: Conformed) -> Self` method.
 
-Framework provides `LayoutGuide`s as analogue UILayoutGuide. He have possible to generate views and add them to hierarchy.
+Framework provides `LayoutGuide` as analogue UILayoutGuide. It has possible to generate views and add them to hierarchy.
 For create `UIView` placeholders use `ViewPlaceholder` class.
 
 For more details, see documentation and example project.

@@ -95,6 +95,7 @@ public class SecondViewController: UIViewController {
         view.layer.addSublayer(separator2)
         separator2Layer = separator2
 
+        #if os(iOS)
         let bounds = view.bounds
         let isLandscape = UIDevice.current.orientation.isLandscape
         DispatchQueue.global(qos: .background).async {
@@ -106,6 +107,7 @@ public class SecondViewController: UIViewController {
                 self.layoutScheme.apply(snapshot: UIDevice.current.orientation.isLandscape ? landscapeSnapshot : portraitSnapshot)
             }
         }
+        #endif
     }
 
     override public func viewDidLayoutSubviews() {
@@ -124,6 +126,7 @@ public class SecondViewController: UIViewController {
 //        }
 
         // cached layout
+        #if os(iOS)
         if UIDevice.current.orientation.isPortrait, let snapshot = portraitSnapshot {
             layoutScheme.apply(snapshot: snapshot)
         } else if UIDevice.current.orientation.isLandscape, let snapshot = landscapeSnapshot {
@@ -131,6 +134,10 @@ public class SecondViewController: UIViewController {
         } else {
             layoutScheme.layout()
         }
+        #endif
+        #if os(tvOS)
+            layoutScheme.layout()
+        #endif
     }
 }
 

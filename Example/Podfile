@@ -1,11 +1,20 @@
 use_frameworks!
 
-target 'CGLayout_Example' do
+abstract_target 'CGLayout' do
   pod 'CGLayout', :path => '../'
 
-  target 'CGLayout_Tests' do
-    inherit! :search_paths
+  target 'CGLayout_Example' do
 
-    
+    target 'CGLayout_Tests' do
+      inherit! :search_paths
+
+    end
+  end
+  target 'CGLayout-tvOS' do
+  end
+  target 'CGLayout-macOS' do
+      target 'CGLayout-macOSTests' do
+          inherit! :search_paths
+      end
   end
 end

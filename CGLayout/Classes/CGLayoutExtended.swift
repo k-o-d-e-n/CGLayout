@@ -27,6 +27,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem {
         self.bounds = CGRect(origin: .zero, size: frame.size)
     }
 }
+#if os(iOS) || os(tvOS)
 public extension LayoutGuide where Super: UIView {
     /// Fabric method for generation view with any type
     ///
@@ -46,6 +47,7 @@ public extension LayoutGuide where Super: UIView {
         return view
     }
 }
+#endif
 public extension LayoutGuide where Super: CALayer {
     /// Fabric method for generation layer with any type
     ///
@@ -86,6 +88,7 @@ extension LayoutGuide {
     }
 }
 
+#if os(iOS) || os(tvOS)
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class ViewPlaceholder<View: UIView>: LayoutGuide<UIView> {
@@ -162,6 +165,7 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
         }
     }
 }
+#endif
 
 // MARK: Additional constraints
 
@@ -209,6 +213,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
 // TODO: Create constraint for attributed string and other data oriented constraints
 
 /// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
+@available(OSX 10.11, *)
 public struct StringLayoutConstraint: RectBasedConstraint {
     let string: String?
     let attributes: [String: Any]?
@@ -245,6 +250,7 @@ public extension String {
     ///   - attributes: String attributes
     ///   - context: Drawing context
     /// - Returns: String-based constraint
+    @available(OSX 10.11, *)
     func layoutConstraint(with options: NSStringDrawingOptions = .usesLineFragmentOrigin, attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutConstraint {
         return StringLayoutConstraint(string: self, options: options, attributes: attributes, context: context)
     }

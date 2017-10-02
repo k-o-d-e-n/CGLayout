@@ -4,12 +4,37 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>CGLayout.xcscheme</key>
+		<key>CGLayout-iOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-CGLayout_Example.xcscheme</key>
+		<key>CGLayout-macOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>CGLayout-tvOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-CGLayout-CGLayout-macOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-CGLayout-CGLayout-tvOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-CGLayout-CGLayout_Example.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-CGLayout-macOSTests.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -22,12 +47,37 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>8786169CF49D9CA876C2C5A0A7D0E276</key>
+		<key>3CCA2D8AFD0737DEB0241267CB14BD96</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C1C6B39D4C31D86A9B2AB620DEFE68BF</key>
+		<key>560A068A8AF669C4A38562ABEDEF0D8B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6E8BF0325A32079A5E493FB75CC0C107</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>75FB66B6831C47D89C49EC7E3E10F9A7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C34240DDF47929FE08CAFC896060F490</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C9BF65001404394818CE3F1F908AF190</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EA16CC38D3BFE950E5992F89D7AB92A8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
