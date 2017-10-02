@@ -51,462 +51,455 @@
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 196,
-      "symbol": "AdjustableLayoutItem.sizeThatFits(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 212,
+      "line": 216,
       "symbol": "LayoutConstraintProtocol",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 242,
+      "line": 246,
       "symbol": "LayoutConstraint.init(item:constraints:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 290,
+      "line": 294,
       "symbol": "AdjustLayoutConstraint.init(item:constraints:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 388,
+      "line": 394,
       "symbol": "LayoutBlock.item",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 393,
+      "line": 399,
       "symbol": "LayoutBlock.init(item:layout:constraints:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 458,
+      "line": 464,
       "symbol": "LayoutScheme.init(blocks:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 534,
+      "line": 540,
       "symbol": "LayoutAnchor.Center.Align",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 535,
+      "line": 541,
       "symbol": "LayoutAnchor.Center.Align.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 544,
+      "line": 550,
       "symbol": "LayoutAnchor.Center.Align.Dependence.origin",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 545,
+      "line": 551,
       "symbol": "LayoutAnchor.Center.Align.Dependence.Origin",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 551,
+      "line": 557,
       "symbol": "LayoutAnchor.Center.Align.Dependence.center",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 552,
+      "line": 558,
       "symbol": "LayoutAnchor.Center.Align.Dependence.Center",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 674,
+      "line": 680,
       "symbol": "LayoutAnchor.Bottom.Align",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 675,
+      "line": 681,
       "symbol": "LayoutAnchor.Bottom.Align.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 687,
+      "line": 693,
       "symbol": "LayoutAnchor.Bottom.Align.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 699,
+      "line": 705,
       "symbol": "LayoutAnchor.Bottom.Align.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 720,
+      "line": 726,
       "symbol": "LayoutAnchor.Bottom.Limit",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 721,
+      "line": 727,
       "symbol": "LayoutAnchor.Bottom.Limit.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 733,
+      "line": 739,
       "symbol": "LayoutAnchor.Bottom.Limit.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 744,
+      "line": 750,
       "symbol": "LayoutAnchor.Bottom.Limit.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 763,
+      "line": 769,
       "symbol": "LayoutAnchor.Bottom.Pull",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 764,
+      "line": 770,
       "symbol": "LayoutAnchor.Bottom.Pull.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 776,
+      "line": 782,
       "symbol": "LayoutAnchor.Bottom.Pull.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 787,
+      "line": 793,
       "symbol": "LayoutAnchor.Bottom.Pull.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 852,
+      "line": 858,
       "symbol": "LayoutAnchor.Right.Align",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 853,
+      "line": 859,
       "symbol": "LayoutAnchor.Right.Align.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 863,
+      "line": 869,
       "symbol": "LayoutAnchor.Right.Align.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 875,
+      "line": 881,
       "symbol": "LayoutAnchor.Right.Align.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 894,
+      "line": 900,
       "symbol": "LayoutAnchor.Right.Limit",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 895,
+      "line": 901,
       "symbol": "LayoutAnchor.Right.Limit.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 905,
+      "line": 911,
       "symbol": "LayoutAnchor.Right.Limit.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 916,
+      "line": 922,
       "symbol": "LayoutAnchor.Right.Limit.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 935,
+      "line": 941,
       "symbol": "LayoutAnchor.Right.Pull",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 936,
+      "line": 942,
       "symbol": "LayoutAnchor.Right.Pull.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 946,
+      "line": 952,
       "symbol": "LayoutAnchor.Right.Pull.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 957,
+      "line": 963,
       "symbol": "LayoutAnchor.Right.Pull.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1022,
+      "line": 1028,
       "symbol": "LayoutAnchor.Left.Align",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1023,
+      "line": 1029,
       "symbol": "LayoutAnchor.Left.Align.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1033,
+      "line": 1039,
       "symbol": "LayoutAnchor.Left.Align.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1045,
+      "line": 1051,
       "symbol": "LayoutAnchor.Left.Align.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1064,
+      "line": 1070,
       "symbol": "LayoutAnchor.Left.Limit",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1065,
+      "line": 1071,
       "symbol": "LayoutAnchor.Left.Limit.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1075,
+      "line": 1081,
       "symbol": "LayoutAnchor.Left.Limit.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1086,
+      "line": 1092,
       "symbol": "LayoutAnchor.Left.Limit.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1105,
+      "line": 1111,
       "symbol": "LayoutAnchor.Left.Pull",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1106,
+      "line": 1112,
       "symbol": "LayoutAnchor.Left.Pull.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1116,
+      "line": 1122,
       "symbol": "LayoutAnchor.Left.Pull.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1127,
+      "line": 1133,
       "symbol": "LayoutAnchor.Left.Pull.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1192,
+      "line": 1198,
       "symbol": "LayoutAnchor.Top.Align",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1193,
+      "line": 1199,
       "symbol": "LayoutAnchor.Top.Align.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1205,
+      "line": 1211,
       "symbol": "LayoutAnchor.Top.Align.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1217,
+      "line": 1223,
       "symbol": "LayoutAnchor.Top.Align.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1236,
+      "line": 1242,
       "symbol": "LayoutAnchor.Top.Limit",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1237,
+      "line": 1243,
       "symbol": "LayoutAnchor.Top.Limit.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1248,
+      "line": 1254,
       "symbol": "LayoutAnchor.Top.Limit.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1259,
+      "line": 1265,
       "symbol": "LayoutAnchor.Top.Limit.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1278,
+      "line": 1284,
       "symbol": "LayoutAnchor.Top.Pull",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1279,
+      "line": 1285,
       "symbol": "LayoutAnchor.Top.Pull.Dependence",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1290,
+      "line": 1296,
       "symbol": "LayoutAnchor.Top.Pull.Dependence.inner",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1301,
+      "line": 1307,
       "symbol": "LayoutAnchor.Top.Pull.Dependence.outer",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1397,
+      "line": 1403,
       "symbol": "Layout.Alignment.Horizontal",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1450,
+      "line": 1456,
       "symbol": "Layout.Alignment.Vertical",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1532,
+      "line": 1538,
       "symbol": "Layout.Filling.Horizontal",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1592,
+      "line": 1598,
       "symbol": "Layout.Filling.Vertical",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayout.swift",
-      "line": 1666,
+      "line": 1672,
       "symbol": "Layout.init(vertical:horizontal:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -627,13 +620,6 @@
       "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayoutExtended.swift",
       "line": 149,
       "symbol": "UIViewPlaceholder.loadViewIfNeeded()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/K-o-D-e-N/Documents/Projects/iOS/CGLayout/CGLayout/Classes/CGLayoutExtended.swift",
-      "line": 169,
-      "symbol": "StringLayoutConstraint.init(string:options:attributes:context:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
