@@ -8,66 +8,53 @@
 
 import Foundation
 
+// TODO: !! Add layout call to layout item, for invoke relayout when adjusted view changed size and other cases.
+//public protocol LayoutItemContainer {
+//    func setNeedsLayout()
+//}
+
 public protocol LayoutItemContainer: LayoutItem {
     var sublayoutItems: [LayoutItem]? { get }
 
     func addSublayoutItem<SubItem: LayoutItem>(_ subItem: SubItem)
-    func removeSublayoutItem<SubItem: LayoutItem>(_ subItem: SubItem)
 }
 
 extension CALayer: LayoutItemContainer {
     public weak var superItem: LayoutItem? { return superlayer }
     public var sublayoutItems: [LayoutItem]? { return sublayers }
+    public func removeFromSuperItem() { removeFromSuperlayer() }
 
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
-    public func removeSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
 
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {
         add(layoutGuide: subItem)
     }
-    public func removeSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {
-        subItem.removeFromOwner()
-    }
-
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
         addSublayer(subItem)
     }
-    public func removeSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
-        subItem.removeFromSuperlayer()
-    }
 }
 
+#if os(iOS) || os(tvOS)
 extension UIView: LayoutItemContainer {
     public var sublayoutItems: [LayoutItem]? { return subviews }
 
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
-    public func removeSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
 
+    public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {
+        layer.add(layoutGuide: subItem)
+    }
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<UIView> {
         add(layoutGuide: subItem)
     }
-    public func removeSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<UIView> {
-        subItem.removeFromOwner()
-    }
-
     @available(iOS 9.0, *)
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : UILayoutGuide {
         addLayoutGuide(subItem)
     }
-    @available(iOS 9.0, *)
-    public func removeSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : UILayoutGuide {
-        removeLayoutGuide(subItem)
-    }
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
         layer.addSublayer(subItem)
-    }
-    public func removeSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
-        subItem.removeFromSuperlayer()
     }
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : UIView {
         addSubview(subItem)
     }
-    public func removeSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : UIView {
-        subItem.removeFromSuperview()
-    }
 }
+#endif

@@ -16,13 +16,7 @@ import UIKit
 // TODO: !!! Resolve problem with create offset for adjusted views.
 // TODO: ! Add CGRect.integral
 
-// TODO: !! Add layout call to layout item, for invoke relayout when adjusted view changed size and other cases. 
-//public protocol LayoutItemContainer {
-//    func setNeedsLayout()
-//}
-
 // TODO: !!! Tests for new code
-
 
 /// Defines method for wrapping entity with base behavior to this type.
 public protocol Extended {
@@ -168,13 +162,21 @@ extension CGRect {
 
 /// Protocol for any layout element
 public protocol LayoutItem: class, LayoutCoordinateSpace {
+    /// External representation of layout entity in coordinate space
     var frame: CGRect { get set }
+    /// Internal coordinate space of layout entity
     var bounds: CGRect { get set }
+    /// Layout item that maintained this layout entity
     weak var superItem: LayoutItem? { get }
-    // TODO: Add subItems if will be need create layout sub elements. For instance, stack view.
+
+    /// Removes layout item from hierarchy
+    func removeFromSuperItem()
 }
 extension UIView: AdjustableLayoutItem {
+    /// Layout item that maintained this layout entity
     public weak var superItem: LayoutItem? { return superview }
+    /// Removes layout item from hierarchy
+    public func removeFromSuperItem() { removeFromSuperview() }
 }
 
 extension LayoutItem {

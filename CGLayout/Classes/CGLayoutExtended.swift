@@ -13,14 +13,20 @@ import Foundation
 /// LayoutGuides will not show up in the view hierarchy, but may be used as layout item in
 /// an `RectBasedConstraint` and represent a rectangle in the layout engine.
 /// Create a LayoutGuide with -init
-/// Add to a view with UIView.add(layoutGuide:) if will be used him as item in RectBasedLayout.apply(for item:, use constraints:)
+/// Add to a view with UIView.add(layoutGuide:)
 open class LayoutGuide<Super: LayoutItem>: LayoutItem {
+    /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
     open fileprivate(set) weak var ownerItem: Super? {
         didSet { superItem = ownerItem }
     }
-    open var frame: CGRect
-    open var bounds: CGRect
-    open weak var superItem: LayoutItem?
+    open /// External representation of layout entity in coordinate space
+    var frame: CGRect
+    open /// Internal coordinate space of layout entity
+    var bounds: CGRect
+    open /// Layout item that maintained this layout entity
+    weak var superItem: LayoutItem?
+    public /// Removes layout item from hierarchy
+    func removeFromSuperItem() { ownerItem = nil }
 
     public init(frame: CGRect) {
         self.frame = frame
@@ -70,32 +76,34 @@ public extension LayoutGuide where Super: CALayer {
     }
 }
 public extension CALayer {
-    /// Bind layout item to layout guide. Should call if layout guide will be applied RectBasedLayout.apply(for item:, use constraints:) method.
+    /// Bind layout item to layout guide.
     ///
     /// - Parameter layoutGuide: Layout guide for binding
     func add<T: CALayer>(layoutGuide: LayoutGuide<T>) {
-        unsafeDowncast(layoutGuide, to: LayoutGuide<CALayer>.self).ownerItem = self
+        unsafeBitCast(layoutGuide, to: LayoutGuide<CALayer>.self).ownerItem = self
     }
 }
 public extension UIView {
-    /// Bind layout item to layout guide. Should call if layout guide will be applied RectBasedLayout.apply(for item:, use constraints:) method.
+    /// Bind layout item to layout guide.
     ///
     /// - Parameter layoutGuide: Layout guide for binding
     func add<T: UIView>(layoutGuide: LayoutGuide<T>) {
-        unsafeDowncast(layoutGuide, to: LayoutGuide<UIView>.self).ownerItem = self
+        unsafeBitCast(layoutGuide, to: LayoutGuide<UIView>.self).ownerItem = self
     }
 }
 extension LayoutGuide {
+    /// Creates dependency between two layout guides.
+    ///
+    /// - Parameter layoutGuide: Child layout guide.
     func add(layoutGuide: LayoutGuide<Super>) {
         layoutGuide.ownerItem = self.ownerItem
-    }
-    func removeFromOwner() {
-        ownerItem = nil
     }
 }
 
 // MARK: Placeholders
 
+/// Base class for any placeholder.
+/// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
     private weak var _item: Item?
     open weak var item: Item! {
@@ -129,6 +137,14 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
 open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
     open override func loadItem() {
         item = add(View.self)
+    }
+}
+
+/// Base class for any layer placeholder that need dynamic position and/or size.
+/// Used UIViewController pattern for loading target view, therefore will be very simply use him.
+open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
+    open override func loadItem() {
+        item = add(Layer.self)
     }
 }
 
@@ -308,6 +324,9 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }
     }
 
+    /// Designed initializer
+    ///
+    /// - Parameter items: Closure provides items
     public init(items: @escaping () -> [LayoutItem]) {
         self.items = items
     }
@@ -377,12 +396,12 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
         var snapshotFrame: CGRect!
-        var preview: LayoutItem?
+        var preview: CGRect?
         return LayoutSnapshot(childSnapshots: items().map { item in
-            let constraints: [ConstrainRect] = preview.map { [($0.frame, axisAnchor)] } ?? []
+            let constraints: [ConstrainRect] = preview.map { [($0, axisAnchor)] } ?? []
             let itemFrame = itemLayout.layout(rect: item.frame, in: sourceRect, use: constraints)
             completedRects.insert((item, itemFrame), at: 0)
-            preview = item
+            preview = itemFrame
 
             snapshotFrame = snapshotFrame?.union(itemFrame) ?? itemFrame
             return itemFrame
@@ -390,33 +409,43 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     }
 }
 
+/// StackLayoutGuide layout guide for arranging items in ordered list. It's analogue UIStackView.
+/// For configure layout parameters use property `scheme`.
+/// Attention: before addition items to stack, need add stack layout guide to super layout item using `func add(layoutGuide:)` method.
 public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, AdjustableLayoutItem {
     fileprivate var items: [LayoutItem] = []
+    /// StackLayoutScheme entity for configuring axis, distribution and other parameters.
     public lazy var scheme: StackLayoutScheme = StackLayoutScheme { [unowned self] in self.items }
+    /// The list of items arranged by the stack layout guide
     public var arrangedItems: [LayoutItem] { return items }
-    /// while stack layout guide cannot manage subitems
-//    public override var ownerItem: Parent? {
-//        willSet {
-//            if newValue == nil {
-//                ownerItem.map { owner in items.forEach { owner.removeSublayoutItem($0) } }
-//            }
-//        }
+    /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
+    public override var ownerItem: Parent? {
+        willSet {
+            if newValue == nil {
+                items.forEach { $0.removeFromSuperItem() }
+            }
+        }
+        /// while stack layout guide cannot add subitems
 //        didSet {
 //            if let owner = ownerItem {
-//                scheme.items.forEach { item in owner.addSublayoutItem(item) }
+//                items.forEach { item in owner.addSublayoutItem(item) }
 //            }
 //        }
-//    }
+    }
+    /// External representation of layout entity in coordinate space
     public override var frame: CGRect {
         didSet { bounds = CGRect(origin: .zero, size: frame.size) }
     }
+    /// Internal coordinate space of layout entity
     public override var bounds: CGRect {
-        didSet { scheme.layout(in: frame) } /// if bounds has origin not zero (such as UIScrollView) or size need converting coordinates
+        didSet { scheme.layout(in: frame) } /// uses frame because LayoutGuide is not owner for items, if bounds has origin not zero (such as UIScrollView) or size need converting coordinates
     }
 
-    fileprivate func removeItem(_ item: LayoutItem) {
-        guard let index = items.index(where: { $0 === item }) else { return }
+    fileprivate func removeItem(_ item: LayoutItem) -> Bool {
+        guard let index = items.index(where: { $0 === item }) else { return false }
+        
         items.remove(at: index)
+        return true
     }
 
     public /// Asks the layout item to calculate and return the size that best fits the specified size
@@ -424,70 +453,130 @@ public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>,
     /// - Parameter size: The size for which the view should calculate its best-fitting size
     /// - Returns: A new size that fits the receiver’s content
     func sizeThatFits(_ size: CGSize) -> CGSize {
-        return scheme.snapshot(for: bounds).snapshotFrame.size
+        return scheme.snapshot(for: bounds).snapshotFrame.distanceFromOrigin
     }
 }
 extension StackLayoutGuide where Parent: UIView {
-    public func addArrangedItem(_ item: LayoutGuide<UIView>) { insertArrangedItem(item, at: items.count) }
-    public func insertArrangedItem(_ item: LayoutGuide<UIView>, at index: Int) {
-        ownerItem?.addSublayoutItem(item)
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter item: Layout guide for addition.
+    public func addArrangedItem<T: UIView>(_ item: LayoutGuide<T>) { insertArrangedItem(item, at: items.count) }
+    /// Inserts a item to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - item: Layout guide for addition
+    ///   - index: Index in list.
+    public func insertArrangedItem<T: UIView>(_ item: LayoutGuide<T>, at index: Int) {
+        ownerItem?.addSublayoutItem(unsafeBitCast(item, to: LayoutGuide<UIView>.self))
         items.insert(item, at: index)
     }
-    public func removeArrangedItem(_ item: LayoutGuide<UIView>, at index: Int) {
-        removeItem(item)
-        guard ownerItem === item.superItem else { return }
-        ownerItem?.removeSublayoutItem(item)
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter item: Layout guide for removing.
+    public func removeArrangedItem<T: UIView>(_ item: LayoutGuide<T>) {
+        guard removeItem(item), ownerItem === item.superItem else { return }
+        item.removeFromSuperItem()
     }
-    public func addArrangedItem(_ item: LayoutGuide<CALayer>) { insertArrangedItem(item, at: items.count) }
-    public func insertArrangedItem(_ item: LayoutGuide<CALayer>, at index: Int) {
-        ownerItem?.addSublayoutItem(item)
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter item: Layout guide for addition.
+    public func addArrangedItem<T: CALayer>(_ item: LayoutGuide<T>) { insertArrangedItem(item, at: items.count) }
+    /// Inserts a item to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - item: Layout guide for addition
+    ///   - index: Index in list.
+    public func insertArrangedItem<T: CALayer>(_ item: LayoutGuide<T>, at index: Int) {
+        ownerItem?.addSublayoutItem(unsafeBitCast(item, to: LayoutGuide<CALayer>.self))
         items.insert(item, at: index)
     }
-    public func removeArrangedItem(_ item: LayoutGuide<CALayer>, at index: Int) {
-        removeItem(item)
-        guard ownerItem === item.superItem else { return }
-        ownerItem?.removeSublayoutItem(item)
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter item: Layout guide for removing.
+    public func removeArrangedItem<T: CALayer>(_ item: LayoutGuide<T>) {
+        guard removeItem(item), ownerItem?.layer === item.superItem else { return }
+        item.removeFromSuperItem()
     }
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter item: View for addition.
     public func addArrangedItem(_ item: UIView) { insertArrangedItem(item, at: items.count) }
+    /// Inserts a item to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - item: View for addition
+    ///   - index: Index in list.
     public func insertArrangedItem(_ item: UIView, at index: Int) {
         ownerItem?.addSublayoutItem(item)
         items.insert(item, at: index)
     }
-    public func removeArrangedItem(_ item: UIView, at index: Int) {
-        removeItem(item)
-        guard ownerItem === item.superItem else { return }
-        ownerItem?.removeSublayoutItem(item)
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter item: View for removing.
+    public func removeArrangedItem(_ item: UIView) {
+        guard removeItem(item), ownerItem === item.superItem else { return }
+        item.removeFromSuperItem()
     }
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter item: Layer for addition.
     public func addArrangedItem(_ item: CALayer) { insertArrangedItem(item, at: items.count) }
+    /// Inserts a item to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - item: Layer for addition
+    ///   - index: Index in list.
     public func insertArrangedItem(_ item: CALayer, at index: Int) {
         ownerItem?.addSublayoutItem(item)
         items.insert(item, at: index)
     }
-    public func removeArrangedItem(_ item: CALayer, at index: Int) {
-        removeItem(item)
-        guard ownerItem === item.superItem else { return }
-        ownerItem?.removeSublayoutItem(item)
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter item: Layer for removing.
+    public func removeArrangedItem(_ item: CALayer) {
+        guard removeItem(item), ownerItem?.layer === item.superItem else { return }
+        item.removeFromSuperItem()
     }
 }
 extension StackLayoutGuide where Parent: CALayer {
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter item: Layout guide for addition.
     public func addArrangedItem<T: CALayer>(_ item: LayoutGuide<T>) { insertArrangedItem(item, at: items.count) }
+    /// Inserts a item to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - item: Layout guide for addition
+    ///   - index: Index in list.
     public func insertArrangedItem<T: CALayer>(_ item: LayoutGuide<T>, at index: Int) {
-        ownerItem?.addSublayoutItem(item)
+        ownerItem?.addSublayoutItem(unsafeBitCast(item, to: LayoutGuide<CALayer>.self))
         items.insert(item, at: index)
     }
-    public func removeArrangedItem<T: CALayer>(_ item: LayoutGuide<T>, at index: Int) {
-        removeItem(item)
-        guard ownerItem === item.superItem else { return }
-        ownerItem?.removeSublayoutItem(item)
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter item: Layout guide for removing.
+    public func removeArrangedItem(_ item: LayoutItem) {
+        guard removeItem(item), ownerItem === item.superItem else { return }
+        item.removeFromSuperItem()
     }
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter item: CALayer for addition.
     public func addArrangedItem(_ item: CALayer) { insertArrangedItem(item, at: items.count) }
+    /// Inserts a item to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - item: Layer for addition
+    ///   - index: Index in list.
     public func insertArrangedItem(_ item: CALayer, at index: Int) {
         ownerItem?.addSublayoutItem(item)
         items.insert(item, at: index)
     }
-    public func removeArrangedItem(_ item: CALayer, at index: Int) {
-        removeItem(item)
-        guard ownerItem === item.superItem else { return }
-        ownerItem?.removeSublayoutItem(item)
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter item: Layer for removing.
+    public func removeArrangedItem(_ item: CALayer) {
+        guard removeItem(item), ownerItem === item.superItem else { return }
+        item.removeFromSuperItem()
     }
 }

@@ -715,6 +715,63 @@ extension Tests {
     }
 }
 
+// MARK: Stack scheme, layout guide
+
+extension Tests {
+    func testStackLayoutGuideSizeThatFits() {
+        let stackGuide = StackLayoutGuide<UIView>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        stackGuide.scheme.itemLayout = Layout(x: .left(5), y: .center(), width: .fixed(30), height: .scaled(1))
+
+        stackGuide.addArrangedItem(UIView(frame: .random(in: stackGuide.bounds)))
+        stackGuide.addArrangedItem(UIView(frame: .random(in: stackGuide.bounds)))
+        stackGuide.addArrangedItem(UIView(frame: .random(in: stackGuide.bounds)))
+
+        XCTAssertTrue(CGSize(width: 105, height: 200) == stackGuide.sizeThatFits(stackGuide.bounds.size))
+    }
+    func testStackLayoutGuideAddRemoveLayoutItems() {
+        let view = UIView()
+        let stackGuide = StackLayoutGuide<UIView>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        view.add(layoutGuide: stackGuide)
+
+        let subview = UIView(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(subview)
+        let sublayer = CALayer(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(sublayer)
+        let layoutGuide = LayoutGuide<CATextLayer>(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(layoutGuide)
+
+        XCTAssertTrue(subview.superview === view)
+        XCTAssertTrue(sublayer.superlayer === view.layer)
+        XCTAssertTrue(layoutGuide.ownerItem === view.layer)
+
+        stackGuide.removeArrangedItem(subview)
+        stackGuide.removeArrangedItem(sublayer)
+        stackGuide.removeArrangedItem(layoutGuide)
+
+        XCTAssertNil(subview.superview)
+        XCTAssertNil(sublayer.superlayer)
+        XCTAssertNil(layoutGuide.ownerItem)
+    }
+    func testRemoveStackLayoutFromSuperItem() {
+        let view = UIView()
+        let stackGuide = StackLayoutGuide<UIView>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        view.add(layoutGuide: stackGuide)
+
+        let subview = UIView(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(subview)
+        let sublayer = CALayer(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(sublayer)
+        let layoutGuide = LayoutGuide<CALayer>(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(layoutGuide)
+
+        stackGuide.removeFromSuperItem()
+
+        XCTAssertNil(subview.superview)
+        XCTAssertNil(sublayer.superlayer)
+        XCTAssertNil(layoutGuide.ownerItem)
+    }
+}
+
 // MARK: Measures
 
 extension Tests {

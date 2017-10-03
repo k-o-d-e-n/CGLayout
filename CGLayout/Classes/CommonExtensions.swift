@@ -14,6 +14,8 @@ extension CGRect {
     var top: CGFloat { return minY }
     var bottom: CGFloat { return maxY }
 
+    var distanceFromOrigin: CGSize { return CGSize(width: maxX, height: maxY) }
+
     mutating func apply(edgeInsets: UIEdgeInsets) {
         self = UIEdgeInsetsInsetRect(self, edgeInsets)
     }
@@ -29,6 +31,7 @@ extension UILayoutGuide: LayoutItem {
     public var frame: CGRect { get { return layoutFrame } set {} }
     public var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }
     public var superItem: LayoutItem? { return owningView }
+    public func removeFromSuperItem() { owningView.map { $0.removeLayoutGuide(self) } }
 }
 
 public extension CALayer {

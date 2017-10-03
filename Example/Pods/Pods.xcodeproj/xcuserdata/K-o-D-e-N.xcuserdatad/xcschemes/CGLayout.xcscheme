@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'C1C6B39D4C31D86A9B2AB620DEFE68BF'
+               BlueprintIdentifier = 'C1EB35A38ECB635A50011FDEC4C4DE03'
                BlueprintName = 'CGLayout'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'CGLayout.framework'>
