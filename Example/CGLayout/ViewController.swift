@@ -42,23 +42,33 @@ class ViewController: UIViewController {
 
     lazy var stackScheme: StackLayoutScheme = { [unowned self] in
         var stack = StackLayoutScheme { Array(self.subviews[0..<7]) }
-        stack.axis = .vertical
-        stack.direction = .toLeading
-        stack.itemLayout = Layout(x: .left(215), y: .bottom(10), width: .boxed(235), height: .fixed(50))
+        stack.distribution = .fromBottom(spacing: 10)
+        stack.alignment = .leading(215)
+        stack.filling = .custom(Layout.Filling(horizontal: .boxed(235), vertical: .fixed(50)))
 
         return stack
     }()
     lazy var stackLayoutGuide: StackLayoutGuide<UIView> = {
         let stack = StackLayoutGuide<UIView>(frame: .zero)
-        stack.scheme.axis = .vertical
-        stack.scheme.itemLayout = Layout(x: .left(5), y: .top(5), width: .boxed(10), height: .fixed(20))
+        stack.contentInsets.top = 5
+        stack.scheme.distribution = .fromTop(spacing: 5)
+        stack.scheme.alignment = .leading(2)
+        stack.scheme.filling = .custom(Layout.Filling(horizontal: .boxed(4), vertical: .fixed(20)))
 
         return stack
     }()
     lazy var substackLayoutGuide: StackLayoutGuide<UIView> = {
         let stack = StackLayoutGuide<UIView>(frame: .zero)
-        stack.scheme.axis = .horizontal
-        stack.scheme.itemLayout = Layout(x: .left(2), y: .top(2), width: .fixed(20), height: .boxed(2))
+        stack.scheme.distribution = .fromLeft(spacing: 5)
+        stack.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(20), vertical: .scaled(1)))
+
+        return stack
+    }()
+    lazy var labelStack: StackLayoutGuide<UIView> = {
+        let stack = StackLayoutGuide<UIView>(frame: .zero)
+        stack.scheme.distribution = .fromBottom(spacing: 2)
+        stack.scheme.filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .fixed(1)))
+        stack.contentInsets.bottom = 2
 
         return stack
     }()
@@ -91,6 +101,7 @@ class ViewController: UIViewController {
 
         view.add(layoutGuide: labelPlaceholder)
         pulledView.add(layoutGuide: stackLayoutGuide)
+        pulledView.add(layoutGuide: labelStack)
         stackLayoutGuide.addArrangedItem(UIView(backgroundColor: .brown))
         stackLayoutGuide.addArrangedItem(UIView(backgroundColor: .yellow))
         stackLayoutGuide.addArrangedItem(CALayer(backgroundColor: .green))
@@ -98,6 +109,13 @@ class ViewController: UIViewController {
         substackLayoutGuide.addArrangedItem(UIView(backgroundColor: .brown))
         substackLayoutGuide.addArrangedItem(CALayer(backgroundColor: .yellow))
         substackLayoutGuide.addArrangedItem(UIView(backgroundColor: .green))
+
+        labelStack.addArrangedItem(UILabel(text: "Some string"))
+        labelStack.addArrangedItem(CALayer(backgroundColor: .black))
+        labelStack.addArrangedItem(UILabel(text: "Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне."))
+        labelStack.addArrangedItem(CALayer(backgroundColor: .black))
+        labelStack.addArrangedItem(UILabel(text: "В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов."))
+        labelStack.addArrangedItem(CALayer(backgroundColor: .black))
     }
 
     override func viewDidLayoutSubviews() {
@@ -121,6 +139,7 @@ class ViewController: UIViewController {
         pulledLayout.apply(for: pulledView, use: [((topLayoutGuide as! UIView).frame, LayoutAnchor.Bottom.limit(on: .outer)), (labelPlaceholder.frame, LayoutAnchor.Left.limit(on: .outer)),
                                                   (subviews[1].frame, LayoutAnchor.Left.limit(on: .outer)), (subviews.first!.frame, topConstraint)])
         Layout.equal.apply(for: stackLayoutGuide)
+        Layout.equal.apply(for: labelStack)
 
         let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(20), height: .fixed(30)),
                                  constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])])
@@ -145,5 +164,13 @@ extension UIView {
     convenience init(backgroundColor: UIColor) {
         self.init()
         self.backgroundColor = backgroundColor
+    }
+}
+
+extension UILabel {
+    convenience init(text: String) {
+        self.init()
+        self.text = text
+        self.numberOfLines = 0
     }
 }

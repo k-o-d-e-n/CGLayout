@@ -37,7 +37,7 @@ public protocol RectBasedLayout {
     /// - Parameters:
     ///   - rect: Rect for layout
     ///   - source: Available space for layout
-    func layout(rect: inout CGRect, in source: CGRect)
+    func layout(rect: inout CGRect, in source: CGRect) // TODO: Add `form` prefix for corresponding Swift API Guidelines
 }
 
 /// Tuple of rect and constraint for constrain other rect
@@ -128,7 +128,7 @@ public protocol RectBasedConstraint {
     /// - Parameters:
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
-    func constrain(sourceRect: inout CGRect, by rect: CGRect)
+    func constrain(sourceRect: inout CGRect, by rect: CGRect) // TODO: Add `form` prefix for corresponding Swift API Guidelines
 }
 extension RectBasedConstraint {
     /// Wrapper for main constrain function. This is used for working with immutable values.
@@ -634,6 +634,170 @@ public struct LayoutAnchor {
         ///   - rect: Rect for constrain
         func constrain(sourceRect: inout CGRect, by rect: CGRect) {
             sourceRect = rect
+        }
+    }
+
+    public struct Leading: RectBasedConstraint, Extended {
+        public typealias Conformed = RectBasedConstraint
+        private let base: RectBasedConstraint
+        private init(base: RectBasedConstraint) { self.base = base }
+
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+
+        public /// Common method for create entity of this type with base behavior.
+        ///
+        /// - Parameter base: Entity implements required behavior
+        /// - Returns: Initialized entity
+        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Leading { return .init(base: base) }
+
+        /// Returns alignment constraint by leading
+        ///
+        /// - Parameter dependency: Space dependency for target rect
+        /// - Returns: Alignment constraint typed by Leading
+        public static func align(by dependency: Align.Dependence) -> Leading { return Leading(base: dependency) }
+        public struct Align {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+
+                public /// Main function for constrain source space by other rect
+                ///
+                /// - Parameters:
+                ///   - sourceRect: Source space
+                ///   - rect: Rect for constrain
+                func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+
+                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.Align.Dependence.inner : Left.Align.Dependence.inner) }
+                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.Align.Dependence.outer : Left.Align.Dependence.outer) }
+            }
+        }
+
+        /// Returns constraint, that limits source rect by leading of passed rect. If source rect intersects leading of passed rect, source rect will be cropped, else will not changed.
+        ///
+        /// - Parameter dependency: Space dependency for target rect
+        /// - Returns: Limit constraint typed by Leading
+        public static func limit(on dependency: Limit.Dependence) -> Leading { return Leading(base: dependency) }
+        public struct Limit {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+
+                public /// Main function for constrain source space by other rect
+                ///
+                /// - Parameters:
+                ///   - sourceRect: Source space
+                ///   - rect: Rect for constrain
+                func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+
+                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.Limit.Dependence.inner : Left.Limit.Dependence.inner) }
+                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.Limit.Dependence.outer : Left.Limit.Dependence.outer) }
+            }
+        }
+
+        /// Returns constraint, that pulls source rect to left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will pulled with changing size.
+        ///
+        /// - Parameter dependency: Space dependency for target rect
+        /// - Returns: Pull constraint typed by Left
+        public static func pull(from dependency: Pull.Dependence) -> Leading { return Leading(base: dependency) }
+        public struct Pull {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+
+                public /// Main function for constrain source space by other rect
+                ///
+                /// - Parameters:
+                ///   - sourceRect: Source space
+                ///   - rect: Rect for constrain
+                func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+
+                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.Pull.Dependence.inner : Left.Pull.Dependence.inner) }
+                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.Pull.Dependence.outer : Left.Pull.Dependence.outer) }
+            }
+        }
+    }
+
+    public struct Trailing: RectBasedConstraint, Extended {
+        public typealias Conformed = RectBasedConstraint
+        private let base: RectBasedConstraint
+        private init(base: RectBasedConstraint) { self.base = base }
+
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+
+        public /// Common method for create entity of this type with base behavior.
+        ///
+        /// - Parameter base: Entity implements required behavior
+        /// - Returns: Initialized entity
+        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Trailing { return .init(base: base) }
+
+        /// Returns alignment constraint by trailing
+        ///
+        /// - Parameter dependency: Space dependency for target rect
+        /// - Returns: Alignment constraint typed by Trailing
+        public static func align(by dependency: Align.Dependence) -> Trailing { return Leading(base: dependency) }
+        public struct Align {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+
+                public /// Main function for constrain source space by other rect
+                ///
+                /// - Parameters:
+                ///   - sourceRect: Source space
+                ///   - rect: Rect for constrain
+                func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+
+                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.Align.Dependence.inner : Right.Align.Dependence.inner) }
+                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.Align.Dependence.outer : Right.Align.Dependence.outer) }
+            }
+        }
+
+        /// Returns constraint, that limits source rect by trailing of passed rect. If source rect intersects trailing of passed rect, source rect will be cropped, else will not changed.
+        ///
+        /// - Parameter dependency: Space dependency for target rect
+        /// - Returns: Limit constraint typed by Trailing
+        public static func limit(on dependency: Limit.Dependence) -> Trailing { return Trailing(base: dependency) }
+        public struct Limit {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+
+                public /// Main function for constrain source space by other rect
+                ///
+                /// - Parameters:
+                ///   - sourceRect: Source space
+                ///   - rect: Rect for constrain
+                func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+
+                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.Limit.Dependence.inner : Right.Limit.Dependence.inner) }
+                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.Limit.Dependence.outer : Right.Limit.Dependence.outer) }
+            }
+        }
+
+        /// Returns constraint, that pulls source rect to left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will pulled with changing size.
+        ///
+        /// - Parameter dependency: Space dependency for target rect
+        /// - Returns: Pull constraint typed by Left
+        public static func pull(from dependency: Pull.Dependence) -> Trailing { return Leading(base: dependency) }
+        public struct Pull {
+            public struct Dependence: RectBasedConstraint {
+                private let base: RectBasedConstraint
+
+                public /// Main function for constrain source space by other rect
+                ///
+                /// - Parameters:
+                ///   - sourceRect: Source space
+                ///   - rect: Rect for constrain
+                func constrain(sourceRect: inout CGRect, by rect: CGRect) { base.constrain(sourceRect: &sourceRect, by: rect) }
+
+                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.Pull.Dependence.inner : Right.Pull.Dependence.inner) }
+                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.Pull.Dependence.outer : Right.Pull.Dependence.outer) }
+            }
         }
     }
 
@@ -1494,6 +1658,9 @@ public struct Layout: RectBasedLayout {
                     rect.origin.x = source.maxX - rect.width - offset
                 }
             }
+
+            public static func trailing(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Configuration.default.isRTLMode ? Left(offset: offset) : Right(offset: offset)) }
+            public static func leading(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Configuration.default.isRTLMode ? Right(offset: offset) : Left(offset: offset)) }
         }
         public struct Vertical: RectBasedLayout, Extended {
             public typealias Conformed = RectBasedLayout
@@ -1553,8 +1720,8 @@ public struct Layout: RectBasedLayout {
     // TODO: ! Add ratio behavior
     /// Filling part of main layout
     public struct Filling: RectBasedLayout {
-        private let horizontal: Horizontal
-        private let vertical: Vertical
+        let horizontal: Horizontal
+        let vertical: Vertical
 
         public /// Performing layout of given rect inside available rect.
         /// Attention: Apply layout for view frame using code as layout(rect: &view.frame,...) has side effect and called setFrame method on view.
@@ -1697,6 +1864,16 @@ public struct Layout: RectBasedLayout {
                 }
             }
         }
+    }
+}
+
+public struct Configuration {
+    let isRTLMode: Bool = false // TODO: RTL in UIKit and AppKit oriented on view.
+
+    static private(set) var `default` = Configuration()
+
+    static func setDefault(configuration: Configuration) {
+        Configuration.default = configuration
     }
 }
 

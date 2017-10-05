@@ -40,3 +40,30 @@ public extension CALayer {
         self.frame = frame
     }
 }
+
+extension Collection where IndexDistance == Int, Index == Int {
+    var centerIndex: Self.Index? {
+        let center: Double = Double(count / 2)
+        return center.rounded(.down) == center ? Int(center) : nil
+    }
+}
+
+extension Bool {
+    mutating func `switch`() {
+        self = self ? false : true
+    }
+}
+
+extension Collection where IndexDistance == Index {
+    func halfSplitIterator() -> AnyIterator<Self.SubSequence.Iterator.Element> {
+        let firstIndex = count / 2
+        var left = prefix(through: firstIndex).reversed().makeIterator()
+        var right = suffix(from: firstIndex).makeIterator()
+
+        var fromLeft = true
+        return AnyIterator {
+            defer { fromLeft.switch() }
+            return fromLeft ? left.next() : right.next()
+        }
+    }
+}

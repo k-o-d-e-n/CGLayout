@@ -287,42 +287,160 @@ public extension String {
 
 // MARK: Additional layout scheme
 
-// TODO: Implement stack layout scheme and others
+protocol RectBasedDistribution {
+    func formDistribute(rect: inout CGRect, in sourceRect: CGRect, after previousRect: CGRect?)
+}
+extension RectBasedDistribution {
+    func distribute(rect: CGRect, in sourceRect: CGRect, after previousRect: CGRect?) -> CGRect {
+        var rect = rect
+        formDistribute(rect: &rect, in: sourceRect, after: previousRect)
+        return rect
+    }
+    func distribute(items: [LayoutItem], in sourceRect: CGRect) {
+        var previous: CGRect?
+        items.forEach { item in
+            item.frame = distribute(rect: item.frame, in: sourceRect, after: previous)
+            previous = item.frame
+        }
+    }
+}
+
+struct LayoutDistribution: RectBasedDistribution {
+    private let base: RectBasedDistribution
+    func formDistribute(rect: inout CGRect, in sourceRect: CGRect, after previousRect: CGRect?) {
+        base.formDistribute(rect: &rect, in: sourceRect, after: previousRect)
+    }
+
+    static func fromLeft(spacing: CGFloat) -> LayoutDistribution {
+        return LayoutDistribution(base: FromSide.left(spacing))
+    }
+    static func fromRight(spacing: CGFloat) -> LayoutDistribution {
+        return LayoutDistribution(base: FromSide.right(spacing))
+    }
+    static func fromTop(spacing: CGFloat) -> LayoutDistribution {
+        return LayoutDistribution(base: FromSide.top(spacing))
+    }
+    static func fromBottom(spacing: CGFloat) -> LayoutDistribution {
+        return LayoutDistribution(base: FromSide.bottom(spacing))
+    }
+    private struct FromSide: RectBasedDistribution {
+        let anchor: RectBasedConstraint
+        let firstAlignment: RectBasedLayout
+        let alignment: RectBasedLayout
+
+        static func left(_ space: CGFloat) -> FromSide { return FromSide(anchor: LayoutAnchor.Right.align(by: .outer),
+                                                                         firstAlignment: Layout.Alignment.Horizontal.left(),
+                                                                         alignment: Layout.Alignment.Horizontal.left(space)) }
+        static func right(_ space: CGFloat) -> FromSide { return FromSide(anchor: LayoutAnchor.Left.align(by: .outer),
+                                                                          firstAlignment: Layout.Alignment.Horizontal.right(),
+                                                                          alignment: Layout.Alignment.Horizontal.right(space)) }
+        static func top(_ space: CGFloat) -> FromSide { return FromSide(anchor: LayoutAnchor.Bottom.align(by: .outer),
+                                                                        firstAlignment: Layout.Alignment.Vertical.top(),
+                                                                        alignment: Layout.Alignment.Vertical.top(space)) }
+        static func bottom(_ space: CGFloat) -> FromSide { return FromSide(anchor: LayoutAnchor.Top.align(by: .outer),
+                                                                           firstAlignment: Layout.Alignment.Vertical.bottom(),
+                                                                           alignment: Layout.Alignment.Vertical.bottom(space)) }
+
+        func formDistribute(rect: inout CGRect, in sourceRect: CGRect, after previousRect: CGRect?) {
+            if let previous = previousRect {
+                alignment.layout(rect: &rect, in: sourceRect.constrainedBy(rect: previous, use: anchor))
+            } else {
+                firstAlignment.layout(rect: &rect, in: sourceRect)
+            }
+        }
+    }
+}
+
+protocol StackLayoutFilling {
+    func filling(for item: LayoutItem, in source: CGRect) -> CGRect
+}
+extension Layout.Filling: StackLayoutFilling {
+    func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
+        return layout(rect: item.frame, in: source)
+    }
+}
+extension LayoutItem where Self: AdjustableLayoutItem {
+    func filling(with layout: RectBasedLayout, in source: CGRect) -> CGRect {
+        var source = source
+        source.size = sizeThatFits(source.size)
+        return layout.layout(rect: frame, in: source)
+    }
+}
+
+// TODO: Implement stack layout scheme, collection and others
 // TODO: Add to stack layout scheme circle type
 
 // TODO: StackLayoutScheme lost multihierarchy layout. Research this.
 // TODO: Self-sized items
-// TODO: Direction to Distribution (Fill, Center and other)
-// TODO: Move Axis and Direction to behaviors
 public struct StackLayoutScheme: LayoutBlockProtocol {
-    public enum Axis {
-        case horizontal
-        case vertical
-    }
-    public enum Direction {
-        case toTrailing
-        case toLeading
-    }
-
     private var items: () -> [LayoutItem]
-    private var axisAnchor: RectBasedConstraint = LayoutAnchor.Right.align(by: .outer)
-
-    public var itemLayout: RectBasedLayout = Layout(x: .left(), y: .top(), width: .scaled(1), height: .scaled(1))
-    public var axis: Axis = .horizontal {
-        didSet { setAxisAnchor(for: axis, direction: direction) }
-    }
-    public var direction: Direction = .toTrailing {
-        didSet { setAxisAnchor(for: axis, direction: direction) }
+    fileprivate enum Axis {
+        case horizontal, vertical
     }
 
-    private mutating func setAxisAnchor(for axis: Axis, direction: Direction) {
-        switch axis {
-        case .horizontal:
-            axisAnchor = direction == .toTrailing ? LayoutAnchor.Right.align(by: .outer) : LayoutAnchor.Left.align(by: .outer)
-        case .vertical:
-            axisAnchor = direction == .toTrailing ? LayoutAnchor.Bottom.align(by: .outer) : LayoutAnchor.Top.align(by: .outer)
+    public struct Distribution: RectBasedDistribution {
+        private let base: LayoutDistribution
+        fileprivate let axis: Axis
+
+        func formDistribute(rect: inout CGRect, in sourceRect: CGRect, after previousRect: CGRect?) {
+            base.formDistribute(rect: &rect, in: sourceRect, after: previousRect)
+        }
+
+        public static func fromLeft(spacing: CGFloat) -> Distribution { return Distribution(base: .fromLeft(spacing: spacing), axis: .horizontal) }
+        public static func fromRight(spacing: CGFloat) -> Distribution { return Distribution(base: .fromRight(spacing: spacing), axis: .horizontal) }
+        public static func fromTop(spacing: CGFloat) -> Distribution { return Distribution(base: .fromTop(spacing: spacing), axis: .vertical) }
+        public static func fromBottom(spacing: CGFloat) -> Distribution { return Distribution(base: .fromBottom(spacing: spacing), axis: .vertical) }
+    }
+    public struct Alignment: RectBasedLayout {
+        private let horizontal: RectBasedLayout
+        private let vertical: RectBasedLayout
+        fileprivate var axis: Axis
+
+        public static func leading(_ offset: CGFloat = 0) -> Alignment { return Alignment(horizontal: Layout.Alignment.Horizontal.leading(offset), vertical: Layout.Alignment.Vertical.top(offset), axis: .horizontal) }
+        public static func trailing(_ offset: CGFloat = 0) -> Alignment { return Alignment(horizontal: Layout.Alignment.Horizontal.trailing(offset), vertical: Layout.Alignment.Vertical.bottom(offset), axis: .horizontal) }
+        public static func center(_ offset: CGFloat = 0) -> Alignment { return Alignment(horizontal: Layout.Alignment.Horizontal.center(offset), vertical: Layout.Alignment.Vertical.center(offset), axis: .horizontal) }
+
+        public func layout(rect: inout CGRect, in source: CGRect) {
+            switch axis {
+            case .vertical:
+                horizontal.layout(rect: &rect, in: source)
+            case .horizontal:
+                vertical.layout(rect: &rect, in: source)
+            }
         }
     }
+    public struct Filling: StackLayoutFilling {
+        private let layout: StackLayoutFilling
+
+        struct AutoDimension: StackLayoutFilling {
+            fileprivate let defaultFilling: Layout.Filling
+            func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
+                guard let adjustItem = item as? AdjustableLayoutItem else { return defaultFilling.layout(rect: item.frame, in: source) }
+                var rect = adjustItem.frame
+                rect.size = adjustItem.sizeThatFits(source.size) // TODO: Size should be max
+                return rect
+            }
+        }
+
+        public static func autoDimension(`default` filling: Layout.Filling) -> Filling { return Filling(layout: AutoDimension(defaultFilling: filling)) }
+        public static func custom(_ value: Layout.Filling) -> Filling { return Filling(layout: value) }
+
+        func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
+            return layout.filling(for: item, in: source)
+        }
+    }
+
+    public var distribution: Distribution = .fromLeft(spacing: 0) {
+        didSet { // TODO: a lot of unnecessary actions with axis
+            if distribution.axis != alignment.axis {
+                alignment.axis = distribution.axis
+            }
+        }
+    }
+    public var alignment: Alignment = .leading(0) {
+        didSet { if alignment.axis != distribution.axis { alignment.axis = distribution.axis } }
+    }
+    public var filling: Filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .scaled(1)))
 
     /// Designed initializer
     ///
@@ -347,11 +465,11 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     public /// Calculate and apply frames layout items.
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout() {
-        var preview: LayoutItem?
+        var previous: CGRect?
         items().forEach { subItem in
-            let constraints: [ConstrainRect] = preview.map { [($0.frame, axisAnchor)] } ?? []
-            itemLayout.apply(for: subItem, use: constraints)
-            preview = subItem
+            let sourceRect = subItem.superItem!.frame
+            subItem.frame = distribution.distribute(rect: alignment.layout(rect: filling.filling(for: subItem, in: sourceRect), in: sourceRect), in: sourceRect, after: previous)
+            previous = subItem.frame
         }
     }
 
@@ -359,11 +477,10 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     ///
     /// - Parameter sourceRect: Source space
     func layout(in sourceRect: CGRect) {
-        var preview: LayoutItem?
+        var previous: CGRect?
         items().forEach { subItem in
-            let constraints: [ConstrainRect] = preview.map { [($0.frame, axisAnchor)] } ?? []
-            itemLayout.apply(for: subItem, in: sourceRect, use: constraints)
-            preview = subItem
+            subItem.frame = distribution.distribute(rect: alignment.layout(rect: filling.filling(for: subItem, in: sourceRect), in: sourceRect), in: sourceRect, after: previous)
+            previous = subItem.frame
         }
     }
 
@@ -396,18 +513,19 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
         var snapshotFrame: CGRect!
-        var preview: CGRect?
+        var previous: CGRect?
         return LayoutSnapshot(childSnapshots: items().map { item in
-            let constraints: [ConstrainRect] = preview.map { [($0, axisAnchor)] } ?? []
-            let itemFrame = itemLayout.layout(rect: item.frame, in: sourceRect, use: constraints)
+            let itemFrame = distribution.distribute(rect: alignment.layout(rect: filling.filling(for: item, in: sourceRect), in: sourceRect), in: sourceRect, after: previous)
             completedRects.insert((item, itemFrame), at: 0)
-            preview = itemFrame
+            previous = itemFrame
 
             snapshotFrame = snapshotFrame?.union(itemFrame) ?? itemFrame
             return itemFrame
         }, snapshotFrame: snapshotFrame)
     }
 }
+
+// TODO: After add need recalculate layout
 
 /// StackLayoutGuide layout guide for arranging items in ordered list. It's analogue UIStackView.
 /// For configure layout parameters use property `scheme`.
@@ -418,6 +536,12 @@ public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>,
     public lazy var scheme: StackLayoutScheme = StackLayoutScheme { [unowned self] in self.items }
     /// The list of items arranged by the stack layout guide
     public var arrangedItems: [LayoutItem] { return items }
+
+    private var insetAnchor: RectBasedConstraint?
+    /// Insets for distribution space
+    public var contentInsets: UIEdgeInsets = .zero {
+        didSet { insetAnchor = LayoutAnchor.insets(contentInsets) }
+    }
     /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
     public override var ownerItem: Parent? {
         willSet {
@@ -438,7 +562,10 @@ public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>,
     }
     /// Internal coordinate space of layout entity
     public override var bounds: CGRect {
-        didSet { scheme.layout(in: frame) } /// uses frame because LayoutGuide is not owner for items, if bounds has origin not zero (such as UIScrollView) or size need converting coordinates
+        didSet {
+            /// uses frame because LayoutGuide is not owner for items, if bounds has origin not zero (such as UIScrollView) or size need converting coordinates
+            scheme.layout(in: insetAnchor?.constrained(sourceRect: frame, by: .zero) ?? frame)
+        }
     }
 
     fileprivate func removeItem(_ item: LayoutItem) -> Bool {

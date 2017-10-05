@@ -718,15 +718,47 @@ extension Tests {
 // MARK: Stack scheme, layout guide
 
 extension Tests {
+    func testLayoutDistribution() {
+        let frames = (0..<5).map { _ in CGRect.random(in: bounds) }
+        let distribution = LayoutDistribution.fromBottom(spacing: 2)
+
+        var previous: CGRect?
+        let distributedFrames: [CGRect] = frames.map { frame in
+            let new = distribution.distribute(rect: frame, in: bounds, after: previous)
+            defer { previous = new }
+            return new
+        }
+
+        var iterator = distributedFrames.makeIterator()
+        previous = iterator.next()
+        XCTAssertTrue(previous!.maxY == bounds.maxY)
+        while let next = iterator.next() {
+            XCTAssertTrue(previous!.top == next.bottom + 2)
+
+            previous = next
+        }
+    }
+    func testStackLayoutScheme() {
+        let views = (0..<5).map { _ in UIView(frame: .random(in: bounds)) }
+        var stack = StackLayoutScheme(items: { views })
+        stack.distribution = .fromRight(spacing: 0)
+        stack.alignment = .center()
+        stack.filling = .custom(Layout.Filling(horizontal: .fixed(20), vertical: .scaled(1)))
+
+        stack.layout(in: bounds)
+
+        XCTAssertTrue(Int(stack.currentSnapshot.snapshotFrame.width) == views.count * 20)
+    }
     func testStackLayoutGuideSizeThatFits() {
         let stackGuide = StackLayoutGuide<UIView>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
-        stackGuide.scheme.itemLayout = Layout(x: .left(5), y: .center(), width: .fixed(30), height: .scaled(1))
+        stackGuide.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(30), vertical: .scaled(1)))
+        stackGuide.scheme.distribution = .fromLeft(spacing: 5)
 
         stackGuide.addArrangedItem(UIView(frame: .random(in: stackGuide.bounds)))
         stackGuide.addArrangedItem(UIView(frame: .random(in: stackGuide.bounds)))
         stackGuide.addArrangedItem(UIView(frame: .random(in: stackGuide.bounds)))
 
-        XCTAssertTrue(CGSize(width: 105, height: 200) == stackGuide.sizeThatFits(stackGuide.bounds.size))
+        XCTAssertTrue(CGSize(width: 100, height: 200) == stackGuide.sizeThatFits(stackGuide.bounds.size))
     }
     func testStackLayoutGuideAddRemoveLayoutItems() {
         let view = UIView()
@@ -812,36 +844,6 @@ extension Tests {
 // MARK: Beta testing, improvements
 
 extension Tests {
-//    func testUICoordinateInBackgroundThread() {
-//        let window = UIApplication.shared.delegate!.window!!
-//        let superview = UIScrollView(frame: bounds.insetBy(dx: 100, dy: 100))
-//        window.addSubview(superview)
-//        superview.contentSize = bounds.size
-//        superview.contentOffset.x = 150
-//        let view = UIView(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
-//        superview.addSubview(view)
-//
-//        var converted: CGRect!
-//        var converted2: CGRect!
-//        let exp = expectation(description: "")
-//        DispatchQueue.global(qos: .background).async {
-//            converted = view.convert(rect: CGRect(x: 10, y: -5, width: 20, height: 10), to: window)
-//            converted2 = view.convert(rect: CGRect(x: 150, y: 0, width: 30, height: 20), from: superview)
-//
-//            XCTAssertTrue(converted.origin.x == -20)
-//            XCTAssertTrue(converted.origin.y == 105)
-//
-//            XCTAssertTrue(converted2.origin.x == 130)
-//            XCTAssertTrue(converted2.origin.y == -10)
-//            exp.fulfill()
-//        }
-//        DispatchQueue.main.async {
-//            superview.contentSize.height = view.frame.maxY
-//            superview.frame = self.bounds
-//        }
-//
-//        waitForExpectations(timeout: 2)
-//    }
     func testLayoutGuideCoordinateConverting() {
         let guideSuperview = UIView(frame: bounds.insetBy(dx: 100, dy: 100))
         let guide = LayoutGuide<UIView>(frame: CGRect(x: 0, y: 0, width: 100, height: 200))
