@@ -160,8 +160,15 @@ extension CGRect {
 
 // MARK: LayoutItem
 
+public protocol RectBasedItem {
+    /// External representation of layout entity in coordinate space
+    var frame: CGRect { get set }
+    /// Internal coordinate space of layout entity
+    var bounds: CGRect { get set }
+}
+
 /// Protocol for any layout element
-public protocol LayoutItem: class, LayoutCoordinateSpace {
+public protocol LayoutItem: class, RectBasedItem, LayoutCoordinateSpace {
     /// External representation of layout entity in coordinate space
     var frame: CGRect { get set }
     /// Internal coordinate space of layout entity
@@ -169,8 +176,23 @@ public protocol LayoutItem: class, LayoutCoordinateSpace {
     /// Layout item that maintained this layout entity
     weak var superItem: LayoutItem? { get }
 
+    var inLayoutTime: InLayoutTimeItem { get }
+
     /// Removes layout item from hierarchy
     func removeFromSuperItem()
+}
+
+public protocol InLayoutTimeItem: RectBasedItem {
+    var superItem: LayoutItem? { get }
+    var superBounds: CGRect { get }
+}
+public protocol InLayoutTimeAdjustableItem: InLayoutTimeItem {
+    func sizeThatFits(_ size: CGSize) -> CGSize
+}
+extension UIView {
+    public var inLayoutTime: InLayoutTimeItem {
+        return _MainThreadAdjustItemInLayoutTime(base: _MainThreadItemInLayoutTime(item: self))
+    }
 }
 extension UIView: AdjustableLayoutItem {
     /// Layout item that maintained this layout entity
@@ -180,20 +202,6 @@ extension UIView: AdjustableLayoutItem {
 }
 
 extension LayoutItem {
-    /// Convenience getter for tuple of item frame and anchor constraint
-    ///
-    /// - Parameter anchor: Anchor constraint
-    /// - Returns: Tuple of item frame and anchor constraint
-    func frameConstraint(for anchor: RectBasedConstraint) -> ConstrainRect {
-        return (frame, anchor)
-    }
-    /// Convenience getter for tuple of item bounds and anchor constraint
-    ///
-    /// - Parameter anchor: Anchor constraint
-    /// - Returns: Tuple of item bounds and anchor constraint
-    func boundsConstraint(for anchor: RectBasedConstraint) -> ConstrainRect {
-        return (bounds, anchor)
-    }
     /// Convenience getter for constraint item related to this entity
     ///
     /// - Parameter anchors: Array of anchor constraints
@@ -211,6 +219,17 @@ extension LayoutItem {
         return LayoutBlock(item: self, layout: layout, constraints: constraints)
     }
 }
+extension LayoutItem where Self: UIView {
+    /// Convenience getter for constraint item related to this entity
+    ///
+    /// - Parameter anchors: Array of anchor constraints
+    /// - Returns: Related constraint item
+    public func layoutConstraint(for anchors: [RectBasedConstraint]) -> LayoutConstraint {
+        var constraint = LayoutConstraint(item: self, constraints: anchors)
+        constraint.inLayoutTime = inLayoutTime
+        return constraint
+    }
+}
 
 // MARK: AdjustableLayoutItem
 
@@ -220,7 +239,7 @@ public protocol AdjustableLayoutItem: LayoutItem {
     ///
     /// - Parameter size: The size for which the view should calculate its best-fitting size
     /// - Returns: A new size that fits the receiver’s content
-    func sizeThatFits(_ size: CGSize) -> CGSize
+    func sizeThatFits(_ size: CGSize) -> CGSize // TODO: Research variant as create thread safe size constraint in layout time, that will be oriented on content or thread safe version sizeThatFits
 }
 extension AdjustableLayoutItem {
     /// Convenience getter for adjust constraint item related to this entity
@@ -229,6 +248,17 @@ extension AdjustableLayoutItem {
     /// - Returns: Related adjust constraint item
     public func adjustLayoutConstraint(for anchors: [LayoutAnchor.Size]) -> AdjustLayoutConstraint {
         return AdjustLayoutConstraint(item: self, constraints: anchors)
+    }
+}
+extension AdjustableLayoutItem where Self: UIView {
+    /// Convenience getter for adjust constraint item related to this entity
+    ///
+    /// - Parameter anchors: Array of anchor constraints
+    /// - Returns: Related adjust constraint item
+    public func adjustLayoutConstraint(for anchors: [LayoutAnchor.Size]) -> AdjustLayoutConstraint {
+        var constraint = AdjustLayoutConstraint(item: self, constraints: anchors)
+        constraint.inLayoutTime = (inLayoutTime as! InLayoutTimeAdjustableItem)
+        return constraint
     }
 }
 
@@ -265,6 +295,10 @@ extension LayoutConstraintProtocol {
 public struct LayoutConstraint {
     let constraints: [RectBasedConstraint]
     private(set) weak var item: LayoutItem!
+    internal var inLayoutTime: InLayoutTimeItem?
+    internal var inLayoutTimeItem: InLayoutTimeItem {
+        return inLayoutTime ?? item.inLayoutTime
+    }
 
     public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
         self.item = item
@@ -286,7 +320,7 @@ extension LayoutConstraint: LayoutConstraintProtocol {
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
     func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
-        return convert(rectIfNeeded: item.frame, to: coordinateSpace)
+        return convert(rectIfNeeded: inLayoutTimeItem.frame, to: coordinateSpace)
     }
 
     public /// Main function for constrain source space by other rect
@@ -305,7 +339,7 @@ extension LayoutConstraint: LayoutConstraintProtocol {
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
     func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
-        return coordinateSpace === item.superItem! ? rect : coordinateSpace.convert(rect: rect, from: item.superItem!)
+        return coordinateSpace === inLayoutTimeItem.superItem! ? rect : coordinateSpace.convert(rect: rect, from: inLayoutTimeItem.superItem!)
     }
 }
 
@@ -313,6 +347,10 @@ extension LayoutConstraint: LayoutConstraintProtocol {
 public struct AdjustLayoutConstraint {
     let constraints: [LayoutAnchor.Size]
     private(set) weak var item: AdjustableLayoutItem!
+    internal var inLayoutTime: InLayoutTimeAdjustableItem?
+    internal var inLayoutTimeItem: InLayoutTimeAdjustableItem {
+        return inLayoutTime ?? item.inLayoutTime as! InLayoutTimeAdjustableItem
+    }
 
     public init(item: AdjustableLayoutItem, constraints: [LayoutAnchor.Size]) {
         self.item = item
@@ -343,7 +381,7 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
     func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-        sourceRect = sourceRect.constrainedBy(rect: CGRect(origin: rect.origin, size: item.sizeThatFits(rect.size)), use: constraints)
+        sourceRect = sourceRect.constrainedBy(rect: CGRect(origin: rect.origin, size: inLayoutTimeItem.sizeThatFits(rect.size)), use: constraints)
     }
 
     public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
@@ -378,6 +416,8 @@ struct LayoutSnapshot: LayoutSnapshotProtocol {
     let childSnapshots: [LayoutSnapshotProtocol]
     let snapshotFrame: CGRect
 }
+
+// TODO: Before calculate snapshot need to check thread. If not .main then get data (frame, bounds) from main thread.
 
 /// Defines general methods for any layout block
 public protocol LayoutBlockProtocol {
@@ -422,7 +462,7 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol { // TODO: Rena
     public private(set) weak var item: Item!
 
     public /// Snapshot for current state without recalculating
-    var currentSnapshot: LayoutSnapshotProtocol { return item.frame }
+    var currentSnapshot: LayoutSnapshotProtocol { return item.inLayoutTime.frame }
 
     public init(item: Item, layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) {
         self.item = item
@@ -448,7 +488,8 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol { // TODO: Rena
     /// - Parameter sourceRect: Source space for layout
     /// - Returns: Snapshot contained frames layout items
     func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
-        return itemLayout.layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)
+        let inLayout = item.inLayoutTime
+        return itemLayout.layout(rect: inLayout.frame, from: inLayout.superItem!, in: sourceRect, use: constraints)
     }
 
     public /// Method for perform layout calculation in child blocks. Does not call this method directly outside `LayoutBlockProtocol` object.
@@ -459,13 +500,14 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol { // TODO: Rena
     ///   - completedRects: `LayoutItem` items with corrected frame
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
+        let inLayout = item.inLayoutTime
         let source = constraints.reduce(sourceRect) { (result, constraint) -> CGRect in
             let rect = constraint.isIndependent ? nil : completedRects.first { constraint.layoutItem(is: $0.0) }?.1
-            let constrainRect = rect.map { constraint.convert(rectIfNeeded: $0, to: item.superItem!) } /// converts rect to current coordinate space if needed
-                ?? constraint.constrainRect(for: result, in: item.superItem!)
+            let constrainRect = rect.map { constraint.convert(rectIfNeeded: $0, to: inLayout.superItem!) } /// converts rect to current coordinate space if needed
+                ?? constraint.constrainRect(for: result, in: inLayout.superItem!)
             return result.constrainedBy(rect: constrainRect, use: constraint)
         }
-        let frame = itemLayout.layout(rect: item.frame, in: source)
+        let frame = itemLayout.layout(rect: inLayout.frame, in: source)
         completedRects.insert((item, frame), at: 0)
         return frame
     }
@@ -697,10 +739,10 @@ public struct LayoutAnchor {
             }
         }
 
-        /// Returns constraint, that pulls source rect to left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will pulled with changing size.
+        /// Returns constraint, that pulls source rect to leading of passed rect. If source rect intersects leading of passed rect, source rect will be cropped, else will pulled with changing size.
         ///
         /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Pull constraint typed by Left
+        /// - Returns: Pull constraint typed by Leading
         public static func pull(from dependency: Pull.Dependence) -> Leading { return Leading(base: dependency) }
         public struct Pull {
             public struct Dependence: RectBasedConstraint {
@@ -741,7 +783,7 @@ public struct LayoutAnchor {
         ///
         /// - Parameter dependency: Space dependency for target rect
         /// - Returns: Alignment constraint typed by Trailing
-        public static func align(by dependency: Align.Dependence) -> Trailing { return Leading(base: dependency) }
+        public static func align(by dependency: Align.Dependence) -> Trailing { return Trailing(base: dependency) }
         public struct Align {
             public struct Dependence: RectBasedConstraint {
                 private let base: RectBasedConstraint
@@ -779,11 +821,11 @@ public struct LayoutAnchor {
             }
         }
 
-        /// Returns constraint, that pulls source rect to left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will pulled with changing size.
+        /// Returns constraint, that pulls source rect to trailing of passed rect. If source rect intersects trailing of passed rect, source rect will be cropped, else will pulled with changing size.
         ///
         /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Pull constraint typed by Left
-        public static func pull(from dependency: Pull.Dependence) -> Trailing { return Leading(base: dependency) }
+        /// - Returns: Pull constraint typed by Trailing
+        public static func pull(from dependency: Pull.Dependence) -> Trailing { return Trailing(base: dependency) }
         public struct Pull {
             public struct Dependence: RectBasedConstraint {
                 private let base: RectBasedConstraint
@@ -1554,6 +1596,11 @@ public struct LayoutAnchor {
 
 // MARK: Layout
 
+protocol RectAxisLayout: RectBasedLayout {
+    var axis: RectAxis { get }
+    func by(axis: RectAxis) -> Self
+}
+
 /// Main layout structure. Use his for positioning and filling in source rect (which can be constrained using `RectBasedConstraint` constraints).
 public struct Layout: RectBasedLayout {
     private let alignment: Alignment
@@ -1604,6 +1651,37 @@ public struct Layout: RectBasedLayout {
         func layout(rect: inout CGRect, in source: CGRect) {
             vertical.layout(rect: &rect, in: source)
             horizontal.layout(rect: &rect, in: source)
+        }
+
+        public static func trailing(by axis: RectAxis, offset: CGFloat = 0) -> RectBasedLayout { return AxisTrailing(offset: offset, axis: axis) }
+        struct AxisTrailing: RectBasedLayout, RectAxisLayout {
+            let offset: CGFloat
+            let axis: RectAxis
+            func layout(rect: inout CGRect, in source: CGRect) {
+                axis.set(origin: axis.get(maxOf: source) - axis.get(sizeAt: rect) - offset, for: &rect)
+            }
+
+            func by(axis: RectAxis) -> AxisTrailing { return AxisTrailing(offset: offset, axis: axis) }
+        }
+        public static func leading(by axis: RectAxis, offset: CGFloat = 0) -> RectBasedLayout { return AxisLeading(offset: offset, axis: axis) }
+        struct AxisLeading: RectBasedLayout, RectAxisLayout {
+            let offset: CGFloat
+            let axis: RectAxis
+            func layout(rect: inout CGRect, in source: CGRect) {
+                axis.set(origin: axis.get(minOf: source) + offset, for: &rect)
+            }
+
+            func by(axis: RectAxis) -> AxisLeading { return AxisLeading(offset: offset, axis: axis) }
+        }
+        public static func center(by axis: RectAxis, offset: CGFloat = 0) -> RectBasedLayout { return AxisCenter(offset: offset, axis: axis) }
+        struct AxisCenter: RectBasedLayout, RectAxisLayout {
+            let offset: CGFloat
+            let axis: RectAxis
+            func layout(rect: inout CGRect, in source: CGRect) {
+                axis.set(origin: axis.get(midOf: source) - (axis.get(sizeAt: rect) / 2) + offset, for: &rect)
+            }
+
+            func by(axis: RectAxis) -> AxisCenter { return AxisCenter(offset: offset, axis: axis) }
         }
 
         public struct Horizontal: RectBasedLayout, Extended {
@@ -1931,6 +2009,90 @@ extension Layout.Filling {
     }
 }
 
+public protocol RectAxis {
+    func set(size: CGFloat, for rect: inout CGRect)
+    func get(sizeAt rect: CGRect) -> CGFloat
+    func set(origin: CGFloat, for rect: inout CGRect)
+    func get(originAt rect: CGRect) -> CGFloat
+
+    func get(maxOf rect: CGRect) -> CGFloat
+    func get(minOf rect: CGRect) -> CGFloat
+    func get(midOf rect: CGRect) -> CGFloat
+
+    func offset(rect: CGRect, by value: CGFloat) -> CGRect
+}
+
+extension CGRect {
+    public static var horizontalAxis: RectAxis { return CGRect.Horizontal() }
+    public static var verticalAxis: RectAxis { return CGRect.Vertical() }
+    struct Horizontal: RectAxis {
+        func set(size: CGFloat, for rect: inout CGRect) { rect.size.width = size }
+        func set(origin: CGFloat, for rect: inout CGRect) { rect.origin.x = origin }
+        func get(originAt rect: CGRect) -> CGFloat { return rect.origin.x }
+        func get(sizeAt rect: CGRect) -> CGFloat { return rect.width }
+        func get(maxOf rect: CGRect) -> CGFloat { return rect.maxX }
+        func get(minOf rect: CGRect) -> CGFloat { return rect.minX }
+        func get(midOf rect: CGRect) -> CGFloat { return rect.midX }
+        func offset(rect: CGRect, by value: CGFloat) -> CGRect { return rect.offsetBy(dx: value, dy: 0) }
+    }
+    struct Vertical: RectAxis {
+        func set(size: CGFloat, for rect: inout CGRect) { rect.size.height = size }
+        func set(origin: CGFloat, for rect: inout CGRect) { rect.origin.y = origin }
+        func get(sizeAt rect: CGRect) -> CGFloat { return rect.height }
+        func get(originAt rect: CGRect) -> CGFloat { return rect.origin.y }
+        func get(maxOf rect: CGRect) -> CGFloat { return rect.maxY }
+        func get(minOf rect: CGRect) -> CGFloat { return rect.minY }
+        func get(midOf rect: CGRect) -> CGFloat { return rect.midY }
+        func offset(rect: CGRect, by value: CGFloat) -> CGRect { return rect.offsetBy(dx: 0, dy: value) }
+    }
+}
+
+internal struct _MainThreadItemInLayoutTime<Item: LayoutItem>: InLayoutTimeItem {
+    var superBounds: CGRect {
+        if Thread.isMainThread { return item.superItem!.bounds }
+        var _bounds: CGRect?
+        DispatchQueue.main.sync { _bounds = item.superItem!.bounds }
+        return _bounds!
+    }
+    weak var superItem: LayoutItem? {
+        if Thread.isMainThread { return item.superItem }
+        var _super: LayoutItem?
+        DispatchQueue.main.sync { _super = item.superItem }
+        return _super
+    }
+    var frame: CGRect { set {}
+        get {
+            if Thread.isMainThread { return item.frame }
+            var _frame: CGRect?
+            DispatchQueue.main.sync { _frame = item.frame }
+            return _frame!
+        }
+    }
+    var bounds: CGRect { set {}
+        get {
+            if Thread.isMainThread { return item.bounds }
+            var _bounds: CGRect?
+            DispatchQueue.main.sync { _bounds = item.bounds }
+            return _bounds!
+        }
+    }
+
+    var item: Item
+}
+internal struct _MainThreadAdjustItemInLayoutTime<Item: AdjustableLayoutItem>: InLayoutTimeAdjustableItem {
+    let base: _MainThreadItemInLayoutTime<Item>
+    var superBounds: CGRect { return base.superBounds }
+    weak var superItem: LayoutItem? { return base.superItem }
+    var frame: CGRect { set {} get { return base.frame } }
+    var bounds: CGRect { set {} get { return base.bounds } }
+
+    func sizeThatFits(_ size: CGSize) -> CGSize {
+        if Thread.isMainThread { return base.item.sizeThatFits(size) }
+        var _size: CGSize?
+        DispatchQueue.main.sync { _size = base.item.sizeThatFits(size) }
+        return _size!
+    }
+}
 
 // MARK: Attempts, not used
 

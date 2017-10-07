@@ -51,6 +51,7 @@ class ViewController: UIViewController {
     lazy var stackLayoutGuide: StackLayoutGuide<UIView> = {
         let stack = StackLayoutGuide<UIView>(frame: .zero)
         stack.contentInsets.top = 5
+        stack.scheme.axis = CGRect.verticalAxis
         stack.scheme.distribution = .fromTop(spacing: 5)
         stack.scheme.alignment = .leading(2)
         stack.scheme.filling = .custom(Layout.Filling(horizontal: .boxed(4), vertical: .fixed(20)))
@@ -59,13 +60,15 @@ class ViewController: UIViewController {
     }()
     lazy var substackLayoutGuide: StackLayoutGuide<UIView> = {
         let stack = StackLayoutGuide<UIView>(frame: .zero)
-        stack.scheme.distribution = .fromLeft(spacing: 5)
+        stack.scheme.axis = CGRect.horizontalAxis
+        stack.scheme.distribution = .equalSpacingHorizontal()
         stack.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(20), vertical: .scaled(1)))
 
         return stack
     }()
     lazy var labelStack: StackLayoutGuide<UIView> = {
         let stack = StackLayoutGuide<UIView>(frame: .zero)
+        stack.scheme.axis = CGRect.verticalAxis
         stack.scheme.distribution = .fromBottom(spacing: 2)
         stack.scheme.filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .fixed(1)))
         stack.contentInsets.bottom = 2

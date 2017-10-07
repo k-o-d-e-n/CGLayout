@@ -171,16 +171,16 @@ fileprivate struct LinkedList<T>: Sequence {
 // TODO: Add search nearest common ancestor to implementation
 extension LayoutCoordinateSpace where Self: LayoutItem {
     fileprivate static func convert(point: CGPoint, from: LayoutItem, to: LayoutItem) -> CGPoint {
-        let list1Iterator = LinkedList(start: from) { $0.superItem }.makeIterator()
-        var list2Iterator = LinkedList(start: to) { $0.superItem }.reversed().makeIterator()
+        let list1Iterator = LinkedList(start: from) { $0.inLayoutTime.superItem }.makeIterator()
+        var list2Iterator = LinkedList(start: to) { $0.inLayoutTime.superItem }.reversed().makeIterator()
 
         var converted = point
-        while let next = list1Iterator.next() {
+        while let next = list1Iterator.next()?.inLayoutTime {
             converted.x = next.frame.origin.x + converted.x - next.bounds.origin.x
             converted.y = next.frame.origin.y + converted.y - next.bounds.origin.y
         }
 
-        while let next = list2Iterator.next() {
+        while let next = list2Iterator.next()?.inLayoutTime {
             converted.x = converted.x - next.frame.origin.x + next.bounds.origin.x
             converted.y = converted.y - next.frame.origin.y + next.bounds.origin.y
         }

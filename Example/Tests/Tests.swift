@@ -723,11 +723,7 @@ extension Tests {
         let distribution = LayoutDistribution.fromBottom(spacing: 2)
 
         var previous: CGRect?
-        let distributedFrames: [CGRect] = frames.map { frame in
-            let new = distribution.distribute(rect: frame, in: bounds, after: previous)
-            defer { previous = new }
-            return new
-        }
+        let distributedFrames = distribution.distribute(rects: frames, in: bounds, iterator: {_ in})
 
         var iterator = distributedFrames.makeIterator()
         previous = iterator.next()

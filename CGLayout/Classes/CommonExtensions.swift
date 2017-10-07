@@ -28,6 +28,7 @@ extension UIEdgeInsets {
 
 @available(iOS 9.0, *)
 extension UILayoutGuide: LayoutItem {
+    public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
     public var frame: CGRect { get { return layoutFrame } set {} }
     public var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }
     public var superItem: LayoutItem? { return owningView }
@@ -42,9 +43,9 @@ public extension CALayer {
 }
 
 extension Collection where IndexDistance == Int, Index == Int {
-    var centerIndex: Self.Index? {
+    var halfIndex: (index: Self.Index, isCentered: Bool) {
         let center: Double = Double(count / 2)
-        return center.rounded(.down) == center ? Int(center) : nil
+        return (Int(center), center.rounded(.down) == center)
     }
 }
 
@@ -67,3 +68,4 @@ extension Collection where IndexDistance == Index {
         }
     }
 }
+

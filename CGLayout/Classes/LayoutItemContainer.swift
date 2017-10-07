@@ -15,11 +15,13 @@ import Foundation
 
 public protocol LayoutItemContainer: LayoutItem {
     var sublayoutItems: [LayoutItem]? { get }
-
     func addSublayoutItem<SubItem: LayoutItem>(_ subItem: SubItem)
+    func setNeedsLayout()
 }
 
-extension CALayer: LayoutItemContainer {
+extension CALayer: LayoutItemContainer, InLayoutTimeItem {
+    public var inLayoutTime: InLayoutTimeItem { return self }
+    public var superBounds: CGRect { return superItem!.bounds }
     public weak var superItem: LayoutItem? { return superlayer }
     public var sublayoutItems: [LayoutItem]? { return sublayers }
     public func removeFromSuperItem() { removeFromSuperlayer() }
