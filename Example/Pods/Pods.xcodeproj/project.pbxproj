@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0195BE66D5DE7DA5D7E54CF33E9DFE23 /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91199F4F2686D99D63FEAFB6D0D362EB /* MultiCoordinateSpace.swift */; };
-		0379A101FD4401BA063E72FA37C05C3D /* CGLayoutExtended.swift.orig in Sources */ = {isa = PBXBuildFile; fileRef = 7C8F61D800399F64BA9BA5242D0EF274 /* CGLayoutExtended.swift.orig */; };
 		0928D7B6A5F592784CBEC2D42B77490D /* CGLayout-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A26733D81B0507712F9AFDE9650DBD57 /* CGLayout-macOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B934A8E123DFE10528D94481CECBC0E /* Pods-CGLayout-macOSTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = CCF692509300A63E4E0767E711BE8834 /* Pods-CGLayout-macOSTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		229E13DE9E88F440C6E5A69E21B43A8C /* CGLayout.swift.orig in Sources */ = {isa = PBXBuildFile; fileRef = 489492B6B073E50D0D2260B965AF38CE /* CGLayout.swift.orig */; };
 		261E3160588144E65CE225589D0ABC97 /* Pods-CGLayout-tvOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D2E03A8CF0BE9019C8B42201229A122B /* Pods-CGLayout-tvOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2A977045E82716E47FB0071180F88890 /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E9FDB75719110DF6B4F7D1D0CA39 /* CGLayoutExtended.swift */; };
 		2BD050B07BD48D91962A8EF8BEAEEBAE /* CGLayout-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 534B0BF3CCFEFA708AC6C7B62CDE8BDC /* CGLayout-iOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -25,27 +23,24 @@
 		3982787D7C0AE442E8E04E495F6E4AF8 /* Pods-CGLayout_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F229980F58F89C441DDDCD00D702568E /* Pods-CGLayout_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4106C7B13FC8CD9CA784C7CAB854F031 /* LayoutItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513E04A8CE7B512675013E71B02BC689 /* LayoutItemContainer.swift */; };
 		444C16F4582CC83AADADBB242DBA4138 /* Pods-CGLayout-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BD834A51F603133F00CC6F1A8024114 /* Pods-CGLayout-macOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		44AA09FFB4963775448466F1E91BD105 /* CGLayoutExtended.swift.orig in Sources */ = {isa = PBXBuildFile; fileRef = 7C8F61D800399F64BA9BA5242D0EF274 /* CGLayoutExtended.swift.orig */; };
 		473983F5F297A89FBC200B699BDD0A93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7461AAFB7A771BCEC6E4E09204991FB5 /* Foundation.framework */; };
 		4AA6342C515798BFF66DEEB1AEF13FC1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38A88E0776EAF5001831CAEFF93C9A0 /* Foundation.framework */; };
 		56CD6FA6946BA7D0F68556EF0138B806 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFB56E35108A1FCAA1F5604A02FFCDC5 /* Cocoa.framework */; };
 		58C8107203F028E87022C7C28C5EE1AC /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FC428820FB5762377C27B739D790A7 /* CommonExtensions.swift */; };
 		6C9BC52E654C2782B48A8605D1A2689E /* LayoutItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513E04A8CE7B512675013E71B02BC689 /* LayoutItemContainer.swift */; };
-		6EAA261FEB6259594A174F69337BBD0D /* CGLayout.swift.orig in Sources */ = {isa = PBXBuildFile; fileRef = 489492B6B073E50D0D2260B965AF38CE /* CGLayout.swift.orig */; };
 		6ECF77BAFFACE9B402BD30D4C6F492BF /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91660FCF7350DA40AE95AAAE690C0ACF /* CGLayout.swift */; };
-		7536A25DD4D7F54D2F0E104295CA3AD6 /* CommonExtensions.swift.orig in Sources */ = {isa = PBXBuildFile; fileRef = 6CF28482B966B655CDA23496B787C3EB /* CommonExtensions.swift.orig */; };
 		7A514AA223B1AFEDB9E7661B0CE6FC22 /* CGLayout-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AC31A81F68AFAAF7A0D912132DEA146 /* CGLayout-iOS-dummy.m */; };
 		83A3BEF4A3848CEA1275B3E8F358AEEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38A88E0776EAF5001831CAEFF93C9A0 /* Foundation.framework */; };
 		87A1297B9CB85D9ECBC4CFEE6B326558 /* Pods-CGLayout_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EEA53948EA0828D3B7406D393CDD652 /* Pods-CGLayout_Example-dummy.m */; };
 		8C23D57EAC1F82584D008F61E9851D93 /* Pods-CGLayout_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F57964F15FDBCE74EC325BE90F11D0 /* Pods-CGLayout_Tests-dummy.m */; };
-		8DAB408BC21A484515DCB00B4785F3A1 /* CGLayout.swift.orig in Sources */ = {isa = PBXBuildFile; fileRef = 489492B6B073E50D0D2260B965AF38CE /* CGLayout.swift.orig */; };
-		90E5E4B69D6389877C95E781EF908701 /* CGLayoutExtended.swift.orig in Sources */ = {isa = PBXBuildFile; fileRef = 7C8F61D800399F64BA9BA5242D0EF274 /* CGLayoutExtended.swift.orig */; };
 		95721C6808BC869217B5BBCCA6691CAE /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91199F4F2686D99D63FEAFB6D0D362EB /* MultiCoordinateSpace.swift */; };
 		9D971E42EDF9753F9D82E9B445A79600 /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91660FCF7350DA40AE95AAAE690C0ACF /* CGLayout.swift */; };
 		9F08D039F4936F72E1EA2AF8B4C5C6B9 /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91199F4F2686D99D63FEAFB6D0D362EB /* MultiCoordinateSpace.swift */; };
 		A057D279ED579B4DCFB9E41351469A6D /* Pods-CGLayout_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 02AEA5B5D0C23C030F670688D184C042 /* Pods-CGLayout_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A2CAC0D2760570023DD8F88EA0BBCB5F /* CGLayout-tvOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D25734798120F965D2ADE660F315EFC /* CGLayout-tvOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ABC51F5D385CC413757E3153CFA05C3D /* CommonExtensions.swift.orig in Sources */ = {isa = PBXBuildFile; fileRef = 6CF28482B966B655CDA23496B787C3EB /* CommonExtensions.swift.orig */; };
+		A4E143401F890C9100648408 /* CGLayoutPrivateEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E1433F1F890C9100648408 /* CGLayoutPrivateEvolution.swift */; };
+		A4E143421F890D0700648408 /* CGLayoutPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E143411F890D0700648408 /* CGLayoutPrivate.swift */; };
+		A4EDB5B71F89697F000E79D1 /* CGLayoutDeprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4EDB5B61F89697F000E79D1 /* CGLayoutDeprecated.swift */; };
 		B9460717DF531CAE3D8EFD5DA6552DE8 /* CGLayout-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F2CF81F9DC3D760CED75F8EC34E0975A /* CGLayout-macOS-dummy.m */; };
 		B9A615A41771C2D34FB496903DA81C20 /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E9FDB75719110DF6B4F7D1D0CA39 /* CGLayoutExtended.swift */; };
 		BB5117D6CD195F9E0D2A5855183ED490 /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E9FDB75719110DF6B4F7D1D0CA39 /* CGLayoutExtended.swift */; };
@@ -53,7 +48,6 @@
 		C31F3A89388B5C40D8DB8D5B34D0F948 /* CGLayout-tvOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 265D1017F6E5D0DD38F9A119E6D2D920 /* CGLayout-tvOS-dummy.m */; };
 		C8F740339540D62AF57521D2AA987353 /* Pods-CGLayout-tvOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0A3AE2D03FCDAA46B95385CC9BD20A /* Pods-CGLayout-tvOS-dummy.m */; };
 		D3A8F27D21B34EA033D3DD64D9DDAAE9 /* Pods-CGLayout-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = AE71AA7AE087A9E7FFD415DEB14E32C0 /* Pods-CGLayout-macOS-dummy.m */; };
-		E3667BB667921F4E9BBCF4220F4AA2AF /* CommonExtensions.swift.orig in Sources */ = {isa = PBXBuildFile; fileRef = 6CF28482B966B655CDA23496B787C3EB /* CommonExtensions.swift.orig */; };
 		F35A3B7B1A69E8066E04C91E2907A8EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7461AAFB7A771BCEC6E4E09204991FB5 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -84,13 +78,13 @@
 /* Begin PBXFileReference section */
 		0192BB8BDC8255F64E9B592AABD5219F /* CGLayout-macOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "CGLayout-macOS.xcconfig"; path = "../CGLayout-macOS/CGLayout-macOS.xcconfig"; sourceTree = "<group>"; };
 		02AEA5B5D0C23C030F670688D184C042 /* Pods-CGLayout_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout_Example-umbrella.h"; sourceTree = "<group>"; };
-		0495B017D77608F290603591C330D91F /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CGLayout.framework; path = "CGLayout-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0495B017D77608F290603591C330D91F /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CGLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0715B29BAF3E5845091404BE03EA7557 /* Pods-CGLayout_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		07A4F35D1AAD2B61C00B873924F0B97F /* Pods-CGLayout-macOS-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CGLayout-macOS-acknowledgements.markdown"; sourceTree = "<group>"; };
 		0A96E9FDB75719110DF6B4F7D1D0CA39 /* CGLayoutExtended.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayoutExtended.swift; path = CGLayout/Classes/CGLayoutExtended.swift; sourceTree = "<group>"; };
 		0DE96167DEFD97195C395AA8631CA65C /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		116BFC93AE4AE00A5C91BDEDCAF8FCFC /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = "../CGLayout-macOS/Info.plist"; sourceTree = "<group>"; };
-		12D1DDB78275F7990C30C4A2E7225FFE /* Pods_CGLayout_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_macOS.framework; path = "Pods-CGLayout-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		12D1DDB78275F7990C30C4A2E7225FFE /* Pods_CGLayout_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		143B29AC1C857B37D3D134CF3E08D745 /* Pods-CGLayout_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CGLayout_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		1A3A198B0F984D53CE160CDE6EBDEF78 /* Pods-CGLayout_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout_Tests-resources.sh"; sourceTree = "<group>"; };
 		2260B480B887B2B77BD9D9AECE998D88 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -103,7 +97,6 @@
 		424CF93DFE10E63F7637A3CAAEEB43E0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43947E6278988A03ABE8D648497A439A /* Pods-CGLayout-tvOS-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CGLayout-tvOS-acknowledgements.markdown"; sourceTree = "<group>"; };
 		466809D682C83C5DD687C6C30CE3A4AA /* Pods-CGLayout_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		489492B6B073E50D0D2260B965AF38CE /* CGLayout.swift.orig */ = {isa = PBXFileReference; includeInIndex = 1; name = CGLayout.swift.orig; path = CGLayout/Classes/CGLayout.swift.orig; sourceTree = "<group>"; };
 		4B0A3AE2D03FCDAA46B95385CC9BD20A /* Pods-CGLayout-tvOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CGLayout-tvOS-dummy.m"; sourceTree = "<group>"; };
 		4CD5700F00B5901D250C180D63C1C609 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4EEA53948EA0828D3B7406D393CDD652 /* Pods-CGLayout_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CGLayout_Example-dummy.m"; sourceTree = "<group>"; };
@@ -111,30 +104,28 @@
 		513E04A8CE7B512675013E71B02BC689 /* LayoutItemContainer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutItemContainer.swift; path = CGLayout/Classes/LayoutItemContainer.swift; sourceTree = "<group>"; };
 		534B0BF3CCFEFA708AC6C7B62CDE8BDC /* CGLayout-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CGLayout-iOS-umbrella.h"; sourceTree = "<group>"; };
 		5609DFCD14C4164389B87E83C68DB639 /* Pods-CGLayout-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		57A65E829AC2F89B2ED9FBB961EB79B7 /* Pods_CGLayout_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_Example.framework; path = "Pods-CGLayout_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		57A65E829AC2F89B2ED9FBB961EB79B7 /* Pods_CGLayout_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BF8C4F3A716E5C46EC9EF79EB174C8C /* Pods-CGLayout-tvOS-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CGLayout-tvOS-acknowledgements.plist"; sourceTree = "<group>"; };
-		5F905395CE499B74109CAAA569443BD6 /* Pods-CGLayout_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout_Example.modulemap"; sourceTree = "<group>"; };
+		5F905395CE499B74109CAAA569443BD6 /* Pods-CGLayout_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-CGLayout_Example.modulemap"; sourceTree = "<group>"; };
 		600E95172867BC51E09C5CBBFDFD5644 /* Pods-CGLayout-macOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-macOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		63199994CF00E2FDF4B60C3FA96B0BC3 /* Pods-CGLayout-macOS-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-macOS-resources.sh"; sourceTree = "<group>"; };
-		664122A068172AA59F07B8BB6EC7E2A9 /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CGLayout.framework; path = "CGLayout-tvOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		664122A068172AA59F07B8BB6EC7E2A9 /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CGLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		68E9969692CDBF7C93C24BA952F1110C /* Pods-CGLayout-macOS-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CGLayout-macOS-acknowledgements.plist"; sourceTree = "<group>"; };
 		694DB2FAA431048C5445AA5DF43F3A5A /* Pods-CGLayout-macOSTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-macOSTests-frameworks.sh"; sourceTree = "<group>"; };
 		6AF225F52253AE7094BDCC424F8E26A1 /* Pods-CGLayout_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout_Example-frameworks.sh"; sourceTree = "<group>"; };
-		6CF28482B966B655CDA23496B787C3EB /* CommonExtensions.swift.orig */ = {isa = PBXFileReference; includeInIndex = 1; name = CommonExtensions.swift.orig; path = CGLayout/Classes/CommonExtensions.swift.orig; sourceTree = "<group>"; };
 		6D71D31A98C266E22523805460CC8FA4 /* Pods-CGLayout-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-macOS.release.xcconfig"; sourceTree = "<group>"; };
 		7461AAFB7A771BCEC6E4E09204991FB5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		75A8B44B288C97764B8FB8065CB5E627 /* Pods-CGLayout-macOS-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-macOS-frameworks.sh"; sourceTree = "<group>"; };
 		7614C19562A0BB17F45171F4B799617C /* Pods-CGLayout_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout_Tests-frameworks.sh"; sourceTree = "<group>"; };
-		789E386950DF21718EB90E76ADF594B3 /* CGLayout-tvOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; name = "CGLayout-tvOS.modulemap"; path = "../CGLayout-tvOS/CGLayout-tvOS.modulemap"; sourceTree = "<group>"; };
+		789E386950DF21718EB90E76ADF594B3 /* CGLayout-tvOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; name = "CGLayout-tvOS.modulemap"; path = "../CGLayout-tvOS/CGLayout-tvOS.modulemap"; sourceTree = "<group>"; };
 		79DD4E76F81D0DF12E42510175BA38A2 /* Pods-CGLayout_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout_Example.release.xcconfig"; sourceTree = "<group>"; };
-		7A063DDD1B066A197A29F949B96C6D46 /* Pods_CGLayout_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_Tests.framework; path = "Pods-CGLayout_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7AAD575825413549C358667883B803E0 /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CGLayout.framework; path = "CGLayout-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A063DDD1B066A197A29F949B96C6D46 /* Pods_CGLayout_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AAD575825413549C358667883B803E0 /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CGLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B1047F4A0859A30DD0AA48B61772ECB /* Pods-CGLayout_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		7C8F61D800399F64BA9BA5242D0EF274 /* CGLayoutExtended.swift.orig */ = {isa = PBXFileReference; includeInIndex = 1; name = CGLayoutExtended.swift.orig; path = CGLayout/Classes/CGLayoutExtended.swift.orig; sourceTree = "<group>"; };
-		7D75D1ACE7AE66710E20905ED5FCB653 /* Pods-CGLayout-macOSTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout-macOSTests.modulemap"; sourceTree = "<group>"; };
-		7E1671394847C9E8F97A76FC7751AA9F /* CGLayout-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "CGLayout-iOS.modulemap"; sourceTree = "<group>"; };
+		7D75D1ACE7AE66710E20905ED5FCB653 /* Pods-CGLayout-macOSTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-CGLayout-macOSTests.modulemap"; sourceTree = "<group>"; };
+		7E1671394847C9E8F97A76FC7751AA9F /* CGLayout-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "CGLayout-iOS.modulemap"; sourceTree = "<group>"; };
 		836C447A8A96C96D1561CABB57D40AED /* Pods-CGLayout-tvOS-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-tvOS-frameworks.sh"; sourceTree = "<group>"; };
-		846C366744E41759A5170B6118271971 /* Pods_CGLayout_macOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_macOSTests.framework; path = "Pods-CGLayout-macOSTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		846C366744E41759A5170B6118271971 /* Pods_CGLayout_macOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_macOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AC31A81F68AFAAF7A0D912132DEA146 /* CGLayout-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CGLayout-iOS-dummy.m"; sourceTree = "<group>"; };
 		8BD834A51F603133F00CC6F1A8024114 /* Pods-CGLayout-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout-macOS-umbrella.h"; sourceTree = "<group>"; };
 		8D4ECF3C6036A2A1108A5FE22513E66F /* Pods-CGLayout_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CGLayout_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -143,13 +134,16 @@
 		91199F4F2686D99D63FEAFB6D0D362EB /* MultiCoordinateSpace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultiCoordinateSpace.swift; path = CGLayout/Classes/MultiCoordinateSpace.swift; sourceTree = "<group>"; };
 		91660FCF7350DA40AE95AAAE690C0ACF /* CGLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayout.swift; path = CGLayout/Classes/CGLayout.swift; sourceTree = "<group>"; };
 		91FC428820FB5762377C27B739D790A7 /* CommonExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CommonExtensions.swift; path = CGLayout/Classes/CommonExtensions.swift; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		98E58963B1F8551BBC8C0BE1BFE3BF06 /* CGLayout-iOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "CGLayout-iOS.xcconfig"; sourceTree = "<group>"; };
-		9B5604A9C031266AA394581F0C7F548B /* Pods-CGLayout-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout-macOS.modulemap"; sourceTree = "<group>"; };
-		9C2F874F87AFF1BF4ACF5C2CB4259572 /* Pods_CGLayout_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_tvOS.framework; path = "Pods-CGLayout-tvOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1B2178B0377C8BBC4DBDC557A66E34B /* CGLayout-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; name = "CGLayout-macOS.modulemap"; path = "../CGLayout-macOS/CGLayout-macOS.modulemap"; sourceTree = "<group>"; };
+		9B5604A9C031266AA394581F0C7F548B /* Pods-CGLayout-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-CGLayout-macOS.modulemap"; sourceTree = "<group>"; };
+		9C2F874F87AFF1BF4ACF5C2CB4259572 /* Pods_CGLayout_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B2178B0377C8BBC4DBDC557A66E34B /* CGLayout-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; name = "CGLayout-macOS.modulemap"; path = "../CGLayout-macOS/CGLayout-macOS.modulemap"; sourceTree = "<group>"; };
 		A26733D81B0507712F9AFDE9650DBD57 /* CGLayout-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-macOS-umbrella.h"; path = "../CGLayout-macOS/CGLayout-macOS-umbrella.h"; sourceTree = "<group>"; };
 		A35996B9EB003AAD78861B951C3E2F13 /* Pods-CGLayout-macOSTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CGLayout-macOSTests-dummy.m"; sourceTree = "<group>"; };
+		A4E1433F1F890C9100648408 /* CGLayoutPrivateEvolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CGLayoutPrivateEvolution.swift; path = CGLayout/Classes/CGLayoutPrivateEvolution.swift; sourceTree = "<group>"; };
+		A4E143411F890D0700648408 /* CGLayoutPrivate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CGLayoutPrivate.swift; path = CGLayout/Classes/CGLayoutPrivate.swift; sourceTree = "<group>"; };
+		A4EDB5B61F89697F000E79D1 /* CGLayoutDeprecated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CGLayoutDeprecated.swift; path = CGLayout/Classes/CGLayoutDeprecated.swift; sourceTree = "<group>"; };
 		A7D32F752FB805EDF4938137103AE8E3 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = "../CGLayout-tvOS/Info.plist"; sourceTree = "<group>"; };
 		AE71AA7AE087A9E7FFD415DEB14E32C0 /* Pods-CGLayout-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CGLayout-macOS-dummy.m"; sourceTree = "<group>"; };
 		B092DB636FAAA03706EAE4342D8B88C2 /* CGLayout-tvOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-tvOS-prefix.pch"; path = "../CGLayout-tvOS/CGLayout-tvOS-prefix.pch"; sourceTree = "<group>"; };
@@ -159,12 +153,12 @@
 		BF1A27E53C22FF6DC2FF117D73661AE3 /* Pods-CGLayout_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CGLayout_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		C3AC44DC3D5FFDE55364E8DE791B766F /* Pods-CGLayout-macOSTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CGLayout-macOSTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		C4BB4BAC0F824B351EDB3872931C270F /* Pods-CGLayout-macOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-macOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		C6283877433D71C6A663B467F8E85152 /* Pods-CGLayout_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout_Tests.modulemap"; sourceTree = "<group>"; };
+		C6283877433D71C6A663B467F8E85152 /* Pods-CGLayout_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-CGLayout_Tests.modulemap"; sourceTree = "<group>"; };
 		CBF84C614BE1AE3334BADEB51A0571FC /* Pods-CGLayout-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		CCF692509300A63E4E0767E711BE8834 /* Pods-CGLayout-macOSTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout-macOSTests-umbrella.h"; sourceTree = "<group>"; };
 		CFB56E35108A1FCAA1F5604A02FFCDC5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		D2E03A8CF0BE9019C8B42201229A122B /* Pods-CGLayout-tvOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout-tvOS-umbrella.h"; sourceTree = "<group>"; };
-		D8C397FBA16C41E457BC461F8C133C39 /* Pods-CGLayout-tvOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout-tvOS.modulemap"; sourceTree = "<group>"; };
+		D8C397FBA16C41E457BC461F8C133C39 /* Pods-CGLayout-tvOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-CGLayout-tvOS.modulemap"; sourceTree = "<group>"; };
 		E4C92AFEE5023AD0CB74DB3FDAE7AB44 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E85080490565C47041553F4D9A4E1F42 /* Pods-CGLayout-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		F229980F58F89C441DDDCD00D702568E /* Pods-CGLayout_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout_Tests-umbrella.h"; sourceTree = "<group>"; };
@@ -315,13 +309,13 @@
 			isa = PBXGroup;
 			children = (
 				91660FCF7350DA40AE95AAAE690C0ACF /* CGLayout.swift */,
-				489492B6B073E50D0D2260B965AF38CE /* CGLayout.swift.orig */,
 				0A96E9FDB75719110DF6B4F7D1D0CA39 /* CGLayoutExtended.swift */,
-				7C8F61D800399F64BA9BA5242D0EF274 /* CGLayoutExtended.swift.orig */,
 				91FC428820FB5762377C27B739D790A7 /* CommonExtensions.swift */,
-				6CF28482B966B655CDA23496B787C3EB /* CommonExtensions.swift.orig */,
 				513E04A8CE7B512675013E71B02BC689 /* LayoutItemContainer.swift */,
 				91199F4F2686D99D63FEAFB6D0D362EB /* MultiCoordinateSpace.swift */,
+				A4E143411F890D0700648408 /* CGLayoutPrivate.swift */,
+				A4E1433F1F890C9100648408 /* CGLayoutPrivateEvolution.swift */,
+				A4EDB5B61F89697F000E79D1 /* CGLayoutDeprecated.swift */,
 				7EE103C02F263E0E8BE750275BEAA161 /* Support Files */,
 			);
 			name = CGLayout;
@@ -716,13 +710,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A4EDB5B71F89697F000E79D1 /* CGLayoutDeprecated.swift in Sources */,
 				7A514AA223B1AFEDB9E7661B0CE6FC22 /* CGLayout-iOS-dummy.m in Sources */,
 				9D971E42EDF9753F9D82E9B445A79600 /* CGLayout.swift in Sources */,
-				8DAB408BC21A484515DCB00B4785F3A1 /* CGLayout.swift.orig in Sources */,
 				B9A615A41771C2D34FB496903DA81C20 /* CGLayoutExtended.swift in Sources */,
-				0379A101FD4401BA063E72FA37C05C3D /* CGLayoutExtended.swift.orig in Sources */,
+				A4E143421F890D0700648408 /* CGLayoutPrivate.swift in Sources */,
 				58C8107203F028E87022C7C28C5EE1AC /* CommonExtensions.swift in Sources */,
-				E3667BB667921F4E9BBCF4220F4AA2AF /* CommonExtensions.swift.orig in Sources */,
+				A4E143401F890C9100648408 /* CGLayoutPrivateEvolution.swift in Sources */,
 				4106C7B13FC8CD9CA784C7CAB854F031 /* LayoutItemContainer.swift in Sources */,
 				0195BE66D5DE7DA5D7E54CF33E9DFE23 /* MultiCoordinateSpace.swift in Sources */,
 			);
@@ -750,11 +744,8 @@
 			files = (
 				C31F3A89388B5C40D8DB8D5B34D0F948 /* CGLayout-tvOS-dummy.m in Sources */,
 				6ECF77BAFFACE9B402BD30D4C6F492BF /* CGLayout.swift in Sources */,
-				6EAA261FEB6259594A174F69337BBD0D /* CGLayout.swift.orig in Sources */,
 				2A977045E82716E47FB0071180F88890 /* CGLayoutExtended.swift in Sources */,
-				44AA09FFB4963775448466F1E91BD105 /* CGLayoutExtended.swift.orig in Sources */,
 				38C5D629A0919BCA9D90CD007E856866 /* CommonExtensions.swift in Sources */,
-				ABC51F5D385CC413757E3153CFA05C3D /* CommonExtensions.swift.orig in Sources */,
 				38FFEA4EC61F464B417D4477646F3B63 /* LayoutItemContainer.swift in Sources */,
 				95721C6808BC869217B5BBCCA6691CAE /* MultiCoordinateSpace.swift in Sources */,
 			);
@@ -774,11 +765,8 @@
 			files = (
 				B9460717DF531CAE3D8EFD5DA6552DE8 /* CGLayout-macOS-dummy.m in Sources */,
 				35C34B679CE7AD1AEF79670BEADB3D23 /* CGLayout.swift in Sources */,
-				229E13DE9E88F440C6E5A69E21B43A8C /* CGLayout.swift.orig in Sources */,
 				BB5117D6CD195F9E0D2A5855183ED490 /* CGLayoutExtended.swift in Sources */,
-				90E5E4B69D6389877C95E781EF908701 /* CGLayoutExtended.swift.orig in Sources */,
 				2F66B4B2B98F68D8C7838A4A841ECFE9 /* CommonExtensions.swift in Sources */,
-				7536A25DD4D7F54D2F0E104295CA3AD6 /* CommonExtensions.swift.orig in Sources */,
 				6C9BC52E654C2782B48A8605D1A2689E /* LayoutItemContainer.swift in Sources */,
 				9F08D039F4936F72E1EA2AF8B4C5C6B9 /* MultiCoordinateSpace.swift in Sources */,
 			);

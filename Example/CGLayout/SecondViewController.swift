@@ -21,7 +21,7 @@ extension LayoutAnchor.Size {
 extension LayoutAnchor.Center {
     static var centerTop: LayoutAnchor.Center { return .build(CenterTop()) }
     private struct CenterTop: RectBasedConstraint {
-        func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
             sourceRect.origin.x = rect.midX - (sourceRect.width / 2)
             sourceRect.origin.y = rect.midY
         }

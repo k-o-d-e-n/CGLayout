@@ -90,6 +90,7 @@
 		A43D53961F6FDEE300A92425 /* SecondViewControllerAutolayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewControllerAutolayout.swift; sourceTree = "<group>"; };
 		A44646BB1F74132A009601DA /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		A4579C341F59E86800893AB2 /* SecondViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		A4E143431F89422700648408 /* CGLayoutPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = CGLayoutPlayground.playground; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		A9D89FE715E08AC2499AAB82 /* Pods-CGLayout_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		B8458FAC7A74CBFBD7D58733 /* Pods-CGLayout_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.release.xcconfig"; sourceTree = "<group>"; };
 		C48A38620A72C16EC983ABC8 /* Pods-CGLayout-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -228,6 +229,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				A4E143431F89422700648408 /* CGLayoutPlayground.playground */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);

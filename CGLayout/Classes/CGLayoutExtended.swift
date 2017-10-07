@@ -235,7 +235,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     /// - Parameters:
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
-    public func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+    public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect = anchors.reduce(sourceRect) { $0.1.constrained(sourceRect: $0.0, by: rect) }
     }
 
@@ -278,7 +278,7 @@ public struct StringLayoutAnchor: RectBasedConstraint {
     /// - Parameters:
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
-    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect.size = string?.boundingRect(with: rect.size, options: options, attributes: attributes, context: context).size ?? .zero
     }
 }
@@ -338,9 +338,9 @@ struct LayoutDistribution: RectBasedDistribution {
             return rects.map { frame in
                 var frame = frame
                 if let previous = previous {
-                    alignment.layout(rect: &frame, in: sourceRect.constrainedBy(rect: previous, use: anchor))
+                    alignment.formLayout(rect: &frame, in: sourceRect.constrainedBy(rect: previous, use: anchor))
                 } else {
-                    firstAlignment.layout(rect: &frame, in: sourceRect)
+                    firstAlignment.formLayout(rect: &frame, in: sourceRect)
                 }
                 iterator(frame)
                 previous = frame
@@ -469,12 +469,12 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         public static func trailing(_ offset: CGFloat = 0) -> Alignment { return Alignment(horizontal: Layout.Alignment.Horizontal.trailing(offset), vertical: Layout.Alignment.Vertical.bottom(offset), axis: .horizontal) }
         public static func center(_ offset: CGFloat = 0) -> Alignment { return Alignment(horizontal: Layout.Alignment.Horizontal.center(offset), vertical: Layout.Alignment.Vertical.center(offset), axis: .horizontal) }
 
-        public func layout(rect: inout CGRect, in source: CGRect) {
+        public func formLayout(rect: inout CGRect, in source: CGRect) {
             switch axis {
             case .vertical:
-                horizontal.layout(rect: &rect, in: source)
+                horizontal.formLayout(rect: &rect, in: source)
             case .horizontal:
-                vertical.layout(rect: &rect, in: source)
+                vertical.formLayout(rect: &rect, in: source)
             }
         }
     }
@@ -493,8 +493,8 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         public static func trailing(_ offset: CGFloat = 0) -> _Alignment { return _Alignment(Layout.Alignment.trailing(by: CGRect.horizontalAxis, offset: offset) as! RectAxisLayout) }
         public static func center(_ offset: CGFloat = 0) -> _Alignment { return _Alignment(Layout.Alignment.center(by: CGRect.horizontalAxis, offset: offset) as! RectAxisLayout) }
 
-        public func layout(rect: inout CGRect, in source: CGRect) {
-            layout.layout(rect: &rect, in: source)
+        public func formLayout(rect: inout CGRect, in source: CGRect) {
+            layout.formLayout(rect: &rect, in: source)
         }
 
         func by(axis: RectAxis) -> StackLayoutScheme._Alignment {
@@ -524,7 +524,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 
     public var axis: RectAxis = CGRect.horizontalAxis {
         didSet {
-            alignment = alignment.by(axis: axis is CGRect.Horizontal ? CGRect.verticalAxis : CGRect.horizontalAxis)
+            alignment = alignment.by(axis: axis is _RectAxis.Horizontal ? CGRect.verticalAxis : CGRect.horizontalAxis)
         }
     }
     public var distribution: Distribution = .fromLeft(spacing: 0) {
@@ -536,7 +536,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }
     }
     public var alignment: _Alignment = .leading(0) {
-        didSet { alignment = alignment.by(axis: axis is CGRect.Horizontal ? CGRect.verticalAxis : CGRect.horizontalAxis) }//if alignment.axis != distribution.axis { alignment.axis = distribution.axis } }
+        didSet { alignment = alignment.by(axis: axis is _RectAxis.Horizontal ? CGRect.verticalAxis : CGRect.horizontalAxis) }//if alignment.axis != distribution.axis { alignment.axis = distribution.axis } }
     }
     public var filling: Filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .scaled(1)))
 
