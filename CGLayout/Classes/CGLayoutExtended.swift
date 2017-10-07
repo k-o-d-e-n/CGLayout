@@ -36,6 +36,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         self.bounds = CGRect(origin: .zero, size: frame.size)
     }
 }
+#if os(iOS) || os(tvOS)
 public extension LayoutGuide where Super: UIView {
     /// Fabric method for generation view with any type
     ///
@@ -55,6 +56,7 @@ public extension LayoutGuide where Super: UIView {
         return view
     }
 }
+#endif
 public extension LayoutGuide where Super: CALayer {
     /// Fabric method for generation layer with any type
     ///
@@ -86,6 +88,7 @@ public extension CALayer {
         unsafeBitCast(layoutGuide, to: LayoutGuide<CALayer>.self).ownerItem = self
     }
 }
+#if os(iOS) || os(tvOS)
 public extension UIView {
     /// Bind layout item to layout guide.
     ///
@@ -94,6 +97,7 @@ public extension UIView {
         unsafeBitCast(layoutGuide, to: LayoutGuide<UIView>.self).ownerItem = self
     }
 }
+#endif
 extension LayoutGuide {
     /// Creates dependency between two layout guides.
     ///
@@ -105,7 +109,7 @@ extension LayoutGuide {
 
 // MARK: Placeholders
 
-/// Base class for any placeholder.
+/// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
     private weak var _item: Item?
@@ -135,19 +139,20 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
     }
 }
 
-/// Base class for any view placeholder that need dynamic position and/or size.
-/// Used UIViewController pattern for loading target view, therefore will be very simply use him.
-open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
-    open override func loadItem() {
-        item = add(View.self)
-    }
-}
-
 /// Base class for any layer placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
     open override func loadItem() {
         item = add(Layer.self)
+    }
+}
+
+#if os(iOS) || os(tvOS)
+/// Base class for any view placeholder that need dynamic position and/or size.
+/// Used UIViewController pattern for loading target view, therefore will be very simply use him.
+open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
+    open override func loadItem() {
+        item = add(View.self)
     }
 }
 
@@ -200,6 +205,7 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
         }
     }
 }
+#endif
 
 // MARK: Additional constraints
 
@@ -246,7 +252,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
 
 // TODO: Create constraint for attributed string and other data oriented constraints
 
-/// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
+@available(OSX 10.11, *) /// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
 public struct StringLayoutAnchor: RectBasedConstraint {
     let string: String?
     let attributes: [String: Any]?
@@ -283,6 +289,7 @@ public extension String {
     ///   - attributes: String attributes
     ///   - context: Drawing context
     /// - Returns: String-based constraint
+    @available(OSX 10.11, *)
     func layoutConstraint(with options: NSStringDrawingOptions = .usesLineFragmentOrigin, attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutAnchor {
         return StringLayoutAnchor(string: self, options: options, attributes: attributes, context: context)
     }
@@ -292,6 +299,7 @@ public extension String {
 
 // TODO: Create RectAxisBasedDistribution as subprotocol RectBasedDistribution. Probably will contain `axis` property
 // TODO: Try to built RectBasedLayout, RectBasedConstraint, RectBasedDistribution on RectAxis.
+// TODO: In MacOS origin in left-bottom corner by default. NSView.isFlipped moves origin to left-top corner.
 
 protocol RectBasedDistribution {
     func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect]
@@ -384,14 +392,7 @@ struct LayoutDistribution: RectBasedDistribution {
             let fullLength = rects.reduce(0) { $0 + axis.get(sizeAt: $1) }
             let spacing = (axis.get(sizeAt: sourceRect) - fullLength) / CGFloat(rects.count - 1)
 
-            var previous: CGRect?
-            return rects.map { rect in
-                var rect = rect
-                axis.set(origin: (previous.map { _ in spacing } ?? 0) + (previous.map { axis.get(maxOf: $0) } ?? axis.get(minOf: sourceRect)), for: &rect)
-                iterator(rect)
-                previous = rect
-                return rect
-            }
+            return LayoutDistribution.distributeFromLeading(rects: rects, in: sourceRect, by: axis, spacing: spacing, iterator: iterator)
         }
     }
     static func distributeFromLeading(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat, iterator: (CGRect) -> Void) -> [CGRect] {
@@ -508,9 +509,8 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             fileprivate let defaultFilling: Layout.Filling
             func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
                 guard let adjustItem = item as? AdjustableLayoutItem else { return defaultFilling.layout(rect: item.frame, in: source) }
-                var rect = adjustItem.frame
-                rect.size = (adjustItem.inLayoutTime as! InLayoutTimeAdjustableItem).sizeThatFits(source.size)
-                return rect
+
+                return adjustItem.contentConstraint.constrained(sourceRect: adjustItem.frame, by: source)
             }
         }
 
@@ -559,7 +559,6 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }, snapshotFrame: snapshotFrame)
     }
 
-
     public /// Calculate and apply frames layout items.
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout() {
@@ -572,7 +571,6 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         var itemsIterator = subItems.makeIterator()
         distribution.distribute(rects: frames, in: sourceRect, iterator: { itemsIterator.next()?.frame = $0 })
     }
-
 
     public /// Calculate and apply frames layout items in custom space.
     ///
@@ -633,7 +631,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 /// StackLayoutGuide layout guide for arranging items in ordered list. It's analogue UIStackView.
 /// For configure layout parameters use property `scheme`.
 /// Attention: before addition items to stack, need add stack layout guide to super layout item using `func add(layoutGuide:)` method.
-public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, AdjustableLayoutItem {
+public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, AdjustableLayoutItem, SelfSizedLayoutItem {
     private var insetAnchor: RectBasedConstraint?
     fileprivate var items: [LayoutItem] = []
     /// StackLayoutScheme entity for configuring axis, distribution and other parameters.
@@ -641,7 +639,7 @@ public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>,
     /// The list of items arranged by the stack layout guide
     public var arrangedItems: [LayoutItem] { return items }
     /// Insets for distribution space
-    public var contentInsets: UIEdgeInsets = .zero {
+    public var contentInsets: EdgeInsets = .zero {
         didSet { insetAnchor = LayoutAnchor.insets(contentInsets) }
     }
     /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
@@ -688,6 +686,7 @@ public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>,
         return scheme.snapshot(for: bounds).snapshotFrame.distanceFromOrigin
     }
 }
+#if os(iOS) || os(tvOS)
 extension StackLayoutGuide where Parent: UIView {
     /// Adds a layout guide to the end of the `arrangedItems` list.
     ///
@@ -770,6 +769,7 @@ extension StackLayoutGuide where Parent: UIView {
         item.removeFromSuperItem()
     }
 }
+#endif
 extension StackLayoutGuide where Parent: CALayer {
     /// Adds a layout guide to the end of the `arrangedItems` list.
     ///

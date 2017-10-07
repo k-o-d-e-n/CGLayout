@@ -4,7 +4,32 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>CGLayout.xcscheme</key>
+		<key>CGLayout-iOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>CGLayout-macOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>CGLayout-tvOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-CGLayout-macOS.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-CGLayout-macOSTests.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-CGLayout-tvOS.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -21,22 +46,6 @@
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict>
-		<key>8786169CF49D9CA876C2C5A0A7D0E276</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C1EB35A38ECB635A50011FDEC4C4DE03</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F83BE90BF4863FD7E127E1DB82CC9CDE</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-	</dict>
+	<dict/>
 </dict>
 </plist>

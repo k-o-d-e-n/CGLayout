@@ -8,7 +8,7 @@
 
 import Foundation
 
-// TODO: !!! Add MacOS support (conversions more complex)
+// TODO: !!! Implement macOS coordinate space (conversions more complex)
 
 // MARK: LayoutCoordinateSpace
 
@@ -25,6 +25,7 @@ public protocol LayoutCoordinateSpace {
     var bounds: CGRect { get }
     var frame: CGRect { get }
 }
+#if os(iOS) || os(tvOS)
 extension LayoutCoordinateSpace where Self: UICoordinateSpace, Self: LayoutItem {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
         guard !(item is UICoordinateSpace) else { return convert(point, to: item as! UICoordinateSpace) }
@@ -79,6 +80,7 @@ extension LayoutCoordinateSpace where Self: UIView {
         return rect
     }
 }
+#endif
 extension LayoutCoordinateSpace where Self: CALayer {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
         guard !(item is CALayer) else { return convert(point, to: item as? CALayer) }
@@ -105,6 +107,7 @@ extension LayoutCoordinateSpace where Self: CALayer {
         return rect
     }
 }
+#if os(iOS) || os(tvOS)
 @available(iOS 9.0, *)
 extension LayoutCoordinateSpace where Self: UILayoutGuide {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
@@ -148,6 +151,7 @@ extension LayoutCoordinateSpace where Self: UILayoutGuide {
         return CGRect(x: rectInSuper.origin.x - frame.origin.x, y: rectInSuper.origin.y - frame.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }
+#endif
 
 fileprivate struct LinkedList<T>: Sequence {
     private let startObject: T
@@ -208,6 +212,7 @@ extension LayoutCoordinateSpace where Self: LayoutItem {
 
 // MARK: LayoutGuide convertions
 
+#if os(iOS) || os(tvOS)
 extension LayoutGuide where Super: UICoordinateSpace {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
         guard !(item is UICoordinateSpace) else { return convert(point, to: item as! UICoordinateSpace) }
@@ -262,6 +267,7 @@ extension LayoutGuide where Super: UIView {
         return rect
     }
 }
+#endif
 extension LayoutGuide where Super: CALayer {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
         guard !(item is CALayer) else { return convert(point, to: item as! CALayer) }
@@ -288,6 +294,7 @@ extension LayoutGuide where Super: CALayer {
         return rect
     }
 }
+#if os(iOS) || os(tvOS)
 extension LayoutGuide where Super: UICoordinateSpace {
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, to coordinateSpace: UICoordinateSpace) -> CGPoint {
@@ -334,6 +341,7 @@ extension LayoutGuide where Super: UIView {
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }
+#endif
 extension LayoutGuide where Super: CALayer {
     public func convert(_ point: CGPoint, to coordinateSpace: CALayer) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)

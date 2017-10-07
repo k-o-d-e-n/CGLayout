@@ -13,7 +13,7 @@
     <a title="CGLayout  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">CGLayout Docs</a> (55% documented)</p>
+        <p><a href="index.html">CGLayout Docs</a> (54% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -31,6 +31,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="Classes/LayoutGuide.html">LayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/StackLayoutGuide.html">StackLayoutGuide</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/UIViewPlaceholder.html">UIViewPlaceholder</a>
@@ -99,6 +102,9 @@
                 <a href="Structs/AdjustLayoutConstraint.html">AdjustLayoutConstraint</a>
               </li>
               <li class="nav-group-task">
+                <a href="Structs/AnonymConstraint.html">AnonymConstraint</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Structs/Layout.html">Layout</a>
               </li>
               <li class="nav-group-task">
@@ -138,6 +144,15 @@
                 <a href="Structs/LayoutScheme.html">LayoutScheme</a>
               </li>
               <li class="nav-group-task">
+                <a href="Structs/StackLayoutScheme.html">StackLayoutScheme</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/StackLayoutScheme/Axis.html">– Axis</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/StackLayoutScheme/Direction.html">– Direction</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Structs/StringLayoutConstraint.html">StringLayoutConstraint</a>
               </li>
             </ul>
@@ -164,15 +179,92 @@
 <a href="http://cocoapods.org/pods/CGLayout"><img src="https://img.shields.io/cocoapods/p/CGLayout.svg?style=flat" alt="Platform"></a></p>
 
 <p align="center">
-    <img src="logo.png">
+    <img src="https://raw.githubusercontent.com/k-o-d-e-n/CGLayout/master/Resources/logo.png">
 </p>
 
 <p>Powerful autolayout framework, that can manage UIView, CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. Fast, asynchronous, declarative, cacheable, extensible.</p>
 
 <p align="center">
-    <img src="benchmark_result.png">
-Performed by [LayoutBenchmarkFramework](https://github.com/lucdion/LayoutFrameworkBenchmark)
+    <img src="https://raw.githubusercontent.com/k-o-d-e-n/CGLayout/master/Resources/benchmark_result.png">
 </p>
+
+<p>Performed by <a href="https://github.com/lucdion/LayoutFrameworkBenchmark">LayoutBenchmarkFramework</a></p>
+<h2 id='quick-tutorial' class='heading'>Quick tutorial</h2>
+
+<p>Layout with <code>CGLayout</code> built using layout-blocks. To combine blocks into single unit use <code>LayoutScheme</code> entity (or other entities that has suffix <code>Scheme</code>).</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">subviewsScheme</span> <span class="o">=</span> <span class="kt">LayoutScheme</span><span class="p">(</span><span class="nv">blocks</span><span class="p">:</span> <span class="p">[</span>
+<span class="c1">// ... layout blocks</span>
+<span class="p">])</span>
+</code></pre>
+
+<p>To define block for <q>view</q> element use <code>LayoutBlock</code> entity, or just use convenience getter method <code>func layoutBlock(with:constraints:)</code>.</p>
+<pre class="highlight swift"><code><span class="n">titleLabel</span><span class="o">.</span><span class="nf">layoutBlock</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="kt">Layout</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="o">.</span><span class="nf">center</span><span class="p">(),</span> <span class="nv">y</span><span class="p">:</span> <span class="o">.</span><span class="nf">top</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="nv">width</span><span class="p">:</span> <span class="o">.</span><span class="nf">scaled</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">height</span><span class="p">:</span> <span class="o">.</span><span class="nf">fixed</span><span class="p">(</span><span class="mi">120</span><span class="p">)),</span>
+                       <span class="nv">constraints</span><span class="p">:</span> <span class="p">[</span><span class="n">logoImageView</span><span class="o">.</span><span class="nf">layoutConstraint</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="p">[</span><span class="kt">LayoutAnchor</span><span class="o">.</span><span class="kt">Bottom</span><span class="o">.</span><span class="nf">limit</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="n">inner</span><span class="p">)])])</span>
+</code></pre>
+
+<p>For understanding how need to built layout block, let&rsquo;s see layout process in <code>LayoutBlock</code>. 
+For example we have this configuration:</p>
+<pre class="highlight swift"><code><span class="kt">LayoutBlock</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">layoutElement</span><span class="p">,</span> 
+            <span class="nv">layout</span><span class="p">:</span> <span class="kt">Layout</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="o">.</span><span class="nf">left</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="nv">y</span><span class="p">:</span> <span class="o">.</span><span class="nf">top</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="nv">width</span><span class="p">:</span> <span class="o">.</span><span class="nf">boxed</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="nv">height</span><span class="p">:</span> <span class="o">.</span><span class="nf">boxed</span><span class="p">(</span><span class="mi">10</span><span class="p">)),</span>
+            <span class="nv">constraints</span><span class="p">:</span> <span class="p">[</span><span class="n">element1</span><span class="o">.</span><span class="nf">layoutConstraint</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="p">[</span><span class="kt">LayoutAnchor</span><span class="o">.</span><span class="kt">Bottom</span><span class="o">.</span><span class="nf">limit</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="n">outer</span><span class="p">),</span> <span class="kt">LayoutAnchor</span><span class="o">.</span><span class="kt">Right</span><span class="o">.</span><span class="nf">limit</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="n">inner</span><span class="p">)]),</span>
+                          <span class="n">element2</span><span class="o">.</span><span class="nf">layoutConstraint</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="p">[</span><span class="kt">LayoutAnchor</span><span class="o">.</span><span class="kt">Right</span><span class="o">.</span><span class="nf">limit</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="n">outer</span><span class="p">),</span> <span class="kt">LayoutAnchor</span><span class="o">.</span><span class="kt">Bottom</span><span class="o">.</span><span class="nf">limit</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="n">inner</span><span class="p">)])])</span>
+</code></pre>
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/k-o-d-e-n/CGLayout/master/Resources/layout1.png">
+<img src="https://raw.githubusercontent.com/k-o-d-e-n/CGLayout/master/Resources/layout2.png">
+</p>
+
+<p>You have to carefully approach the creation of blocks, because anchors and based on them constraints not have priority and is applying sequentially.
+Constraints should operate actual frames, therefore next layout block must have constraints with <q>views</q>, that will not change frame.</p>
+
+<p>Layout anchors are limiters, that is oriented on frame properties (such as sides, size, position).
+Any side-based anchors have three base implementations: alignment, limitation(cropping), pulling. Each this implementation have dependency on working space: inner and outer.
+Size-based anchors are represented by two implementations: size, insets.
+For constrain <q>view</q> by yourself content use <code>AdjustLayoutConstraint</code> or <code>func adjustLayoutConstraint(for anchors: LayoutAnchor.Size)</code> getter.
+In common case, adjust constraints should be apply after any other constraints (but not always).</p>
+<pre class="highlight swift"><code><span class="n">weatherLabel</span><span class="o">.</span><span class="nf">layoutBlock</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="kt">Layout</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="o">.</span><span class="nf">left</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="nv">y</span><span class="p">:</span> <span class="o">.</span><span class="nf">top</span><span class="p">(),</span> <span class="nv">width</span><span class="p">:</span> <span class="o">.</span><span class="nf">scaled</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">height</span><span class="p">:</span> <span class="o">.</span><span class="nf">scaled</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
+                         <span class="nv">constraints</span><span class="p">:</span> <span class="p">[</span><span class="n">weatherImageView</span><span class="o">.</span><span class="nf">layoutConstraint</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="p">[</span><span class="n">topLimit</span><span class="p">,</span> <span class="n">rightLimit</span><span class="p">,</span> <span class="n">heightEqual</span><span class="p">]),</span>
+                                       <span class="n">weatherLabel</span><span class="o">.</span><span class="nf">adjustLayoutConstraint</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="nf">width</span><span class="p">()])])</span>
+</code></pre>
+
+<p>Use <code>AnonymConstraint</code> for constrain source space independently from external environment:</p>
+<pre class="highlight swift"><code><span class="kt">AnonymConstraint</span><span class="p">(</span><span class="nv">anchors</span><span class="p">:</span> <span class="p">[</span><span class="kt">LayoutAnchor</span><span class="o">.</span><span class="nf">insets</span><span class="p">(</span><span class="kt">UIEdgeInsets</span><span class="p">(</span><span class="nv">top</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">left</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nv">bottom</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">right</span><span class="p">:</span> <span class="mi">15</span><span class="p">))])</span>
+</code></pre>
+
+<p>Each layout-block has methods for layout, take snapshot and applying snapshot.
+Consequently you may use layout-blocks for direct layout, background layout and cached layout:</p>
+<pre class="highlight swift"><code><span class="c1">// layout directly</span>
+<span class="n">layoutScheme</span><span class="o">.</span><span class="nf">layout</span><span class="p">()</span>
+
+<span class="c1">// layout in background</span>
+<span class="k">let</span> <span class="nv">bounds</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="n">bounds</span>
+    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="o">.</span><span class="n">background</span><span class="p">)</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">snapshot</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">layoutScheme</span><span class="o">.</span><span class="nf">snapshot</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">bounds</span><span class="p">)</span>
+    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">sync</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">layoutScheme</span><span class="o">.</span><span class="nf">apply</span><span class="p">(</span><span class="nv">snapshot</span><span class="p">:</span> <span class="n">snapshot</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// cached layout</span>
+<span class="k">if</span> <span class="kt">UIDevice</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">isPortrait</span><span class="p">,</span> <span class="k">let</span> <span class="nv">snapshot</span> <span class="o">=</span> <span class="n">portraitSnapshot</span> <span class="p">{</span>
+    <span class="n">layoutScheme</span><span class="o">.</span><span class="nf">apply</span><span class="p">(</span><span class="nv">snapshot</span><span class="p">:</span> <span class="n">snapshot</span><span class="p">)</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="kt">UIDevice</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">isLandscape</span><span class="p">,</span> <span class="k">let</span> <span class="nv">snapshot</span> <span class="o">=</span> <span class="n">landscapeSnapshot</span> <span class="p">{</span>
+    <span class="n">layoutScheme</span><span class="o">.</span><span class="nf">apply</span><span class="p">(</span><span class="nv">snapshot</span><span class="p">:</span> <span class="n">snapshot</span><span class="p">)</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">layoutScheme</span><span class="o">.</span><span class="nf">layout</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>For implementing custom layout entities and save strong typed code, use <code>static func build(_ base: Conformed) -&gt; Self</code> method.</p>
+
+<p>Framework provides <code>LayoutGuide</code>s as analogue UILayoutGuide. He have possible to generate views and add them to hierarchy.
+For create <code>UIView</code> placeholders use <code>ViewPlaceholder</code> class.</p>
+
+<p>For more details, see documentation and example project.</p>
+<h2 id='code-documentation' class='heading'>Code documentation</h2>
+
+<p>See <a href="https://k-o-d-e-n.github.io/CGLayout/">here</a></p>
 <h2 id='example' class='heading'>Example</h2>
 
 <p>To run the example project, clone the repo, and run <code>pod install</code> from the Example directory first.</p>
@@ -195,7 +287,7 @@ it, simply add the following line to your Podfile:</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-09-26)</p>
+          <p>&copy; 2017 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">k-o-d-e-n</a>. All rights reserved. (Last updated: 2017-10-02)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.3</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

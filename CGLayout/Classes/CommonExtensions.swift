@@ -8,24 +8,38 @@
 
 import Foundation
 
+#if os(iOS) || os(tvOS)
+    public typealias EdgeInsets = UIEdgeInsets
+#endif
+
 extension CGRect {
     var left: CGFloat { return minX }
     var right: CGFloat { return maxX }
     var top: CGFloat { return minY }
     var bottom: CGFloat { return maxY }
-
+    
     var distanceFromOrigin: CGSize { return CGSize(width: maxX, height: maxY) }
-
-    mutating func apply(edgeInsets: UIEdgeInsets) {
-        self = UIEdgeInsetsInsetRect(self, edgeInsets)
+}
+extension CGRect {
+    mutating func apply(edgeInsets: EdgeInsets) {
+        #if os(iOS) || os(tvOS)
+            self = UIEdgeInsetsInsetRect(self, edgeInsets)
+        #else
+            self = CGRect(x: origin.x + edgeInsets.left, y: origin.y + edgeInsets.top,
+                          width: size.width - edgeInsets.horizontal, height: size.height - edgeInsets.vertical)
+        #endif
     }
 }
 
-extension UIEdgeInsets {
+extension EdgeInsets {
     var horizontal: CGFloat { return left + right }
     var vertical: CGFloat { return top + bottom }
+#if os(macOS)
+    public static var zero: EdgeInsets { return EdgeInsets(top: 0, left: 0, bottom: 0, right: 0) }
+#endif
 }
 
+#if os(iOS) || os(tvOS)
 @available(iOS 9.0, *)
 extension UILayoutGuide: LayoutItem {
     public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
@@ -34,6 +48,7 @@ extension UILayoutGuide: LayoutItem {
     public var superItem: LayoutItem? { return owningView }
     public func removeFromSuperItem() { owningView.map { $0.removeLayoutGuide(self) } }
 }
+#endif
 
 public extension CALayer {
     convenience init(frame: CGRect) {

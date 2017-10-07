@@ -6,13 +6,18 @@
 //  Copyright © 2017 K-o-D-e-N. All rights reserved.
 //
 
+#if os(iOS) || os(tvOS)
 import UIKit
+#endif
+#if os(macOS)
+import Cocoa
+#endif
 
 // TODO: !! Comment all code
 // TODO: ! Add RTL (right to left language)
 // TODO: !! Implement behavior on remove view from hierarchy (Unwrapped LayoutItem, break result in ConstraintsItem). Probably need add `isActive` property.
 // TODO: ! Add support UITraitCollection
-// TODO: !!! Add MacOS, tvOS support
+// TODO: !! Optimization for macOS API
 // TODO: !!! Resolve problem with create offset for adjusted views.
 // TODO: ! Add CGRect.integral
 
@@ -182,24 +187,35 @@ public protocol LayoutItem: class, RectBasedItem, LayoutCoordinateSpace {
     func removeFromSuperItem()
 }
 
+extension AdjustableLayoutItem where Self: SelfSizedLayoutItem {
+    public var contentConstraint: RectBasedConstraint { return _SizeThatFitsConstraint(item: self) }
+}
+
 public protocol InLayoutTimeItem: RectBasedItem {
     var superItem: LayoutItem? { get }
     var superBounds: CGRect { get }
 }
-public protocol InLayoutTimeAdjustableItem: InLayoutTimeItem {
-    func sizeThatFits(_ size: CGSize) -> CGSize
-}
-extension UIView {
-    public var inLayoutTime: InLayoutTimeItem {
-        return _MainThreadAdjustItemInLayoutTime(base: _MainThreadItemInLayoutTime(item: self))
-    }
-}
+#if os(iOS) || os(tvOS)
+extension UIView: SelfSizedLayoutItem {}
 extension UIView: AdjustableLayoutItem {
+    public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) }
+    public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
     /// Layout item that maintained this layout entity
     public weak var superItem: LayoutItem? { return superview }
     /// Removes layout item from hierarchy
     public func removeFromSuperItem() { removeFromSuperview() }
 }
+#endif
+#if os(macOS)
+extension NSView: LayoutItem {
+    public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
+    public weak var superItem: LayoutItem? { return superview }
+    public func removeFromSuperItem() { removeFromSuperview() }
+}
+extension NSControl: SelfSizedLayoutItem, AdjustableLayoutItem {
+    public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) }
+}
+#endif
 
 extension LayoutItem {
     /// Convenience getter for constraint item related to this entity
@@ -219,6 +235,7 @@ extension LayoutItem {
         return LayoutBlock(item: self, layout: layout, constraints: constraints)
     }
 }
+#if os(iOS) || os(tvOS)
 extension LayoutItem where Self: UIView {
     /// Convenience getter for constraint item related to this entity
     ///
@@ -230,16 +247,21 @@ extension LayoutItem where Self: UIView {
         return constraint
     }
 }
+#endif
 
 // MARK: AdjustableLayoutItem
 
-/// Protocol for items that can calculate yourself fitted size
-public protocol AdjustableLayoutItem: LayoutItem {
+public protocol SelfSizedLayoutItem: class {
     /// Asks the layout item to calculate and return the size that best fits the specified size
     ///
     /// - Parameter size: The size for which the view should calculate its best-fitting size
     /// - Returns: A new size that fits the receiver’s content
-    func sizeThatFits(_ size: CGSize) -> CGSize // TODO: Research variant as create thread safe size constraint in layout time, that will be oriented on content or thread safe version sizeThatFits
+    func sizeThatFits(_ size: CGSize) -> CGSize
+}
+
+/// Protocol for items that can calculate yourself fitted size
+public protocol AdjustableLayoutItem: LayoutItem {
+    var contentConstraint: RectBasedConstraint { get }
 }
 extension AdjustableLayoutItem {
     /// Convenience getter for adjust constraint item related to this entity
@@ -250,15 +272,20 @@ extension AdjustableLayoutItem {
         return AdjustLayoutConstraint(item: self, constraints: anchors)
     }
 }
-extension AdjustableLayoutItem where Self: UIView {
-    /// Convenience getter for adjust constraint item related to this entity
-    ///
-    /// - Parameter anchors: Array of anchor constraints
-    /// - Returns: Related adjust constraint item
-    public func adjustLayoutConstraint(for anchors: [LayoutAnchor.Size]) -> AdjustLayoutConstraint {
-        var constraint = AdjustLayoutConstraint(item: self, constraints: anchors)
-        constraint.inLayoutTime = (inLayoutTime as! InLayoutTimeAdjustableItem)
-        return constraint
+internal struct _SizeThatFitsConstraint: RectBasedConstraint {
+    weak var item: SelfSizedLayoutItem!
+    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+        sourceRect.size = item.sizeThatFits(rect.size)
+    }
+}
+internal struct _MainThreadSizeThatFitsConstraint: RectBasedConstraint {
+    weak var item: SelfSizedLayoutItem!
+    func constrain(sourceRect: inout CGRect, by rect: CGRect) {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.sync { sourceRect.size = item.sizeThatFits(rect.size) }
+            return
+        }
+        sourceRect.size = item.sizeThatFits(rect.size)
     }
 }
 
@@ -347,10 +374,6 @@ extension LayoutConstraint: LayoutConstraintProtocol {
 public struct AdjustLayoutConstraint {
     let constraints: [LayoutAnchor.Size]
     private(set) weak var item: AdjustableLayoutItem!
-    internal var inLayoutTime: InLayoutTimeAdjustableItem?
-    internal var inLayoutTimeItem: InLayoutTimeAdjustableItem {
-        return inLayoutTime ?? item.inLayoutTime as! InLayoutTimeAdjustableItem
-    }
 
     public init(item: AdjustableLayoutItem, constraints: [LayoutAnchor.Size]) {
         self.item = item
@@ -381,7 +404,7 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
     func constrain(sourceRect: inout CGRect, by rect: CGRect) {
-        sourceRect = sourceRect.constrainedBy(rect: CGRect(origin: rect.origin, size: inLayoutTimeItem.sizeThatFits(rect.size)), use: constraints)
+        sourceRect = sourceRect.constrainedBy(rect: item.contentConstraint.constrained(sourceRect: rect, by: rect), use: constraints)
     }
 
     public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
@@ -653,9 +676,9 @@ public struct LayoutAnchor {
     ///
     /// - Parameter value: UIEdgeInsets value
     /// - Returns: Inset constraint
-    public static func insets(_ value: UIEdgeInsets) -> RectBasedConstraint { return Inset(insets: value) }
+    public static func insets(_ value: EdgeInsets) -> RectBasedConstraint { return Inset(insets: value) }
     private struct Inset: RectBasedConstraint {
-        let insets: UIEdgeInsets
+        let insets: EdgeInsets
         /// Main function for constrain source space by other rect
         ///
         /// - Parameters:
@@ -2078,20 +2101,6 @@ internal struct _MainThreadItemInLayoutTime<Item: LayoutItem>: InLayoutTimeItem 
     }
 
     var item: Item
-}
-internal struct _MainThreadAdjustItemInLayoutTime<Item: AdjustableLayoutItem>: InLayoutTimeAdjustableItem {
-    let base: _MainThreadItemInLayoutTime<Item>
-    var superBounds: CGRect { return base.superBounds }
-    weak var superItem: LayoutItem? { return base.superItem }
-    var frame: CGRect { set {} get { return base.frame } }
-    var bounds: CGRect { set {} get { return base.bounds } }
-
-    func sizeThatFits(_ size: CGSize) -> CGSize {
-        if Thread.isMainThread { return base.item.sizeThatFits(size) }
-        var _size: CGSize?
-        DispatchQueue.main.sync { _size = base.item.sizeThatFits(size) }
-        return _size!
-    }
 }
 
 // MARK: Attempts, not used
