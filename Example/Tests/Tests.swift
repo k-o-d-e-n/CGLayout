@@ -888,6 +888,20 @@ extension Tests {
         XCTAssertTrue(rect2.left == rect1.right)
         XCTAssertTrue(rect2.top == rect1.bottom)
     }
+    func testAnchors() {
+        let view = UIView(frame: .random(in: bounds))
+
+        XCTAssertTrue(view.frame.size == view.anchors.size.get(for: view.frame))
+    }
+    func testMeasurementAnchors() {
+        let view = UIView(frame: .random(in: bounds))
+
+        let size = view.anchors.size
+        measure {
+//            _ = view.frame.size
+            _ = size.get(for: view.frame)
+        }
+    }
 }
 
 // MARK: Beta testing, improvements
@@ -912,17 +926,6 @@ extension Tests {
         XCTAssertTrue(convertedPointFrom.y == -90)
         XCTAssertTrue(convertedRectFrom.origin.x == -90)
         XCTAssertTrue(convertedRectFrom.origin.y == -90)
-    }
-    func testNewAnchors() {
-        let leftAnchor = LeftAnchor.align
-        let rightAnchor = RightAnchor()
-
-        let rect1 = CGRect.random(in: bounds)
-        var rect2 = CGRect.random(in: bounds)
-
-        leftAnchor.set(anchor: rightAnchor, of: rect1, to: &rect2)
-
-        XCTAssertTrue(rect2.left == rect1.right)
     }
 }
 

@@ -145,8 +145,13 @@ class ViewController: UIViewController {
         Layout.equal.apply(for: labelStack)
 
         let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(20), height: .fixed(30)),
-                                 constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])])
+                                 constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)]),
+                                               subviews[7].anchorConstraint(for: [.align(centeredView.anchors.bottom, to: subviews[7].anchors.bottom)])])
 
+//        centeredView.anchors.size.set(CGSize(width: 20, height: 30), for: &centeredView.frame)
+//        centeredView.anchors.center.horizontal.offset(rect: &centeredView.frame, by: subviews[7].anchors.center.horizontal.get(for: subviews[7].frame))
+//        centeredView.anchors.bottom.offset(rect: &centeredView.frame, by: subviews[7].anchors.bottom.get(for: subviews[7].frame))
+        
         // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space. 
         navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.layoutConstraint(for: [LayoutAnchor.equal])]).layout()
 

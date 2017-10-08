@@ -16,6 +16,18 @@ internal protocol RectAxisLayout: RectBasedLayout {
 
 // MARK: Implementations
 
+internal struct ConstraintsAggregator: RectBasedConstraint {
+    let constraints: [RectBasedConstraint]
+
+    init(_ constraints: [RectBasedConstraint]) {
+        self.constraints = constraints
+    }
+
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+        constraints.forEach { $0.formConstrain(sourceRect: &sourceRect, by: rect) }
+    }
+}
+
 /// Represents frame of block where was received. Contains snapshots for child blocks.
 internal struct LayoutSnapshot: LayoutSnapshotProtocol {
     let childSnapshots: [LayoutSnapshotProtocol]

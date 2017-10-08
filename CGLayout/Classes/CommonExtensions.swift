@@ -8,6 +8,10 @@
 
 import Foundation
 
+func -(l: CGSize, r: CGFloat) -> CGSize { return CGSize(width: l.width - r, height: l.height - r) }
+func +(l: CGSize, r: CGFloat) -> CGSize { return CGSize(width: l.width + r, height: l.height + r) }
+func *(l: CGSize, r: CGFloat) -> CGSize { return CGSize(width: l.width * r, height: l.height * r) }
+
 #if os(iOS) || os(tvOS)
     public typealias EdgeInsets = UIEdgeInsets
 #endif
