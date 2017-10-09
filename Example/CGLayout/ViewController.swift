@@ -144,9 +144,17 @@ class ViewController: UIViewController {
         Layout.equal.apply(for: stackLayoutGuide)
         Layout.equal.apply(for: labelStack)
 
-        let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(20), height: .fixed(30)),
-                                 constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)]),
-                                               subviews[7].anchorConstraint(for: [.align(centeredView.anchors.bottom, to: subviews[7].anchors.bottom)])])
+        subviews[7].semanticContentAttribute = .forceRightToLeft
+        let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .scaled(1), height: .scaled(1)),
+                                                          constraints: [subviews[7].anchorSizeConstraint(for: [.scaled(centeredView.superview!.anchors.size,
+                                                                                                                       by: subviews[7].anchors.size,
+                                                                                                                       scale: 0.5)]),
+                                               subviews[7].anchorPointConstraint(for: [.align(centeredView.superview!.anchors.leading, by: subviews[7].anchors.leading)])])
+
+        /// centeredView.layoutBlock(with: layout, constraints: [.align(.bottom, by: subview.bottom), .limit(.left, on: subview.right)])
+        /// centeredView.anchors.bottom.align(by: subview.anchors.bottom) // -> LayoutConstraint contains only one limiter. // anchors should contains reference on view.
+        /// centeredView.layoutBlock(constraints: [.align(.bottom, by: .bottom, on: subview)]) // -> LayoutBlock
+
 
 //        centeredView.anchors.size.set(CGSize(width: 20, height: 30), for: &centeredView.frame)
 //        centeredView.anchors.center.horizontal.offset(rect: &centeredView.frame, by: subviews[7].anchors.center.horizontal.get(for: subviews[7].frame))
