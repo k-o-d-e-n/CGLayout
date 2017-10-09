@@ -891,7 +891,7 @@ extension Tests {
     func testAnchors() {
         let view = UIView(frame: .random(in: bounds))
 
-        XCTAssertTrue(view.frame.size == view.anchors.size.get(for: view.frame))
+        XCTAssertTrue(view.frame.size == view.anchors.size.anchor.get(for: view.frame))
     }
     func testMeasurementAnchors() {
         let view = UIView(frame: .random(in: bounds))
@@ -899,7 +899,7 @@ extension Tests {
         let size = view.anchors.size
         measure {
 //            _ = view.frame.size
-            _ = size.get(for: view.frame)
+            _ = size.anchor.get(for: view.frame)
         }
     }
 }

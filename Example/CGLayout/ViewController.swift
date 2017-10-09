@@ -145,16 +145,25 @@ class ViewController: UIViewController {
         Layout.equal.apply(for: labelStack)
 
         subviews[7].semanticContentAttribute = .forceRightToLeft
-        let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .scaled(1), height: .scaled(1)),
-                                                          constraints: [subviews[7].anchorSizeConstraint(for: [.scaled(centeredView.superview!.anchors.size,
-                                                                                                                       by: subviews[7].anchors.size,
-                                                                                                                       scale: 0.5)]),
-                                               subviews[7].anchorPointConstraint(for: [.align(centeredView.superview!.anchors.leading, by: subviews[7].anchors.leading)])])
+//        let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .scaled(1), height: .scaled(1)),
+//                                                          constraints: [subviews[7].anchorSizeConstraint(for: [.scaled(centeredView.superview!.anchors.size.anchor,
+//                                                                                                                       by: subviews[7].anchors.size.anchor,
+//                                                                                                                       scale: 0.5)]),
+//                                                                        subviews[7].anchorPointConstraint(for: [.align(centeredView.superview!.anchors.leading.anchor,
+//                                                                                                                       by: subviews[7].anchors.leading.anchor)])])
+
+        let centeredViewLayout = centeredView.layout { (anchors) in
+            /// anchors should contains reference on view. `align` method should be mutating and to store binded anchors
+//            anchors.center.align(by: subviews[7].anchors.center)
+            anchors.size.scaled(by: subviews[7].anchors.size, scale: 0.5)
+//            anchors.size.equal(to: CGSize(width: 50, height: 20))
+            anchors.origin.align(by: subviews[7].anchors.origin)
+            anchors.bottom.pull(to: subviews[7].anchors.bottom)
+        }
 
         /// centeredView.layoutBlock(with: layout, constraints: [.align(.bottom, by: subview.bottom), .limit(.left, on: subview.right)])
         /// centeredView.anchors.bottom.align(by: subview.anchors.bottom) // -> LayoutConstraint contains only one limiter. // anchors should contains reference on view.
         /// centeredView.layoutBlock(constraints: [.align(.bottom, by: .bottom, on: subview)]) // -> LayoutBlock
-
 
 //        centeredView.anchors.size.set(CGSize(width: 20, height: 30), for: &centeredView.frame)
 //        centeredView.anchors.center.horizontal.offset(rect: &centeredView.frame, by: subviews[7].anchors.center.horizontal.get(for: subviews[7].frame))
