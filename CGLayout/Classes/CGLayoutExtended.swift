@@ -213,6 +213,10 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
 public struct AnonymConstraint: LayoutConstraintProtocol {
     let anchors: [RectBasedConstraint]
 
+    public init(anchors: [RectBasedConstraint]) {
+        self.anchors = anchors
+    }
+
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     public var isIndependent: Bool { return true }
 
