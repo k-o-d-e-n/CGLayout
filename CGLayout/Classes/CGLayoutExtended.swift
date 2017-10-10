@@ -14,13 +14,15 @@ import Foundation
 /// an `RectBasedConstraint` and represent a rectangle in the layout engine.
 /// Create a LayoutGuide with -init
 /// Add to a view with UIView.add(layoutGuide:)
+/// If you use subclass LayoutGuide, that manages `LayoutItem` items, than you should use 
+/// `layout(in: frame)` method for apply layout, otherwise items will be have wrong position.
 open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
     public var inLayoutTime: InLayoutTimeItem { return self }
     public var superBounds: CGRect { return superItem!.bounds } // TODO: UIView ?
 
     /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
     open fileprivate(set) weak var ownerItem: Super? {
-        didSet { superItem = ownerItem }
+        didSet { superItem = ownerItem; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
     var frame: CGRect
@@ -28,16 +30,41 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
     var bounds: CGRect
     open /// Layout item that maintained this layout entity
     weak var superItem: LayoutItem?
-    public /// Removes layout item from hierarchy
+    open /// Removes layout item from hierarchy
     func removeFromSuperItem() { ownerItem = nil }
 
     public init(frame: CGRect) {
         self.frame = frame
         self.bounds = CGRect(origin: .zero, size: frame.size)
     }
+
+    open func didAddToOwner() {
+        // subclass override
+    }
 }
 #if os(iOS) || os(tvOS)
 public extension LayoutGuide where Super: UIView {
+    /// Fabric method for generation layer with any type
+    ///
+    /// - Parameter type: Type of layer
+    /// - Returns: Generated layer
+    func build<L: CALayer>(_ type: L.Type) -> L {
+        let layer = L()
+        layer.frame = frame
+        return layer
+    }
+    /// Generates layer and adds to `superItem` hierarchy
+    ///
+    /// - Parameter type: Type of layer
+    /// - Returns: Added layer
+    @discardableResult
+    func add<L: CALayer>(_ type: L.Type) -> L? {
+        guard let superItem = ownerItem else { fatalError("You must add layout guide to container using `func add(layoutGuide:)` method") }
+
+        let layer = build(type)
+        superItem.layer.addSublayer(layer)
+        return layer
+    }
     /// Fabric method for generation view with any type
     ///
     /// - Parameter type: Type of view
@@ -49,7 +76,7 @@ public extension LayoutGuide where Super: UIView {
     /// - Returns: Added view
     @discardableResult
     func add<V: UIView>(_ type: V.Type) -> V? {
-        guard let superItem = ownerItem else { return nil }
+        guard let superItem = ownerItem else { fatalError("You must add layout guide to container using `func add(layoutGuide:)` method") }
 
         let view = build(type)
         superItem.addSubview(view)
@@ -73,7 +100,7 @@ public extension LayoutGuide where Super: CALayer {
     /// - Returns: Added layer
     @discardableResult
     func add<L: CALayer>(_ type: L.Type) -> L? {
-        guard let superItem = ownerItem else { return nil }
+        guard let superItem = ownerItem else { fatalError("You must add layout guide to container using `func add(layoutGuide:)` method") }
 
         let layer = build(type)
         superItem.addSublayer(layer)
@@ -98,7 +125,7 @@ public extension UIView {
     }
 }
 #endif
-extension LayoutGuide {
+public extension LayoutGuide {
     /// Creates dependency between two layout guides.
     ///
     /// - Parameter layoutGuide: Child layout guide.
@@ -112,6 +139,7 @@ extension LayoutGuide {
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
+    private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock(with: Layout.equal, constraints: [self.layoutConstraint(for: [LayoutAnchor.equal])])
     private weak var _item: Item?
     open weak var item: Item! {
         set { _item = newValue }
@@ -137,13 +165,19 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
             itemDidLoad()
         }
     }
+
+    open func layout() {
+        if isItemLoaded {
+            itemLayout.layout(in: frame)
+        }
+    }
 }
 
 /// Base class for any layer placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
     open override func loadItem() {
-        item = add(Layer.self)
+        item = add(Layer.self) // TODO: can be add to hierarchy on didSet `item`
     }
 }
 
@@ -171,7 +205,7 @@ public extension UILayoutGuide {
     /// - Returns: Added view
     @discardableResult
     func add<V: UIView>(_ type: V.Type) -> V? {
-        guard let superItem = owningView else { return nil }
+        guard let superItem = owningView else { fatalError("You must add layout guide to container using `func addLayoutGuide(_:)` method") }
 
         let view = build(type)
         superItem.addSubview(view)
@@ -212,9 +246,11 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
 /// Layout constraint for independent changing source space. Use him with anchors that not describes rect side (for example `LayoutAnchor.insets` or `LayoutAnchor.Size`).
 public struct AnonymConstraint: LayoutConstraintProtocol {
     let anchors: [RectBasedConstraint]
+    let constrainRect: ((CGRect) -> CGRect)?
 
-    public init(anchors: [RectBasedConstraint]) {
+    public init(anchors: [RectBasedConstraint], constrainRect: ((CGRect) -> CGRect)? = nil) {
         self.anchors = anchors
+        self.constrainRect = constrainRect
     }
 
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
@@ -231,7 +267,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
     public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
-        return currentSpace
+        return constrainRect?(currentSpace) ?? currentSpace
     }
 
     /// Main function for constrain source space by other rect
@@ -635,19 +671,19 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 /// StackLayoutGuide layout guide for arranging items in ordered list. It's analogue UIStackView.
 /// For configure layout parameters use property `scheme`.
 /// Attention: before addition items to stack, need add stack layout guide to super layout item using `func add(layoutGuide:)` method.
-public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, AdjustableLayoutItem, SelfSizedLayoutItem {
+open class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, AdjustableLayoutItem, SelfSizedLayoutItem {
     private var insetAnchor: RectBasedConstraint?
     fileprivate var items: [LayoutItem] = []
     /// StackLayoutScheme entity for configuring axis, distribution and other parameters.
-    public lazy var scheme: StackLayoutScheme = StackLayoutScheme { [unowned self] in self.items }
+    open lazy var scheme: StackLayoutScheme = StackLayoutScheme { [unowned self] in self.items }
     /// The list of items arranged by the stack layout guide
-    public var arrangedItems: [LayoutItem] { return items }
+    open var arrangedItems: [LayoutItem] { return items }
     /// Insets for distribution space
-    public var contentInsets: EdgeInsets = .zero {
+    open var contentInsets: EdgeInsets = .zero {
         didSet { insetAnchor = LayoutAnchor.insets(contentInsets) }
     }
     /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
-    public override var ownerItem: Parent? {
+    open override var ownerItem: Parent? {
         willSet {
             if newValue == nil {
                 items.forEach { $0.removeFromSuperItem() }
@@ -661,7 +697,7 @@ public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>,
 //        }
     }
     /// External representation of layout entity in coordinate space
-    public override var frame: CGRect {
+    open override var frame: CGRect {
         set {
             if newValue != frame {
                 super.frame = newValue
@@ -682,13 +718,21 @@ public class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>,
         return true
     }
 
-    public /// Asks the layout item to calculate and return the size that best fits the specified size
+    open /// Asks the layout item to calculate and return the size that best fits the specified size
     ///
     /// - Parameter size: The size for which the view should calculate its best-fitting size
     /// - Returns: A new size that fits the receiver’s content
     func sizeThatFits(_ size: CGSize) -> CGSize {
-        return scheme.snapshot(for: bounds).snapshotFrame.distanceFromOrigin
+        let sourceRect = CGRect(origin: .zero, size: size)
+        var result = scheme.snapshot(for: insetAnchor?.constrained(sourceRect: sourceRect, by: .zero) ?? sourceRect).snapshotFrame.distanceFromOrigin
+        result.width += contentInsets.right
+        result.height += contentInsets.bottom
+        return result
     }
+}
+extension StackLayoutGuide: CustomDebugStringConvertible, CustomStringConvertible {
+    public var debugDescription: String { return items.debugDescription }
+    public var description: String { return items.description }
 }
 #if os(iOS) || os(tvOS)
 extension StackLayoutGuide where Parent: UIView {
