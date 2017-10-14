@@ -924,6 +924,18 @@ extension Tests {
 
         XCTAssertTrue(rect2.left == rect1.right)
     }
+    func testLazyFilter() {
+        let numbers = 0..<10
+
+        var counter = 0
+        numbers.lazy.filter {
+            counter += 1
+            return $0 % 2 == 0
+        }.forEach {
+            XCTAssertFalse(counter == numbers.count)
+            print($0)
+        }
+    }
 }
 
 extension CGRect {

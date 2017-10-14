@@ -53,7 +53,10 @@ public class SecondViewController: UIViewController {
     let separator1Align = Layout.Alignment(horizontal: .right(25), vertical: .top())
     let separator2Align = Layout.Alignment(horizontal: .left(25), vertical: .bottom())
 
+    lazy var rainLabelReservedConstraint: MutableLayoutConstraint = self.distanceLabel.layoutConstraint(for: [self.topLimit, LayoutAnchor.Left.align(by: .outer)]).active(false)
+
     lazy var layoutScheme: LayoutScheme = {
+
         return LayoutScheme(blocks: [
             self.distanceLabel.layoutBlock(with: Layout(x: .center(), y: .bottom(50), width: .fixed(70), height: .fixed(30))),
             self.separator1Layer.layoutBlock(with: Layout(alignment: self.separator1Align, filling: self.separatorSize),
@@ -68,7 +71,8 @@ public class SecondViewController: UIViewController {
 //                                            self.weatherLabel.adjustLayoutConstraint(for: [.stringSize(self.weatherLabel.text, attributes: [NSFontAttributeName: self.weatherLabel.font])])]),
             self.rainLabel.layoutBlock(with: Layout(x: .right(20), y: .top(), width: .scaled(1), height: .fixed(30)),
                                        constraints: [self.rainLabel.adjustLayoutConstraint(for: [self.widthEqual]),
-                                                     self.separator1Layer.layoutConstraint(for: [self.topLimit, LayoutAnchor.Left.align(by: .outer)])]),
+                                                     self.separator1Layer.layoutConstraint(for: [self.topLimit, LayoutAnchor.Left.align(by: .outer)]),
+                                                     self.rainLabelReservedConstraint]),
             self.rainImageView.layoutBlock(with: Layout(x: .right(10), y: .top(), width: .fixed(30), height: .fixed(30)),
                                            constraints: [self.rainLabel.layoutConstraint(for: [self.leftLimit, self.topLimit])]),
             self.logoImageView.layoutBlock(with: Layout(x: .center(), y: .top(80), width: .fixed(70), height: .fixed(70))),
@@ -127,17 +131,23 @@ public class SecondViewController: UIViewController {
 
         // cached layout
         #if os(iOS)
-        if UIDevice.current.orientation.isPortrait, let snapshot = portraitSnapshot {
-            layoutScheme.apply(snapshot: snapshot)
-        } else if UIDevice.current.orientation.isLandscape, let snapshot = landscapeSnapshot {
-            layoutScheme.apply(snapshot: snapshot)
-        } else {
+//        if UIDevice.current.orientation.isPortrait, let snapshot = portraitSnapshot {
+//            layoutScheme.apply(snapshot: snapshot)
+//        } else if UIDevice.current.orientation.isLandscape, let snapshot = landscapeSnapshot {
+//            layoutScheme.apply(snapshot: snapshot)
+//        } else {
             layoutScheme.layout()
-        }
+//        }
         #endif
         #if os(tvOS)
             layoutScheme.layout()
         #endif
+    }
+
+    public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        separator1Layer?.removeFromSuperItem()
+        rainLabelReservedConstraint.isActive = true
     }
 }
 

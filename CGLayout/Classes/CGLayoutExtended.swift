@@ -253,6 +253,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
         self.constrainRect = constrainRect
     }
 
+    public var isActive: Bool { return true }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     public var isIndependent: Bool { return true }
 
@@ -471,6 +472,8 @@ extension Layout.Filling: StackLayoutFilling {
 
 // TODO: StackLayoutScheme lost multihierarchy layout. Research this. // Comment: Probably would be not available.
 public struct StackLayoutScheme: LayoutBlockProtocol {
+    public var isActive: Bool { return true }
+
     private var items: () -> [LayoutItem]
     fileprivate enum Axis {
         case horizontal, vertical

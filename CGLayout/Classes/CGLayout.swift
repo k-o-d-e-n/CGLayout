@@ -15,11 +15,11 @@ import Cocoa
 
 // TODO: !! Comment all code
 // TODO: ! Add RTL (right to left language)
-// TODO: !! Implement behavior on remove view from hierarchy (Unwrapped LayoutItem, break result in ConstraintsItem). Probably need add `isActive` property.
 // TODO: ! Add support UITraitCollection
 // TODO: !! Optimization for macOS API
 // TODO: !!! Resolve problem with create offset for adjusted views.
 // TODO: ! Add CGRect.integral
+// TODO: !! Add implementation description variables if needed
 
 // TODO: !!! Tests for new code
 
@@ -282,6 +282,7 @@ extension AdjustableLayoutItem {
 /// Provides rect for constrain source space. Used for related constraints.
 // TODO: Change protocol definition. It is not exactly describe layout constraint.
 public protocol LayoutConstraintProtocol: RectBasedConstraint {
+    var isActive: Bool { get }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { get }
     /// `LayoutItem` object associated with this constraint
@@ -305,15 +306,21 @@ extension LayoutConstraintProtocol {
         return constrained(sourceRect: sourceRect, by: constrainRect(for: sourceRect, in: coordinateSpace))
     }
 }
+public extension LayoutConstraintProtocol {
+    func active(_ active: Bool) -> MutableLayoutConstraint {
+        return .init(base: self, isActive: active)
+    }
+}
 
 /// Simple related constraint. Contains anchor constraints and layout item as source of frame for constrain
 public struct LayoutConstraint {
-    let constraints: [RectBasedConstraint]
-    private(set) weak var item: LayoutItem!
+    fileprivate let constraints: [RectBasedConstraint]
+    private(set) weak var item: LayoutItem?
     internal var inLayoutTime: InLayoutTimeItem?
-    internal var inLayoutTimeItem: InLayoutTimeItem {
-        return inLayoutTime ?? item.inLayoutTime
+    internal var inLayoutTimeItem: InLayoutTimeItem? {
+        return inLayoutTime ?? item?.inLayoutTime
     }
+    public var isActive: Bool { return inLayoutTimeItem?.superItem != nil }
 
     public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
         self.item = item
@@ -335,7 +342,9 @@ extension LayoutConstraint: LayoutConstraintProtocol {
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
     func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
-        return convert(rectIfNeeded: inLayoutTimeItem.frame, to: coordinateSpace)
+        guard let layoutItem = inLayoutTimeItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+
+        return convert(rectIfNeeded: layoutItem.frame, to: coordinateSpace)
     }
 
     public /// Main function for constrain source space by other rect
@@ -354,14 +363,16 @@ extension LayoutConstraint: LayoutConstraintProtocol {
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
     func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
-        return coordinateSpace === inLayoutTimeItem.superItem! ? rect : coordinateSpace.convert(rect: rect, from: inLayoutTimeItem.superItem!)
+        guard let superLayoutItem = inLayoutTimeItem?.superItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+
+        return coordinateSpace === superLayoutItem ? rect : coordinateSpace.convert(rect: rect, from: superLayoutItem)
     }
 }
 
 /// Related constraint for adjust size of source space. Contains size constraints and layout item for calculate size.
 public struct AdjustLayoutConstraint {
     let constraints: [LayoutAnchor.Size]
-    private(set) weak var item: AdjustableLayoutItem!
+    private(set) weak var item: AdjustableLayoutItem?
 
     public init(item: AdjustableLayoutItem, constraints: [LayoutAnchor.Size]) {
         self.item = item
@@ -369,6 +380,9 @@ public struct AdjustLayoutConstraint {
     }
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
+    public ///
+    var isActive: Bool { return item?.superItem != nil }
+
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return true }
 
@@ -392,6 +406,8 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
     func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+        guard let item = item else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+
         sourceRect = sourceRect.constrainedBy(rect: item.contentConstraint.constrained(sourceRect: rect, by: rect), use: constraints)
     }
 
@@ -404,6 +420,49 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
         return rect
     }
+}
+
+public class MutableLayoutConstraint: LayoutConstraintProtocol {
+    private var base: LayoutConstraintProtocol
+    private var _active = true
+
+    public var isActive: Bool {
+        set { _active = newValue }
+        get { return _active && base.isActive }
+    }
+
+    init(base: LayoutConstraintProtocol, isActive: Bool) {
+        self.base = base
+        self._active = isActive
+    }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+    public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
+    ///
+    /// - Parameters:
+    ///   - rect: Initial rect
+    ///   - coordinateSpace: Destination coordinate space
+    /// - Returns: Converted rect
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect { return base.convert(rectIfNeeded: rect, to: coordinateSpace) }
+
+    public /// Return rectangle for constrain source rect
+    ///
+    /// - Parameter currentSpace: Source rect in current state
+    /// - Parameter coordinateSpace: Working coordinate space
+    /// - Returns: Rect for constrain
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect { return base.constrainRect(for: currentSpace, in: coordinateSpace) }
+
+    public /// `LayoutItem` object associated with this constraint
+    func layoutItem(is object: AnyObject) -> Bool { return base.layoutItem(is: object) }
+
+    public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
+    var isIndependent: Bool { return base.isIndependent }
 }
 
 // MARK: LayoutBlock
@@ -424,6 +483,7 @@ extension CGRect: LayoutSnapshotProtocol {
 
 /// Defines general methods for any layout block
 public protocol LayoutBlockProtocol {
+    var isActive: Bool { get }
     /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol { get }
 
@@ -462,10 +522,15 @@ public protocol LayoutBlockProtocol {
 public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     private let itemLayout: RectBasedLayout
     private let constraints: [LayoutConstraintProtocol]
-    public private(set) weak var item: Item!
+    public private(set) weak var item: Item?
+
+    public var isActive: Bool { return item?.superItem != nil }
 
     public /// Snapshot for current state without recalculating
-    var currentSnapshot: LayoutSnapshotProtocol { return item.inLayoutTime.frame }
+    var currentSnapshot: LayoutSnapshotProtocol {
+        guard let item = item else { fatalError("Layout block is not active, because layout item not available") }
+        return item.inLayoutTime.frame
+    }
 
     public init(item: Item, layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) {
         self.item = item
@@ -476,14 +541,18 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     public /// Calculate and apply frames layout items.
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout() {
-        itemLayout.apply(for: item, use: constraints)
+        guard let item = item else { assertionFailure("Layout block is not active, because layout item not available in:\n\(self)"); return }
+
+        itemLayout.apply(for: item, use: constraints.lazy.filter { $0.isActive })
     }
 
     public /// Calculate and apply frames layout items in custom space.
     ///
     /// - Parameter sourceRect: Source space
     func layout(in sourceRect: CGRect) {
-        itemLayout.apply(for: item, in: sourceRect, use: constraints)
+        guard let item = item else { assertionFailure("Layout block is not active, because layout item not available in:\n\(self)"); return }
+
+        itemLayout.apply(for: item, in: sourceRect, use: constraints.lazy.filter { $0.isActive })
     }
 
     public /// Returns snapshot for all `LayoutItem` items in block. Attention: in during calculating snapshot frames of layout items must not changed.
@@ -491,8 +560,9 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     /// - Parameter sourceRect: Source space for layout
     /// - Returns: Snapshot contained frames layout items
     func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
-        let inLayout = item.inLayoutTime
-        return itemLayout.layout(rect: inLayout.frame, from: inLayout.superItem!, in: sourceRect, use: constraints)
+        guard let inLayout = item?.inLayoutTime, let superItem = inLayout.superItem else { fatalError("Layout block is not active, because layout item not available") }
+
+        return itemLayout.layout(rect: inLayout.frame, from: superItem, in: sourceRect, use: constraints.lazy.filter { $0.isActive })
     }
 
     public /// Method for perform layout calculation in child blocks. Does not call this method directly outside `LayoutBlockProtocol` object.
@@ -503,11 +573,12 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     ///   - completedRects: `LayoutItem` items with corrected frame
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
-        let inLayout = item.inLayoutTime
-        let source = constraints.reduce(sourceRect) { (result, constraint) -> CGRect in
+        guard let item = item, let inLayout = self.item?.inLayoutTime, let superItem = inLayout.superItem else { fatalError("Layout block is not active, because layout item not available") }
+
+        let source = constraints.lazy.filter { $0.isActive }.reduce(sourceRect) { (result, constraint) -> CGRect in
             let rect = constraint.isIndependent ? nil : completedRects.first { constraint.layoutItem(is: $0.0) }?.1
-            let constrainRect = rect.map { constraint.convert(rectIfNeeded: $0, to: inLayout.superItem!) } /// converts rect to current coordinate space if needed
-                ?? constraint.constrainRect(for: result, in: inLayout.superItem!)
+            let constrainRect = rect.map { constraint.convert(rectIfNeeded: $0, to: superItem) } /// converts rect to current coordinate space if needed
+                ?? constraint.constrainRect(for: result, in: superItem)
             return result.constrainedBy(rect: constrainRect, use: constraint)
         }
         let frame = itemLayout.layout(rect: inLayout.frame, in: source)
@@ -520,7 +591,9 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     ///
     /// - Parameter snapshot: Snapshot represented as array of frames.
     func apply(snapshot: LayoutSnapshotProtocol) {
-        item.frame = snapshot.snapshotFrame
+        assert(isActive, "Layout block is not active, because layout item not available in:\n\(self)")
+
+        item?.frame = snapshot.snapshotFrame
     }
 }
 
@@ -529,7 +602,8 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
 /// currently performed block has constraints related to `LayoutItem` items with corrected frame.
 /// LayoutScheme can contain other layout schemes.
 public struct LayoutScheme: LayoutBlockProtocol {
-    private let blocks: [LayoutBlockProtocol]
+    private var blocks: [LayoutBlockProtocol]
+    public var isActive: Bool { return blocks.contains(where: { $0.isActive }) }
 
     public /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol {
@@ -592,6 +666,18 @@ public struct LayoutScheme: LayoutBlockProtocol {
             snapshotFrame = snapshotFrame?.union(blockSnapshot.snapshotFrame) ?? blockSnapshot.snapshotFrame
             return blockSnapshot
         }, snapshotFrame: snapshotFrame)
+    }
+
+    public mutating func addLayout(block: LayoutBlockProtocol) {
+        guard Thread.isMainThread else { fatalError("Mutating layout scheme is available only on main thread") }
+
+        blocks.append(block)
+    }
+
+    mutating func removeInactiveBlocks() {
+        guard Thread.isMainThread else { fatalError("Mutating layout scheme is available only on main thread") }
+
+        blocks = blocks.filter { $0.isActive }
     }
 }
 
