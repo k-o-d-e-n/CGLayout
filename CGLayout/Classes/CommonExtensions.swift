@@ -8,6 +8,12 @@
 
 import Foundation
 
+internal func printWarning(_ message: String) {
+    #if DEBUG
+        debugPrint("CGLayout warning: \(message)")
+    #endif
+}
+
 #if os(iOS) || os(tvOS)
     public typealias EdgeInsets = UIEdgeInsets
 #endif

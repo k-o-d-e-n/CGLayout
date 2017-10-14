@@ -519,16 +519,28 @@ public protocol LayoutBlockProtocol {
 }
 
 /// Makes full layout for `LayoutItem` entity. Contains main layout, related anchor constrains and item for layout.
-public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
-    private let itemLayout: RectBasedLayout
-    private let constraints: [LayoutConstraintProtocol]
+public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
+    private var itemLayout: RectBasedLayout
+    private var constraints: [LayoutConstraintProtocol]
     public private(set) weak var item: Item?
 
     public var isActive: Bool { return item?.superItem != nil }
 
+    public func setLayout(_ layout: RectBasedLayout) {
+        guard Thread.isMainThread else { fatalError(LayoutBlock.message(forMutating: self)) }
+
+        self.itemLayout = layout
+    }
+
+    public func setConstraints(_ constraints: [LayoutConstraintProtocol]) {
+        guard Thread.isMainThread else { fatalError(LayoutBlock.message(forMutating: self)) }
+
+        self.constraints = constraints
+    }
+
     public /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol {
-        guard let item = item else { fatalError("Layout block is not active, because layout item not available") }
+        guard let item = item else { fatalError(LayoutBlock.message(forNotActive: self)) }
         return item.inLayoutTime.frame
     }
 
@@ -541,7 +553,7 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     public /// Calculate and apply frames layout items.
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout() {
-        guard let item = item else { assertionFailure("Layout block is not active, because layout item not available in:\n\(self)"); return }
+        guard let item = item else { printWarning(LayoutBlock.message(forSkipped: self)); return }
 
         itemLayout.apply(for: item, use: constraints.lazy.filter { $0.isActive })
     }
@@ -550,7 +562,7 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     ///
     /// - Parameter sourceRect: Source space
     func layout(in sourceRect: CGRect) {
-        guard let item = item else { assertionFailure("Layout block is not active, because layout item not available in:\n\(self)"); return }
+        guard let item = item else { printWarning(LayoutBlock.message(forSkipped: self)); return }
 
         itemLayout.apply(for: item, in: sourceRect, use: constraints.lazy.filter { $0.isActive })
     }
@@ -560,7 +572,7 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     /// - Parameter sourceRect: Source space for layout
     /// - Returns: Snapshot contained frames layout items
     func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
-        guard let inLayout = item?.inLayoutTime, let superItem = inLayout.superItem else { fatalError("Layout block is not active, because layout item not available") }
+        guard let inLayout = item?.inLayoutTime, let superItem = inLayout.superItem else { fatalError(LayoutBlock.message(forNotActive: self)) }
 
         return itemLayout.layout(rect: inLayout.frame, from: superItem, in: sourceRect, use: constraints.lazy.filter { $0.isActive })
     }
@@ -573,7 +585,7 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     ///   - completedRects: `LayoutItem` items with corrected frame
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
-        guard let item = item, let inLayout = self.item?.inLayoutTime, let superItem = inLayout.superItem else { fatalError("Layout block is not active, because layout item not available") }
+        guard let item = item, let inLayout = self.item?.inLayoutTime, let superItem = inLayout.superItem else { fatalError(LayoutBlock.message(forNotActive: self)) }
 
         let source = constraints.lazy.filter { $0.isActive }.reduce(sourceRect) { (result, constraint) -> CGRect in
             let rect = constraint.isIndependent ? nil : completedRects.first { constraint.layoutItem(is: $0.0) }?.1
@@ -591,10 +603,14 @@ public struct LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     ///
     /// - Parameter snapshot: Snapshot represented as array of frames.
     func apply(snapshot: LayoutSnapshotProtocol) {
-        assert(isActive, "Layout block is not active, because layout item not available in:\n\(self)")
+        assert(isActive, LayoutBlock.message(forNotActive: self))
 
         item?.frame = snapshot.snapshotFrame
     }
+
+    private static func message(forSkipped block: LayoutBlock) -> String { return "Layout block was skipped, because layout item not available in: \(self)" }
+    private static func message(forNotActive block: LayoutBlock) -> String { return "Layout block is not active, because layout item not available in: \(self)" }
+    private static func message(forMutating block: LayoutBlock) -> String { return "Mutating layout block is available only on main thread \(self)" }
 }
 
 /// LayoutScheme defines layout process for some layout blocks.
@@ -668,13 +684,13 @@ public struct LayoutScheme: LayoutBlockProtocol {
         }, snapshotFrame: snapshotFrame)
     }
 
-    public mutating func addLayout(block: LayoutBlockProtocol) {
+    public mutating func insertLayout(block: LayoutBlockProtocol, to position: Int) {
         guard Thread.isMainThread else { fatalError("Mutating layout scheme is available only on main thread") }
 
-        blocks.append(block)
+        blocks.insert(block, at: position)
     }
 
-    mutating func removeInactiveBlocks() {
+    public mutating func removeInactiveBlocks() {
         guard Thread.isMainThread else { fatalError("Mutating layout scheme is available only on main thread") }
 
         blocks = blocks.filter { $0.isActive }

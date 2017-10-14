@@ -54,6 +54,8 @@ public class SecondViewController: UIViewController {
     let separator2Align = Layout.Alignment(horizontal: .left(25), vertical: .bottom())
 
     lazy var rainLabelReservedConstraint: MutableLayoutConstraint = self.distanceLabel.layoutConstraint(for: [self.topLimit, LayoutAnchor.Left.align(by: .outer)]).active(false)
+    lazy var presentationLabelBlock: LayoutBlock<UILabel> = self.presentationLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(50)),
+                                                                                               constraints: [self.nameLabel.layoutConstraint(for: [self.bottomLimit])])
 
     lazy var layoutScheme: LayoutScheme = {
 
@@ -81,9 +83,9 @@ public class SecondViewController: UIViewController {
                 self.titleLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(120)),
                                             constraints: [self.logoImageView.layoutConstraint(for: [self.bottomLimit])]),
                 self.nameLabel.layoutBlock(with: Layout(x: .center(), y: .center(20), width: .scaled(1), height: .fixed(30))),
-                self.presentationLabel.layoutBlock(with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(50)),
-                                                   constraints: [self.nameLabel.layoutConstraint(for: [self.bottomLimit])])])
+                self.presentationLabelBlock
             ])
+        ])
     }()
 
     var portraitSnapshot: LayoutSnapshotProtocol!
@@ -147,6 +149,11 @@ public class SecondViewController: UIViewController {
     public override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         separator1Layer?.removeFromSuperItem()
+        if !rainLabelReservedConstraint.isActive {
+            presentationLabelBlock.setLayout(Layout(x: .center(), y: .center(), width: .scaled(1), height: .scaled(1)))
+            presentationLabelBlock.setConstraints([presentationLabel.adjustLayoutConstraint(for: [.height()]),
+                                                   view.layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])])
+        }
         rainLabelReservedConstraint.isActive = true
     }
 }
