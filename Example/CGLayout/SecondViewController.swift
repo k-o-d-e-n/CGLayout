@@ -58,7 +58,6 @@ public class SecondViewController: UIViewController {
                                                                                                constraints: [self.nameLabel.layoutConstraint(for: [self.bottomLimit])])
 
     lazy var layoutScheme: LayoutScheme = {
-
         return LayoutScheme(blocks: [
             self.distanceLabel.layoutBlock(with: Layout(x: .center(), y: .bottom(50), width: .fixed(70), height: .fixed(30))),
             self.separator1Layer.layoutBlock(with: Layout(alignment: self.separator1Align, filling: self.separatorSize),

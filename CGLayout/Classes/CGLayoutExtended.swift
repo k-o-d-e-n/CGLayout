@@ -26,7 +26,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         didSet { superItem = ownerItem; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
-    var frame: CGRect { didSet { bounds = contentRect(forFrame: frame) } }
+    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } }
     open /// Internal coordinate space of layout entity
     var bounds: CGRect { didSet { layout() } }
     open /// Layout item that maintained this layout entity
@@ -869,5 +869,37 @@ extension StackLayoutGuide where Parent: CALayer {
     public func removeArrangedItem(_ item: CALayer) {
         guard removeItem(item), ownerItem === item.superItem else { return }
         item.removeFromSuperItem()
+    }
+}
+
+// MARK: ScrollLayoutGuide
+
+open class ScrollLayoutGuide<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
+    private var layout: LayoutBlock<Item>
+    var contentItem: Item // TODO: not necessary
+
+    public required init(layout: LayoutBlock<Item>) {
+        self.contentItem = layout.item!
+        self.layout = layout
+        super.init(frame: contentItem.frame)
+    }
+
+    override open func layout(in rect: CGRect) {
+        super.layout(in: rect)
+        layout.layout(in: rect) // TODO: Apply snapshot from contentRect calculation
+    }
+
+    open var contentOffset: CGPoint { set { bounds.origin = newValue } get { return bounds.origin } }
+    open var contentSize: CGSize { set { bounds.size = contentSize } get { return bounds.size } }
+
+    override open func contentRect(forFrame frame: CGRect) -> CGRect {
+        var contentRect = bounds
+        contentRect.size = layout.snapshot(for: frame).snapshotFrame.distanceFromOrigin // TODO: not correct
+        return contentRect
+    }
+}
+extension ScrollLayoutGuide where Item: AdjustableLayoutItem {
+    convenience public init(contentItem: Item) {
+        self.init(layout: contentItem.layoutBlock(with: Layout.equal, constraints: [contentItem.adjustLayoutConstraint(for: [.width(), .height()])]))
     }
 }
