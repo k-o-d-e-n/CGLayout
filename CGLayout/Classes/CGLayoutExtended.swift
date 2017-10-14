@@ -17,6 +17,7 @@ import Foundation
 /// If you use subclass LayoutGuide, that manages `LayoutItem` items, than you should use 
 /// `layout(in: frame)` method for apply layout, otherwise items will be have wrong position.
 open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
+    open var layoutFrame: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x + bounds.origin.x, y: frame.origin.y + bounds.origin.y), size: bounds.size) }
     public var inLayoutTime: InLayoutTimeItem { return self }
     public var superBounds: CGRect { return superItem!.bounds } // TODO: UIView ?
 
@@ -25,9 +26,9 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         didSet { superItem = ownerItem; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
-    var frame: CGRect
+    var frame: CGRect { didSet { bounds = contentRect(forFrame: frame) } }
     open /// Internal coordinate space of layout entity
-    var bounds: CGRect
+    var bounds: CGRect { didSet { layout() } }
     open /// Layout item that maintained this layout entity
     weak var superItem: LayoutItem?
     open /// Removes layout item from hierarchy
@@ -41,6 +42,16 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
     open func didAddToOwner() {
         // subclass override
     }
+
+    open func layout(in rect: CGRect) {
+        // subclass override
+    }
+
+    open func contentRect(forFrame frame: CGRect) -> CGRect {
+        return CGRect(origin: .zero, size: frame.size)
+    }
+
+    internal func layout() { layout(in: layoutFrame) }
 }
 #if os(iOS) || os(tvOS)
 public extension LayoutGuide where Super: UIView {
@@ -139,8 +150,9 @@ public extension LayoutGuide {
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
-    private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock(with: Layout.equal, constraints: [self.layoutConstraint(for: [LayoutAnchor.equal])])
+    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock(with: Layout.equal, constraints: [self.layoutConstraint(for: [LayoutAnchor.equal])])
     private weak var _item: Item?
+
     open weak var item: Item! {
         set { _item = newValue }
         get {
@@ -166,9 +178,9 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
         }
     }
 
-    open func layout() {
+    open override func layout(in rect: CGRect) {
         if isItemLoaded {
-            itemLayout.layout(in: frame)
+            itemLayout.layout(in: rect)
         }
     }
 }
@@ -699,26 +711,22 @@ open class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, A
 //            }
 //        }
     }
-    /// External representation of layout entity in coordinate space
-    open override var frame: CGRect {
-        set {
-            if newValue != frame {
-                super.frame = newValue
-                bounds = CGRect(origin: .zero, size: newValue.size)
-                /// uses frame because LayoutGuide is not container for items, if bounds has origin not zero (such as UIScrollView) or size need converting coordinates
-                scheme.layout(in: insetAnchor?.constrained(sourceRect: newValue, by: .zero) ?? newValue)
-            }
-        }
-        get { return super.frame }
-    }
-//    /// Internal coordinate space of layout entity
-//    public override var bounds: CGRect
 
     fileprivate func removeItem(_ item: LayoutItem) -> Bool {
         guard let index = items.index(where: { $0 === item }) else { return false }
         
         items.remove(at: index)
         return true
+    }
+
+    override open func layout(in rect: CGRect) {
+        super.layout(in: rect)
+        scheme.layout(in: rect)
+    }
+
+    open override func contentRect(forFrame frame: CGRect) -> CGRect {
+        let lFrame = super.contentRect(forFrame: frame)
+        return insetAnchor?.constrained(sourceRect: lFrame, by: .zero) ?? lFrame
     }
 
     open /// Asks the layout item to calculate and return the size that best fits the specified size
