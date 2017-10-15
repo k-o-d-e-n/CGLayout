@@ -69,14 +69,14 @@ class ViewController: UIViewController {
     lazy var labelStack: StackLayoutGuide<UIView> = {
         let stack = StackLayoutGuide<UIView>(frame: .zero)
         stack.scheme.axis = CGRect.verticalAxis
-        stack.scheme.distribution = .fromBottom(spacing: 2)
+        stack.scheme.distribution = .fromTop(spacing: 2)
         stack.scheme.filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .fixed(1)))
         stack.contentInsets.bottom = 2
 
         return stack
     }()
     lazy var scrollLayoutGuide: ScrollLayoutGuide<StackLayoutGuide<UIView>, UIView> = {
-        return ScrollLayoutGuide(contentItem: self.labelStack)
+        return ScrollLayoutGuide(contentItem: self.labelStack, direction: .vertical)
     }()
 
     lazy var latestItemLayout = Layout(vertical: (.top(10), .boxed(20)),
@@ -147,7 +147,6 @@ class ViewController: UIViewController {
         pulledLayout.apply(for: pulledView, use: [((topLayoutGuide as! UIView).frame, LayoutAnchor.Bottom.limit(on: .outer)), (labelPlaceholder.frame, LayoutAnchor.Left.limit(on: .outer)),
                                                   (subviews[1].frame, LayoutAnchor.Left.limit(on: .outer)), (subviews.first!.frame, topConstraint)])
         Layout.equal.apply(for: stackLayoutGuide)
-//        Layout.equal.apply(for: labelStack)
 
         let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(20), height: .fixed(30)),
                                  constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])])
@@ -162,7 +161,7 @@ class ViewController: UIViewController {
         subviewScheme.apply(snapshot: snapshotSubview)
 
         scrollLayoutGuide.layoutBlock(with: Layout.equal,
-                                      constraints: [pulledView.layoutConstraint(for: [LayoutAnchor.Size.height(0.4), LayoutAnchor.Size.width()])]).layout()
+                                      constraints: [pulledView.layoutConstraint(for: [LayoutAnchor.Size.height(), LayoutAnchor.Size.width()])]).layout()
         pulledView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
     }
 
@@ -173,12 +172,10 @@ class ViewController: UIViewController {
         if recognizer.state == .began {
             start = scrollLayoutGuide.contentOffset
             position = start
-        } else if recognizer.state == .ended {
-            start = .zero
-            position = .zero
         } else {
-            position = CGPoint(x: start.x + translation.x, y: start.y + translation.y)
+            position = CGPoint(x: start.x - translation.x, y: start.y - translation.y)
         }
+
         scrollLayoutGuide.contentOffset = position
     }
 

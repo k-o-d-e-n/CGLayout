@@ -199,7 +199,7 @@ public protocol InLayoutTimeItem: RectBasedItem {
 }
 #if os(iOS) || os(tvOS)
 extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
-    public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) }
+    public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) } // TODO: For UILabel need calculate through .boundingRect function
     public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
     /// Layout item that maintained this layout entity
     public weak var superItem: LayoutItem? { return superview }

@@ -18,6 +18,11 @@ internal func printWarning(_ message: String) {
     public typealias EdgeInsets = UIEdgeInsets
 #endif
 
+extension CGPoint {
+    func positive() -> CGPoint { return CGPoint(x: abs(x), y: abs(y)) }
+    func negated() -> CGPoint { return CGPoint(x: x.negated(), y: y.negated()) }
+}
+
 extension CGRect {
     var left: CGFloat { return minX }
     var right: CGFloat { return maxX }
@@ -25,6 +30,7 @@ extension CGRect {
     var bottom: CGFloat { return maxY }
     
     var distanceFromOrigin: CGSize { return CGSize(width: maxX, height: maxY) }
+    func distance(from point: CGPoint) -> CGSize { return CGSize(width: maxX - point.x, height: maxY - point.y) }
 }
 extension CGRect {
     mutating func apply(edgeInsets: EdgeInsets) {

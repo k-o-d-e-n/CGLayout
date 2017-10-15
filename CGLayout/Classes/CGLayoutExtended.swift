@@ -670,7 +670,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         var snapshotFrame: CGRect!
         let subItems = items()
         var iterator = subItems.makeIterator()
-        let frames = distribution.distribute(rects: items().map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) },
+        let frames = distribution.distribute(rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) },
                                              in: sourceRect,
                                              iterator: {
                                                 completedRects.insert((iterator.next()!, $0), at: 0)
@@ -875,31 +875,55 @@ extension StackLayoutGuide where Parent: CALayer {
 // MARK: ScrollLayoutGuide
 
 open class ScrollLayoutGuide<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
-    private var layout: LayoutBlock<Item>
-    var contentItem: Item // TODO: not necessary
+    private var layout: LayoutBlockProtocol
 
-    public required init(layout: LayoutBlock<Item>) {
-        self.contentItem = layout.item!
+    public required init(layout: LayoutBlockProtocol) {
         self.layout = layout
-        super.init(frame: contentItem.frame)
+        super.init(frame: .zero)
     }
 
     override open func layout(in rect: CGRect) {
         super.layout(in: rect)
-        layout.layout(in: rect) // TODO: Apply snapshot from contentRect calculation
+        layout.layout(in: rect)
     }
 
-    open var contentOffset: CGPoint { set { bounds.origin = newValue } get { return bounds.origin } }
+    open var contentOffset: CGPoint { set { bounds.origin = newValue.negated() } get { return bounds.origin.negated() } }
     open var contentSize: CGSize { set { bounds.size = contentSize } get { return bounds.size } }
 
     override open func contentRect(forFrame frame: CGRect) -> CGRect {
         var contentRect = bounds
-        contentRect.size = layout.snapshot(for: frame).snapshotFrame.distanceFromOrigin // TODO: not correct
+        let lFrame = layoutFrame
+        let snapshotFrame = CGRect(x: lFrame.origin.x, y: lFrame.origin.y, width: max(contentRect.width, frame.width), height: max(contentRect.height, frame.height))
+        contentRect.size = layout.snapshot(for: snapshotFrame).snapshotFrame.distance(from: frame.origin)
         return contentRect
     }
 }
-extension ScrollLayoutGuide where Item: AdjustableLayoutItem {
-    convenience public init(contentItem: Item) {
-        self.init(layout: contentItem.layoutBlock(with: Layout.equal, constraints: [contentItem.adjustLayoutConstraint(for: [.width(), .height()])]))
+public extension ScrollLayoutGuide where Item: AdjustableLayoutItem {
+    public convenience init(contentItem: Item, direction: ScrollDirection) {
+        self.init(layout: contentItem.layoutBlock(with: Layout.equal, constraints: [contentItem.adjustLayoutConstraint(for: direction.constraints)]))
     }
+}
+public struct ScrollDirection: OptionSet {
+    public
+    var rawValue: Int
+    public
+    init(rawValue: Int) {
+        switch rawValue {
+        case 1: self = .horizontal
+        case 2: self = .vertical
+        default:
+            self = .both
+        }
+    }
+    
+    let constraints: [LayoutAnchor.Size]
+
+    init(constraints: [LayoutAnchor.Size], rawValue: Int) {
+        self.constraints = constraints
+        self.rawValue = rawValue
+    }
+
+    public static var horizontal: ScrollDirection = ScrollDirection(constraints: [.width()], rawValue: 1)
+    public static var vertical: ScrollDirection = ScrollDirection(constraints: [.height()], rawValue: 2)
+    public static var both: ScrollDirection = ScrollDirection(constraints: [.height(), .width()], rawValue: 0)
 }
