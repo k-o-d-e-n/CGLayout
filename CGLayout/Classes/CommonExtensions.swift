@@ -14,7 +14,7 @@ internal func warning(_ isTruth: Bool, _ message: String) {
 
 internal func debugAction(_ action: () -> Void) {
     #if DEBUG
-        debugPrint("CGLayout warning: \(message)")
+        action()
     #endif
 }
 

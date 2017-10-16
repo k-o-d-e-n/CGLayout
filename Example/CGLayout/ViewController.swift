@@ -146,7 +146,7 @@ class ViewController: UIViewController {
         Layout.equal.apply(for: stackLayoutGuide)
 
         let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(20), height: .fixed(30)),
-                                 constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])])
+                                                          constraints: [subviews[7].layoutConstraint(for: [LayoutAnchor.Center.align(by: .center)])])
 
         // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space. 
         navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.layoutConstraint(for: [LayoutAnchor.equal])]).layout()
@@ -154,7 +154,7 @@ class ViewController: UIViewController {
         let subviewLayout = subview.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(50), height: .fixed(1)),
                             constraints: [centeredView.layoutConstraint(for: [LayoutAnchor.equal])])
         let subviewScheme = LayoutScheme(blocks: [centeredViewLayout, subviewLayout])
-        let snapshotSubview = subviewScheme.snapshot(for: view.bounds)
+        let snapshotSubview = subviewScheme.snapshot(for: view.bounds, constrainRects: [(subviews[7], subviews[7].frame)]) /// example use constrain rects 
         subviewScheme.apply(snapshot: snapshotSubview)
 
         scrollLayoutGuide.layoutBlock(with: Layout.equal,

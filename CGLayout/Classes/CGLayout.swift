@@ -500,16 +500,16 @@ public protocol LayoutBlockProtocol {
     /// Returns snapshot for all `LayoutItem` items in block. Attention: in during calculating snapshot frames of layout items must not changed. 
     ///
     /// - Parameter sourceRect: Source space for layout
-    /// - Returns: Snapshot contained frames layout items
+    /// - Returns: Snapshot that contains frames layout items
     func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol
 
-    /// Method for perform layout calculation in child blocks. Does not call this method directly outside `LayoutBlockProtocol` object.
-    /// Layout block should be insert contained `LayoutItem` items to completedRects
+    /// Returns snapshot for all `LayoutItem` items in block. Does not call this method directly outside `LayoutBlockProtocol` object.
+    /// Method implementation should operate `completedRects` with all `LayoutItem` items, that has been used to constrain this and child blocks.
     ///
     /// - Parameters:
-    ///   - sourceRect: Source space for layout. For not top level blocks rect should be define available bounds of block
+    ///   - sourceRect: Source space for layout. For not top level blocks rect should define the available bounds of block
     ///   - completedRects: `LayoutItem` items with corrected frame
-    /// - Returns: Frame of this block
+    /// - Returns: Snapshot that contains frames layout items
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol
 
     /// Applying frames from snapshot to `LayoutItem` items in this block. 
@@ -517,6 +517,20 @@ public protocol LayoutBlockProtocol {
     ///
     /// - Parameter snapshot: Snapshot represented as array of frames.
     func apply(snapshot: LayoutSnapshotProtocol)
+}
+public extension LayoutBlockProtocol {
+    /// Returns snapshot for all `LayoutItem` items in block. 
+    /// Use this method when you need to get snapshot for block, that has been constrained by `LayoutItem` items, that is not included to this block.
+    /// For example: block constrained by super item and you need to get size of block.
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space for layout.
+    ///   - constrainRects: `LayoutItem` items, that not included to block, but use for constraining.
+    /// - Returns: Snapshot that contains frames layout items
+    func snapshot(for sourceRect: CGRect, constrainRects: [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
+        var completedRects = constrainRects
+        return snapshot(for: sourceRect, completedRects: &completedRects)
+    }
 }
 
 /// Makes full layout for `LayoutItem` entity. Contains main layout, related anchor constrains and item for layout.
