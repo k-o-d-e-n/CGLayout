@@ -1752,8 +1752,8 @@ public struct Layout: RectBasedLayout {
             horizontal.formLayout(rect: &rect, in: source)
         }
 
-        public static func trailing(by axis: RectAxis, offset: CGFloat = 0) -> RectBasedLayout { return AxisTrailing(offset: offset, axis: axis) }
-        struct AxisTrailing: RectBasedLayout, RectAxisLayout {
+        internal static func trailing(by axis: RectAxis, offset: CGFloat = 0) -> RectAxisLayout { return AxisTrailing(offset: offset, axis: axis) }
+        struct AxisTrailing: RectAxisLayout {
             let offset: CGFloat
             let axis: RectAxis
             func formLayout(rect: inout CGRect, in source: CGRect) {
@@ -1762,8 +1762,8 @@ public struct Layout: RectBasedLayout {
 
             func by(axis: RectAxis) -> AxisTrailing { return AxisTrailing(offset: offset, axis: axis) }
         }
-        public static func leading(by axis: RectAxis, offset: CGFloat = 0) -> RectBasedLayout { return AxisLeading(offset: offset, axis: axis) }
-        struct AxisLeading: RectBasedLayout, RectAxisLayout {
+        internal static func leading(by axis: RectAxis, offset: CGFloat = 0) -> RectAxisLayout { return AxisLeading(offset: offset, axis: axis) }
+        struct AxisLeading: RectAxisLayout {
             let offset: CGFloat
             let axis: RectAxis
             func formLayout(rect: inout CGRect, in source: CGRect) {
@@ -1772,8 +1772,8 @@ public struct Layout: RectBasedLayout {
 
             func by(axis: RectAxis) -> AxisLeading { return AxisLeading(offset: offset, axis: axis) }
         }
-        public static func center(by axis: RectAxis, offset: CGFloat = 0) -> RectBasedLayout { return AxisCenter(offset: offset, axis: axis) }
-        struct AxisCenter: RectBasedLayout, RectAxisLayout {
+        internal static func center(by axis: RectAxis, offset: CGFloat = 0) -> RectAxisLayout { return AxisCenter(offset: offset, axis: axis) }
+        struct AxisCenter: RectAxisLayout {
             let offset: CGFloat
             let axis: RectAxis
             func formLayout(rect: inout CGRect, in source: CGRect) {

@@ -9,10 +9,11 @@ import Foundation
 
 // MARK: Protocols
 
-internal protocol RectAxisLayout: RectBasedLayout {
+internal protocol AxisEntity {
     var axis: RectAxis { get }
     func by(axis: RectAxis) -> Self
 }
+internal protocol RectAxisLayout: RectBasedLayout, AxisEntity {}
 
 // MARK: Implementations
 

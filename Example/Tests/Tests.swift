@@ -720,7 +720,7 @@ extension Tests {
 extension Tests {
     func testLayoutDistribution() {
         let frames = (0..<5).map { _ in CGRect.random(in: bounds) }
-        let distribution = LayoutDistribution.fromBottom(spacing: 2)
+        let distribution = LayoutDistribution.fromTrailing(by: _RectAxis.vertical, spacing: 2)
 
         var previous: CGRect?
         let distributedFrames = distribution.distribute(rects: frames, in: bounds, iterator: {_ in})

@@ -364,45 +364,10 @@ struct LayoutDistribution: RectBasedDistribution {
         return base.distribute(rects: rects, in: sourceRect, iterator: iterator)
     }
 
-    static func fromLeft(spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromSide.left(spacing)) }
-    static func fromRight(spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromSide.right(spacing)) }
-    static func fromTop(spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromSide.top(spacing)) }
-    static func fromBottom(spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromSide.bottom(spacing)) }
-    private struct FromSide: RectBasedDistribution {
-        let anchor: RectBasedConstraint
-        let firstAlignment: RectBasedLayout
-        let alignment: RectBasedLayout
-
-        static func left(_ space: CGFloat) -> FromSide { return FromSide(anchor: LayoutAnchor.Right.align(by: .outer),
-                                                                         firstAlignment: Layout.Alignment.Horizontal.left(),
-                                                                         alignment: Layout.Alignment.Horizontal.left(space)) }
-        static func right(_ space: CGFloat) -> FromSide { return FromSide(anchor: LayoutAnchor.Left.align(by: .outer),
-                                                                          firstAlignment: Layout.Alignment.Horizontal.right(),
-                                                                          alignment: Layout.Alignment.Horizontal.right(space)) }
-        static func top(_ space: CGFloat) -> FromSide { return FromSide(anchor: LayoutAnchor.Bottom.align(by: .outer),
-                                                                        firstAlignment: Layout.Alignment.Vertical.top(),
-                                                                        alignment: Layout.Alignment.Vertical.top(space)) }
-        static func bottom(_ space: CGFloat) -> FromSide { return FromSide(anchor: LayoutAnchor.Top.align(by: .outer),
-                                                                           firstAlignment: Layout.Alignment.Vertical.bottom(),
-                                                                           alignment: Layout.Alignment.Vertical.bottom(space)) }
-
-        func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect] {
-            var previous: CGRect?
-            return rects.map { frame in
-                var frame = frame
-                if let previous = previous {
-                    alignment.formLayout(rect: &frame, in: sourceRect.constrainedBy(rect: previous, use: anchor))
-                } else {
-                    firstAlignment.formLayout(rect: &frame, in: sourceRect)
-                }
-                iterator(frame)
-                previous = frame
-                return frame
-            }
-        }
-    }
     static func fromLeading(by axis: RectAxis, spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromLeading(axis: axis, spacing: spacing)) }
-    private struct FromLeading: RectBasedDistribution {
+    fileprivate struct FromLeading: RectBasedDistribution, AxisEntity {
+        func by(axis: RectAxis) -> LayoutDistribution.FromLeading { return .init(axis: axis, spacing: spacing) }
+
         let axis: RectAxis
         let spacing: CGFloat
 
@@ -411,7 +376,9 @@ struct LayoutDistribution: RectBasedDistribution {
         }
     }
     static func fromTrailing(by axis: RectAxis, spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromTrailing(axis: axis, spacing: spacing)) }
-    private struct FromTrailing: RectBasedDistribution {
+    fileprivate struct FromTrailing: RectBasedDistribution, AxisEntity {
+        func by(axis: RectAxis) -> LayoutDistribution.FromTrailing { return .init(axis: axis, spacing: spacing) }
+
         let axis: RectAxis
         let spacing: CGFloat
 
@@ -420,12 +387,14 @@ struct LayoutDistribution: RectBasedDistribution {
         }
     }
 
-    static func fromCenter(baseDistribution: RectBasedDistribution, axis: RectAxis) -> LayoutDistribution {
-        return LayoutDistribution(base: FromCenter(baseDistribution: baseDistribution, axis: axis))
+    static func fromCenter(baseDistribution: RectBasedDistribution & AxisEntity) -> LayoutDistribution {
+        return LayoutDistribution(base: FromCenter(baseDistribution: baseDistribution))
     }
-    private struct FromCenter: RectBasedDistribution {
-        let baseDistribution: RectBasedDistribution
-        let axis: RectAxis
+    fileprivate struct FromCenter: RectBasedDistribution, AxisEntity {
+        func by(axis: RectAxis) -> LayoutDistribution.FromCenter { return .init(baseDistribution: baseDistribution) }
+        let baseDistribution: RectBasedDistribution & AxisEntity
+        var axis: RectAxis { return baseDistribution.axis }
+
         func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect] {
             let frames = baseDistribution.distribute(rects: rects, in: sourceRect, iterator: {_ in})
             let offset = axis.get(midOf: sourceRect) - (((axis.get(maxOf: frames.last!) - axis.get(minOf: frames.first!)) / 2) + axis.get(minOf: frames.first!))
@@ -436,9 +405,11 @@ struct LayoutDistribution: RectBasedDistribution {
                 return offsetRect
             }
         }
+
     }
     static func equalSpacing(axis: RectAxis) -> LayoutDistribution { return LayoutDistribution(base: EqualSpacing(axis: axis)) }
-    private struct EqualSpacing: RectBasedDistribution {
+    fileprivate struct EqualSpacing: RectBasedDistribution, AxisEntity {
+        func by(axis: RectAxis) -> LayoutDistribution.EqualSpacing { return .init(axis: axis) }
         let axis: RectAxis
 
         func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect] {
@@ -491,49 +462,27 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         case horizontal, vertical
     }
 
-    public struct Distribution: RectBasedDistribution {
-        private let base: LayoutDistribution
-        fileprivate let axis: Axis
+    public struct Distribution: RectBasedDistribution, AxisEntity {
+        func by(axis: RectAxis) -> StackLayoutScheme.Distribution { return .init(base: base.by(axis: axis)) }
+
+        private let base: RectBasedDistribution & AxisEntity
+        internal var axis: RectAxis { return base.axis }
 
         @discardableResult
         func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void = {_ in}) -> [CGRect] {
             return base.distribute(rects: rects, in: sourceRect, iterator: iterator)
         }
 
-//        public static func fromLeft(spacing: CGFloat) -> Distribution { return Distribution(base: .fromLeft(spacing: spacing), axis: .horizontal) }
-//        public static func fromRight(spacing: CGFloat) -> Distribution { return Distribution(base: .fromRight(spacing: spacing), axis: .horizontal) }
-//        public static func fromTop(spacing: CGFloat) -> Distribution { return Distribution(base: .fromTop(spacing: spacing), axis: .vertical) }
-//        public static func fromBottom(spacing: CGFloat) -> Distribution { return Distribution(base: .fromBottom(spacing: spacing), axis: .vertical) }
-        public static func fromLeft(spacing: CGFloat) -> Distribution { return Distribution(base: .fromLeading(by: CGRect.horizontalAxis, spacing: spacing), axis: .horizontal) }
-        public static func fromRight(spacing: CGFloat) -> Distribution { return Distribution(base: .fromTrailing(by: CGRect.horizontalAxis, spacing: spacing), axis: .horizontal) }
-        public static func fromTop(spacing: CGFloat) -> Distribution { return Distribution(base: .fromLeading(by: CGRect.verticalAxis, spacing: spacing), axis: .vertical) }
-        public static func fromBottom(spacing: CGFloat) -> Distribution { return Distribution(base: .fromTrailing(by: CGRect.verticalAxis, spacing: spacing), axis: .vertical) }
-        public static func fromVerticalCenter(spacing: CGFloat) -> Distribution { return Distribution(base: .fromCenter(baseDistribution: LayoutDistribution.fromTop(spacing: spacing),
-                                                                                                                        axis: CGRect.verticalAxis), axis: .vertical) }
-        public static func fromHorizontalCenter(spacing: CGFloat) -> Distribution { return Distribution(base: .fromCenter(baseDistribution: LayoutDistribution.fromLeft(spacing: spacing),
-                                                                                                                          axis: CGRect.horizontalAxis), axis: .horizontal) }
-        public static func equalSpacingHorizontal() -> Distribution { return Distribution(base: .equalSpacing(axis: CGRect.horizontalAxis), axis: .horizontal) }
-        public static func equalSpacingVertical() -> Distribution { return Distribution(base: .equalSpacing(axis: CGRect.verticalAxis), axis: .vertical) }
+        public static func fromLeft(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromLeading(axis: _RectAxis.horizontal, spacing: spacing)) }
+        public static func fromRight(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromTrailing(axis: _RectAxis.horizontal, spacing: spacing)) }
+        public static func fromTop(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromLeading(axis: _RectAxis.vertical, spacing: spacing)) }
+        public static func fromBottom(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromTrailing(axis: _RectAxis.vertical, spacing: spacing)) }
+        public static func fromVerticalCenter(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromCenter(baseDistribution: LayoutDistribution.FromLeading(axis: _RectAxis.vertical, spacing: spacing))) }
+        public static func fromHorizontalCenter(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromCenter(baseDistribution: LayoutDistribution.FromLeading(axis: _RectAxis.horizontal, spacing: spacing))) }
+        public static func equalSpacingHorizontal() -> Distribution { return Distribution(base: LayoutDistribution.EqualSpacing(axis: _RectAxis.horizontal)) }
+        public static func equalSpacingVertical() -> Distribution { return Distribution(base: LayoutDistribution.EqualSpacing(axis: _RectAxis.vertical)) }
     }
-    public struct Alignment: RectBasedLayout {
-        private let horizontal: RectBasedLayout
-        private let vertical: RectBasedLayout
-        fileprivate var axis: Axis
-
-        public static func leading(_ offset: CGFloat = 0) -> Alignment { return Alignment(horizontal: Layout.Alignment.Horizontal.leading(offset), vertical: Layout.Alignment.Vertical.top(offset), axis: .horizontal) }
-        public static func trailing(_ offset: CGFloat = 0) -> Alignment { return Alignment(horizontal: Layout.Alignment.Horizontal.trailing(offset), vertical: Layout.Alignment.Vertical.bottom(offset), axis: .horizontal) }
-        public static func center(_ offset: CGFloat = 0) -> Alignment { return Alignment(horizontal: Layout.Alignment.Horizontal.center(offset), vertical: Layout.Alignment.Vertical.center(offset), axis: .horizontal) }
-
-        public func formLayout(rect: inout CGRect, in source: CGRect) {
-            switch axis {
-            case .vertical:
-                horizontal.formLayout(rect: &rect, in: source)
-            case .horizontal:
-                vertical.formLayout(rect: &rect, in: source)
-            }
-        }
-    }
-    public struct _Alignment: RectBasedLayout, RectAxisLayout {
+    public struct Alignment: RectAxisLayout {
         let layout: RectAxisLayout
         var axis: RectAxis { return layout.axis }
 
@@ -544,15 +493,15 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             self.layout = layout
         }
 
-        public static func leading(_ offset: CGFloat = 0) -> _Alignment { return _Alignment(Layout.Alignment.leading(by: CGRect.horizontalAxis, offset: offset) as! RectAxisLayout) }
-        public static func trailing(_ offset: CGFloat = 0) -> _Alignment { return _Alignment(Layout.Alignment.trailing(by: CGRect.horizontalAxis, offset: offset) as! RectAxisLayout) }
-        public static func center(_ offset: CGFloat = 0) -> _Alignment { return _Alignment(Layout.Alignment.center(by: CGRect.horizontalAxis, offset: offset) as! RectAxisLayout) }
+        public static func leading(_ offset: CGFloat = 0) -> Alignment { return Alignment(Layout.Alignment.leading(by: _RectAxis.vertical, offset: offset)) }
+        public static func trailing(_ offset: CGFloat = 0) -> Alignment { return Alignment(Layout.Alignment.trailing(by: _RectAxis.vertical, offset: offset)) }
+        public static func center(_ offset: CGFloat = 0) -> Alignment { return Alignment(Layout.Alignment.center(by: _RectAxis.vertical, offset: offset)) }
 
         public func formLayout(rect: inout CGRect, in source: CGRect) {
             layout.formLayout(rect: &rect, in: source)
         }
 
-        func by(axis: RectAxis) -> StackLayoutScheme._Alignment {
+        func by(axis: RectAxis) -> StackLayoutScheme.Alignment {
             let l = layout.by(axis: axis)
             return .init(l)
         }
@@ -577,21 +526,14 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }
     }
 
-    public var axis: RectAxis = CGRect.horizontalAxis {
-        didSet {
-            alignment = alignment.by(axis: axis.invertedIn2D())
-        }
-    }
+    public var axis: RectAxis { return distribution.axis }
     public var distribution: Distribution = .fromLeft(spacing: 0) {
-        didSet { // TODO: a lot of unnecessary actions with axis
-            axis = distribution.axis == .horizontal ? CGRect.horizontalAxis : CGRect.verticalAxis
-//            if distribution.axis != alignment.axis {
-//                alignment.axis = distribution.axis
-//            }
-        }
+        didSet { _alignment = alignment.by(axis: axis.invertedIn2D()) }
     }
-    public var alignment: _Alignment = .leading(0) {
-        didSet { alignment = alignment.by(axis: axis.invertedIn2D()) }
+    private var _alignment: Alignment = .leading()
+    public var alignment: Alignment {
+        set { _alignment = newValue.by(axis: axis.invertedIn2D()) }
+        get { return _alignment }
     }
     public var filling: Filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .scaled(1)))
 
