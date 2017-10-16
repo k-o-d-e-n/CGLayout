@@ -579,7 +579,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 
     public var axis: RectAxis = CGRect.horizontalAxis {
         didSet {
-            alignment = alignment.by(axis: axis is _RectAxis.Horizontal ? CGRect.verticalAxis : CGRect.horizontalAxis)
+            alignment = alignment.by(axis: axis.invertedIn2D())
         }
     }
     public var distribution: Distribution = .fromLeft(spacing: 0) {
@@ -591,7 +591,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }
     }
     public var alignment: _Alignment = .leading(0) {
-        didSet { alignment = alignment.by(axis: axis is _RectAxis.Horizontal ? CGRect.verticalAxis : CGRect.horizontalAxis) }//if alignment.axis != distribution.axis { alignment.axis = distribution.axis } }
+        didSet { alignment = alignment.by(axis: axis.invertedIn2D()) }
     }
     public var filling: Filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .scaled(1)))
 
@@ -606,12 +606,12 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 
     public /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol {
-        var snapshotFrame: CGRect!
+        var snapshotFrame: CGRect?
         return LayoutSnapshot(childSnapshots: items().map { block in
             let blockFrame = block.frame
             snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
             return blockFrame
-        }, snapshotFrame: snapshotFrame)
+        }, snapshotFrame: snapshotFrame ?? .zero)
     }
 
     public /// Calculate and apply frames layout items.
@@ -667,8 +667,8 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     ///   - completedRects: `LayoutItem` items with corrected frame
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
-        var snapshotFrame: CGRect!
         let subItems = items()
+        var snapshotFrame: CGRect?
         var iterator = subItems.makeIterator()
         let frames = distribution.distribute(rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) },
                                              in: sourceRect,
@@ -677,7 +677,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
                                                 snapshotFrame = snapshotFrame?.union($0) ?? $0
 
         })
-        return LayoutSnapshot(childSnapshots: frames, snapshotFrame: snapshotFrame)
+        return LayoutSnapshot(childSnapshots: frames, snapshotFrame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
     }
 }
 
