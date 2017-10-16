@@ -20,6 +20,7 @@ import Cocoa
 // TODO: !!! Resolve problem with create offset for adjusted views.
 // TODO: ! Add CGRect.integral
 // TODO: !! Add implementation description variables if needed
+// TODO: ! Move reduce to inout with swift 4
 
 // TODO: !!! Tests for new code
 
@@ -589,6 +590,9 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
 
         let source = constraints.lazy.filter { $0.isActive }.reduce(sourceRect) { (result, constraint) -> CGRect in
             let rect = constraint.isIndependent ? nil : completedRects.first { constraint.layoutItem(is: $0.0) }?.1
+
+            warning(!constraint.isIndependent && rect == nil, "Constraint operates with not actual frame of item: \(constraint)")
+
             let constrainRect = rect.map { constraint.convert(rectIfNeeded: $0, to: superItem) } /// converts rect to current coordinate space if needed
                 ?? constraint.constrainRect(for: result, in: superItem)
             return result.constrainedBy(rect: constrainRect, use: constraint)

@@ -8,6 +8,16 @@
 
 import Foundation
 
+internal func warning(_ isTruth: Bool, _ message: String) {
+    debugAction { if isTruth { printWarning(message) } }
+}
+
+internal func debugAction(_ action: () -> Void) {
+    #if DEBUG
+        debugPrint("CGLayout warning: \(message)")
+    #endif
+}
+
 internal func printWarning(_ message: String) {
     #if DEBUG
         debugPrint("CGLayout warning: \(message)")
