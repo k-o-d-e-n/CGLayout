@@ -17,6 +17,7 @@ import Foundation
 /// If you use subclass LayoutGuide, that manages `LayoutItem` items, than you should use 
 /// `layout(in: frame)` method for apply layout, otherwise items will be have wrong position.
 open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
+    open var layoutFrame: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x + bounds.origin.x, y: frame.origin.y + bounds.origin.y), size: bounds.size) }
     public var inLayoutTime: InLayoutTimeItem { return self }
     public var superBounds: CGRect { return superItem!.bounds } // TODO: UIView ?
 
@@ -25,9 +26,9 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         didSet { superItem = ownerItem; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
-    var frame: CGRect
+    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } }
     open /// Internal coordinate space of layout entity
-    var bounds: CGRect
+    var bounds: CGRect { didSet { layout() } }
     open /// Layout item that maintained this layout entity
     weak var superItem: LayoutItem?
     open /// Removes layout item from hierarchy
@@ -41,6 +42,16 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
     open func didAddToOwner() {
         // subclass override
     }
+
+    open func layout(in rect: CGRect) {
+        // subclass override
+    }
+
+    open func contentRect(forFrame frame: CGRect) -> CGRect {
+        return CGRect(origin: .zero, size: frame.size)
+    }
+
+    internal func layout() { layout(in: layoutFrame) }
 }
 #if os(iOS) || os(tvOS)
 public extension LayoutGuide where Super: UIView {
@@ -139,8 +150,9 @@ public extension LayoutGuide {
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
-    private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock(with: Layout.equal, constraints: [self.layoutConstraint(for: [LayoutAnchor.equal])])
+    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock(with: Layout.equal, constraints: [self.layoutConstraint(for: [LayoutAnchor.equal])])
     private weak var _item: Item?
+
     open weak var item: Item! {
         set { _item = newValue }
         get {
@@ -166,9 +178,9 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
         }
     }
 
-    open func layout() {
+    open override func layout(in rect: CGRect) {
         if isItemLoaded {
-            itemLayout.layout(in: frame)
+            itemLayout.layout(in: rect)
         }
     }
 }
@@ -253,6 +265,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
         self.constrainRect = constrainRect
     }
 
+    public var isActive: Bool { return true }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     public var isIndependent: Bool { return true }
 
@@ -471,6 +484,8 @@ extension Layout.Filling: StackLayoutFilling {
 
 // TODO: StackLayoutScheme lost multihierarchy layout. Research this. // Comment: Probably would be not available.
 public struct StackLayoutScheme: LayoutBlockProtocol {
+    public var isActive: Bool { return true }
+
     private var items: () -> [LayoutItem]
     fileprivate enum Axis {
         case horizontal, vertical
@@ -564,7 +579,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 
     public var axis: RectAxis = CGRect.horizontalAxis {
         didSet {
-            alignment = alignment.by(axis: axis is _RectAxis.Horizontal ? CGRect.verticalAxis : CGRect.horizontalAxis)
+            alignment = alignment.by(axis: axis.invertedIn2D())
         }
     }
     public var distribution: Distribution = .fromLeft(spacing: 0) {
@@ -576,7 +591,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }
     }
     public var alignment: _Alignment = .leading(0) {
-        didSet { alignment = alignment.by(axis: axis is _RectAxis.Horizontal ? CGRect.verticalAxis : CGRect.horizontalAxis) }//if alignment.axis != distribution.axis { alignment.axis = distribution.axis } }
+        didSet { alignment = alignment.by(axis: axis.invertedIn2D()) }
     }
     public var filling: Filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .scaled(1)))
 
@@ -591,12 +606,12 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 
     public /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol {
-        var snapshotFrame: CGRect!
+        var snapshotFrame: CGRect?
         return LayoutSnapshot(childSnapshots: items().map { block in
             let blockFrame = block.frame
             snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
             return blockFrame
-        }, snapshotFrame: snapshotFrame)
+        }, snapshotFrame: snapshotFrame ?? .zero)
     }
 
     public /// Calculate and apply frames layout items.
@@ -652,17 +667,17 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     ///   - completedRects: `LayoutItem` items with corrected frame
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
-        var snapshotFrame: CGRect!
         let subItems = items()
+        var snapshotFrame: CGRect?
         var iterator = subItems.makeIterator()
-        let frames = distribution.distribute(rects: items().map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) },
+        let frames = distribution.distribute(rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) },
                                              in: sourceRect,
                                              iterator: {
                                                 completedRects.insert((iterator.next()!, $0), at: 0)
                                                 snapshotFrame = snapshotFrame?.union($0) ?? $0
 
         })
-        return LayoutSnapshot(childSnapshots: frames, snapshotFrame: snapshotFrame)
+        return LayoutSnapshot(childSnapshots: frames, snapshotFrame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
     }
 }
 
@@ -696,26 +711,22 @@ open class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, A
 //            }
 //        }
     }
-    /// External representation of layout entity in coordinate space
-    open override var frame: CGRect {
-        set {
-            if newValue != frame {
-                super.frame = newValue
-                bounds = CGRect(origin: .zero, size: newValue.size)
-                /// uses frame because LayoutGuide is not container for items, if bounds has origin not zero (such as UIScrollView) or size need converting coordinates
-                scheme.layout(in: insetAnchor?.constrained(sourceRect: newValue, by: .zero) ?? newValue)
-            }
-        }
-        get { return super.frame }
-    }
-//    /// Internal coordinate space of layout entity
-//    public override var bounds: CGRect
 
     fileprivate func removeItem(_ item: LayoutItem) -> Bool {
         guard let index = items.index(where: { $0 === item }) else { return false }
         
         items.remove(at: index)
         return true
+    }
+
+    override open func layout(in rect: CGRect) {
+        super.layout(in: rect)
+        scheme.layout(in: rect)
+    }
+
+    open override func contentRect(forFrame frame: CGRect) -> CGRect {
+        let lFrame = super.contentRect(forFrame: frame)
+        return insetAnchor?.constrained(sourceRect: lFrame, by: .zero) ?? lFrame
     }
 
     open /// Asks the layout item to calculate and return the size that best fits the specified size
@@ -859,4 +870,60 @@ extension StackLayoutGuide where Parent: CALayer {
         guard removeItem(item), ownerItem === item.superItem else { return }
         item.removeFromSuperItem()
     }
+}
+
+// MARK: ScrollLayoutGuide
+
+open class ScrollLayoutGuide<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
+    private var layout: LayoutBlockProtocol
+
+    public required init(layout: LayoutBlockProtocol) {
+        self.layout = layout
+        super.init(frame: .zero)
+    }
+
+    override open func layout(in rect: CGRect) {
+        super.layout(in: rect)
+        layout.layout(in: rect)
+    }
+
+    open var contentOffset: CGPoint { set { bounds.origin = newValue.negated() } get { return bounds.origin.negated() } }
+    open var contentSize: CGSize { set { bounds.size = contentSize } get { return bounds.size } }
+
+    override open func contentRect(forFrame frame: CGRect) -> CGRect {
+        var contentRect = bounds
+        let lFrame = layoutFrame
+        let snapshotFrame = CGRect(x: lFrame.origin.x, y: lFrame.origin.y, width: max(contentRect.width, frame.width), height: max(contentRect.height, frame.height))
+        contentRect.size = layout.snapshot(for: snapshotFrame).snapshotFrame.distance(from: frame.origin)
+        return contentRect
+    }
+}
+public extension ScrollLayoutGuide where Item: AdjustableLayoutItem {
+    public convenience init(contentItem: Item, direction: ScrollDirection) {
+        self.init(layout: contentItem.layoutBlock(with: Layout.equal, constraints: [contentItem.adjustLayoutConstraint(for: direction.constraints)]))
+    }
+}
+public struct ScrollDirection: OptionSet {
+    public
+    var rawValue: Int
+    public
+    init(rawValue: Int) {
+        switch rawValue {
+        case 1: self = .horizontal
+        case 2: self = .vertical
+        default:
+            self = .both
+        }
+    }
+    
+    let constraints: [LayoutAnchor.Size]
+
+    init(constraints: [LayoutAnchor.Size], rawValue: Int) {
+        self.constraints = constraints
+        self.rawValue = rawValue
+    }
+
+    public static var horizontal: ScrollDirection = ScrollDirection(constraints: [.width()], rawValue: 1)
+    public static var vertical: ScrollDirection = ScrollDirection(constraints: [.height()], rawValue: 2)
+    public static var both: ScrollDirection = ScrollDirection(constraints: [.height(), .width()], rawValue: 0)
 }
