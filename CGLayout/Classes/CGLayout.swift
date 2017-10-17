@@ -68,7 +68,7 @@ public extension RectBasedLayout {
     ///   - item: Item for layout
     ///   - constraints: Array of tuples with rect and constraint
     public func apply(for item: LayoutItem, use constraints: [ConstrainRect] = []) {
-        item.frame = layout(rect: item.frame, in: item.superItem!.bounds, use: constraints)
+        item.frame = layout(rect: item.frame, in: item.superItem!.layoutBounds, use: constraints)
     }
     /// Used for layout `LayoutItem` entity in constrained source space using constraints. Must call only on main thread.
     ///
@@ -100,7 +100,7 @@ public extension RectBasedLayout {
     ///   - constraints: Array of constraint items
     public func apply(for item: LayoutItem, use constraints: [LayoutConstraintProtocol]) {
         // TODO: ! Add flag for using layout margins. IMPL: Apply 'inset' constraint from LayotAnchor to super bounds.
-        apply(for: item, in: item.superItem!.bounds, use: constraints)
+        apply(for: item, in: item.superItem!.layoutBounds, use: constraints)
     }
     /// Use for layout `LayoutItem` entity in constrained source space using constraints. Must call only on main thread.
     ///
@@ -185,6 +185,7 @@ public protocol LayoutItem: class, RectBasedItem, LayoutCoordinateSpace {
     var frame: CGRect { get set }
     /// Internal coordinate space of layout entity
     var bounds: CGRect { get set }
+    var layoutBounds: CGRect { get }
     /// Layout item that maintained this layout entity
     weak var superItem: LayoutItem? { get }
 
@@ -196,10 +197,11 @@ public protocol LayoutItem: class, RectBasedItem, LayoutCoordinateSpace {
 
 public protocol InLayoutTimeItem: RectBasedItem {
     var superItem: LayoutItem? { get }
-    var superBounds: CGRect { get }
+    var superLayoutBounds: CGRect { get }
 }
 #if os(iOS) || os(tvOS)
 extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
+    public var layoutBounds: CGRect { return bounds }
     public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) } // TODO: For UILabel need calculate through .boundingRect function
     public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
     /// Layout item that maintained this layout entity
@@ -207,12 +209,19 @@ extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
     /// Removes layout item from hierarchy
     public func removeFromSuperItem() { removeFromSuperview() }
 }
+extension UIScrollView {
+    public override var layoutBounds: CGRect { return CGRect(origin: .zero, size: contentSize) }
+}
 #endif
 #if os(macOS)
 extension NSView: LayoutItem {
+    public var layoutBounds: CGRect { return bounds }
     public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
     public weak var superItem: LayoutItem? { return superview }
     public func removeFromSuperItem() { removeFromSuperview() }
+}
+extension NSScrollView {
+    public override var layoutBounds: CGRect { return documentView?.bounds ?? contentView.bounds } // TODO: Research NSScrollView
 }
 extension NSControl: SelfSizedLayoutItem, AdjustableLayoutItem {
     public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) }
@@ -312,6 +321,8 @@ public extension LayoutConstraintProtocol {
         return .init(base: self, isActive: active)
     }
 }
+
+// TODO: Define for LayoutConstraint rect for restriction (bounds, frame, layoutFrame)
 
 /// Simple related constraint. Contains anchor constraints and layout item as source of frame for constrain
 public struct LayoutConstraint {

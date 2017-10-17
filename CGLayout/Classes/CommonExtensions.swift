@@ -51,6 +51,7 @@ extension CGRect {
                           width: size.width - edgeInsets.horizontal, height: size.height - edgeInsets.vertical)
         #endif
     }
+    func applying(edgeInsets: EdgeInsets) -> CGRect { var this = self; this.apply(edgeInsets: edgeInsets); return this }
 }
 
 extension EdgeInsets {
@@ -64,6 +65,7 @@ extension EdgeInsets {
 #if os(iOS) || os(tvOS)
 @available(iOS 9.0, *)
 extension UILayoutGuide: LayoutItem {
+    public var layoutBounds: CGRect { return bounds }
     public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
     public var frame: CGRect { get { return layoutFrame } set {} }
     public var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }

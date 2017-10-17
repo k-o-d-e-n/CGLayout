@@ -34,6 +34,7 @@ class LabelPlaceholder: ViewPlaceholder<UILabel> {
 }
 
 class ViewController: UIViewController {
+    var scrollView: UIScrollView { return view as! UIScrollView }
     var subviews: [UIView] = []
     let pulledView: UIView = UIView()
     let centeredView: UIView = UIView()
@@ -121,6 +122,9 @@ class ViewController: UIViewController {
         labelStack.addArrangedItem(CALayer(backgroundColor: .black))
         labelStack.addArrangedItem(UILabel(text: "В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов."))
         labelStack.addArrangedItem(CALayer(backgroundColor: .black))
+
+        scrollView.contentSize.height = view.frame.height.advanced(by: 2)
+        scrollView.contentSize.width = view.frame.width
     }
 
     override func viewDidLayoutSubviews() {
@@ -159,7 +163,9 @@ class ViewController: UIViewController {
 
         scrollLayoutGuide.layoutBlock(with: Layout.equal,
                                       constraints: [pulledView.layoutConstraint(for: [LayoutAnchor.Size.height(), LayoutAnchor.Size.width()])]).layout()
-        pulledView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:)))
+        pan.require(toFail: scrollView.panGestureRecognizer)
+        pulledView.addGestureRecognizer(pan)
     }
 
     var start: CGPoint = .zero

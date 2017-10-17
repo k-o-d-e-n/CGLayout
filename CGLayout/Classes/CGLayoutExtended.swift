@@ -17,9 +17,9 @@ import Foundation
 /// If you use subclass LayoutGuide, that manages `LayoutItem` items, than you should use 
 /// `layout(in: frame)` method for apply layout, otherwise items will be have wrong position.
 open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
-    open var layoutFrame: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x + bounds.origin.x, y: frame.origin.y + bounds.origin.y), size: bounds.size) }
+    open var layoutBounds: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x + bounds.origin.x, y: frame.origin.y + bounds.origin.y), size: bounds.size) }
     public var inLayoutTime: InLayoutTimeItem { return self }
-    public var superBounds: CGRect { return superItem!.bounds } // TODO: UIView ?
+    public var superLayoutBounds: CGRect { return superItem!.layoutBounds }
 
     /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
     open fileprivate(set) weak var ownerItem: Super? {
@@ -51,7 +51,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         return CGRect(origin: .zero, size: frame.size)
     }
 
-    internal func layout() { layout(in: layoutFrame) }
+    internal func layout() { layout(in: layoutBounds) }
 }
 #if os(iOS) || os(tvOS)
 public extension LayoutGuide where Super: UIView {
@@ -834,7 +834,7 @@ open class ScrollLayoutGuide<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
 
     override open func contentRect(forFrame frame: CGRect) -> CGRect {
         var contentRect = bounds
-        let lFrame = layoutFrame
+        let lFrame = layoutBounds
         let snapshotFrame = CGRect(x: lFrame.origin.x, y: lFrame.origin.y, width: max(contentRect.width, frame.width), height: max(contentRect.height, frame.height))
         contentRect.size = layout.snapshot(for: snapshotFrame).snapshotFrame.distance(from: frame.origin)
         return contentRect

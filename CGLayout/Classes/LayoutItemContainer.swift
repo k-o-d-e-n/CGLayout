@@ -20,8 +20,9 @@ public protocol LayoutItemContainer: LayoutItem {
 }
 
 extension CALayer: LayoutItemContainer, InLayoutTimeItem {
+    public var layoutBounds: CGRect { return bounds }
     public var inLayoutTime: InLayoutTimeItem { return self }
-    public var superBounds: CGRect { return superItem!.bounds }
+    public var superLayoutBounds: CGRect { return superItem!.layoutBounds }
     public weak var superItem: LayoutItem? { return superlayer }
     public var sublayoutItems: [LayoutItem]? { return sublayers }
     public func removeFromSuperItem() { removeFromSuperlayer() }
