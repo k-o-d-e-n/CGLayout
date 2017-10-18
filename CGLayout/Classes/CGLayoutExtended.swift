@@ -17,9 +17,12 @@ import Foundation
 /// If you use subclass LayoutGuide, that manages `LayoutItem` items, than you should use 
 /// `layout(in: frame)` method for apply layout, otherwise items will be have wrong position.
 open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
-    open var layoutBounds: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x + bounds.origin.x, y: frame.origin.y + bounds.origin.y), size: bounds.size) }
-    public var inLayoutTime: InLayoutTimeItem { return self }
-    public var superLayoutBounds: CGRect { return superItem!.layoutBounds }
+    public /// Internal layout space of super item
+    var superLayoutBounds: CGRect { return superItem!.layoutBounds }
+    public /// Entity that represents item in layout time
+    var inLayoutTime: InLayoutTimeItem { return self }
+    public /// Internal space for layout subitems
+    var layoutBounds: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x + bounds.origin.x, y: frame.origin.y + bounds.origin.y), size: bounds.size) }
 
     /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
     open fileprivate(set) weak var ownerItem: Super? {
@@ -39,14 +42,22 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         self.bounds = CGRect(origin: .zero, size: frame.size)
     }
 
+    /// Tells that a this layout guide was added to owner
     open func didAddToOwner() {
         // subclass override
     }
 
+    /// Performs layout for subitems, which this layout guide manages, in layout space rect
+    ///
+    /// - Parameter rect: Space for layout
     open func layout(in rect: CGRect) {
         // subclass override
     }
 
+    /// Defines rect for `bounds` property. Calls on change `frame`.
+    ///
+    /// - Parameter frame: New frame value.
+    /// - Returns: Content rect
     open func contentRect(forFrame frame: CGRect) -> CGRect {
         return CGRect(origin: .zero, size: frame.size)
     }
@@ -135,6 +146,16 @@ public extension UIView {
         unsafeBitCast(layoutGuide, to: LayoutGuide<UIView>.self).ownerItem = self
     }
 }
+#endif
+#if os(macOS)
+    public extension NSView {
+        /// Bind layout item to layout guide.
+        ///
+        /// - Parameter layoutGuide: Layout guide for binding
+        func add<T: NSView>(layoutGuide: LayoutGuide<T>) {
+            unsafeBitCast(layoutGuide, to: LayoutGuide<NSView>.self).ownerItem = self
+        }
+    }
 #endif
 public extension LayoutGuide {
     /// Creates dependency between two layout guides.
@@ -265,7 +286,8 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
         self.constrainRect = constrainRect
     }
 
-    public var isActive: Bool { return true }
+    public /// Flag, defines that constraint may be used for layout
+    var isActive: Bool { return true }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     public var isIndependent: Bool { return true }
 
@@ -354,16 +376,24 @@ public extension String {
 // TODO: Try to built RectBasedLayout, RectBasedConstraint, RectBasedDistribution on RectAxis.
 // TODO: In MacOS origin in left-bottom corner by default. NSView.isFlipped moves origin to left-top corner.
 
+/// Base protocol for any layout distribution
 protocol RectBasedDistribution {
     func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect]
 }
 
+/// Implementation space for distributions
 struct LayoutDistribution: RectBasedDistribution {
     private let base: RectBasedDistribution
     func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect] {
         return base.distribute(rects: rects, in: sourceRect, iterator: iterator)
     }
 
+    /// Defines distribution arranged items from leading side (top, left) in specific axis.
+    ///
+    /// - Parameters:
+    ///   - axis: Axis for distribution
+    ///   - spacing: Value of space between arranged items
+    /// - Returns: LayoutDistribution entity
     static func fromLeading(by axis: RectAxis, spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromLeading(axis: axis, spacing: spacing)) }
     fileprivate struct FromLeading: RectBasedDistribution, AxisEntity {
         func by(axis: RectAxis) -> LayoutDistribution.FromLeading { return .init(axis: axis, spacing: spacing) }
@@ -375,6 +405,12 @@ struct LayoutDistribution: RectBasedDistribution {
             return LayoutDistribution.distributeFromLeading(rects: rects, in: sourceRect, by: axis, spacing: spacing, iterator: iterator)
         }
     }
+    /// Defines distribution arranged items from trailing side (bottom, right) in specific axis.
+    ///
+    /// - Parameters:
+    ///   - axis: Axis for distribution
+    ///   - spacing: Value of space between arranged items
+    /// - Returns: LayoutDistribution entity
     static func fromTrailing(by axis: RectAxis, spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromTrailing(axis: axis, spacing: spacing)) }
     fileprivate struct FromTrailing: RectBasedDistribution, AxisEntity {
         func by(axis: RectAxis) -> LayoutDistribution.FromTrailing { return .init(axis: axis, spacing: spacing) }
@@ -387,6 +423,10 @@ struct LayoutDistribution: RectBasedDistribution {
         }
     }
 
+    /// Defines distribution arranged items from center anchor point in specific axis.
+    ///
+    /// - Parameter baseDistribution: Distribution that will be used for defining dependency between arranged items. In common cases it is left and top distribution.
+    /// - Returns: LayoutDistribution entity
     static func fromCenter(baseDistribution: RectBasedDistribution & AxisEntity) -> LayoutDistribution {
         return LayoutDistribution(base: FromCenter(baseDistribution: baseDistribution))
     }
@@ -407,6 +447,10 @@ struct LayoutDistribution: RectBasedDistribution {
         }
 
     }
+    /// Defines distribution with equally spaces between arranged items.
+    ///
+    /// - Parameter axis: Axis for distribution
+    /// - Returns: LayoutDistribution entity
     static func equalSpacing(axis: RectAxis) -> LayoutDistribution { return LayoutDistribution(base: EqualSpacing(axis: axis)) }
     fileprivate struct EqualSpacing: RectBasedDistribution, AxisEntity {
         func by(axis: RectAxis) -> LayoutDistribution.EqualSpacing { return .init(axis: axis) }
@@ -441,7 +485,14 @@ struct LayoutDistribution: RectBasedDistribution {
     }
 }
 
+/// Protocol defines method for filling items
 protocol StackLayoutFilling {
+    /// Performs filling for item in defined source space
+    ///
+    /// - Parameters:
+    ///   - item: Item for filling
+    ///   - source: Source space
+    /// - Returns: Modified rect
     func filling(for item: LayoutItem, in source: CGRect) -> CGRect
 }
 extension Layout.Filling: StackLayoutFilling {
@@ -454,13 +505,9 @@ extension Layout.Filling: StackLayoutFilling {
 // TODO: Add to stack layout scheme circle type
 
 // TODO: StackLayoutScheme lost multihierarchy layout. Research this. // Comment: Probably would be not available.
+/// Defines layout for arranged items
 public struct StackLayoutScheme: LayoutBlockProtocol {
-    public var isActive: Bool { return true }
-
     private var items: () -> [LayoutItem]
-    fileprivate enum Axis {
-        case horizontal, vertical
-    }
 
     public struct Distribution: RectBasedDistribution, AxisEntity {
         func by(axis: RectAxis) -> StackLayoutScheme.Distribution { return .init(base: base.by(axis: axis)) }
@@ -526,15 +573,22 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }
     }
 
+    public /// Flag, defines that block will be used for layout
+    var isActive: Bool { return true }
+
+    /// Current layout axis
     public var axis: RectAxis { return distribution.axis }
+    /// Current distribution for arranged items
     public var distribution: Distribution = .fromLeft(spacing: 0) {
-        didSet { _alignment = alignment.by(axis: axis.invertedIn2D()) }
+        didSet { _alignment = alignment.by(axis: axis.transverse()) }
     }
     private var _alignment: Alignment = .leading()
+    /// Alignment for arranged items in transverse axis
     public var alignment: Alignment {
-        set { _alignment = newValue.by(axis: axis.invertedIn2D()) }
+        set { _alignment = newValue.by(axis: axis.transverse()) }
         get { return _alignment }
     }
+    /// Filling in source space
     public var filling: Filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .scaled(1)))
 
     /// Designed initializer
@@ -661,11 +715,18 @@ open class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, A
         return true
     }
 
+    /// Performs layout for subitems, which this layout guide manages, in layout space rect
+    ///
+    /// - Parameter rect: Space for layout
     override open func layout(in rect: CGRect) {
         super.layout(in: rect)
         scheme.layout(in: rect)
     }
 
+    /// Defines rect for `bounds` property. Calls on change `frame`.
+    ///
+    /// - Parameter frame: New frame value.
+    /// - Returns: Content rect
     open override func contentRect(forFrame frame: CGRect) -> CGRect {
         let lFrame = super.contentRect(forFrame: frame)
         return insetAnchor?.constrained(sourceRect: lFrame, by: .zero) ?? lFrame
@@ -816,22 +877,35 @@ extension StackLayoutGuide where Parent: CALayer {
 
 // MARK: ScrollLayoutGuide
 
-open class ScrollLayoutGuide<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
+/// Layout guide that provides interface for scrolling content
+open class ScrollLayoutGuide<Super: LayoutItem>: LayoutGuide<Super> {
     private var layout: LayoutBlockProtocol
 
+    /// Designed initializer
+    ///
+    /// - Parameter layout: Layout defined scrollable content
     public required init(layout: LayoutBlockProtocol) {
         self.layout = layout
         super.init(frame: .zero)
     }
 
+    /// Point that defines offset for content origin
+    open var contentOffset: CGPoint { set { bounds.origin = newValue.negated() } get { return bounds.origin.negated() } }
+    /// Size of content
+    open var contentSize: CGSize { set { bounds.size = contentSize } get { return bounds.size } } // TODO: Size of bounds should be equal frame size.
+
+    /// Performs layout for subitems, which this layout guide manages, in layout space rect
+    ///
+    /// - Parameter rect: Space for layout
     override open func layout(in rect: CGRect) {
         super.layout(in: rect)
         layout.layout(in: rect)
     }
 
-    open var contentOffset: CGPoint { set { bounds.origin = newValue.negated() } get { return bounds.origin.negated() } }
-    open var contentSize: CGSize { set { bounds.size = contentSize } get { return bounds.size } }
-
+    /// Defines rect for content that will be visible in this guide space.
+    ///
+    /// - Parameter frame: New frame value.
+    /// - Returns: Content rect
     override open func contentRect(forFrame frame: CGRect) -> CGRect {
         var contentRect = bounds
         let lFrame = layoutBounds
@@ -840,11 +914,18 @@ open class ScrollLayoutGuide<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
         return contentRect
     }
 }
-public extension ScrollLayoutGuide where Item: AdjustableLayoutItem {
-    public convenience init(contentItem: Item, direction: ScrollDirection) {
+public extension ScrollLayoutGuide {
+    /// Convinience initializer for adjustable layout items. 
+    /// Initializes layout guide with layout block constrained to calculated size of item.
+    ///
+    /// - Parameters:
+    ///   - contentItem: Item that defines content
+    ///   - direction: Scroll direction
+    public convenience init<Item: AdjustableLayoutItem>(contentItem: Item, direction: ScrollDirection) {
         self.init(layout: contentItem.layoutBlock(with: Layout.equal, constraints: [contentItem.adjustLayoutConstraint(for: direction.constraints)]))
     }
 }
+/// Defines limiters for content of scroll layout guide.
 public struct ScrollDirection: OptionSet {
     public
     var rawValue: Int

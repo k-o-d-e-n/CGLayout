@@ -10,10 +10,10 @@ import UIKit
 import CGLayout
 
 class ScrollLayoutViewController: UIViewController {
-    var scrollLayout: LayoutBlock<ScrollLayoutGuide<UIView, UIView>>!
-    var scrollLayoutGuide: ScrollLayoutGuide<UIView, UIView>!
+    var scrollLayoutGuide: ScrollLayoutGuide<UIView>!
 
     var subviews: [LayoutItem] = []
+    var scheme: LayoutScheme!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,17 +25,17 @@ class ScrollLayoutViewController: UIViewController {
         let contentGuide = LayoutGuide<UIView>(frame: view.bounds.insetBy(dx: -100, dy: -300))
         subviews.append(contentGuide)
 
-        let scheme = LayoutScheme(blocks: [
+        let contentScheme = LayoutScheme(blocks: [
             contentGuide.layoutBlock(with: Layout(x: .left(), y: .top(), width: .fixed(contentGuide.frame.width), height: .fixed(contentGuide.frame.height))),
             redView.layoutBlock(with: Layout(x: .left(), y: .top(), width: .fixed(200), height: .fixed(150))),
             greenView.layoutBlock(with: Layout(x: .left(), y: .bottom(), width: .fixed(150), height: .fixed(200)),
                                   constraints: [contentGuide.layoutConstraint(for: [LayoutAnchor.Left.align(by: .inner), LayoutAnchor.Bottom.align(by: .inner)])])
         ])
         
-        scrollLayoutGuide = ScrollLayoutGuide(layout: scheme)
-
-        scrollLayout = scrollLayoutGuide.layoutBlock(with: Layout(x: .left(), y: .top(), width: .scaled(1), height: .scaled(1)),
-                                                     constraints: [(topLayoutGuide as! UIView).layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .outer)])])
+        scrollLayoutGuide = ScrollLayoutGuide(layout: contentScheme)
+        scheme = LayoutScheme(blocks: [scrollLayoutGuide.layoutBlock(with: Layout(x: .left(), y: .top(), width: .scaled(1), height: .scaled(1)),
+                                                                     constraints: [(topLayoutGuide as! UIView).layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .outer)])]),
+                                       contentScheme])
 
         view.add(layoutGuide: scrollLayoutGuide)
         view.add(layoutGuide: contentGuide)
@@ -47,7 +47,7 @@ class ScrollLayoutViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollLayout.layout()
+        scheme.layout()
     }
 
     var start: CGPoint = .zero

@@ -73,7 +73,7 @@ class ViewController: UIViewController {
 
         return stack
     }()
-    lazy var scrollLayoutGuide: ScrollLayoutGuide<StackLayoutGuide<UIView>, UIView> = {
+    lazy var scrollLayoutGuide: ScrollLayoutGuide<UIView> = {
         return ScrollLayoutGuide(contentItem: self.labelStack, direction: .vertical)
     }()
 

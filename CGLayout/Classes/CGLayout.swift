@@ -185,10 +185,11 @@ public protocol LayoutItem: class, RectBasedItem, LayoutCoordinateSpace {
     var frame: CGRect { get set }
     /// Internal coordinate space of layout entity
     var bounds: CGRect { get set }
+    /// Internal space for layout subitems
     var layoutBounds: CGRect { get }
-    /// Layout item that maintained this layout entity
+    /// Layout item that maintains this layout entity
     weak var superItem: LayoutItem? { get }
-
+    /// Entity that represents item in layout time
     var inLayoutTime: InLayoutTimeItem { get }
 
     /// Removes layout item from hierarchy
@@ -196,34 +197,46 @@ public protocol LayoutItem: class, RectBasedItem, LayoutCoordinateSpace {
 }
 
 public protocol InLayoutTimeItem: RectBasedItem {
+    /// Layout item that maintains this layout entity
     var superItem: LayoutItem? { get }
+    /// Internal layout space of super item
     var superLayoutBounds: CGRect { get }
 }
 #if os(iOS) || os(tvOS)
 extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
-    public var layoutBounds: CGRect { return bounds }
+    /// Constraint, that defines content size for item
     public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) } // TODO: For UILabel need calculate through .boundingRect function
-    public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
+    public /// Entity that represents item in layout time
+    var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
+    public /// Internal space for layout subitems
+    var layoutBounds: CGRect { return bounds }
     /// Layout item that maintained this layout entity
     public weak var superItem: LayoutItem? { return superview }
     /// Removes layout item from hierarchy
     public func removeFromSuperItem() { removeFromSuperview() }
 }
 extension UIScrollView {
-    public override var layoutBounds: CGRect { return CGRect(origin: .zero, size: contentSize) }
+    public /// Internal space for layout subitems
+    override var layoutBounds: CGRect { return CGRect(origin: .zero, size: contentSize) }
 }
 #endif
 #if os(macOS)
 extension NSView: LayoutItem {
-    public var layoutBounds: CGRect { return bounds }
-    public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
-    public weak var superItem: LayoutItem? { return superview }
-    public func removeFromSuperItem() { removeFromSuperview() }
+    public /// Removes layout item from hierarchy
+    func removeFromSuperItem() { removeFromSuperview() }
+    public /// Entity that represents item in layout time
+    var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
+    public /// Layout item that maintains this layout entity
+    weak var superItem: LayoutItem? { return superview }
+    public /// Internal space for layout subitems
+    var layoutBounds: CGRect { return bounds }
 }
 extension NSScrollView {
-    public override var layoutBounds: CGRect { return documentView?.bounds ?? contentView.bounds } // TODO: Research NSScrollView
+    public /// Internal space for layout subitems
+    override var layoutBounds: CGRect { return documentView?.bounds ?? contentView.bounds } // TODO: Research NSScrollView
 }
 extension NSControl: SelfSizedLayoutItem, AdjustableLayoutItem {
+    /// Constraint, that defines content size for item
     public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) }
 }
 #endif
@@ -272,9 +285,11 @@ public protocol SelfSizedLayoutItem: class {
 
 /// Protocol for items that can calculate yourself fitted size
 public protocol AdjustableLayoutItem: LayoutItem {
+    /// Constraint, that defines content size for item
     var contentConstraint: RectBasedConstraint { get }
 }
 extension AdjustableLayoutItem where Self: SelfSizedLayoutItem {
+    /// Constraint, that defines content size for item
     public var contentConstraint: RectBasedConstraint { return _SizeThatFitsConstraint(item: self) }
 }
 extension AdjustableLayoutItem {
@@ -292,6 +307,7 @@ extension AdjustableLayoutItem {
 /// Provides rect for constrain source space. Used for related constraints.
 // TODO: Change protocol definition. It is not exactly describe layout constraint.
 public protocol LayoutConstraintProtocol: RectBasedConstraint {
+    /// Flag, defines that constraint may be used for layout
     var isActive: Bool { get }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { get }
@@ -317,6 +333,10 @@ extension LayoutConstraintProtocol {
     }
 }
 public extension LayoutConstraintProtocol {
+    /// Returns constraint with possibility to change active state
+    ///
+    /// - Parameter active: Initial active state
+    /// - Returns: Mutable layout constraint
     func active(_ active: Bool) -> MutableLayoutConstraint {
         return .init(base: self, isActive: active)
     }
@@ -332,7 +352,6 @@ public struct LayoutConstraint {
     internal var inLayoutTimeItem: InLayoutTimeItem? {
         return inLayoutTime ?? item?.inLayoutTime
     }
-    public var isActive: Bool { return inLayoutTimeItem?.superItem != nil }
 
     public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
         self.item = item
@@ -340,6 +359,9 @@ public struct LayoutConstraint {
     }
 }
 extension LayoutConstraint: LayoutConstraintProtocol {
+    /// Flag, defines that constraint may be used for layout
+    public var isActive: Bool { return inLayoutTimeItem?.superItem != nil }
+
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return false }
 
@@ -392,7 +414,7 @@ public struct AdjustLayoutConstraint {
     }
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
-    public ///
+    public /// Flag, defines that constraint may be used for layout
     var isActive: Bool { return item?.superItem != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
@@ -434,16 +456,23 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     }
 }
 
+/// Layout constraint that creates possibility to change active state.
 public class MutableLayoutConstraint: LayoutConstraintProtocol {
     private var base: LayoutConstraintProtocol
     private var _active = true
 
+    /// Flag, defines that constraint may be used for layout
     public var isActive: Bool {
         set { _active = newValue }
         get { return _active && base.isActive }
     }
 
-    init(base: LayoutConstraintProtocol, isActive: Bool) {
+    /// Designed initializer
+    ///
+    /// - Parameters:
+    ///   - base: Constraint for mutating
+    ///   - isActive: Initial state
+    public init(base: LayoutConstraintProtocol, isActive: Bool) {
         self.base = base
         self._active = isActive
     }
@@ -495,6 +524,7 @@ extension CGRect: LayoutSnapshotProtocol {
 
 /// Defines general methods for any layout block
 public protocol LayoutBlockProtocol {
+    /// Flag, defines that block will be used for layout
     var isActive: Bool { get }
     /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol { get }
@@ -2135,9 +2165,4 @@ extension Layout.Filling {
         apply(for: item, use: constraints)
         alignment.apply(for: item, use: constraints)
     }
-}
-
-extension CGRect {
-    public static var horizontalAxis: RectAxis { return _RectAxis.horizontal }
-    public static var verticalAxis: RectAxis { return _RectAxis.vertical }
 }

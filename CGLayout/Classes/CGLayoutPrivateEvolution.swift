@@ -123,7 +123,7 @@ public protocol RectAxis {
     func offset(rect: CGRect, by value: CGFloat) -> CGRect
 }
 extension RectAxis {
-    func invertedIn2D() -> RectAxis { return self is _RectAxis.Horizontal ? _RectAxis.vertical : _RectAxis.horizontal }
+    func transverse() -> RectAxis { return self is _RectAxis.Horizontal ? _RectAxis.vertical : _RectAxis.horizontal }
 }
 
 public struct _RectAxis: RectAxis {
