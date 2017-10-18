@@ -91,6 +91,10 @@ For create `UIView` placeholders use `ViewPlaceholder` class.
 
 For more details, see documentation and example project.
 
+## Contributing
+
+I will be happy your feedback, advices and pull requests. For more information read [here](https://github.com/k-o-d-e-n/CGLayout/blob/master/CONTRIBUTING.md) 
+
 ## Code documentation
 
 See [here](https://k-o-d-e-n.github.io/CGLayout/)

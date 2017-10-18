@@ -14,6 +14,8 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		682F10FE8B5FFE9E215A0EB8 /* Pods_CGLayout_CGLayout_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EBF0DDB4F980922FB75511F /* Pods_CGLayout_CGLayout_Example.framework */; };
+		A40485A71F978A1C00DB38E4 /* CONTRIBUTING.md in Sources */ = {isa = PBXBuildFile; fileRef = A40485A61F978A1C00DB38E4 /* CONTRIBUTING.md */; };
 		A4232A181F82D20C00016A8A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		A4232A191F82D21100016A8A /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A4232A1A1F82D21500016A8A /* SecondViewControllerAutolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43D53961F6FDEE300A92425 /* SecondViewControllerAutolayout.swift */; };
@@ -75,6 +77,7 @@
 		62CF1CA328076DFAD55E59B6 /* Pods-CGLayout-macOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-macOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-macOSTests/Pods-CGLayout-macOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		630FC71E11F5799F80FC8116 /* Pods_CGLayout_macOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_macOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B8BF7184AA959D9A6E3D5F0 /* Pods-CGLayout-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-macOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-macOS/Pods-CGLayout-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		A40485A61F978A1C00DB38E4 /* CONTRIBUTING.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
 		A4232A231F82D58E00016A8A /* CGLayout-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CGLayout-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4232A251F82D58E00016A8A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A4232A271F82D58E00016A8A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -250,6 +253,7 @@
 		607FACF51AFB993E008FA782 /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
+				A40485A61F978A1C00DB38E4 /* CONTRIBUTING.md */,
 				27B52FB9B48634E2B93F98CA /* CGLayout.podspec */,
 				F9EF02C1911902D3A9CA9BDC /* README.md */,
 				3EBA77EEBD0196F171836E72 /* LICENSE */,
@@ -758,6 +762,7 @@
 			files = (
 				A4579C351F59E86800893AB2 /* SecondViewController.swift in Sources */,
 				A43D53971F6FDEE300A92425 /* SecondViewControllerAutolayout.swift in Sources */,
+				A40485A71F978A1C00DB38E4 /* CONTRIBUTING.md in Sources */,
 				A4879D0D1F93A4B400BCBF0E /* ScrollLayoutViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				A44646BC1F74132A009601DA /* TableViewController.swift in Sources */,
