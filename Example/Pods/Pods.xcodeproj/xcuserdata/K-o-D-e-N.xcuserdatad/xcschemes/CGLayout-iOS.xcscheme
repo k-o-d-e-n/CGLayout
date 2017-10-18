@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3CCA2D8AFD0737DEB0241267CB14BD96"
+               BlueprintIdentifier = "D5C9450617EB3C58D8130038D1B534DF"
                BuildableName = "CGLayout.framework"
                BlueprintName = "CGLayout-iOS"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3CCA2D8AFD0737DEB0241267CB14BD96"
+            BlueprintIdentifier = "D5C9450617EB3C58D8130038D1B534DF"
             BuildableName = "CGLayout.framework"
             BlueprintName = "CGLayout-iOS"
             ReferencedContainer = "container:Pods.xcodeproj">

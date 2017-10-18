@@ -65,7 +65,7 @@ extension Tests {
         let view2 = UIView(frame: CGRect.random(in: bounds))
         let alignment = Layout.Alignment.Vertical.top()
 
-        alignment.layout(rect: &view1.frame, in: view2.frame)
+        alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.minY == view2.frame.minY)
     }
@@ -75,7 +75,7 @@ extension Tests {
         let view2 = UIView(frame: CGRect.random(in: bounds))
         let alignment = Layout.Alignment.Vertical.top(-10)
 
-        alignment.layout(rect: &view1.frame, in: view2.frame)
+        alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.minY + 10 == view2.frame.minY)
     }
@@ -85,7 +85,7 @@ extension Tests {
         let view2 = UIView(frame: CGRect.random(in: bounds))
         let alignment = Layout.Alignment.Vertical.bottom()
 
-        alignment.layout(rect: &view1.frame, in: view2.frame)
+        alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.maxY == view2.frame.maxY)
     }
@@ -95,7 +95,7 @@ extension Tests {
         let view2 = UIView(frame: CGRect.random(in: bounds))
         let alignment = Layout.Alignment.Vertical.bottom(10)
 
-        alignment.layout(rect: &view1.frame, in: view2.frame)
+        alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.maxY + 10 == view2.frame.maxY)
     }
@@ -105,7 +105,7 @@ extension Tests {
         let view2 = UIView(frame: CGRect.random(in: bounds))
         let alignment = Layout.Alignment.Horizontal.left()
 
-        alignment.layout(rect: &view1.frame, in: view2.frame)
+        alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.minX == view2.frame.minX)
     }
@@ -115,7 +115,7 @@ extension Tests {
         let view2 = UIView(frame: CGRect.random(in: bounds))
         let alignment = Layout.Alignment.Horizontal.left(-10)
 
-        alignment.layout(rect: &view1.frame, in: view2.frame)
+        alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.minX + 10 == view2.frame.minX)
     }
@@ -125,7 +125,7 @@ extension Tests {
         let view2 = UIView(frame: CGRect.random(in: bounds))
         let alignment = Layout.Alignment.Horizontal.right()
 
-        alignment.layout(rect: &view1.frame, in: view2.frame)
+        alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.maxX == view2.frame.maxX)
     }
@@ -135,7 +135,7 @@ extension Tests {
         let view2 = UIView(frame: CGRect.random(in: bounds))
         let alignment = Layout.Alignment.Horizontal.right(10)
 
-        alignment.layout(rect: &view1.frame, in: view2.frame)
+        alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.maxX + 10 == view2.frame.maxX)
     }
@@ -152,8 +152,8 @@ extension Tests {
         let vertical = Layout.Filling.Vertical.fixed(heightConstant)
         let horizontal = Layout.Filling.Horizontal.fixed(widthConstant)
 
-        vertical.layout(rect: &rect1, in: bounds) // second parameter has no effect in this case
-        horizontal.layout(rect: &rect2, in: bounds) // second parameter has no effect in this case
+        vertical.formLayout(rect: &rect1, in: bounds) // second parameter has no effect in this case
+        horizontal.formLayout(rect: &rect2, in: bounds) // second parameter has no effect in this case
 
         XCTAssertTrue(rect1.height == heightConstant)
         XCTAssertTrue(rect2.width == widthConstant)
@@ -169,8 +169,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect2 = rect2
-        vertical.layout(rect: &resultRect1, in: rect2)
-        horizontal.layout(rect: &resultRect2, in: rect1)
+        vertical.formLayout(rect: &resultRect1, in: rect2)
+        horizontal.formLayout(rect: &resultRect2, in: rect1)
 
         XCTAssertTrue(resultRect1.height == rect2.height * heightScale)
         XCTAssertTrue(resultRect2.width == rect1.width * widthScale)
@@ -185,8 +185,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect2 = rect2
-        vertical.layout(rect: &resultRect1, in: rect2)
-        horizontal.layout(rect: &resultRect2, in: rect1)
+        vertical.formLayout(rect: &resultRect1, in: rect2)
+        horizontal.formLayout(rect: &resultRect2, in: rect1)
 
         XCTAssertTrue(resultRect1.height == max(0, rect2.height - box.vertical))
         XCTAssertTrue(resultRect2.width == max(0, rect1.width - box.horizontal))
@@ -206,8 +206,8 @@ extension Tests {
         var rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
 
-        outer.constrain(sourceRect: &rect1, by: rect2)
-        inner.constrain(sourceRect: &rect3, by: rect4)
+        outer.formConstrain(sourceRect: &rect1, by: rect2)
+        inner.formConstrain(sourceRect: &rect3, by: rect4)
 
         XCTAssertTrue(rect1.minY == rect2.maxY)
         XCTAssertTrue(rect3.maxY == rect4.maxY)
@@ -227,8 +227,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect3 = rect3
-        outer.constrain(sourceRect: &resultRect1, by: rect2)
-        inner.constrain(sourceRect: &resultRect3, by: rect4)
+        outer.formConstrain(sourceRect: &resultRect1, by: rect2)
+        inner.formConstrain(sourceRect: &resultRect3, by: rect4)
 
         if isRect1AboveBottomRect2 {
             XCTAssertTrue(resultRect1.maxY == rect2.maxY)
@@ -262,8 +262,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect3 = rect3
-        outer.constrain(sourceRect: &resultRect1, by: rect2)
-        inner.constrain(sourceRect: &resultRect3, by: rect4)
+        outer.formConstrain(sourceRect: &resultRect1, by: rect2)
+        inner.formConstrain(sourceRect: &resultRect3, by: rect4)
 
         XCTAssertTrue(resultRect1.minY == rect2.maxY)
         if isBottomRect1BelowBottomRect2 {
@@ -285,8 +285,8 @@ extension Tests {
         var rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
 
-        outer.constrain(sourceRect: &rect1, by: rect2)
-        inner.constrain(sourceRect: &rect3, by: rect4)
+        outer.formConstrain(sourceRect: &rect1, by: rect2)
+        inner.formConstrain(sourceRect: &rect3, by: rect4)
 
         XCTAssertTrue(rect1.minX == rect2.maxX)
         XCTAssertTrue(rect3.maxX == rect4.maxX)
@@ -306,8 +306,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect3 = rect3
-        outer.constrain(sourceRect: &resultRect1, by: rect2)
-        inner.constrain(sourceRect: &resultRect3, by: rect4)
+        outer.formConstrain(sourceRect: &resultRect1, by: rect2)
+        inner.formConstrain(sourceRect: &resultRect3, by: rect4)
 
         if isRect1BeforeRightRect2 {
             XCTAssertTrue(resultRect1.maxX == rect2.maxX)
@@ -341,8 +341,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect3 = rect3
-        outer.constrain(sourceRect: &resultRect1, by: rect2)
-        inner.constrain(sourceRect: &resultRect3, by: rect4)
+        outer.formConstrain(sourceRect: &resultRect1, by: rect2)
+        inner.formConstrain(sourceRect: &resultRect3, by: rect4)
 
         XCTAssertTrue(resultRect1.minX == rect2.maxX, "\(resultRect1, rect1, rect2)")
         if isRightRect1AfterRightRect2 {
@@ -364,8 +364,8 @@ extension Tests {
         var rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
 
-        outer.constrain(sourceRect: &rect1, by: rect2)
-        inner.constrain(sourceRect: &rect3, by: rect4)
+        outer.formConstrain(sourceRect: &rect1, by: rect2)
+        inner.formConstrain(sourceRect: &rect3, by: rect4)
 
         XCTAssertTrue(rect1.maxX == rect2.minX)
         XCTAssertTrue(rect3.minX == rect4.minX)
@@ -385,8 +385,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect3 = rect3
-        outer.constrain(sourceRect: &resultRect1, by: rect2)
-        inner.constrain(sourceRect: &resultRect3, by: rect4)
+        outer.formConstrain(sourceRect: &resultRect1, by: rect2)
+        inner.formConstrain(sourceRect: &resultRect3, by: rect4)
 
         if isRect1AfterLeftRect2 {
             XCTAssertTrue(resultRect1.maxX == rect2.minX)
@@ -420,8 +420,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect3 = rect3
-        outer.constrain(sourceRect: &resultRect1, by: rect2)
-        inner.constrain(sourceRect: &resultRect3, by: rect4)
+        outer.formConstrain(sourceRect: &resultRect1, by: rect2)
+        inner.formConstrain(sourceRect: &resultRect3, by: rect4)
 
         XCTAssertTrue(resultRect1.maxX == rect2.minX)
         if isLeftRect1BeforeLeftRect2 {
@@ -443,8 +443,8 @@ extension Tests {
         var rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
 
-        outer.constrain(sourceRect: &rect1, by: rect2)
-        inner.constrain(sourceRect: &rect3, by: rect4)
+        outer.formConstrain(sourceRect: &rect1, by: rect2)
+        inner.formConstrain(sourceRect: &rect3, by: rect4)
 
         XCTAssertTrue(rect1.bottom == rect2.top)
         XCTAssertTrue(rect3.top == rect4.top)
@@ -464,8 +464,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect3 = rect3
-        outer.constrain(sourceRect: &resultRect1, by: rect2)
-        inner.constrain(sourceRect: &resultRect3, by: rect4)
+        outer.formConstrain(sourceRect: &resultRect1, by: rect2)
+        inner.formConstrain(sourceRect: &resultRect3, by: rect4)
 
         if isRect1BelowTopRect2 {
             XCTAssertTrue(resultRect1.maxY == rect2.minY)
@@ -499,8 +499,8 @@ extension Tests {
 
         var resultRect1 = rect1
         var resultRect3 = rect3
-        outer.constrain(sourceRect: &resultRect1, by: rect2)
-        inner.constrain(sourceRect: &resultRect3, by: rect4)
+        outer.formConstrain(sourceRect: &resultRect1, by: rect2)
+        inner.formConstrain(sourceRect: &resultRect3, by: rect4)
 
         XCTAssertTrue(resultRect1.maxY == rect2.minY)
         if isTopRect1AboveTopRect2 {
@@ -665,8 +665,8 @@ extension Tests {
         window.addSubview(superview)
         superview.contentSize = bounds.size
         superview.contentOffset.x = 150
-        let view = UIView(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
-        superview.addSubview(view)
+        let view = ViewPlaceholder(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
+        superview.add(layoutGuide: view)
 
         let converted = view.convert(rect: CGRect(x: 10, y: -5, width: 20, height: 10), to: window)
         let converted2 = view.convert(rect: CGRect(x: 150, y: 0, width: 30, height: 20), from: superview)
@@ -713,6 +713,111 @@ extension Tests {
         XCTAssertTrue(converted2.x == 130)
         XCTAssertTrue(converted2.y == -10)
     }
+    func testLayoutGuideCoordinateConverting() {
+        let guideSuperview = UIView(frame: bounds.insetBy(dx: 100, dy: 100))
+        let guide = LayoutGuide<UIView>(frame: CGRect(x: 0, y: 0, width: 100, height: 200))
+        guideSuperview.add(layoutGuide: guide)
+
+        let convertedPointTo = guide.convert(CGPoint(x: 10, y: 10), to: UIScreen.main.coordinateSpace)
+        let convertedPointFrom = guide.convert(CGPoint(x: 10, y: 10), from: UIScreen.main.coordinateSpace)
+        let convertedRectTo = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), to: UIScreen.main.coordinateSpace)
+        let convertedRectFrom = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), from: UIScreen.main.coordinateSpace)
+
+        XCTAssertTrue(convertedPointTo.x == 110)
+        XCTAssertTrue(convertedPointTo.y == 110)
+        XCTAssertTrue(convertedRectTo.origin.x == 110)
+        XCTAssertTrue(convertedRectTo.origin.y == 110)
+
+        XCTAssertTrue(convertedPointFrom.x == -90)
+        XCTAssertTrue(convertedPointFrom.y == -90)
+        XCTAssertTrue(convertedRectFrom.origin.x == -90)
+        XCTAssertTrue(convertedRectFrom.origin.y == -90)
+    }
+}
+
+// MARK: Stack scheme, layout guide
+
+extension Tests {
+    func testLayoutDistribution() {
+        let frames = (0..<5).map { _ in CGRect.random(in: bounds) }
+        let distribution = LayoutDistribution.fromTrailing(by: _RectAxis.vertical, spacing: 2)
+
+        var previous: CGRect?
+        let distributedFrames = distribution.distribute(rects: frames, in: bounds, iterator: {_ in})
+
+        var iterator = distributedFrames.makeIterator()
+        previous = iterator.next()
+        XCTAssertTrue(previous!.maxY == bounds.maxY)
+        while let next = iterator.next() {
+            XCTAssertTrue(previous!.top == next.bottom + 2)
+
+            previous = next
+        }
+    }
+    func testStackLayoutScheme() {
+        let views = (0..<5).map { _ in UIView(frame: .random(in: bounds)) }
+        var stack = StackLayoutScheme(items: { views })
+        stack.distribution = .fromRight(spacing: 0)
+        stack.alignment = .center()
+        stack.filling = .custom(Layout.Filling(horizontal: .fixed(20), vertical: .scaled(1)))
+
+        stack.layout(in: bounds)
+
+        XCTAssertTrue(Int(stack.currentSnapshot.snapshotFrame.width) == views.count * 20)
+    }
+    func testStackLayoutGuideSizeThatFits() {
+        let stackGuide = StackLayoutGuide<UIView>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        stackGuide.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(30), vertical: .scaled(1)))
+        stackGuide.scheme.distribution = .fromLeft(spacing: 5)
+
+        stackGuide.addArrangedItem(UIView(frame: .random(in: stackGuide.bounds)))
+        stackGuide.addArrangedItem(UIView(frame: .random(in: stackGuide.bounds)))
+        stackGuide.addArrangedItem(UIView(frame: .random(in: stackGuide.bounds)))
+
+        XCTAssertTrue(CGSize(width: 100, height: 200) == stackGuide.sizeThatFits(stackGuide.bounds.size))
+    }
+    func testStackLayoutGuideAddRemoveLayoutItems() {
+        let view = UIView()
+        let stackGuide = StackLayoutGuide<UIView>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        view.add(layoutGuide: stackGuide)
+
+        let subview = UIView(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(subview)
+        let sublayer = CALayer(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(sublayer)
+        let layoutGuide = LayoutGuide<CATextLayer>(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(layoutGuide)
+
+        XCTAssertTrue(subview.superview === view)
+        XCTAssertTrue(sublayer.superlayer === view.layer)
+        XCTAssertTrue(layoutGuide.ownerItem === view.layer)
+
+        stackGuide.removeArrangedItem(subview)
+        stackGuide.removeArrangedItem(sublayer)
+        stackGuide.removeArrangedItem(layoutGuide)
+
+        XCTAssertNil(subview.superview)
+        XCTAssertNil(sublayer.superlayer)
+        XCTAssertNil(layoutGuide.ownerItem)
+    }
+    func testRemoveStackLayoutFromSuperItem() {
+        let view = UIView()
+        let stackGuide = StackLayoutGuide<UIView>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        view.add(layoutGuide: stackGuide)
+
+        let subview = UIView(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(subview)
+        let sublayer = CALayer(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(sublayer)
+        let layoutGuide = LayoutGuide<CALayer>(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedItem(layoutGuide)
+
+        stackGuide.removeFromSuperItem()
+
+        XCTAssertNil(subview.superview)
+        XCTAssertNil(sublayer.superlayer)
+        XCTAssertNil(layoutGuide.ownerItem)
+    }
 }
 
 // MARK: Measures
@@ -752,59 +857,62 @@ extension Tests {
     }
 }
 
+// MARK: RectAxis
+
+extension Tests {
+    func testLayoutWorkspaceBeforeLeadingAlign() {
+        let leftAlign = LayoutWorkspace.Before.Align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)
+        let topAlign = LayoutWorkspace.Before.Align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)
+        let rect1 = CGRect.random(in: bounds)
+        var rect2 = CGRect.random(in: bounds)
+
+        leftAlign.formConstrain(sourceRect: &rect2, by: rect1)
+        topAlign.formConstrain(sourceRect: &rect2, by: rect1)
+
+        XCTAssertTrue(rect2.right == rect1.left)
+        XCTAssertTrue(rect2.bottom == rect1.top)
+    }
+    func testLayoutWorkspaceAfterLeadingAlign() {
+        let leftAlign = LayoutWorkspace.After.Align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)
+        let topAlign = LayoutWorkspace.After.Align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)
+        let rect1 = CGRect.random(in: bounds)
+        var rect2 = CGRect.random(in: bounds)
+
+        leftAlign.formConstrain(sourceRect: &rect2, by: rect1)
+        topAlign.formConstrain(sourceRect: &rect2, by: rect1)
+
+        XCTAssertTrue(rect2.left == rect1.left)
+        XCTAssertTrue(rect2.top == rect1.top)
+    }
+    func testLayoutWorkspaceBeforeTrailingAlign() {
+        let rightAlign = LayoutWorkspace.Before.Align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)
+        let bottomAlign = LayoutWorkspace.Before.Align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)
+        let rect1 = CGRect.random(in: bounds)
+        var rect2 = CGRect.random(in: bounds)
+
+        rightAlign.formConstrain(sourceRect: &rect2, by: rect1)
+        bottomAlign.formConstrain(sourceRect: &rect2, by: rect1)
+
+        XCTAssertTrue(rect2.right == rect1.right)
+        XCTAssertTrue(rect2.bottom == rect1.bottom)
+    }
+    func testLayoutWorkspaceAfterTrailingAlign() {
+        let rightAlign = LayoutWorkspace.After.Align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)
+        let bottomAlign = LayoutWorkspace.After.Align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)
+        let rect1 = CGRect.random(in: bounds)
+        var rect2 = CGRect.random(in: bounds)
+
+        rightAlign.formConstrain(sourceRect: &rect2, by: rect1)
+        bottomAlign.formConstrain(sourceRect: &rect2, by: rect1)
+
+        XCTAssertTrue(rect2.left == rect1.right)
+        XCTAssertTrue(rect2.top == rect1.bottom)
+    }
+}
+
 // MARK: Beta testing, improvements
 
 extension Tests {
-//    func testUICoordinateInBackgroundThread() {
-//        let window = UIApplication.shared.delegate!.window!!
-//        let superview = UIScrollView(frame: bounds.insetBy(dx: 100, dy: 100))
-//        window.addSubview(superview)
-//        superview.contentSize = bounds.size
-//        superview.contentOffset.x = 150
-//        let view = UIView(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
-//        superview.addSubview(view)
-//
-//        var converted: CGRect!
-//        var converted2: CGRect!
-//        let exp = expectation(description: "")
-//        DispatchQueue.global(qos: .background).async {
-//            converted = view.convert(rect: CGRect(x: 10, y: -5, width: 20, height: 10), to: window)
-//            converted2 = view.convert(rect: CGRect(x: 150, y: 0, width: 30, height: 20), from: superview)
-//
-//            XCTAssertTrue(converted.origin.x == -20)
-//            XCTAssertTrue(converted.origin.y == 105)
-//
-//            XCTAssertTrue(converted2.origin.x == 130)
-//            XCTAssertTrue(converted2.origin.y == -10)
-//            exp.fulfill()
-//        }
-//        DispatchQueue.main.async {
-//            superview.contentSize.height = view.frame.maxY
-//            superview.frame = self.bounds
-//        }
-//
-//        waitForExpectations(timeout: 2)
-//    }
-    func testLayoutGuideCoordinateConverting() {
-        let guideSuperview = UIView(frame: bounds.insetBy(dx: 100, dy: 100))
-        let guide = LayoutGuide<UIView>(frame: CGRect(x: 0, y: 0, width: 100, height: 200))
-        guideSuperview.add(layoutGuide: guide)
-
-        let convertedPointTo = guide.convert(CGPoint(x: 10, y: 10), to: UIScreen.main.coordinateSpace)
-        let convertedPointFrom = guide.convert(CGPoint(x: 10, y: 10), from: UIScreen.main.coordinateSpace)
-        let convertedRectTo = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), to: UIScreen.main.coordinateSpace)
-        let convertedRectFrom = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), from: UIScreen.main.coordinateSpace)
-
-        XCTAssertTrue(convertedPointTo.x == 110)
-        XCTAssertTrue(convertedPointTo.y == 110)
-        XCTAssertTrue(convertedRectTo.origin.x == 110)
-        XCTAssertTrue(convertedRectTo.origin.y == 110)
-
-        XCTAssertTrue(convertedPointFrom.x == -90)
-        XCTAssertTrue(convertedPointFrom.y == -90)
-        XCTAssertTrue(convertedRectFrom.origin.x == -90)
-        XCTAssertTrue(convertedRectFrom.origin.y == -90)
-    }
     func testNewAnchors() {
         let leftAnchor = LeftAnchor.align
         let rightAnchor = RightAnchor()
@@ -816,17 +924,18 @@ extension Tests {
 
         XCTAssertTrue(rect2.left == rect1.right)
     }
-//    func testNewAnchors2() {
-//        let leftAnchor = LeftAnchor.alignOuter
-//        let rightAnchor = RightAnchor()
-//
-//        let rect1 = CGRect.random(in: bounds)
-//        var rect2 = CGRect.random(in: bounds)
-//
-//        leftAnchor.set(anchor: rightAnchor, of: rect1, to: &rect2)
-//
-//        XCTAssertTrue(rect2.left == rect1.right)
-//    }
+    func testLazyFilter() {
+        let numbers = 0..<10
+
+        var counter = 0
+        numbers.lazy.filter {
+            counter += 1
+            return $0 % 2 == 0
+        }.forEach {
+            XCTAssertFalse(counter == numbers.count)
+            print($0)
+        }
+    }
 }
 
 extension CGRect {
