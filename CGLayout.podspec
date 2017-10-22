@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CGLayout'
-  s.version          = '0.5.5'
+  s.version          = '0.6'
   s.summary          = 'Constraint-based autolayout system written on Swift. Not Autolayout wrapper.'
 
 # This description is used to generate tags and improve search results.
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'k-o-d-e-n' => 'koden.u8800@gmail.com' }
-  s.source           = { :git => 'https://github.com/k-o-d-e-n/CGLayout.git', :tag => '0.5.5_beta' }
+  s.source           = { :git => 'https://github.com/k-o-d-e-n/CGLayout.git', :tag => '0.6_beta' }
   s.social_media_url = 'https://twitter.com/K_o_D_e_N'
 
   s.ios.deployment_target = '9.0'

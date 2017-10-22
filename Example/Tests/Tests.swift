@@ -713,6 +713,26 @@ extension Tests {
         XCTAssertTrue(converted2.x == 130)
         XCTAssertTrue(converted2.y == -10)
     }
+    func testLayoutGuideCoordinateConverting() {
+        let guideSuperview = UIView(frame: bounds.insetBy(dx: 100, dy: 100))
+        let guide = LayoutGuide<UIView>(frame: CGRect(x: 0, y: 0, width: 100, height: 200))
+        guideSuperview.add(layoutGuide: guide)
+
+        let convertedPointTo = guide.convert(CGPoint(x: 10, y: 10), to: UIScreen.main.coordinateSpace)
+        let convertedPointFrom = guide.convert(CGPoint(x: 10, y: 10), from: UIScreen.main.coordinateSpace)
+        let convertedRectTo = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), to: UIScreen.main.coordinateSpace)
+        let convertedRectFrom = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), from: UIScreen.main.coordinateSpace)
+
+        XCTAssertTrue(convertedPointTo.x == 110)
+        XCTAssertTrue(convertedPointTo.y == 110)
+        XCTAssertTrue(convertedRectTo.origin.x == 110)
+        XCTAssertTrue(convertedRectTo.origin.y == 110)
+
+        XCTAssertTrue(convertedPointFrom.x == -90)
+        XCTAssertTrue(convertedPointFrom.y == -90)
+        XCTAssertTrue(convertedRectFrom.origin.x == -90)
+        XCTAssertTrue(convertedRectFrom.origin.y == -90)
+    }
 }
 
 // MARK: Stack scheme, layout guide
@@ -720,7 +740,7 @@ extension Tests {
 extension Tests {
     func testLayoutDistribution() {
         let frames = (0..<5).map { _ in CGRect.random(in: bounds) }
-        let distribution = LayoutDistribution.fromBottom(spacing: 2)
+        let distribution = LayoutDistribution.fromTrailing(by: _RectAxis.vertical, spacing: 2)
 
         var previous: CGRect?
         let distributedFrames = distribution.distribute(rects: frames, in: bounds, iterator: {_ in})
@@ -907,25 +927,17 @@ extension Tests {
 // MARK: Beta testing, improvements
 
 extension Tests {
-    func testLayoutGuideCoordinateConverting() {
-        let guideSuperview = UIView(frame: bounds.insetBy(dx: 100, dy: 100))
-        let guide = LayoutGuide<UIView>(frame: CGRect(x: 0, y: 0, width: 100, height: 200))
-        guideSuperview.add(layoutGuide: guide)
+    func testLazyFilter() {
+        let numbers = 0..<10
 
-        let convertedPointTo = guide.convert(CGPoint(x: 10, y: 10), to: UIScreen.main.coordinateSpace)
-        let convertedPointFrom = guide.convert(CGPoint(x: 10, y: 10), from: UIScreen.main.coordinateSpace)
-        let convertedRectTo = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), to: UIScreen.main.coordinateSpace)
-        let convertedRectFrom = guide.convert(CGRect(x: 10, y: 10, width: 20, height: 20), from: UIScreen.main.coordinateSpace)
-
-        XCTAssertTrue(convertedPointTo.x == 110)
-        XCTAssertTrue(convertedPointTo.y == 110)
-        XCTAssertTrue(convertedRectTo.origin.x == 110)
-        XCTAssertTrue(convertedRectTo.origin.y == 110)
-
-        XCTAssertTrue(convertedPointFrom.x == -90)
-        XCTAssertTrue(convertedPointFrom.y == -90)
-        XCTAssertTrue(convertedRectFrom.origin.x == -90)
-        XCTAssertTrue(convertedRectFrom.origin.y == -90)
+        var counter = 0
+        numbers.lazy.filter {
+            counter += 1
+            return $0 % 2 == 0
+        }.forEach {
+            XCTAssertFalse(counter == numbers.count)
+            print($0)
+        }
     }
 }
 

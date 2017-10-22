@@ -9,6 +9,8 @@
 import Foundation
 
 // TODO: !!! Implement macOS coordinate space (conversions more complex)
+// TODO: Implement all conversion cases
+// TODO: Add more tests coordinate conversions
 
 // MARK: LayoutCoordinateSpace
 
@@ -56,24 +58,28 @@ extension LayoutCoordinateSpace where Self: UICoordinateSpace, Self: LayoutItem 
 /// Therefore makes extension for UIView.
 extension LayoutCoordinateSpace where Self: UIView {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
-        guard !(item is UIView) else { return convert(point, to: item as! UIView) }
+        if let item = item as? UIView { return convert(point, to: item) }
+        if let item = item as? CALayer { return layer.convert(point, to: item) }
 
         return Self.convert(point: point, from: self, to: item)
     }
     public func convert(point: CGPoint, from item: LayoutItem) -> CGPoint {
-        guard !(item is UIView) else { return convert(point, from: item as! UIView) }
+        if let item = item as? UIView { return convert(point, from: item) }
+        if let item = item as? CALayer { return layer.convert(point, from: item) }
 
         return Self.convert(point: point, from: item, to: self)
     }
     public func convert(rect: CGRect, to item: LayoutItem) -> CGRect {
-        guard !(item is UIView) else { return convert(rect, to: item as! UIView) }
+        if let item = item as? UIView { return convert(rect, to: item) }
+        if let item = item as? CALayer { return layer.convert(rect, to: item) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: self, to: item)
         return rect
     }
     public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-        guard !(item is UIView) else { return convert(rect, from: item as! UIView) }
+        if let item = item as? UIView { return convert(rect, from: item) }
+        if let item = item as? CALayer { return layer.convert(rect, from: item) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: item, to: self)
@@ -83,24 +89,24 @@ extension LayoutCoordinateSpace where Self: UIView {
 #endif
 extension LayoutCoordinateSpace where Self: CALayer {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
-        guard !(item is CALayer) else { return convert(point, to: item as? CALayer) }
+        if let item = item as? CALayer { return convert(point, to: item) }
 
         return Self.convert(point: point, from: self, to: item)
     }
     public func convert(point: CGPoint, from item: LayoutItem) -> CGPoint {
-        guard !(item is CALayer) else { return convert(point, from: item as? CALayer) }
+        if let item = item as? CALayer { return convert(point, from: item) }
 
         return Self.convert(point: point, from: item, to: self)
     }
     public func convert(rect: CGRect, to item: LayoutItem) -> CGRect {
-        guard !(item is CALayer) else { return convert(rect, to: item as? CALayer) }
+        if let item = item as? CALayer { return convert(rect, to: item) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: self, to: item)
         return rect
     }
     public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-        guard !(item is CALayer) else { return convert(rect, from: item as? CALayer) }
+        if let item = item as? CALayer { return convert(rect, from: item) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: item, to: self)
@@ -151,6 +157,38 @@ extension LayoutCoordinateSpace where Self: UILayoutGuide {
         return CGRect(x: rectInSuper.origin.x - frame.origin.x, y: rectInSuper.origin.y - frame.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }
+#endif
+#if os(macOS)
+    extension LayoutCoordinateSpace where Self: NSView {
+        public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
+            if let item = item as? NSView { return convert(point, to: item) }
+            if let item = item as? CALayer, let layer = layer { return layer.convert(point, to: item) }
+
+            return Self.convert(point: point, from: self, to: item)
+        }
+        public func convert(point: CGPoint, from item: LayoutItem) -> CGPoint {
+            if let item = item as? NSView { return convert(point, from: item) }
+            if let item = item as? CALayer, let layer = layer { return layer.convert(point, from: item) }
+
+            return Self.convert(point: point, from: item, to: self)
+        }
+        public func convert(rect: CGRect, to item: LayoutItem) -> CGRect {
+            if let item = item as? NSView { return convert(rect, to: item) }
+            if let item = item as? CALayer, let layer = layer { return layer.convert(rect, to: item) }
+
+            var rect = rect
+            rect.origin = Self.convert(point: rect.origin, from: self, to: item)
+            return rect
+        }
+        public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
+            if let item = item as? NSView { return convert(rect, from: item) }
+            if let item = item as? CALayer, let layer = layer { return layer.convert(rect, from: item) }
+
+            var rect = rect
+            rect.origin = Self.convert(point: rect.origin, from: item, to: self)
+            return rect
+        }
+    }
 #endif
 
 fileprivate struct LinkedList<T>: Sequence {
@@ -210,7 +248,7 @@ extension LayoutCoordinateSpace where Self: LayoutItem {
     }
 }
 
-// MARK: LayoutGuide convertions
+// MARK: LayoutGuide conversions
 
 #if os(iOS) || os(tvOS)
 extension LayoutGuide where Super: UICoordinateSpace {
@@ -243,30 +281,66 @@ extension LayoutGuide where Super: UICoordinateSpace {
 /// Therefore makes extension for UIView.
 extension LayoutGuide where Super: UIView {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
-        guard !(item is UIView) else { return convert(point, to: item as! UIView) }
+        if let item = item as? UIView { return convert(point, to: item) }
+        if let item = item as? CALayer { return convert(point, to: item) }
 
         return LayoutGuide.convert(point: point, from: self, to: item)
     }
     public func convert(point: CGPoint, from item: LayoutItem) -> CGPoint {
-        guard !(item is UIView) else { return convert(point, from: item as! UIView) }
+        if let item = item as? UIView { return convert(point, from: item) }
+        if let item = item as? CALayer { return convert(point, from: item) }
 
         return LayoutGuide.convert(point: point, from: item, to: self)
     }
     public func convert(rect: CGRect, to item: LayoutItem) -> CGRect {
-        guard !(item is UIView) else { return convert(rect, to: item as! UIView) }
+        if let item = item as? UIView { return convert(rect, to: item) }
+        if let item = item as? CALayer { return convert(rect, to: item) }
 
         var rect = rect
         rect.origin = LayoutGuide.convert(point: rect.origin, from: self, to: item)
         return rect
     }
     public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-        guard !(item is UIView) else { return convert(rect, from: item as! UIView) }
+        if let item = item as? UIView { return convert(rect, from: item) }
+        if let item = item as? CALayer { return convert(rect, from: item) }
 
         var rect = rect
         rect.origin = LayoutGuide.convert(point: rect.origin, from: item, to: self)
         return rect
     }
 }
+#endif
+#if os(macOS)
+    extension LayoutGuide where Super: NSView {
+        public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
+            if let item = item as? NSView { return convert(point, to: item) }
+            if let item = item as? CALayer, let layer = ownerItem?.layer { return convert(point, to: item, superLayer: layer) }
+
+            return LayoutGuide.convert(point: point, from: self, to: item)
+        }
+        public func convert(point: CGPoint, from item: LayoutItem) -> CGPoint {
+            if let item = item as? NSView { return convert(point, from: item) }
+            if let item = item as? CALayer, let layer = ownerItem?.layer { return convert(point, from: item, superLayer: layer) }
+
+            return LayoutGuide.convert(point: point, from: item, to: self)
+        }
+        public func convert(rect: CGRect, to item: LayoutItem) -> CGRect {
+            if let item = item as? NSView { return convert(rect, to: item) }
+            if let item = item as? CALayer, let layer = ownerItem?.layer { return convert(rect, to: item, superLayer: layer) }
+
+            var rect = rect
+            rect.origin = LayoutGuide.convert(point: rect.origin, from: self, to: item)
+            return rect
+        }
+        public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
+            if let item = item as? NSView { return convert(rect, from: item) }
+            if let item = item as? CALayer, let layer = ownerItem?.layer { return convert(rect, from: item, superLayer: layer) }
+
+            var rect = rect
+            rect.origin = LayoutGuide.convert(point: rect.origin, from: item, to: self)
+            return rect
+        }
+    }
 #endif
 extension LayoutGuide where Super: CALayer {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
@@ -340,7 +414,68 @@ extension LayoutGuide where Super: UIView {
         let rectInSuper = ownerItem!.convert(rect, from: view)
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
+    public func convert(_ point: CGPoint, to layer: CALayer) -> CGPoint {
+        let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
+        return ownerItem!.layer.convert(pointInSuper, to: layer)
+    }
+
+    public func convert(_ point: CGPoint, from layer: CALayer) -> CGPoint {
+        let pointInSuper = ownerItem!.layer.convert(point, from: layer)
+        return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
+    }
+
+    public func convert(_ rect: CGRect, to layer: CALayer) -> CGRect {
+        let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
+        return ownerItem!.layer.convert(rectInSuper, to: layer)
+    }
+
+    public func convert(_ rect: CGRect, from layer: CALayer) -> CGRect {
+        let rectInSuper = ownerItem!.layer.convert(rect, from: layer)
+        return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
+    }
 }
+#endif
+#if os(macOS)
+    extension LayoutGuide where Super: NSView {
+        public func convert(_ point: CGPoint, to view: NSView) -> CGPoint {
+            let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
+            return ownerItem!.convert(pointInSuper, to: view)
+        }
+
+        public func convert(_ point: CGPoint, from view: NSView) -> CGPoint {
+            let pointInSuper = ownerItem!.convert(point, from: view)
+            return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
+        }
+
+        public func convert(_ rect: CGRect, to view: NSView) -> CGRect {
+            let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
+            return ownerItem!.convert(rectInSuper, to: view)
+        }
+
+        public func convert(_ rect: CGRect, from view: NSView) -> CGRect {
+            let rectInSuper = ownerItem!.convert(rect, from: view)
+            return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
+        }
+        public func convert(_ point: CGPoint, to layer: CALayer, superLayer: CALayer) -> CGPoint {
+            let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
+            return superLayer.convert(pointInSuper, to: layer)
+        }
+
+        public func convert(_ point: CGPoint, from layer: CALayer, superLayer: CALayer) -> CGPoint {
+            let pointInSuper = superLayer.convert(point, from: layer)
+            return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
+        }
+
+        public func convert(_ rect: CGRect, to layer: CALayer, superLayer: CALayer) -> CGRect {
+            let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
+            return superLayer.convert(rectInSuper, to: layer)
+        }
+
+        public func convert(_ rect: CGRect, from layer: CALayer, superLayer: CALayer) -> CGRect {
+            let rectInSuper = superLayer.convert(rect, from: layer)
+            return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
+        }
+    }
 #endif
 extension LayoutGuide where Super: CALayer {
     public func convert(_ point: CGPoint, to coordinateSpace: CALayer) -> CGPoint {

@@ -12,9 +12,30 @@ func -(l: CGSize, r: CGFloat) -> CGSize { return CGSize(width: l.width - r, heig
 func +(l: CGSize, r: CGFloat) -> CGSize { return CGSize(width: l.width + r, height: l.height + r) }
 func *(l: CGSize, r: CGFloat) -> CGSize { return CGSize(width: l.width * r, height: l.height * r) }
 
+internal func warning(_ isTruth: Bool, _ message: String) {
+    debugAction { if isTruth { printWarning(message) } }
+}
+
+internal func debugAction(_ action: () -> Void) {
+    #if DEBUG
+        action()
+    #endif
+}
+
+internal func printWarning(_ message: String) {
+    #if DEBUG
+        debugPrint("CGLayout warning: \(message)")
+    #endif
+}
+
 #if os(iOS) || os(tvOS)
     public typealias EdgeInsets = UIEdgeInsets
 #endif
+
+extension CGPoint {
+    func positive() -> CGPoint { return CGPoint(x: abs(x), y: abs(y)) }
+    func negated() -> CGPoint { return CGPoint(x: x.negated(), y: y.negated()) }
+}
 
 extension CGRect {
     var left: CGFloat { return minX }
@@ -23,6 +44,7 @@ extension CGRect {
     var bottom: CGFloat { return maxY }
     
     var distanceFromOrigin: CGSize { return CGSize(width: maxX, height: maxY) }
+    func distance(from point: CGPoint) -> CGSize { return CGSize(width: maxX - point.x, height: maxY - point.y) }
 }
 extension CGRect {
     mutating func apply(edgeInsets: EdgeInsets) {
@@ -33,6 +55,9 @@ extension CGRect {
                           width: size.width - edgeInsets.horizontal, height: size.height - edgeInsets.vertical)
         #endif
     }
+    func applying(edgeInsets: EdgeInsets) -> CGRect { var this = self; this.apply(edgeInsets: edgeInsets); return this }
+
+    public func asLayout() -> RectBasedLayout { return Layout(x: .left(origin.x), y: .top(origin.y), width: .fixed(width), height: .fixed(height)) }
 }
 
 extension EdgeInsets {
@@ -46,6 +71,7 @@ extension EdgeInsets {
 #if os(iOS) || os(tvOS)
 @available(iOS 9.0, *)
 extension UILayoutGuide: LayoutItem {
+    public var layoutBounds: CGRect { return bounds }
     public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
     public var frame: CGRect { get { return layoutFrame } set {} }
     public var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }

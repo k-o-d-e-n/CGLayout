@@ -9,10 +9,11 @@ import Foundation
 
 // MARK: Protocols
 
-internal protocol RectAxisLayout: RectBasedLayout {
+internal protocol AxisEntity {
     var axis: RectAxis { get }
     func by(axis: RectAxis) -> Self
 }
+internal protocol RectAxisLayout: RectBasedLayout, AxisEntity {}
 
 // MARK: Implementations
 
@@ -52,10 +53,10 @@ internal struct _MainThreadSizeThatFitsConstraint: RectBasedConstraint {
 }
 
 internal struct _MainThreadItemInLayoutTime<Item: LayoutItem>: InLayoutTimeItem {
-    var superBounds: CGRect {
-        if Thread.isMainThread { return item.superItem!.bounds }
+    var superLayoutBounds: CGRect {
+        if Thread.isMainThread { return item.superItem!.layoutBounds }
         var _bounds: CGRect?
-        DispatchQueue.main.sync { _bounds = item.superItem!.bounds }
+        DispatchQueue.main.sync { _bounds = item.superItem!.layoutBounds }
         return _bounds!
     }
     weak var superItem: LayoutItem? {

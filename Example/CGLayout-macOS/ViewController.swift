@@ -23,6 +23,7 @@ class ColoredView: NSView {
 }
 
 class ViewController: NSViewController {
+    var scrollView: NSScrollView { return view as! NSScrollView }
     var subviews: [ColoredView] = []
     let pulledView = ColoredView()
     let centeredView = ColoredView()
@@ -31,7 +32,6 @@ class ViewController: NSViewController {
 
     lazy var stackScheme: StackLayoutScheme = { [unowned self] in
         var stack = StackLayoutScheme(items: { Array(self.subviews[0..<7]) })
-        stack.axis = CGRect.verticalAxis
         stack.distribution = .fromBottom(spacing: 10)
         stack.alignment = .leading(215)
         stack.filling = .custom(Layout.Filling(horizontal: .boxed(235), vertical: .fixed(50)))
@@ -56,13 +56,14 @@ class ViewController: NSViewController {
             view.backgroundColor = NSColor(white: (1 - (1 / max(0.5,CGFloat(i)))), alpha: 1 / max(0.5,CGFloat(i)))
             return view
         }
+        scrollView.documentView = NSView(frame: CGRect(origin: .zero, size: CGSize(width: 800, height: 800)))
         subviews.first?.backgroundColor = .red
-        subviews.forEach(view.addSubview)
-        view.addSubview(pulledView)
+        subviews.forEach(scrollView.documentView!.addSubview)
+        scrollView.documentView!.addSubview(pulledView)
         pulledView.backgroundColor = .red
-        view.addSubview(centeredView)
+        scrollView.documentView!.addSubview(centeredView)
         centeredView.backgroundColor = .yellow
-        view.addSubview(navigationBarBackView)
+        scrollView.documentView!.addSubview(navigationBarBackView)
         navigationBarBackView.backgroundColor = .black
         subview.backgroundColor = .red
         pulledView.addSubview(subview)
@@ -101,7 +102,7 @@ class ViewController: NSViewController {
         let subviewLayout = subview.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(50), height: .fixed(1)),
                                                 constraints: [centeredView.layoutConstraint(for: [LayoutAnchor.equal])])
         let subviewScheme = LayoutScheme(blocks: [centeredViewLayout, subviewLayout])
-        let snapshotSubview = subviewScheme.snapshot(for: view.bounds)
+        let snapshotSubview = subviewScheme.snapshot(for: view.bounds, constrainRects: [(subviews[7], subviews[7].frame)])
         subviewScheme.apply(snapshot: snapshotSubview)
     }
 

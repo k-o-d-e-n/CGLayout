@@ -449,6 +449,9 @@ extension RectAxis {
     }
     func move(maxOf rect: inout CGRect, to newMax: CGFloat) { set(size: max(0, newMax - get(minOf: rect)), for: &rect) }
 }
+extension RectAxis {
+    func transverse() -> RectAxis { return self is _RectAxis.Horizontal ? _RectAxis.vertical : _RectAxis.horizontal }
+}
 
 public struct _RectAxis: RectAxis {
     let base: RectAxis
@@ -541,7 +544,6 @@ public struct _RectAxis: RectAxis {
 //        func move(maxOf rect: inout CGRect, to newMax: CGFloat) { rect.size.height = max(0, newMax - rect.minY) }
     }
 }
-
 
 public struct LayoutWorkspace {
     public struct Before {
