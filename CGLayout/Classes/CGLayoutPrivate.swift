@@ -41,6 +41,12 @@ internal struct _MainThreadSizeThatFitsConstraint: RectBasedConstraint {
 }
 
 internal struct _MainThreadItemInLayoutTime<Item: LayoutItem>: InLayoutTimeItem {
+    var layoutBounds: CGRect {
+        if Thread.isMainThread { return item.layoutBounds }
+        var _bounds: CGRect?
+        DispatchQueue.main.sync { _bounds = item.layoutBounds }
+        return _bounds!
+    }
     var superLayoutBounds: CGRect {
         if Thread.isMainThread { return item.superItem!.layoutBounds }
         var _bounds: CGRect?

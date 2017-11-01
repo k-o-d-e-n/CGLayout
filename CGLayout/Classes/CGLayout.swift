@@ -201,6 +201,8 @@ public protocol InLayoutTimeItem: RectBasedItem {
     var superItem: LayoutItem? { get }
     /// Internal layout space of super item
     var superLayoutBounds: CGRect { get }
+    /// Internal space for layout subitems
+    var layoutBounds: CGRect { get }
 }
 #if os(iOS) || os(tvOS)
 extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
@@ -258,15 +260,25 @@ extension LayoutItem {
     public func layoutBlock(with layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
         return LayoutBlock(item: self, layout: layout, constraints: constraints)
     }
+
+    func contentLayoutConstraint(for anchors: [RectBasedConstraint]) -> ContentLayoutConstraint {
+        return ContentLayoutConstraint(item: self, constraints: anchors)
+    }
 }
 #if os(iOS) || os(tvOS)
-extension LayoutItem where Self: UIView {
+public extension LayoutItem where Self: UIView {
     /// Convenience getter for constraint item related to this entity
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related constraint item
-    public func layoutConstraint(for anchors: [RectBasedConstraint]) -> LayoutConstraint {
+    func layoutConstraint(for anchors: [RectBasedConstraint]) -> LayoutConstraint {
         var constraint = LayoutConstraint(item: self, constraints: anchors)
+        constraint.inLayoutTime = inLayoutTime
+        return constraint
+    }
+
+    func contentLayoutConstraint(for anchors: [RectBasedConstraint]) -> ContentLayoutConstraint {
+        var constraint = ContentLayoutConstraint(item: self, constraints: anchors)
         constraint.inLayoutTime = inLayoutTime
         return constraint
     }
@@ -453,6 +465,62 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     /// - Returns: Converted rect
     func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
         return rect
+    }
+}
+
+public struct ContentLayoutConstraint {
+    fileprivate let constraints: [RectBasedConstraint]
+    private(set) weak var item: LayoutItem?
+    internal var inLayoutTime: InLayoutTimeItem?
+    internal var inLayoutTimeItem: InLayoutTimeItem? {
+        return inLayoutTime ?? item?.inLayoutTime
+    }
+
+    public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
+        self.item = item
+        self.constraints = constraints
+    }
+}
+extension ContentLayoutConstraint: LayoutConstraintProtocol {
+    /// Flag, defines that constraint may be used for layout
+    public var isActive: Bool { return inLayoutTimeItem?.superItem != nil }
+
+    public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
+    var isIndependent: Bool { return false }
+
+    public /// `LayoutItem` object associated with this constraint
+    func layoutItem(is object: AnyObject) -> Bool { return item === object }
+
+    public /// Return rectangle for constrain source rect
+    ///
+    /// - Parameter currentSpace: Source rect in current state
+    /// - Parameter coordinateSpace: Working coordinate space
+    /// - Returns: Rect for constrain
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+        guard let layoutItem = inLayoutTimeItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+
+        return convert(rectIfNeeded: layoutItem.layoutBounds, to: coordinateSpace)
+    }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+        sourceRect = sourceRect.constrainedBy(rect: rect, use: constraints)
+    }
+
+    public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
+    ///
+    /// - Parameters:
+    ///   - rect: Initial rect
+    ///   - coordinateSpace: Destination coordinate space
+    /// - Returns: Converted rect
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
+        guard let item = self.item else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+
+        return coordinateSpace === item ? rect : coordinateSpace.convert(rect: rect, from: item)
     }
 }
 
