@@ -211,6 +211,7 @@ fileprivate struct LinkedList<T>: Sequence {
 }
 
 // TODO: Add search nearest common ancestor to implementation
+// TODO: UIView.isDescendant(of view: UIView)
 extension LayoutCoordinateSpace where Self: LayoutItem {
     fileprivate static func convert(point: CGPoint, from: LayoutItem, to: LayoutItem) -> CGPoint {
         let list1Iterator = LinkedList(start: from) { $0.inLayoutTime.superItem }.makeIterator()

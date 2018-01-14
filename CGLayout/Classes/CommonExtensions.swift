@@ -43,7 +43,7 @@ extension CGRect {
     func distance(from point: CGPoint) -> CGSize { return CGSize(width: maxX - point.x, height: maxY - point.y) }
 }
 extension CGRect {
-    mutating func apply(edgeInsets: EdgeInsets) {
+    public mutating func apply(edgeInsets: EdgeInsets) {
         #if os(iOS) || os(tvOS)
             self = UIEdgeInsetsInsetRect(self, edgeInsets)
         #else
@@ -51,7 +51,7 @@ extension CGRect {
                           width: size.width - edgeInsets.horizontal, height: size.height - edgeInsets.vertical)
         #endif
     }
-    func applying(edgeInsets: EdgeInsets) -> CGRect { var this = self; this.apply(edgeInsets: edgeInsets); return this }
+    public func applying(edgeInsets: EdgeInsets) -> CGRect { var this = self; this.apply(edgeInsets: edgeInsets); return this }
 
     public func asLayout() -> RectBasedLayout { return Layout(x: .left(origin.x), y: .top(origin.y), width: .fixed(width), height: .fixed(height)) }
 }

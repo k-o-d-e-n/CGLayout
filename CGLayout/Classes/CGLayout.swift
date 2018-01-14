@@ -257,7 +257,7 @@ extension LayoutItem {
     ///   - layout: Main layout for this entity
     ///   - constraints: Array of related constraint items
     /// - Returns: Related layout block
-    public func layoutBlock(with layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
+    public func layoutBlock(with layout: RectBasedLayout = Layout.equal, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
         return LayoutBlock(item: self, layout: layout, constraints: constraints)
     }
 
@@ -576,6 +576,8 @@ public class MutableLayoutConstraint: LayoutConstraintProtocol {
 
 // MARK: LayoutBlock
 
+// TODO: Add take snapshot to specific level (or at least top level)
+
 /// Defines frame of layout block, and child blocks
 public protocol LayoutSnapshotProtocol {
     /// Frame of layout block represented as snapshot
@@ -590,12 +592,14 @@ extension CGRect: LayoutSnapshotProtocol {
     public var childSnapshots: [LayoutSnapshotProtocol] { return [] }
 }
 
+// TODO: ! Add snapshot getter for specific level of hierarchy
 /// Defines general methods for any layout block
 public protocol LayoutBlockProtocol {
     /// Flag, defines that block will be used for layout
     var isActive: Bool { get }
     /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol { get }
+    var currentRect: CGRect { get }
 
     /// Calculate and apply frames layout items.
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
@@ -667,6 +671,10 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
         guard let item = item else { fatalError(LayoutBlock.message(forNotActive: self)) }
         return item.inLayoutTime.frame
     }
+    public var currentRect: CGRect {
+        guard let item = item else { fatalError(LayoutBlock.message(forNotActive: self)) }
+        return item.inLayoutTime.frame
+    }
 
     public init(item: Item, layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) {
         self.item = item
@@ -734,10 +742,12 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
 
         item?.frame = snapshot.snapshotFrame
     }
+}
 
-    private static func message(forSkipped block: LayoutBlock) -> String { return "Layout block was skipped, because layout item not available in: \(self)" }
-    private static func message(forNotActive block: LayoutBlock) -> String { return "Layout block is not active, because layout item not available in: \(self)" }
-    private static func message(forMutating block: LayoutBlock) -> String { return "Mutating layout block is available only on main thread \(self)" }
+internal extension LayoutBlockProtocol {
+    static func message(forSkipped block: LayoutBlockProtocol) -> String { return "Layout block was skipped, because layout item not available in: \(self)" }
+    static func message(forNotActive block: LayoutBlockProtocol) -> String { return "Layout block is not active, because layout item not available in: \(self)" }
+    static func message(forMutating block: LayoutBlockProtocol) -> String { return "Mutating layout block is available only on main thread \(self)" }
 }
 
 /// LayoutScheme defines layout process for some layout blocks.
@@ -760,6 +770,11 @@ public struct LayoutScheme: LayoutBlockProtocol {
 
     public init(blocks: [LayoutBlockProtocol]) {
         self.blocks = blocks
+    }
+
+    public var currentRect: CGRect {
+        guard blocks.count > 0 else { fatalError(LayoutScheme.message(forNotActive: self)) }
+        return blocks.reduce(nil) { return $0?.union($1.currentRect) ?? $1.currentRect }!
     }
 
     public /// Calculate and apply frames layout items.
@@ -803,12 +818,12 @@ public struct LayoutScheme: LayoutBlockProtocol {
     ///   - completedRects: `LayoutItem` items with corrected frame
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
-        var snapshotFrame: CGRect!
+        var snapshotFrame: CGRect?
         return LayoutSnapshot(childSnapshots: blocks.map { block in
             let blockSnapshot = block.snapshot(for: sourceRect, completedRects: &completedRects)
             snapshotFrame = snapshotFrame?.union(blockSnapshot.snapshotFrame) ?? blockSnapshot.snapshotFrame
             return blockSnapshot
-        }, snapshotFrame: snapshotFrame)
+        }, snapshotFrame: snapshotFrame ?? .zero)
     }
 
     public mutating func insertLayout(block: LayoutBlockProtocol, to position: Int) {
@@ -828,6 +843,7 @@ public struct LayoutScheme: LayoutBlockProtocol {
 
 // TODO: ! Add center, baseline and other behaviors
 // TODO: !! Hide types that not used directly
+// TODO: RectBasedConstraint should have possible be wrapped by transformations (min, max, ...) 
 
 /// Provides set of anchor constraints
 public struct LayoutAnchor {

@@ -8,6 +8,8 @@
 
 import Foundation
 
+// TODO: !!! LayoutGuide does not have link to super layout guide. For manage z-index subitems.
+
 // MARK: LayoutGuide and placeholders
 
 /// LayoutGuides will not show up in the view hierarchy, but may be used as layout item in
@@ -29,7 +31,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         didSet { superItem = ownerItem; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
-    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } }
+    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } } // TODO: if calculated frame does not changed subviews don`t update (UILabel)
     open /// Internal coordinate space of layout entity
     var bounds: CGRect { didSet { layout() } }
     open /// Layout item that maintained this layout entity
@@ -168,10 +170,12 @@ public extension LayoutGuide {
 
 // MARK: Placeholders
 
+// TODO: Add possible to make lazy configuration
+
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
-    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock(with: Layout.equal, constraints: [self.layoutConstraint(for: [LayoutAnchor.equal])])
+    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock(with: Layout.equal)
     private weak var _item: Item?
 
     open weak var item: Item! {
@@ -203,6 +207,11 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
         if isItemLoaded {
             itemLayout.layout(in: rect)
         }
+    }
+
+    open override func didAddToOwner() {
+        super.didAddToOwner()
+        if ownerItem == nil { item.removeFromSuperItem() }
     }
 }
 
@@ -528,6 +537,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         public static func fromHorizontalCenter(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromCenter(baseDistribution: LayoutDistribution.FromLeading(axis: _RectAxis.horizontal, spacing: spacing))) }
         public static func equalSpacingHorizontal() -> Distribution { return Distribution(base: LayoutDistribution.EqualSpacing(axis: _RectAxis.horizontal)) }
         public static func equalSpacingVertical() -> Distribution { return Distribution(base: LayoutDistribution.EqualSpacing(axis: _RectAxis.vertical)) }
+        // TODO: Add distribution with limited by size anchor (width, height)
     }
     public struct Alignment: RectAxisLayout {
         let layout: RectAxisLayout
@@ -565,6 +575,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             }
         }
 
+        // TODO: Create auto dimension for axis (only height, only width, together)
         public static func autoDimension(`default` filling: Layout.Filling) -> Filling { return Filling(layout: AutoDimension(defaultFilling: filling)) }
         public static func custom(_ value: Layout.Filling) -> Filling { return Filling(layout: value) }
 
@@ -608,6 +619,11 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
             return blockFrame
         }, snapshotFrame: snapshotFrame ?? .zero)
+    }
+    public var currentRect: CGRect {
+        let items = self.items()
+        guard items.count > 0 else { fatalError(StackLayoutScheme.message(forNotActive: self)) }
+        return items.reduce(nil) { return $0?.union($1.frame) ?? $1.frame }!
     }
 
     public /// Calculate and apply frames layout items.
@@ -666,7 +682,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         let subItems = items()
         var snapshotFrame: CGRect?
         var iterator = subItems.makeIterator()
-        let frames = distribution.distribute(rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) },
+        let frames = distribution.distribute(rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
                                              in: sourceRect,
                                              iterator: {
                                                 completedRects.insert((iterator.next()!, $0), at: 0)
@@ -748,6 +764,8 @@ extension StackLayoutGuide: CustomDebugStringConvertible, CustomStringConvertibl
     public var debugDescription: String { return items.debugDescription }
     public var description: String { return items.description }
 }
+// TODO: Add throw exception on insert arranged item when ownerItem is nil
+// TODO: Remove methods not convinience, need add method with removing by index
 #if os(iOS) || os(tvOS)
 extension StackLayoutGuide where Parent: UIView {
     /// Adds a layout guide to the end of the `arrangedItems` list.
