@@ -1,0 +1,686 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "warning"
+- "debugAction"
+- "printWarning"
+- "EdgeInsets"
+provides-nominal:
+provides-member:
+- ["10Foundation7CGPointV", ""]
+- ["10Foundation6CGRectV", ""]
+- ["10Foundation12NSEdgeInsetsV", ""]
+- ["s10CollectionP", ""]
+- ["Sb", ""]
+- ["s13FloatingPointP", ""]
+- ["10Foundation7CGPointV", "positive"]
+- ["10Foundation7CGPointV", "negated"]
+- ["10Foundation6CGRectV", "left"]
+- ["10Foundation6CGRectV", "right"]
+- ["10Foundation6CGRectV", "top"]
+- ["10Foundation6CGRectV", "bottom"]
+- ["10Foundation6CGRectV", "distanceFromOrigin"]
+- ["10Foundation6CGRectV", "distance"]
+- ["10Foundation6CGRectV", "apply"]
+- ["10Foundation6CGRectV", "applying"]
+- ["10Foundation6CGRectV", "asLayout"]
+- ["10Foundation12NSEdgeInsetsV", "horizontal"]
+- ["10Foundation12NSEdgeInsetsV", "vertical"]
+- ["10Foundation12NSEdgeInsetsV", "zero"]
+- ["s10CollectionP", "halfIndex"]
+- ["Sb", "switch"]
+- ["s10CollectionP", "halfSplitIterator"]
+- ["s13FloatingPointP", "multiplied"]
+- ["s13FloatingPointP", "subtracting"]
+- ["10Foundation6CGRectV", "null"]
+- ["10Foundation6CGRectV", "infinite"]
+- ["10Foundation6CGRectV", "width"]
+- ["10Foundation6CGRectV", "height"]
+- ["10Foundation6CGRectV", "minX"]
+- ["10Foundation6CGRectV", "midX"]
+- ["10Foundation6CGRectV", "maxX"]
+- ["10Foundation6CGRectV", "minY"]
+- ["10Foundation6CGRectV", "midY"]
+- ["10Foundation6CGRectV", "maxY"]
+- ["10Foundation6CGRectV", "isEmpty"]
+- ["10Foundation6CGRectV", "isInfinite"]
+- ["10Foundation6CGRectV", "isNull"]
+- ["10Foundation6CGRectV", "contains"]
+- ["10Foundation6CGRectV", "contains"]
+- ["10Foundation6CGRectV", "standardized"]
+- ["10Foundation6CGRectV", "integral"]
+- ["10Foundation6CGRectV", "insetBy"]
+- ["10Foundation6CGRectV", "union"]
+- ["10Foundation6CGRectV", "intersection"]
+- ["10Foundation6CGRectV", "intersects"]
+- ["10Foundation6CGRectV", "offsetBy"]
+- ["10Foundation6CGRectV", "divided"]
+depends-top-level:
+- !private "!"
+- !private "&&"
+- !private "*"
+- !private "+"
+- !private "+="
+- "-"
+- !private "-="
+- !private "..."
+- !private "..<"
+- "/"
+- !private "<"
+- !private "=="
+- "AnyIterator"
+- "AssignmentPrecedence"
+- "Bool"
+- !private "BooleanLiteralType"
+- "CGFloat"
+- "CGPoint"
+- "CGRect"
+- "CGRectEdge"
+- "CGSize"
+- "Collection"
+- !private "Double"
+- "EdgeInsets"
+- "FloatLiteralType"
+- "FloatingPoint"
+- "Int"
+- "IntegerLiteralType"
+- !private "Layout"
+- "NSEdgeInsets"
+- "RectBasedLayout"
+- "String"
+- "TernaryPrecedence"
+- "Void"
+- !private "abs"
+- "debugAction"
+- !private "max"
+- !private "min"
+- "printWarning"
+- "warning"
+- !private "||"
+depends-member:
+- !private ["s11AnyIteratorV", "init"]
+- !private ["Sa", "makeIterator"]
+- !private ["s23BidirectionalCollectionP", "contains"]
+- !private ["s23BidirectionalCollectionP", "makeIterator"]
+- ["s19BinaryFloatingPointP", "greatestFiniteMagnitude"]
+- ["s19BinaryFloatingPointP", "infinity"]
+- ["s19BinaryFloatingPointP", "init"]
+- !private ["s19BinaryFloatingPointP", "rounded"]
+- !private ["s13BinaryIntegerP", "init"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- ["Sb", "switch"]
+- ["10Foundation7CGFloatV", "greatestFiniteMagnitude"]
+- ["10Foundation7CGFloatV", "infinity"]
+- ["10Foundation7CGFloatV", "init"]
+- !private ["10Foundation7CGFloatV", "rounded"]
+- ["8CGLayout0A5ValueP", "greatestFiniteMagnitude"]
+- ["8CGLayout0A5ValueP", "infinity"]
+- ["8CGLayout0A5ValueP", "init"]
+- !private ["8CGLayout0A5ValueP", "rounded"]
+- ["10Foundation7CGPointV", "CGPoint"]
+- !private ["10Foundation7CGPointV", "abs"]
+- !private ["10Foundation7CGPointV", "init"]
+- ["10Foundation7CGPointV", "negated"]
+- ["10Foundation7CGPointV", "positive"]
+- !private ["10Foundation7CGPointV", "x"]
+- !private ["10Foundation7CGPointV", "y"]
+- ["10Foundation6CGRectV", "Bool"]
+- ["10Foundation6CGRectV", "CGFloat"]
+- ["10Foundation6CGRectV", "CGPoint"]
+- ["10Foundation6CGRectV", "CGRect"]
+- ["10Foundation6CGRectV", "CGRectEdge"]
+- ["10Foundation6CGRectV", "CGSize"]
+- ["10Foundation6CGRectV", "EdgeInsets"]
+- !private ["10Foundation6CGRectV", "Layout"]
+- ["10Foundation6CGRectV", "RectBasedLayout"]
+- !private ["10Foundation6CGRectV", "abs"]
+- ["10Foundation6CGRectV", "apply"]
+- ["10Foundation6CGRectV", "applying"]
+- ["10Foundation6CGRectV", "asLayout"]
+- ["10Foundation6CGRectV", "bottom"]
+- ["10Foundation6CGRectV", "contains"]
+- ["10Foundation6CGRectV", "distance"]
+- ["10Foundation6CGRectV", "distanceFromOrigin"]
+- ["10Foundation6CGRectV", "divided"]
+- ["10Foundation6CGRectV", "height"]
+- ["10Foundation6CGRectV", "infinite"]
+- ["10Foundation6CGRectV", "init"]
+- ["10Foundation6CGRectV", "insetBy"]
+- ["10Foundation6CGRectV", "integral"]
+- ["10Foundation6CGRectV", "intersection"]
+- ["10Foundation6CGRectV", "intersects"]
+- ["10Foundation6CGRectV", "isEmpty"]
+- ["10Foundation6CGRectV", "isInfinite"]
+- ["10Foundation6CGRectV", "isNull"]
+- ["10Foundation6CGRectV", "left"]
+- !private ["10Foundation6CGRectV", "max"]
+- ["10Foundation6CGRectV", "maxX"]
+- ["10Foundation6CGRectV", "maxY"]
+- ["10Foundation6CGRectV", "midX"]
+- ["10Foundation6CGRectV", "midY"]
+- !private ["10Foundation6CGRectV", "min"]
+- ["10Foundation6CGRectV", "minX"]
+- ["10Foundation6CGRectV", "minY"]
+- ["10Foundation6CGRectV", "null"]
+- ["10Foundation6CGRectV", "offsetBy"]
+- !private ["10Foundation6CGRectV", "origin"]
+- ["10Foundation6CGRectV", "right"]
+- !private ["10Foundation6CGRectV", "size"]
+- ["10Foundation6CGRectV", "standardized"]
+- ["10Foundation6CGRectV", "top"]
+- ["10Foundation6CGRectV", "union"]
+- ["10Foundation6CGRectV", "width"]
+- ["10Foundation10CGRectEdgeO", "maxXEdge"]
+- ["10Foundation10CGRectEdgeO", "maxYEdge"]
+- ["10Foundation10CGRectEdgeO", "minXEdge"]
+- ["10Foundation10CGRectEdgeO", "minYEdge"]
+- !private ["10Foundation6CGSizeV", "height"]
+- !private ["10Foundation6CGSizeV", "init"]
+- !private ["10Foundation6CGSizeV", "width"]
+- ["s7CVarArgP", "greatestFiniteMagnitude"]
+- ["s7CVarArgP", "infinity"]
+- ["s7CVarArgP", "init"]
+- !private ["s7CVarArgP", "rounded"]
+- !private ["s11ClosedRangeV", "clamped"]
+- !private ["s11ClosedRangeV", "lowerBound"]
+- !private ["s11ClosedRangeV", "overlaps"]
+- !private ["s11ClosedRangeV", "upperBound"]
+- ["s10CollectionP", "AnyIterator"]
+- ["s10CollectionP", "Bool"]
+- !private ["s10CollectionP", "Double"]
+- ["s10CollectionP", "Index"]
+- ["s10CollectionP", "IndexDistance"]
+- ["s10CollectionP", "Int"]
+- ["s10CollectionP", "Self"]
+- !private ["s10CollectionP", "contains"]
+- !private ["s10CollectionP", "count"]
+- ["s10CollectionP", "halfIndex"]
+- ["s10CollectionP", "halfSplitIterator"]
+- !private ["s10CollectionP", "makeIterator"]
+- !private ["s10CollectionP", "prefix"]
+- !private ["s10CollectionP", "suffix"]
+- ["s10ComparableP", "Self"]
+- ["s10ComparableP", "greatestFiniteMagnitude"]
+- ["s10ComparableP", "infinity"]
+- ["s10ComparableP", "init"]
+- !private ["s10ComparableP", "rounded"]
+- !private ["s14CountableRangeV", "contains"]
+- !private ["s28CustomDebugStringConvertibleP", "clamped"]
+- !private ["s28CustomDebugStringConvertibleP", "contains"]
+- !private ["s28CustomDebugStringConvertibleP", "infinity"]
+- !private ["s28CustomDebugStringConvertibleP", "init"]
+- !private ["s28CustomDebugStringConvertibleP", "lowerBound"]
+- !private ["s28CustomDebugStringConvertibleP", "makeIterator"]
+- !private ["s28CustomDebugStringConvertibleP", "overlaps"]
+- !private ["s28CustomDebugStringConvertibleP", "rounded"]
+- !private ["s28CustomDebugStringConvertibleP", "upperBound"]
+- !private ["s29CustomPlaygroundQuickLookableP", "_getBuiltinLogicValue"]
+- !private ["s29CustomPlaygroundQuickLookableP", "init"]
+- !private ["s29CustomPlaygroundQuickLookableP", "rounded"]
+- !private ["s29CustomPlaygroundQuickLookableP", "switch"]
+- !private ["s17CustomReflectableP", "_getBuiltinLogicValue"]
+- !private ["s17CustomReflectableP", "clamped"]
+- !private ["s17CustomReflectableP", "contains"]
+- ["s17CustomReflectableP", "greatestFiniteMagnitude"]
+- ["s17CustomReflectableP", "infinity"]
+- ["s17CustomReflectableP", "init"]
+- !private ["s17CustomReflectableP", "lowerBound"]
+- !private ["s17CustomReflectableP", "makeIterator"]
+- !private ["s17CustomReflectableP", "overlaps"]
+- !private ["s17CustomReflectableP", "rounded"]
+- !private ["s17CustomReflectableP", "switch"]
+- !private ["s17CustomReflectableP", "upperBound"]
+- !private ["s23CustomStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s23CustomStringConvertibleP", "clamped"]
+- !private ["s23CustomStringConvertibleP", "contains"]
+- ["s23CustomStringConvertibleP", "greatestFiniteMagnitude"]
+- ["s23CustomStringConvertibleP", "infinity"]
+- ["s23CustomStringConvertibleP", "init"]
+- !private ["s23CustomStringConvertibleP", "lowerBound"]
+- !private ["s23CustomStringConvertibleP", "makeIterator"]
+- !private ["s23CustomStringConvertibleP", "overlaps"]
+- !private ["s23CustomStringConvertibleP", "rounded"]
+- !private ["s23CustomStringConvertibleP", "switch"]
+- !private ["s23CustomStringConvertibleP", "upperBound"]
+- ["s9DecodableP", "CGFloat"]
+- !private ["s9DecodableP", "CGPoint"]
+- ["s9DecodableP", "CGRect"]
+- !private ["s9DecodableP", "CGSize"]
+- !private ["s9DecodableP", "Layout"]
+- !private ["s9DecodableP", "_getBuiltinLogicValue"]
+- !private ["s9DecodableP", "abs"]
+- !private ["s9DecodableP", "apply"]
+- ["s9DecodableP", "greatestFiniteMagnitude"]
+- !private ["s9DecodableP", "height"]
+- !private ["s9DecodableP", "infinite"]
+- ["s9DecodableP", "infinity"]
+- ["s9DecodableP", "init"]
+- !private ["s9DecodableP", "intersection"]
+- !private ["s9DecodableP", "isEmpty"]
+- !private ["s9DecodableP", "isNull"]
+- !private ["s9DecodableP", "makeIterator"]
+- !private ["s9DecodableP", "max"]
+- !private ["s9DecodableP", "maxX"]
+- !private ["s9DecodableP", "maxY"]
+- !private ["s9DecodableP", "min"]
+- !private ["s9DecodableP", "minX"]
+- !private ["s9DecodableP", "minY"]
+- !private ["s9DecodableP", "null"]
+- !private ["s9DecodableP", "origin"]
+- !private ["s9DecodableP", "rounded"]
+- !private ["s9DecodableP", "size"]
+- !private ["s9DecodableP", "standardized"]
+- !private ["s9DecodableP", "switch"]
+- !private ["s9DecodableP", "union"]
+- !private ["s9DecodableP", "width"]
+- !private ["s9DecodableP", "x"]
+- !private ["s9DecodableP", "y"]
+- !private ["Sd", "init"]
+- !private ["Sd", "rounded"]
+- ["s9EncodableP", "CGFloat"]
+- !private ["s9EncodableP", "CGPoint"]
+- ["s9EncodableP", "CGRect"]
+- !private ["s9EncodableP", "CGSize"]
+- !private ["s9EncodableP", "Layout"]
+- !private ["s9EncodableP", "_getBuiltinLogicValue"]
+- !private ["s9EncodableP", "abs"]
+- !private ["s9EncodableP", "apply"]
+- ["s9EncodableP", "greatestFiniteMagnitude"]
+- !private ["s9EncodableP", "height"]
+- !private ["s9EncodableP", "infinite"]
+- ["s9EncodableP", "infinity"]
+- ["s9EncodableP", "init"]
+- !private ["s9EncodableP", "intersection"]
+- !private ["s9EncodableP", "isEmpty"]
+- !private ["s9EncodableP", "isNull"]
+- !private ["s9EncodableP", "makeIterator"]
+- !private ["s9EncodableP", "max"]
+- !private ["s9EncodableP", "maxX"]
+- !private ["s9EncodableP", "maxY"]
+- !private ["s9EncodableP", "min"]
+- !private ["s9EncodableP", "minX"]
+- !private ["s9EncodableP", "minY"]
+- !private ["s9EncodableP", "null"]
+- !private ["s9EncodableP", "origin"]
+- !private ["s9EncodableP", "rounded"]
+- !private ["s9EncodableP", "size"]
+- !private ["s9EncodableP", "standardized"]
+- !private ["s9EncodableP", "switch"]
+- !private ["s9EncodableP", "union"]
+- !private ["s9EncodableP", "width"]
+- !private ["s9EncodableP", "x"]
+- !private ["s9EncodableP", "y"]
+- ["s9EquatableP", "CGFloat"]
+- !private ["s9EquatableP", "CGPoint"]
+- ["s9EquatableP", "CGRect"]
+- !private ["s9EquatableP", "CGSize"]
+- !private ["s9EquatableP", "Layout"]
+- ["s9EquatableP", "Self"]
+- !private ["s9EquatableP", "_getBuiltinLogicValue"]
+- !private ["s9EquatableP", "abs"]
+- !private ["s9EquatableP", "apply"]
+- !private ["s9EquatableP", "clamped"]
+- !private ["s9EquatableP", "contains"]
+- !private ["s9EquatableP", "down"]
+- ["s9EquatableP", "greatestFiniteMagnitude"]
+- !private ["s9EquatableP", "height"]
+- !private ["s9EquatableP", "infinite"]
+- ["s9EquatableP", "infinity"]
+- ["s9EquatableP", "init"]
+- !private ["s9EquatableP", "intersection"]
+- !private ["s9EquatableP", "isEmpty"]
+- !private ["s9EquatableP", "isNull"]
+- !private ["s9EquatableP", "lowerBound"]
+- !private ["s9EquatableP", "max"]
+- !private ["s9EquatableP", "maxX"]
+- ["s9EquatableP", "maxXEdge"]
+- !private ["s9EquatableP", "maxY"]
+- ["s9EquatableP", "maxYEdge"]
+- !private ["s9EquatableP", "min"]
+- !private ["s9EquatableP", "minX"]
+- ["s9EquatableP", "minXEdge"]
+- !private ["s9EquatableP", "minY"]
+- ["s9EquatableP", "minYEdge"]
+- !private ["s9EquatableP", "null"]
+- !private ["s9EquatableP", "origin"]
+- !private ["s9EquatableP", "overlaps"]
+- !private ["s9EquatableP", "rounded"]
+- !private ["s9EquatableP", "size"]
+- !private ["s9EquatableP", "standardized"]
+- !private ["s9EquatableP", "switch"]
+- !private ["s9EquatableP", "union"]
+- !private ["s9EquatableP", "up"]
+- !private ["s9EquatableP", "upperBound"]
+- !private ["s9EquatableP", "width"]
+- !private ["s9EquatableP", "x"]
+- !private ["s9EquatableP", "y"]
+- !private ["s25ExpressibleByArrayLiteralP", "makeIterator"]
+- !private ["s27ExpressibleByBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s27ExpressibleByBooleanLiteralP", "switch"]
+- ["s25ExpressibleByFloatLiteralP", "greatestFiniteMagnitude"]
+- ["s25ExpressibleByFloatLiteralP", "infinity"]
+- ["s25ExpressibleByFloatLiteralP", "init"]
+- !private ["s25ExpressibleByFloatLiteralP", "rounded"]
+- ["s27ExpressibleByIntegerLiteralP", "Self"]
+- ["s27ExpressibleByIntegerLiteralP", "greatestFiniteMagnitude"]
+- ["s27ExpressibleByIntegerLiteralP", "infinity"]
+- ["s27ExpressibleByIntegerLiteralP", "init"]
+- !private ["s27ExpressibleByIntegerLiteralP", "rounded"]
+- !private ["s23ExpressibleByNilLiteralP", "infinity"]
+- !private ["8CGLayout8ExtendedP", "fixed"]
+- !private ["8CGLayout8ExtendedP", "left"]
+- !private ["8CGLayout8ExtendedP", "top"]
+- !private ["s17FixedWidthIntegerP", "init"]
+- ["s13FloatingPointP", "Self"]
+- ["s13FloatingPointP", "greatestFiniteMagnitude"]
+- ["s13FloatingPointP", "infinity"]
+- ["s13FloatingPointP", "init"]
+- ["s13FloatingPointP", "multiplied"]
+- !private ["s13FloatingPointP", "rounded"]
+- ["s13FloatingPointP", "subtracting"]
+- !private ["s25FloatingPointRoundingRuleO", "down"]
+- !private ["s25FloatingPointRoundingRuleO", "up"]
+- ["s8HashableP", "Self"]
+- !private ["s8HashableP", "_getBuiltinLogicValue"]
+- !private ["s8HashableP", "down"]
+- ["s8HashableP", "greatestFiniteMagnitude"]
+- ["s8HashableP", "infinity"]
+- ["s8HashableP", "init"]
+- ["s8HashableP", "maxXEdge"]
+- ["s8HashableP", "maxYEdge"]
+- ["s8HashableP", "minXEdge"]
+- ["s8HashableP", "minYEdge"]
+- !private ["s8HashableP", "rounded"]
+- !private ["s8HashableP", "switch"]
+- !private ["s8HashableP", "up"]
+- !private ["8CGLayout6LayoutV7FillingV10HorizontalV", "fixed"]
+- !private ["8CGLayout6LayoutV9AlignmentV10HorizontalV", "left"]
+- !private ["s16IndexingIteratorV", "next"]
+- !private ["Si", "init"]
+- !private ["s16IteratorProtocolP", "init"]
+- !private ["s16IteratorProtocolP", "next"]
+- !private ["8CGLayout6LayoutV", "deinit"]
+- !private ["8CGLayout6LayoutV", "init"]
+- ["8CGLayout22LayoutSnapshotProtocolP", "CGFloat"]
+- ["8CGLayout22LayoutSnapshotProtocolP", "CGRect"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "CGSize"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "Layout"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "abs"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "apply"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "height"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "infinite"]
+- ["8CGLayout22LayoutSnapshotProtocolP", "init"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "intersection"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "isEmpty"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "isNull"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "max"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "maxX"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "maxY"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "min"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "minX"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "minY"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "null"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "origin"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "size"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "standardized"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "union"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "width"]
+- !private ["s25LosslessStringConvertibleP", "_getBuiltinLogicValue"]
+- !private ["s25LosslessStringConvertibleP", "init"]
+- !private ["s25LosslessStringConvertibleP", "rounded"]
+- !private ["s25LosslessStringConvertibleP", "switch"]
+- !private ["s10MirrorPathP", "init"]
+- !private ["s17MutableCollectionP", "makeIterator"]
+- ["10Foundation12NSEdgeInsetsV", "CGFloat"]
+- ["10Foundation12NSEdgeInsetsV", "EdgeInsets"]
+- !private ["10Foundation12NSEdgeInsetsV", "bottom"]
+- ["10Foundation12NSEdgeInsetsV", "horizontal"]
+- !private ["10Foundation12NSEdgeInsetsV", "init"]
+- !private ["10Foundation12NSEdgeInsetsV", "left"]
+- !private ["10Foundation12NSEdgeInsetsV", "right"]
+- !private ["10Foundation12NSEdgeInsetsV", "top"]
+- ["10Foundation12NSEdgeInsetsV", "vertical"]
+- ["10Foundation12NSEdgeInsetsV", "zero"]
+- ["10Foundation20NSSpecialValueCodingP", "CGFloat"]
+- !private ["10Foundation20NSSpecialValueCodingP", "CGPoint"]
+- ["10Foundation20NSSpecialValueCodingP", "CGRect"]
+- !private ["10Foundation20NSSpecialValueCodingP", "CGSize"]
+- !private ["10Foundation20NSSpecialValueCodingP", "EdgeInsets"]
+- !private ["10Foundation20NSSpecialValueCodingP", "Layout"]
+- !private ["10Foundation20NSSpecialValueCodingP", "abs"]
+- !private ["10Foundation20NSSpecialValueCodingP", "apply"]
+- !private ["10Foundation20NSSpecialValueCodingP", "bottom"]
+- !private ["10Foundation20NSSpecialValueCodingP", "height"]
+- !private ["10Foundation20NSSpecialValueCodingP", "horizontal"]
+- !private ["10Foundation20NSSpecialValueCodingP", "infinite"]
+- ["10Foundation20NSSpecialValueCodingP", "init"]
+- !private ["10Foundation20NSSpecialValueCodingP", "intersection"]
+- !private ["10Foundation20NSSpecialValueCodingP", "isEmpty"]
+- !private ["10Foundation20NSSpecialValueCodingP", "isNull"]
+- !private ["10Foundation20NSSpecialValueCodingP", "left"]
+- !private ["10Foundation20NSSpecialValueCodingP", "max"]
+- !private ["10Foundation20NSSpecialValueCodingP", "maxX"]
+- !private ["10Foundation20NSSpecialValueCodingP", "maxY"]
+- !private ["10Foundation20NSSpecialValueCodingP", "min"]
+- !private ["10Foundation20NSSpecialValueCodingP", "minX"]
+- !private ["10Foundation20NSSpecialValueCodingP", "minY"]
+- !private ["10Foundation20NSSpecialValueCodingP", "null"]
+- !private ["10Foundation20NSSpecialValueCodingP", "origin"]
+- !private ["10Foundation20NSSpecialValueCodingP", "right"]
+- !private ["10Foundation20NSSpecialValueCodingP", "size"]
+- !private ["10Foundation20NSSpecialValueCodingP", "standardized"]
+- !private ["10Foundation20NSSpecialValueCodingP", "top"]
+- !private ["10Foundation20NSSpecialValueCodingP", "union"]
+- !private ["10Foundation20NSSpecialValueCodingP", "vertical"]
+- !private ["10Foundation20NSSpecialValueCodingP", "width"]
+- !private ["10Foundation20NSSpecialValueCodingP", "x"]
+- !private ["10Foundation20NSSpecialValueCodingP", "y"]
+- ["s7NumericP", "Self"]
+- ["s7NumericP", "greatestFiniteMagnitude"]
+- ["s7NumericP", "infinity"]
+- ["s7NumericP", "init"]
+- !private ["s7NumericP", "rounded"]
+- !private ["Sq", "infinity"]
+- !private ["s22RandomAccessCollectionP", "contains"]
+- !private ["s22RandomAccessCollectionP", "makeIterator"]
+- !private ["s5RangeV", "contains"]
+- !private ["s15RangeExpressionP", "clamped"]
+- !private ["s15RangeExpressionP", "contains"]
+- !private ["s15RangeExpressionP", "lowerBound"]
+- !private ["s15RangeExpressionP", "overlaps"]
+- !private ["s15RangeExpressionP", "upperBound"]
+- !private ["s26RangeReplaceableCollectionP", "makeIterator"]
+- ["s16RawRepresentableP", "maxXEdge"]
+- ["s16RawRepresentableP", "maxYEdge"]
+- ["s16RawRepresentableP", "minXEdge"]
+- ["s16RawRepresentableP", "minYEdge"]
+- !private ["8CGLayout15RectBasedLayoutP", "fixed"]
+- !private ["8CGLayout15RectBasedLayoutP", "init"]
+- !private ["8CGLayout15RectBasedLayoutP", "left"]
+- !private ["8CGLayout15RectBasedLayoutP", "top"]
+- ["s8SequenceP", "AnyIterator"]
+- ["s8SequenceP", "Bool"]
+- !private ["s8SequenceP", "Double"]
+- ["s8SequenceP", "Index"]
+- ["s8SequenceP", "IndexDistance"]
+- ["s8SequenceP", "Int"]
+- ["s8SequenceP", "Self"]
+- !private ["s8SequenceP", "contains"]
+- !private ["s8SequenceP", "count"]
+- !private ["s8SequenceP", "init"]
+- !private ["s8SequenceP", "makeIterator"]
+- !private ["s8SequenceP", "next"]
+- !private ["s8SequenceP", "prefix"]
+- !private ["s8SequenceP", "reversed"]
+- !private ["s8SequenceP", "suffix"]
+- !private ["s13SignedIntegerP", "init"]
+- ["s13SignedNumericP", "Self"]
+- ["s13SignedNumericP", "greatestFiniteMagnitude"]
+- ["s13SignedNumericP", "infinity"]
+- ["s13SignedNumericP", "init"]
+- !private ["s13SignedNumericP", "rounded"]
+- ["s10StrideableP", "Self"]
+- ["s10StrideableP", "greatestFiniteMagnitude"]
+- ["s10StrideableP", "infinity"]
+- ["s10StrideableP", "init"]
+- !private ["s10StrideableP", "rounded"]
+- !private ["8CGLayout6LayoutV7FillingV8VerticalV", "fixed"]
+- !private ["8CGLayout6LayoutV9AlignmentV8VerticalV", "top"]
+- !private ["s14_ArrayProtocolP", "makeIterator"]
+- !private ["s23_BidirectionalIndexableP", "contains"]
+- !private ["s23_BidirectionalIndexableP", "makeIterator"]
+- !private ["s18_BitwiseOperationsP", "init"]
+- !private ["10Foundation13_CFBridgeableP", "_getBuiltinLogicValue"]
+- !private ["10Foundation13_CFBridgeableP", "makeIterator"]
+- !private ["10Foundation13_CFBridgeableP", "switch"]
+- ["s15_CVarArgAlignedP", "greatestFiniteMagnitude"]
+- ["s15_CVarArgAlignedP", "infinity"]
+- ["s15_CVarArgAlignedP", "init"]
+- !private ["s15_CVarArgAlignedP", "rounded"]
+- ["s22_CVarArgPassedAsDoubleP", "greatestFiniteMagnitude"]
+- ["s22_CVarArgPassedAsDoubleP", "infinity"]
+- ["s22_CVarArgPassedAsDoubleP", "init"]
+- !private ["s22_CVarArgPassedAsDoubleP", "rounded"]
+- !private ["s24_DestructorSafeContainerP", "makeIterator"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "_getBuiltinLogicValue"]
+- !private ["s35_ExpressibleByBuiltinBooleanLiteralP", "switch"]
+- !private ["s33_ExpressibleByBuiltinFloatLiteralP", "init"]
+- !private ["s33_ExpressibleByBuiltinFloatLiteralP", "rounded"]
+- !private ["s35_ExpressibleByBuiltinIntegerLiteralP", "init"]
+- !private ["s35_ExpressibleByBuiltinIntegerLiteralP", "rounded"]
+- ["s10_IndexableP", "AnyIterator"]
+- ["s10_IndexableP", "Bool"]
+- !private ["s10_IndexableP", "Double"]
+- ["s10_IndexableP", "Index"]
+- ["s10_IndexableP", "IndexDistance"]
+- ["s10_IndexableP", "Int"]
+- ["s10_IndexableP", "Self"]
+- !private ["s10_IndexableP", "contains"]
+- !private ["s10_IndexableP", "count"]
+- !private ["s10_IndexableP", "makeIterator"]
+- !private ["s10_IndexableP", "prefix"]
+- !private ["s10_IndexableP", "suffix"]
+- ["s14_IndexableBaseP", "AnyIterator"]
+- ["s14_IndexableBaseP", "Bool"]
+- !private ["s14_IndexableBaseP", "Double"]
+- ["s14_IndexableBaseP", "Index"]
+- ["s14_IndexableBaseP", "IndexDistance"]
+- ["s14_IndexableBaseP", "Int"]
+- ["s14_IndexableBaseP", "Self"]
+- !private ["s14_IndexableBaseP", "contains"]
+- !private ["s14_IndexableBaseP", "count"]
+- !private ["s14_IndexableBaseP", "makeIterator"]
+- !private ["s14_IndexableBaseP", "prefix"]
+- !private ["s14_IndexableBaseP", "reversed"]
+- !private ["s14_IndexableBaseP", "suffix"]
+- !private ["s17_MutableIndexableP", "makeIterator"]
+- !private ["10Foundation13_NSBridgeableP", "makeIterator"]
+- !private ["10Foundation17_ObjectBridgeableP", "_getBuiltinLogicValue"]
+- !private ["10Foundation17_ObjectBridgeableP", "init"]
+- !private ["10Foundation17_ObjectBridgeableP", "makeIterator"]
+- !private ["10Foundation17_ObjectBridgeableP", "rounded"]
+- !private ["10Foundation17_ObjectBridgeableP", "switch"]
+- !private ["10Foundation21_ObjectTypeBridgeableP", "_getBuiltinLogicValue"]
+- !private ["10Foundation21_ObjectTypeBridgeableP", "init"]
+- !private ["10Foundation21_ObjectTypeBridgeableP", "makeIterator"]
+- !private ["10Foundation21_ObjectTypeBridgeableP", "rounded"]
+- !private ["10Foundation21_ObjectTypeBridgeableP", "switch"]
+- !private ["s26_OptionalNilComparisonTypeV", "infinity"]
+- !private ["s22_RandomAccessIndexableP", "contains"]
+- !private ["s22_RandomAccessIndexableP", "makeIterator"]
+- !private ["s26_RangeReplaceableIndexableP", "makeIterator"]
+- ["s11_StrideableP", "Self"]
+- ["s11_StrideableP", "greatestFiniteMagnitude"]
+- ["s11_StrideableP", "infinity"]
+- ["s11_StrideableP", "init"]
+- !private ["s11_StrideableP", "rounded"]
+depends-nominal:
+- !private "s11AnyIteratorV"
+- !private "Sa"
+- !private "s23BidirectionalCollectionP"
+- "s19BinaryFloatingPointP"
+- !private "s13BinaryIntegerP"
+- "Sb"
+- "10Foundation7CGFloatV"
+- "8CGLayout0A5ValueP"
+- "10Foundation7CGPointV"
+- "10Foundation6CGRectV"
+- "10Foundation10CGRectEdgeO"
+- !private "10Foundation6CGSizeV"
+- "s7CVarArgP"
+- !private "s11ClosedRangeV"
+- "s10CollectionP"
+- "s10ComparableP"
+- !private "s14CountableRangeV"
+- !private "s28CustomDebugStringConvertibleP"
+- !private "s29CustomPlaygroundQuickLookableP"
+- "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- "s9DecodableP"
+- !private "Sd"
+- "s9EncodableP"
+- "s9EquatableP"
+- !private "s25ExpressibleByArrayLiteralP"
+- !private "s27ExpressibleByBooleanLiteralP"
+- "s25ExpressibleByFloatLiteralP"
+- "s27ExpressibleByIntegerLiteralP"
+- !private "s23ExpressibleByNilLiteralP"
+- !private "8CGLayout8ExtendedP"
+- !private "s17FixedWidthIntegerP"
+- "s13FloatingPointP"
+- !private "s25FloatingPointRoundingRuleO"
+- "s8HashableP"
+- !private "8CGLayout6LayoutV7FillingV10HorizontalV"
+- !private "8CGLayout6LayoutV9AlignmentV10HorizontalV"
+- !private "s16IndexingIteratorV"
+- !private "Si"
+- !private "s16IteratorProtocolP"
+- !private "8CGLayout6LayoutV"
+- "8CGLayout22LayoutSnapshotProtocolP"
+- !private "s25LosslessStringConvertibleP"
+- !private "s10MirrorPathP"
+- !private "s17MutableCollectionP"
+- "10Foundation12NSEdgeInsetsV"
+- "10Foundation20NSSpecialValueCodingP"
+- "s7NumericP"
+- !private "Sq"
+- !private "s22RandomAccessCollectionP"
+- !private "s5RangeV"
+- !private "s15RangeExpressionP"
+- !private "s26RangeReplaceableCollectionP"
+- "s16RawRepresentableP"
+- !private "8CGLayout15RectBasedLayoutP"
+- "s8SequenceP"
+- !private "s13SignedIntegerP"
+- "s13SignedNumericP"
+- "s10StrideableP"
+- !private "8CGLayout6LayoutV7FillingV8VerticalV"
+- !private "8CGLayout6LayoutV9AlignmentV8VerticalV"
+- !private "s14_ArrayProtocolP"
+- !private "s23_BidirectionalIndexableP"
+- !private "s18_BitwiseOperationsP"
+- !private "10Foundation13_CFBridgeableP"
+- "s15_CVarArgAlignedP"
+- "s22_CVarArgPassedAsDoubleP"
+- !private "s24_DestructorSafeContainerP"
+- !private "s35_ExpressibleByBuiltinBooleanLiteralP"
+- !private "s33_ExpressibleByBuiltinFloatLiteralP"
+- !private "s35_ExpressibleByBuiltinIntegerLiteralP"
+- "s10_IndexableP"
+- "s14_IndexableBaseP"
+- !private "s17_MutableIndexableP"
+- !private "10Foundation13_NSBridgeableP"
+- !private "10Foundation17_ObjectBridgeableP"
+- !private "10Foundation21_ObjectTypeBridgeableP"
+- !private "s26_OptionalNilComparisonTypeV"
+- !private "s22_RandomAccessIndexableP"
+- !private "s26_RangeReplaceableIndexableP"
+- "s11_StrideableP"
+depends-dynamic-lookup:
+depends-external:
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Dispatch.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Foundation.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/glibc.modulemap"
+interface-hash: "94161ee0c12ba01459109a30f780ebde"

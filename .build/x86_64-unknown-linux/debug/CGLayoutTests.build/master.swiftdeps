@@ -1,0 +1,5 @@
+version: "Swift version 4.0.3 (swift-4.0.3-RELEASE)"
+options: "488d11fbcfc3663388556c6c815dda8a"
+build_time: [1521922372, 772708815]
+inputs:
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Tests/CGLayoutTests/CGLayoutTests.swift": [1521922370, 0]

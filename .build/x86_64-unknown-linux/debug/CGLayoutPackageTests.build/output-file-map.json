@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build/master.swiftdeps"
+  },
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Tests/LinuxMain.swift": {
+    "dependencies": "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build/LinuxMain.d",
+    "object": "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build/LinuxMain.swift.o",
+    "swiftmodule": "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build/LinuxMain~partial.swiftmodule",
+    "swift-dependencies": "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build/LinuxMain.swiftdeps"
+  }
+}

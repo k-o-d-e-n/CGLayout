@@ -1,0 +1,5 @@
+version: "Swift version 4.0.3 (swift-4.0.3-RELEASE)"
+options: "1989ac85afb89efad3df76192037f6a1"
+build_time: [1521922373, 210954438]
+inputs:
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Tests/LinuxMain.swift": [1521912666, 0]

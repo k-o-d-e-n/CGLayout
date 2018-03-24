@@ -1,0 +1,87 @@
+client:
+  name: swift-build
+tools: {}
+targets:
+  "main": ["<CGLayout.module>"]
+  "test": ["<CGLayoutTests.module>","<CGLayout.module>","<CGLayoutPackageTests.module>","<CGLayoutPackageTests.test>"]
+  "CGLayoutTests.module": ["<CGLayoutTests.module>"]
+  "CGLayout.module": ["<CGLayout.module>"]
+  "CGLayoutPackageTests.module": ["<CGLayoutPackageTests.module>"]
+  "CGLayoutPackageTests.test": ["<CGLayoutPackageTests.test>"]
+default: "main"
+commands: 
+  "<C.CGLayout.module>":
+    tool: phony
+    inputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.swiftmodule"]
+    outputs: ["<CGLayout.module>"]
+
+  "<C.CGLayoutPackageTests.module>":
+    tool: phony
+    inputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.swiftmodule"]
+    outputs: ["<CGLayoutPackageTests.module>"]
+
+  "<C.CGLayoutPackageTests.test>":
+    tool: phony
+    inputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.xctest"]
+    outputs: ["<CGLayoutPackageTests.test>"]
+
+  "<C.CGLayoutTests.module>":
+    tool: phony
+    inputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutTests.swiftmodule"]
+    outputs: ["<CGLayoutTests.module>"]
+
+  "C.CGLayout.module":
+    tool: swift-compiler
+    executable: "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/bin/swiftc"
+    module-name: "CGLayout"
+    module-output-path: "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.swiftmodule"
+    inputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayout.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutDeprecated.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutExtended.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutPrivate.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutPrivateEvolution.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CommonExtensions.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/LayoutItemContainer.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/MultiCoordinateSpace.swift"]
+    outputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayout.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutDeprecated.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutExtended.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutPrivate.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutPrivateEvolution.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CommonExtensions.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/LayoutItemContainer.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/MultiCoordinateSpace.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.swiftmodule"]
+    import-paths: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug"]
+    temps-path: "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build"
+    objects: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayout.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutDeprecated.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutExtended.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutPrivate.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutPrivateEvolution.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CommonExtensions.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/LayoutItemContainer.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/MultiCoordinateSpace.swift.o"]
+    other-args: ["-swift-version","4","-target","x86_64-unknown-linux","-sdk","/","-Onone","-g","-enable-testing","-j2","-DSWIFT_PACKAGE","-module-cache-path","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/ModuleCache"]
+    sources: ["/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayout.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutDeprecated.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutExtended.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutPrivate.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutPrivateEvolution.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CommonExtensions.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/LayoutItemContainer.swift","/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/MultiCoordinateSpace.swift"]
+    is-library: true
+    enable-whole-module-optimization: false
+    num-threads: "2"
+
+  "C.CGLayoutPackageTests.module":
+    tool: swift-compiler
+    executable: "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/bin/swiftc"
+    module-name: "CGLayoutPackageTests"
+    module-output-path: "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.swiftmodule"
+    inputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutTests.swiftmodule","/home/k-o-d-e-n/Documents/Development/CGLayout/Tests/LinuxMain.swift"]
+    outputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build/LinuxMain.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.swiftmodule"]
+    import-paths: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug"]
+    temps-path: "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build"
+    objects: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build/LinuxMain.swift.o"]
+    other-args: ["-swift-version","4","-target","x86_64-unknown-linux","-sdk","/","-Onone","-g","-enable-testing","-j2","-DSWIFT_PACKAGE","-module-cache-path","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/ModuleCache"]
+    sources: ["/home/k-o-d-e-n/Documents/Development/CGLayout/Tests/LinuxMain.swift"]
+    is-library: false
+    enable-whole-module-optimization: false
+    num-threads: "2"
+
+  "C.CGLayoutPackageTests.test":
+    tool: shell
+    description: "Linking ./.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.xctest"
+    inputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayout.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutDeprecated.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutExtended.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutPrivate.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutPrivateEvolution.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CommonExtensions.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/LayoutItemContainer.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/MultiCoordinateSpace.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build/LinuxMain.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutTests.build/CGLayoutTests.swift.o"]
+    outputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.xctest"]
+    args: ["/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/bin/swiftc","-target","x86_64-unknown-linux","-sdk","/","-g","-L","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug","-o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.xctest","-module-name","CGLayoutPackageTests","-emit-executable","-Xlinker","-rpath=$ORIGIN","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayout.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutDeprecated.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutExtended.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutPrivate.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CGLayoutPrivateEvolution.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/CommonExtensions.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/LayoutItemContainer.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.build/MultiCoordinateSpace.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.build/LinuxMain.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutTests.build/CGLayoutTests.swift.o"]
+
+  "C.CGLayoutTests.module":
+    tool: swift-compiler
+    executable: "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/bin/swiftc"
+    module-name: "CGLayoutTests"
+    module-output-path: "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutTests.swiftmodule"
+    inputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.swiftmodule","/home/k-o-d-e-n/Documents/Development/CGLayout/Tests/CGLayoutTests/CGLayoutTests.swift"]
+    outputs: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutTests.build/CGLayoutTests.swift.o","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutTests.swiftmodule"]
+    import-paths: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug"]
+    temps-path: "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutTests.build"
+    objects: ["/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayoutTests.build/CGLayoutTests.swift.o"]
+    other-args: ["-swift-version","4","-target","x86_64-unknown-linux","-sdk","/","-Onone","-g","-enable-testing","-j2","-DSWIFT_PACKAGE","-module-cache-path","/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/ModuleCache"]
+    sources: ["/home/k-o-d-e-n/Documents/Development/CGLayout/Tests/CGLayoutTests/CGLayoutTests.swift"]
+    is-library: true
+    enable-whole-module-optimization: false
+    num-threads: "2"
+

@@ -1,0 +1,16 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+provides-nominal:
+provides-member:
+depends-top-level:
+depends-member:
+depends-nominal:
+depends-dynamic-lookup:
+depends-external:
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Dispatch.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Foundation.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/glibc.modulemap"
+interface-hash: "5bf39d8b5f0094ca83c744a0da4fb204"

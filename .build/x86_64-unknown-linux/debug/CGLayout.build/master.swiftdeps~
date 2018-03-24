@@ -1,0 +1,12 @@
+version: "Swift version 4.0.3 (swift-4.0.3-RELEASE)"
+options: "0097fe90e3fb183f0cff96ec72c5d4e0"
+build_time: [1521919408, 965466840]
+inputs:
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayout.swift": [1521913679, 0]
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutDeprecated.swift": [1521912224, 0]
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutExtended.swift": [1521919368, 0]
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutPrivate.swift": !dirty [1521912224, 0]
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CGLayoutPrivateEvolution.swift": [1521912224, 0]
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/CommonExtensions.swift": [1521919407, 0]
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/LayoutItemContainer.swift": [1521915376, 0]
+  "/home/k-o-d-e-n/Documents/Development/CGLayout/Sources/Classes/MultiCoordinateSpace.swift": [1521915450, 0]

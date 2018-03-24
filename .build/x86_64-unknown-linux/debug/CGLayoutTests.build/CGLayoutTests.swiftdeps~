@@ -1,0 +1,186 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "View"
+- "CGLayoutTests"
+provides-nominal:
+- "13CGLayoutTests4ViewV"
+- "13CGLayoutTestsAAC"
+provides-member:
+- ["13CGLayoutTests4ViewV", ""]
+- ["13CGLayoutTestsAAC", ""]
+depends-top-level:
+- !private "=="
+- "Array"
+- "CGLayoutTests"
+- "CGRect"
+- "FloatLiteralType"
+- "IntegerLiteralType"
+- !private "Layout"
+- "StringLiteralType"
+- "View"
+- !private "XCTAssertTrue"
+- "XCTestCase"
+depends-member:
+- !private ["8CGLayout6LayoutV9AlignmentV", "Vertical"]
+- ["s23BidirectionalCollectionP", "init"]
+- ["13CGLayoutTestsAAC", "CGRect"]
+- !private ["13CGLayoutTestsAAC", "Layout"]
+- !private ["13CGLayoutTestsAAC", "View"]
+- !private ["13CGLayoutTestsAAC", "XCTAssertTrue"]
+- ["13CGLayoutTestsAAC", "allTests"]
+- ["13CGLayoutTestsAAC", "bounds"]
+- ["13CGLayoutTestsAAC", "deinit"]
+- ["13CGLayoutTestsAAC", "init"]
+- ["13CGLayoutTestsAAC", "testTopAlignment"]
+- ["10Foundation6CGRectV", "init"]
+- !private ["10Foundation6CGRectV", "minY"]
+- ["s10CollectionP", "init"]
+- ["s10ComparableP", "init"]
+- ["s28CustomDebugStringConvertibleP", "init"]
+- ["s29CustomPlaygroundQuickLookableP", "init"]
+- ["s17CustomReflectableP", "init"]
+- ["s23CustomStringConvertibleP", "init"]
+- ["s9DecodableP", "init"]
+- !private ["s9DecodableP", "minY"]
+- ["s9EncodableP", "init"]
+- !private ["s9EncodableP", "minY"]
+- ["s9EquatableP", "init"]
+- !private ["s9EquatableP", "minY"]
+- ["s43ExpressibleByExtendedGraphemeClusterLiteralP", "init"]
+- ["s26ExpressibleByStringLiteralP", "init"]
+- ["s33ExpressibleByUnicodeScalarLiteralP", "init"]
+- !private ["8CGLayout8ExtendedP", "formLayout"]
+- !private ["8CGLayout8ExtendedP", "top"]
+- ["s8HashableP", "init"]
+- !private ["8CGLayout6LayoutV", "Alignment"]
+- ["8CGLayout22LayoutSnapshotProtocolP", "init"]
+- !private ["8CGLayout22LayoutSnapshotProtocolP", "minY"]
+- ["6XCTest8ListableP", "CGRect"]
+- !private ["6XCTest8ListableP", "Layout"]
+- !private ["6XCTest8ListableP", "View"]
+- !private ["6XCTest8ListableP", "XCTAssertTrue"]
+- !private ["6XCTest8ListableP", "bounds"]
+- !private ["6XCTest8ListableP", "init"]
+- ["6XCTest8ListableP", "testTopAlignment"]
+- ["6XCTest8ListableP", ""]
+- ["s25LosslessStringConvertibleP", "init"]
+- ["s10MirrorPathP", "init"]
+- ["10Foundation20NSSpecialValueCodingP", "init"]
+- !private ["10Foundation20NSSpecialValueCodingP", "minY"]
+- ["6XCTest24PerformanceMeterDelegateP", "CGRect"]
+- !private ["6XCTest24PerformanceMeterDelegateP", "Layout"]
+- !private ["6XCTest24PerformanceMeterDelegateP", "View"]
+- !private ["6XCTest24PerformanceMeterDelegateP", "XCTAssertTrue"]
+- !private ["6XCTest24PerformanceMeterDelegateP", "bounds"]
+- !private ["6XCTest24PerformanceMeterDelegateP", "init"]
+- ["6XCTest24PerformanceMeterDelegateP", "testTopAlignment"]
+- ["6XCTest24PerformanceMeterDelegateP", ""]
+- ["s26RangeReplaceableCollectionP", "init"]
+- !private ["8CGLayout15RectBasedLayoutP", "Alignment"]
+- !private ["8CGLayout15RectBasedLayoutP", "Vertical"]
+- !private ["8CGLayout15RectBasedLayoutP", "formLayout"]
+- !private ["8CGLayout15RectBasedLayoutP", "top"]
+- ["s8SequenceP", "init"]
+- !private ["s12StaticStringV", "init"]
+- ["SS", "init"]
+- ["s14StringProtocolP", "init"]
+- ["s16TextOutputStreamP", "init"]
+- ["s20TextOutputStreamableP", "init"]
+- !private ["8CGLayout6LayoutV9AlignmentV8VerticalV", "formLayout"]
+- !private ["8CGLayout6LayoutV9AlignmentV8VerticalV", "top"]
+- ["13CGLayoutTests4ViewV", "CGRect"]
+- ["13CGLayoutTests4ViewV", "frame"]
+- ["13CGLayoutTests4ViewV", "init"]
+- ["6XCTestAAC", "CGRect"]
+- !private ["6XCTestAAC", "Layout"]
+- !private ["6XCTestAAC", "View"]
+- !private ["6XCTestAAC", "XCTAssertTrue"]
+- ["6XCTestAAC", "allTests"]
+- ["6XCTestAAC", "bounds"]
+- ["6XCTestAAC", "testTopAlignment"]
+- ["6XCTest0A4CaseC", "CGRect"]
+- !private ["6XCTest0A4CaseC", "Layout"]
+- !private ["6XCTest0A4CaseC", "View"]
+- !private ["6XCTest0A4CaseC", "XCTAssertTrue"]
+- ["6XCTest0A4CaseC", "allTests"]
+- ["6XCTest0A4CaseC", "bounds"]
+- ["6XCTest0A4CaseC", "init"]
+- ["6XCTest0A4CaseC", "testTopAlignment"]
+- ["6XCTest0A4CaseC", ""]
+- ["s23_BidirectionalIndexableP", "init"]
+- ["10Foundation13_CFBridgeableP", "init"]
+- ["s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP", "init"]
+- ["s34_ExpressibleByBuiltinStringLiteralP", "init"]
+- ["s39_ExpressibleByBuiltinUTF16StringLiteralP", "init"]
+- ["s41_ExpressibleByBuiltinUnicodeScalarLiteralP", "init"]
+- ["s33_ExpressibleByStringInterpolationP", "init"]
+- ["s10_IndexableP", "init"]
+- ["s14_IndexableBaseP", "init"]
+- ["10Foundation13_NSBridgeableP", "init"]
+- ["10Foundation17_ObjectBridgeableP", "init"]
+- ["10Foundation21_ObjectTypeBridgeableP", "init"]
+- ["s26_RangeReplaceableIndexableP", "init"]
+- ["s16_SwiftStringViewP", "init"]
+depends-nominal:
+- !private "8CGLayout6LayoutV9AlignmentV"
+- "s23BidirectionalCollectionP"
+- "13CGLayoutTestsAAC"
+- "10Foundation6CGRectV"
+- "s10CollectionP"
+- "s10ComparableP"
+- "s28CustomDebugStringConvertibleP"
+- "s29CustomPlaygroundQuickLookableP"
+- "s17CustomReflectableP"
+- "s23CustomStringConvertibleP"
+- "s9DecodableP"
+- "s9EncodableP"
+- "s9EquatableP"
+- "s43ExpressibleByExtendedGraphemeClusterLiteralP"
+- "s26ExpressibleByStringLiteralP"
+- "s33ExpressibleByUnicodeScalarLiteralP"
+- !private "8CGLayout8ExtendedP"
+- "s8HashableP"
+- !private "8CGLayout6LayoutV"
+- "8CGLayout22LayoutSnapshotProtocolP"
+- "6XCTest8ListableP"
+- "s25LosslessStringConvertibleP"
+- "s10MirrorPathP"
+- "10Foundation20NSSpecialValueCodingP"
+- "6XCTest24PerformanceMeterDelegateP"
+- "s26RangeReplaceableCollectionP"
+- !private "8CGLayout15RectBasedLayoutP"
+- "s8SequenceP"
+- !private "s12StaticStringV"
+- "SS"
+- "s14StringProtocolP"
+- "s16TextOutputStreamP"
+- "s20TextOutputStreamableP"
+- !private "8CGLayout6LayoutV9AlignmentV8VerticalV"
+- "13CGLayoutTests4ViewV"
+- "6XCTestAAC"
+- "6XCTest0A4CaseC"
+- "s23_BidirectionalIndexableP"
+- "10Foundation13_CFBridgeableP"
+- "s51_ExpressibleByBuiltinExtendedGraphemeClusterLiteralP"
+- "s34_ExpressibleByBuiltinStringLiteralP"
+- "s39_ExpressibleByBuiltinUTF16StringLiteralP"
+- "s41_ExpressibleByBuiltinUnicodeScalarLiteralP"
+- "s33_ExpressibleByStringInterpolationP"
+- "s10_IndexableP"
+- "s14_IndexableBaseP"
+- "10Foundation13_NSBridgeableP"
+- "10Foundation17_ObjectBridgeableP"
+- "10Foundation21_ObjectTypeBridgeableP"
+- "s26_RangeReplaceableIndexableP"
+- "s16_SwiftStringViewP"
+depends-dynamic-lookup:
+depends-external:
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Glibc.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Dispatch.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Foundation.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/Swift.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/SwiftOnoneSupport.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/XCTest.swiftmodule"
+- "/home/k-o-d-e-n/Documents/Development/CGLayout/.build/x86_64-unknown-linux/debug/CGLayout.swiftmodule"
+- "/opt/swift-4.0.3-RELEASE-ubuntu16.10/usr/lib/swift/linux/x86_64/glibc.modulemap"
+interface-hash: "e287cba00becfb4b9c6ae7d53265194e"
