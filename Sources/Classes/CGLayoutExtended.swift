@@ -25,7 +25,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
     var layoutBounds: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x + bounds.origin.x, y: frame.origin.y + bounds.origin.y), size: bounds.size) }
 
     /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
-    open fileprivate(set) weak var ownerItem: Super? {
+    open internal(set) weak var ownerItem: Super? {
         didSet { superItem = ownerItem; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
