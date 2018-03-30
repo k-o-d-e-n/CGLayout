@@ -125,6 +125,11 @@ class ViewController: UIViewController {
 
         scrollView.contentSize.height = view.frame.height.advanced(by: 2)
         scrollView.contentSize.width = view.frame.width
+
+        /// CALayer can insert by any index (work as zIndex)
+//        let testlayer = CALayer(frame: view.bounds)
+//        testlayer.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25).cgColor
+//        view.layer.insertSublayer(testlayer, at: .max)
     }
 
     override func viewDidLayoutSubviews() {

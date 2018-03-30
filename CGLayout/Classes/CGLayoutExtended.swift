@@ -495,7 +495,7 @@ struct LayoutDistribution: RectBasedDistribution {
 }
 
 /// Protocol defines method for filling items
-protocol StackLayoutFilling {
+public protocol StackLayoutFilling {
     /// Performs filling for item in defined source space
     ///
     /// - Parameters:
@@ -505,7 +505,7 @@ protocol StackLayoutFilling {
     func filling(for item: LayoutItem, in source: CGRect) -> CGRect
 }
 extension Layout.Filling: StackLayoutFilling {
-    func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
+    public func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
         return layout(rect: item.frame, in: source)
     }
 }
@@ -563,8 +563,13 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             return .init(l)
         }
     }
-    public struct Filling: StackLayoutFilling {
+    public struct Filling: StackLayoutFilling, Extended {
         private let layout: StackLayoutFilling
+
+        public typealias Conformed = StackLayoutFilling
+        public static func build(_ base: StackLayoutFilling) -> StackLayoutScheme.Filling {
+            return Filling(layout: base)
+        }
 
         struct AutoDimension: StackLayoutFilling {
             fileprivate let defaultFilling: Layout.Filling
@@ -579,7 +584,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         public static func autoDimension(`default` filling: Layout.Filling) -> Filling { return Filling(layout: AutoDimension(defaultFilling: filling)) }
         public static func custom(_ value: Layout.Filling) -> Filling { return Filling(layout: value) }
 
-        func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
+        public func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
             return layout.filling(for: item, in: source)
         }
     }
@@ -908,10 +913,21 @@ open class ScrollLayoutGuide<Super: LayoutItem>: LayoutGuide<Super> {
     }
 
     /// Point that defines offset for content origin
-    open var contentOffset: CGPoint { set { bounds.origin = newValue.negated() } get { return bounds.origin.negated() } }
+    open var contentOffset: CGPoint { set { bounds.origin = newValue } get { return bounds.origin } }
     /// Size of content
-    open var contentSize: CGSize { set { bounds.size = contentSize } get { return bounds.size } } // TODO: Size of bounds should be equal frame size.
+    open var contentSize: CGSize = .zero//{ set { bounds.size = contentSize } get { return bounds.size } } // TODO: Size of bounds should be equal frame size.
+    open var contentInset: EdgeInsets = .zero {
+        didSet {
+            if oldValue != contentInset {
+                let x = contentInset.left - oldValue.left
+                let y = contentInset.top - oldValue.top
 
+                contentOffset = CGPoint(x: contentOffset.x - x, y: contentOffset.y - y)
+            }
+        }
+    }
+
+    override public var layoutBounds: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x - contentOffset.x, y: frame.origin.y - contentOffset.y), size: contentSize) }
     /// Performs layout for subitems, which this layout guide manages, in layout space rect
     ///
     /// - Parameter rect: Space for layout
@@ -925,11 +941,13 @@ open class ScrollLayoutGuide<Super: LayoutItem>: LayoutGuide<Super> {
     /// - Parameter frame: New frame value.
     /// - Returns: Content rect
     override open func contentRect(forFrame frame: CGRect) -> CGRect {
-        var contentRect = bounds
-        let lFrame = layoutBounds
-        let snapshotFrame = CGRect(x: lFrame.origin.x, y: lFrame.origin.y, width: max(contentRect.width, frame.width), height: max(contentRect.height, frame.height))
-        contentRect.size = layout.snapshot(for: snapshotFrame).snapshotFrame.distance(from: frame.origin)
-        return contentRect
+//        var contentRect = bounds
+//        let lFrame = layoutBounds
+//        let snapshotFrame = CGRect(x: lFrame.origin.x, y: lFrame.origin.y, width: max(contentRect.width, frame.width), height: max(contentRect.height, frame.height))
+//        contentRect.size = layout.snapshot(for: snapshotFrame).snapshotFrame.distance(from: frame.origin)
+//        return contentRect
+        var bounds = frame; bounds.origin = contentOffset
+        return bounds
     }
 }
 public extension ScrollLayoutGuide {
@@ -967,4 +985,220 @@ public struct ScrollDirection: OptionSet {
     public static var horizontal: ScrollDirection = ScrollDirection(constraints: [.width()], rawValue: 1)
     public static var vertical: ScrollDirection = ScrollDirection(constraints: [.height()], rawValue: 2)
     public static var both: ScrollDirection = ScrollDirection(constraints: [.height(), .width()], rawValue: 0)
+}
+
+func LinearInterpolation(t: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
+    if t <= 0 {
+        return start
+    }
+    else if t >= 1 {
+        return end
+    }
+    else {
+        return t * end + (1 - t) * start
+    }
+}
+
+func QuadraticEaseOut(t: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
+    if t <= 0 {
+        return start
+    }
+    else if t >= 1 {
+        return end
+    }
+    else {
+        return LinearInterpolation(t: 2 * t - t * t, start: start, end: end)
+    }
+}
+
+protocol ScrollAnimation {
+    var beginTime: TimeInterval { get set }
+    func animate() -> Bool
+    func momentumScroll(by delta: CGPoint)
+}
+
+struct ScrollAnimationDecelerationComponent {
+    var decelerateTime: TimeInterval
+    var position: CGFloat
+    var velocity: CGFloat
+    var returnTime: TimeInterval
+    var returnFrom: CGFloat
+    var bounced: Bool
+}
+
+private let minimumBounceVelocityBeforeReturning: CGFloat = 100
+private let returnAnimationDuration: TimeInterval = 0.33
+private let physicsTimeStep: TimeInterval = 1 / 120.0
+private let springTightness: CGFloat = 7
+private let springDampening: CGFloat = 15
+
+private func Clamp(v: CGFloat, min: CGFloat, max: CGFloat) -> CGFloat {
+    return (v < min) ? min : (v > max) ? max : v
+}
+
+private func ClampedVelocty(v: CGFloat) -> CGFloat {
+    let V: CGFloat = 200
+    return Clamp(v: v, min: -V, max: V)
+}
+
+private func Spring(velocity: CGFloat, position: CGFloat, restPosition: CGFloat, tightness: CGFloat, dampening: CGFloat) -> CGFloat {
+    let d: CGFloat = position - restPosition
+    return (-tightness * d) - (dampening * velocity)
+}
+
+private func BounceComponent(t: TimeInterval, c: inout ScrollAnimationDecelerationComponent, to: CGFloat) -> Bool {
+    if c.bounced && c.returnTime != 0 {
+        let returnBounceTime: TimeInterval = min(1, ((t - c.returnTime) / returnAnimationDuration))
+        c.position = QuadraticEaseOut(t: CGFloat(returnBounceTime), start: c.returnFrom, end: to)
+        return returnBounceTime == 1
+    }
+    else if abs(to - c.position) > 0 {
+        let F: CGFloat = Spring(velocity: c.velocity, position: c.position, restPosition: to, tightness: springTightness, dampening: springDampening)
+        c.velocity += F * CGFloat(physicsTimeStep)
+        c.position += c.velocity * CGFloat(physicsTimeStep)
+        c.bounced = true
+        if abs(c.velocity) < minimumBounceVelocityBeforeReturning {
+            c.returnFrom = c.position
+            c.returnTime = t
+        }
+        return false
+    }
+    else {
+        return true
+    }
+
+}
+
+extension ScrollLayoutGuide {
+    func _confinedContentOffset(_ contentOffset: CGPoint) -> CGPoint {
+        let scrollerBounds: CGRect = UIEdgeInsetsInsetRect(bounds, contentInset)
+        var contentOffset = contentOffset
+        if (contentSize.width - contentOffset.x) < scrollerBounds.size.width {
+            contentOffset.x = contentSize.width - scrollerBounds.size.width
+        }
+        if (contentSize.height - contentOffset.y) < scrollerBounds.size.height {
+            contentOffset.y = contentSize.height - scrollerBounds.size.height
+        }
+        contentOffset.x = max(contentOffset.x, 0)
+        contentOffset.y = max(contentOffset.y, 0)
+        if contentSize.width <= scrollerBounds.size.width {
+            contentOffset.x = 0
+        }
+        if contentSize.height <= scrollerBounds.size.height {
+            contentOffset.y = 0
+        }
+        return contentOffset
+    }
+    func _setRestrainedContentOffset(_ offset: CGPoint) {
+        var offset = offset
+        let confinedOffset: CGPoint = _confinedContentOffset(offset)
+        let scrollerBounds: CGRect = UIEdgeInsetsInsetRect(bounds, contentInset)
+        if !(/*alwaysBounceHorizontal && */contentSize.width <= scrollerBounds.size.width) {
+            offset.x = confinedOffset.x
+        }
+        if !(/*alwaysBounceVertical && */contentSize.height <= scrollerBounds.size.height) {
+            offset.y = confinedOffset.y
+        }
+        contentOffset = offset
+    }
+}
+
+public class ScrollAnimationDeceleration<Item: LayoutItem>: ScrollAnimation {
+    private var x: ScrollAnimationDecelerationComponent
+    private var y: ScrollAnimationDecelerationComponent
+    private var lastMomentumTime: TimeInterval
+    private(set) weak var scrollGuide: ScrollLayoutGuide<Item>!
+    var beginTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+
+    public init(scrollGuide sg: ScrollLayoutGuide<Item>, velocity v: CGPoint) {
+        self.scrollGuide = sg
+
+        startVelocity = v
+        startPosition = sg.contentOffset
+        lastMomentumTime = beginTime
+        x = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
+                                                 position: scrollGuide.contentOffset.x,
+                                                 velocity: ClampedVelocty(v: v.x),
+                                                 returnTime: 0,
+                                                 returnFrom: 0,
+                                                 bounced: false)
+        y = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
+                                                 position: scrollGuide.contentOffset.y,
+                                                 velocity: ClampedVelocty(v: v.y),
+                                                 returnTime: 0,
+                                                 returnFrom: 0,
+                                                 bounced: false)
+        if x.velocity == 0 {
+            x.bounced = true
+            x.returnTime = beginTime
+            x.returnFrom = x.position
+        }
+        if y.velocity == 0 {
+            y.bounced = true
+            y.returnTime = beginTime
+            y.returnFrom = y.position
+        }
+    }
+
+    public func animate() -> Bool {
+        let currentTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+        let isFinishedWaitingForMomentumScroll: Bool = (currentTime - lastMomentumTime) > 0.15
+        var finished = false
+        while !finished && currentTime >= beginTime {
+            let confinedOffset = scrollGuide._confinedContentOffset(CGPoint(x: x.position, y: y.position))
+            let verticalIsFinished: Bool = BounceComponent(t: beginTime, c: &y, to: confinedOffset.y)
+            let horizontalIsFinished: Bool = BounceComponent(t: beginTime, c: &x, to: confinedOffset.x)
+            finished = verticalIsFinished && horizontalIsFinished && isFinishedWaitingForMomentumScroll
+            beginTime += physicsTimeStep
+        }
+        scrollGuide._setRestrainedContentOffset(CGPoint(x: x.position, y: y.position))
+        return finished
+    }
+
+    let timeInterval: CGFloat = 1/60
+    let startVelocity: CGPoint
+    let startPosition: CGPoint
+    var bouncing = false
+    public func step(_ timer: Timer) {
+        guard let guide = scrollGuide, (abs(x.velocity) >= 0.001 && abs(y.velocity) >= 0.001) else {
+            timer.invalidate()
+            return
+        }
+
+        var offset = guide.contentOffset
+        if !bouncing {
+            offset.x += x.velocity.negated() * timeInterval
+            offset.y += y.velocity.negated() * timeInterval
+            guide.contentOffset = offset
+        }
+
+        if (offset.x < 0 || offset.x > scrollGuide.contentSize.width - scrollGuide.frame.width) ||
+            (offset.y < 0 || offset.y > scrollGuide.contentSize.height - scrollGuide.frame.height) {
+            bouncing = true
+            if animate() {
+                timer.invalidate()
+            }
+            return
+        }
+
+        lastMomentumTime = Date.timeIntervalSinceReferenceDate
+        let friction: CGFloat = 0.96
+        let drag: CGFloat = pow(pow(friction, 60), CGFloat(lastMomentumTime - beginTime))
+        x.velocity = startVelocity.x * drag
+        y.velocity = startVelocity.y * drag
+    }
+
+    func momentumScroll(by delta: CGPoint) {
+        lastMomentumTime = Date.timeIntervalSinceReferenceDate
+        if !x.bounced {
+            x.position += delta.x
+            x.velocity = ClampedVelocty(v: delta.x / CGFloat(lastMomentumTime - x.decelerateTime))
+            x.decelerateTime = lastMomentumTime
+        }
+        if !y.bounced {
+            y.position += delta.y
+            y.velocity = ClampedVelocty(v: delta.y / CGFloat(lastMomentumTime - y.decelerateTime))
+            y.decelerateTime = lastMomentumTime
+        }
+    }
 }
