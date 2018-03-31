@@ -14,7 +14,6 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
-		682F10FE8B5FFE9E215A0EB8 /* Pods_CGLayout_CGLayout_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EBF0DDB4F980922FB75511F /* Pods_CGLayout_CGLayout_Example.framework */; };
 		A40485A71F978A1C00DB38E4 /* CONTRIBUTING.md in Sources */ = {isa = PBXBuildFile; fileRef = A40485A61F978A1C00DB38E4 /* CONTRIBUTING.md */; };
 		A4232A181F82D20C00016A8A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		A4232A191F82D21100016A8A /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
@@ -33,6 +32,8 @@
 		A4579C351F59E86800893AB2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A4879D0D1F93A4B400BCBF0E /* ScrollLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4879D0C1F93A4B400BCBF0E /* ScrollLayoutViewController.swift */; };
+		A4DECF99206FFA76006933C4 /* CGLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DECF97206FFA76006933C4 /* CGLayoutTests.swift */; };
+		A4DECF9A206FFA76006933C4 /* LinuxMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DECF98206FFA76006933C4 /* LinuxMain.swift */; };
 		AA207DB93A95FD0B83A04761 /* Pods_CGLayout_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AF282E152D179C9353E356 /* Pods_CGLayout_Tests.framework */; };
 		B635776618CF077E9FE44524 /* Pods_CGLayout_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 229950F7B0B7736994BF5766 /* Pods_CGLayout_tvOS.framework */; };
 		B647708983ED594F2B47B59F /* Pods_CGLayout_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8DB75E422B488E64064C358 /* Pods_CGLayout_Example.framework */; };
@@ -59,7 +60,7 @@
 /* Begin PBXFileReference section */
 		18AF282E152D179C9353E356 /* Pods_CGLayout_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		229950F7B0B7736994BF5766 /* Pods_CGLayout_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		27B52FB9B48634E2B93F98CA /* CGLayout.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = CGLayout.podspec; path = ../CGLayout.podspec; sourceTree = "<group>"; };
+		27B52FB9B48634E2B93F98CA /* CGLayout.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = CGLayout.podspec; path = ../CGLayout.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		330A42FA87474F26BC08EC6C /* Pods_CGLayout_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CGLayout_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E0DEC4377566CB21DB9F879 /* Pods-CGLayout-macOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout-macOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout-macOSTests/Pods-CGLayout-macOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		3EBA77EEBD0196F171836E72 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
@@ -95,6 +96,8 @@
 		A44646BB1F74132A009601DA /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		A4579C341F59E86800893AB2 /* SecondViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A4879D0C1F93A4B400BCBF0E /* ScrollLayoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollLayoutViewController.swift; sourceTree = "<group>"; };
+		A4DECF97206FFA76006933C4 /* CGLayoutTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGLayoutTests.swift; sourceTree = "<group>"; };
+		A4DECF98206FFA76006933C4 /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
 		A4E143431F89422700648408 /* CGLayoutPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = CGLayoutPlayground.playground; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		A9D89FE715E08AC2499AAB82 /* Pods-CGLayout_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		B8458FAC7A74CBFBD7D58733 /* Pods-CGLayout_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CGLayout_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -235,6 +238,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				A4DECF95206FFA76006933C4 /* Tests */,
 				A4E143431F89422700648408 /* CGLayoutPlayground.playground */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
@@ -290,6 +294,24 @@
 				A42B70001F828F6F00633A10 /* Info.plist */,
 			);
 			path = "CGLayout-tvOS";
+			sourceTree = "<group>";
+		};
+		A4DECF95206FFA76006933C4 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				A4DECF96206FFA76006933C4 /* CGLayoutTests */,
+				A4DECF98206FFA76006933C4 /* LinuxMain.swift */,
+			);
+			name = Tests;
+			path = ../../Tests;
+			sourceTree = "<group>";
+		};
+		A4DECF96206FFA76006933C4 /* CGLayoutTests */ = {
+			isa = PBXGroup;
+			children = (
+				A4DECF97206FFA76006933C4 /* CGLayoutTests.swift */,
+			);
+			path = CGLayoutTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -775,7 +797,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */,
+				A4DECF99206FFA76006933C4 /* CGLayoutTests.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				A4DECF9A206FFA76006933C4 /* LinuxMain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
