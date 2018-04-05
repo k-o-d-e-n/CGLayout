@@ -60,7 +60,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
     ///
     /// - Parameter frame: New frame value.
     /// - Returns: Content rect
-    open func contentRect(forFrame frame: CGRect) -> CGRect {
+    open func contentRect(forFrame frame: CGRect) -> CGRect { // TODO: Can use `inout`
         return CGRect(origin: .zero, size: frame.size)
     }
 

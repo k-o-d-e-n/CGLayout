@@ -427,7 +427,7 @@ public struct AdjustLayoutConstraint {
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     public /// Flag, defines that constraint may be used for layout
-    var isActive: Bool { return item?.superItem != nil }
+    var isActive: Bool { return item?.inLayoutTime.superItem != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return true }

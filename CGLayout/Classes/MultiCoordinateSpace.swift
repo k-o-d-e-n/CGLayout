@@ -30,24 +30,24 @@ public protocol LayoutCoordinateSpace {
 #if os(iOS) || os(tvOS)
 extension LayoutCoordinateSpace where Self: UICoordinateSpace, Self: LayoutItem {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
-        guard !(item is UICoordinateSpace) else { return convert(point, to: item as! UICoordinateSpace) }
+        guard !(item is UICoordinateSpace) else { return syncGuard(mainThread: { convert(point, to: item as! UICoordinateSpace) }) }
 
         return Self.convert(point: point, from: self, to: item)
     }
     public func convert(point: CGPoint, from item: LayoutItem) -> CGPoint {
-        guard !(item is UICoordinateSpace) else { return convert(point, from: item as! UICoordinateSpace) }
+        guard !(item is UICoordinateSpace) else { return syncGuard(mainThread: { convert(point, from: item as! UICoordinateSpace) }) }
 
         return Self.convert(point: point, from: item, to: self)
     }
     public func convert(rect: CGRect, to item: LayoutItem) -> CGRect {
-        guard !(item is UICoordinateSpace) else { return convert(rect, to: item as! UICoordinateSpace) }
+        guard !(item is UICoordinateSpace) else { return syncGuard(mainThread: { convert(rect, to: item as! UICoordinateSpace) }) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: self, to: item)
         return rect
     }
     public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-        guard !(item is UICoordinateSpace) else { return convert(rect, from: item as! UICoordinateSpace) }
+        guard !(item is UICoordinateSpace) else { return syncGuard(mainThread: { convert(rect, from: item as! UICoordinateSpace) }) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: item, to: self)
@@ -58,28 +58,28 @@ extension LayoutCoordinateSpace where Self: UICoordinateSpace, Self: LayoutItem 
 /// Therefore makes extension for UIView.
 extension LayoutCoordinateSpace where Self: UIView {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
-        if let item = item as? UIView { return convert(point, to: item) }
-        if let item = item as? CALayer { return layer.convert(point, to: item) }
+        if let item = item as? UIView { return syncGuard(mainThread: { convert(point, to: item) }) }
+        if let item = item as? CALayer { return syncGuard(mainThread: { layer.convert(point, to: item) }) }
 
         return Self.convert(point: point, from: self, to: item)
     }
     public func convert(point: CGPoint, from item: LayoutItem) -> CGPoint {
-        if let item = item as? UIView { return convert(point, from: item) }
-        if let item = item as? CALayer { return layer.convert(point, from: item) }
+        if let item = item as? UIView { return syncGuard(mainThread: { convert(point, from: item) }) }
+        if let item = item as? CALayer { return syncGuard(mainThread: { layer.convert(point, from: item) }) }
 
         return Self.convert(point: point, from: item, to: self)
     }
     public func convert(rect: CGRect, to item: LayoutItem) -> CGRect {
-        if let item = item as? UIView { return convert(rect, to: item) }
-        if let item = item as? CALayer { return layer.convert(rect, to: item) }
+        if let item = item as? UIView { return syncGuard(mainThread: { convert(rect, to: item) }) }
+        if let item = item as? CALayer { return syncGuard(mainThread: { layer.convert(rect, to: item) }) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: self, to: item)
         return rect
     }
     public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-        if let item = item as? UIView { return convert(rect, from: item) }
-        if let item = item as? CALayer { return layer.convert(rect, from: item) }
+        if let item = item as? UIView { return syncGuard(mainThread: { convert(rect, from: item) }) }
+        if let item = item as? CALayer { return syncGuard(mainThread: { layer.convert(rect, from: item) }) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: item, to: self)
@@ -89,24 +89,24 @@ extension LayoutCoordinateSpace where Self: UIView {
 #endif
 extension LayoutCoordinateSpace where Self: CALayer {
     public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
-        if let item = item as? CALayer { return convert(point, to: item) }
+        if let item = item as? CALayer { return syncGuard(mainThread: { convert(point, to: item) }) }
 
         return Self.convert(point: point, from: self, to: item)
     }
     public func convert(point: CGPoint, from item: LayoutItem) -> CGPoint {
-        if let item = item as? CALayer { return convert(point, from: item) }
+        if let item = item as? CALayer { return syncGuard(mainThread: { convert(point, from: item) }) }
 
         return Self.convert(point: point, from: item, to: self)
     }
     public func convert(rect: CGRect, to item: LayoutItem) -> CGRect {
-        if let item = item as? CALayer { return convert(rect, to: item) }
+        if let item = item as? CALayer { return syncGuard(mainThread: { convert(rect, to: item) }) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: self, to: item)
         return rect
     }
     public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-        if let item = item as? CALayer { return convert(rect, from: item) }
+        if let item = item as? CALayer { return syncGuard(mainThread: { convert(rect, from: item) }) }
 
         var rect = rect
         rect.origin = Self.convert(point: rect.origin, from: item, to: self)
@@ -161,28 +161,28 @@ extension LayoutCoordinateSpace where Self: UILayoutGuide {
 #if os(macOS)
     extension LayoutCoordinateSpace where Self: NSView {
         public func convert(point: CGPoint, to item: LayoutItem) -> CGPoint {
-            if let item = item as? NSView { return convert(point, to: item) }
-            if let item = item as? CALayer, let layer = layer { return layer.convert(point, to: item) }
+            if let item = item as? NSView { return syncGuard(mainThread: { convert(point, to: item) }) }
+            if let item = item as? CALayer, let layer = layer { return syncGuard(mainThread: { layer.convert(point, to: item) }) }
 
             return Self.convert(point: point, from: self, to: item)
         }
         public func convert(point: CGPoint, from item: LayoutItem) -> CGPoint {
-            if let item = item as? NSView { return convert(point, from: item) }
-            if let item = item as? CALayer, let layer = layer { return layer.convert(point, from: item) }
+            if let item = item as? NSView { return syncGuard(mainThread: { convert(point, from: item) }) }
+            if let item = item as? CALayer, let layer = layer { return syncGuard(mainThread: { layer.convert(point, from: item) }) }
 
             return Self.convert(point: point, from: item, to: self)
         }
         public func convert(rect: CGRect, to item: LayoutItem) -> CGRect {
-            if let item = item as? NSView { return convert(rect, to: item) }
-            if let item = item as? CALayer, let layer = layer { return layer.convert(rect, to: item) }
+            if let item = item as? NSView { return syncGuard(mainThread: { convert(rect, to: item) }) }
+            if let item = item as? CALayer, let layer = layer { return syncGuard(mainThread: { layer.convert(rect, to: item) }) }
 
             var rect = rect
             rect.origin = Self.convert(point: rect.origin, from: self, to: item)
             return rect
         }
         public func convert(rect: CGRect, from item: LayoutItem) -> CGRect {
-            if let item = item as? NSView { return convert(rect, from: item) }
-            if let item = item as? CALayer, let layer = layer { return layer.convert(rect, from: item) }
+            if let item = item as? NSView { return syncGuard(mainThread: { convert(rect, from: item) }) }
+            if let item = item as? CALayer, let layer = layer { return syncGuard(mainThread: { layer.convert(rect, from: item) }) }
 
             var rect = rect
             rect.origin = Self.convert(point: rect.origin, from: item, to: self)
@@ -374,64 +374,64 @@ extension LayoutGuide where Super: UICoordinateSpace {
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, to coordinateSpace: UICoordinateSpace) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-        return ownerItem!.convert(pointInSuper, to: coordinateSpace)
+        return syncGuard(mainThread: ownerItem!.convert(pointInSuper, to: coordinateSpace))
     }
 
     @available(iOS 8.0, *)
     public func convert(_ point: CGPoint, from coordinateSpace: UICoordinateSpace) -> CGPoint {
-        let pointInSuper = ownerItem!.convert(point, from: coordinateSpace)
+        let pointInSuper = syncGuard(mainThread: ownerItem!.convert(point, from: coordinateSpace))
         return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
     }
 
     @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, to coordinateSpace: UICoordinateSpace) -> CGRect {
         let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-        return ownerItem!.convert(rectInSuper, to: coordinateSpace)
+        return syncGuard(mainThread: ownerItem!.convert(rectInSuper, to: coordinateSpace))
     }
 
     @available(iOS 8.0, *)
     public func convert(_ rect: CGRect, from coordinateSpace: UICoordinateSpace) -> CGRect {
-        let rectInSuper = ownerItem!.convert(rect, from: coordinateSpace)
+        let rectInSuper = syncGuard(mainThread: ownerItem!.convert(rect, from: coordinateSpace))
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }
 extension LayoutGuide where Super: UIView {
     public func convert(_ point: CGPoint, to view: UIView) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-        return ownerItem!.convert(pointInSuper, to: view)
+        return syncGuard(mainThread: ownerItem!.convert(pointInSuper, to: view))
     }
 
     public func convert(_ point: CGPoint, from view: UIView) -> CGPoint {
-        let pointInSuper = ownerItem!.convert(point, from: view)
+        let pointInSuper = syncGuard(mainThread: ownerItem!.convert(point, from: view))
         return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
     }
 
     public func convert(_ rect: CGRect, to view: UIView) -> CGRect {
         let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-        return ownerItem!.convert(rectInSuper, to: view)
+        return syncGuard(mainThread: ownerItem!.convert(rectInSuper, to: view))
     }
 
     public func convert(_ rect: CGRect, from view: UIView) -> CGRect {
-        let rectInSuper = ownerItem!.convert(rect, from: view)
+        let rectInSuper = syncGuard(mainThread: ownerItem!.convert(rect, from: view))
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
     public func convert(_ point: CGPoint, to layer: CALayer) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-        return ownerItem!.layer.convert(pointInSuper, to: layer)
+        return syncGuard(mainThread: ownerItem!.layer.convert(pointInSuper, to: layer))
     }
 
     public func convert(_ point: CGPoint, from layer: CALayer) -> CGPoint {
-        let pointInSuper = ownerItem!.layer.convert(point, from: layer)
+        let pointInSuper = syncGuard(mainThread: ownerItem!.layer.convert(point, from: layer))
         return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
     }
 
     public func convert(_ rect: CGRect, to layer: CALayer) -> CGRect {
         let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-        return ownerItem!.layer.convert(rectInSuper, to: layer)
+        return syncGuard(mainThread: ownerItem!.layer.convert(rectInSuper, to: layer))
     }
 
     public func convert(_ rect: CGRect, from layer: CALayer) -> CGRect {
-        let rectInSuper = ownerItem!.layer.convert(rect, from: layer)
+        let rectInSuper = syncGuard(mainThread: ownerItem!.layer.convert(rect, from: layer))
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }
@@ -440,40 +440,40 @@ extension LayoutGuide where Super: UIView {
     extension LayoutGuide where Super: NSView {
         public func convert(_ point: CGPoint, to view: NSView) -> CGPoint {
             let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-            return ownerItem!.convert(pointInSuper, to: view)
+            return syncGuard(mainThread: ownerItem!.convert(pointInSuper, to: view))
         }
 
         public func convert(_ point: CGPoint, from view: NSView) -> CGPoint {
-            let pointInSuper = ownerItem!.convert(point, from: view)
+            let pointInSuper = syncGuard(mainThread: ownerItem!.convert(point, from: view))
             return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
         }
 
         public func convert(_ rect: CGRect, to view: NSView) -> CGRect {
             let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-            return ownerItem!.convert(rectInSuper, to: view)
+            return syncGuard(mainThread: ownerItem!.convert(rectInSuper, to: view))
         }
 
         public func convert(_ rect: CGRect, from view: NSView) -> CGRect {
-            let rectInSuper = ownerItem!.convert(rect, from: view)
+            let rectInSuper = syncGuard(mainThread: ownerItem!.convert(rect, from: view))
             return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
         }
         public func convert(_ point: CGPoint, to layer: CALayer, superLayer: CALayer) -> CGPoint {
             let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-            return superLayer.convert(pointInSuper, to: layer)
+            return syncGuard(mainThread: superLayer.convert(pointInSuper, to: layer))
         }
 
         public func convert(_ point: CGPoint, from layer: CALayer, superLayer: CALayer) -> CGPoint {
-            let pointInSuper = superLayer.convert(point, from: layer)
+            let pointInSuper = syncGuard(mainThread: superLayer.convert(point, from: layer))
             return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
         }
 
         public func convert(_ rect: CGRect, to layer: CALayer, superLayer: CALayer) -> CGRect {
             let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-            return superLayer.convert(rectInSuper, to: layer)
+            return syncGuard(mainThread: superLayer.convert(rectInSuper, to: layer))
         }
 
         public func convert(_ rect: CGRect, from layer: CALayer, superLayer: CALayer) -> CGRect {
-            let rectInSuper = superLayer.convert(rect, from: layer)
+            let rectInSuper = syncGuard(mainThread: superLayer.convert(rect, from: layer))
             return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
         }
     }
@@ -481,21 +481,21 @@ extension LayoutGuide where Super: UIView {
 extension LayoutGuide where Super: CALayer {
     public func convert(_ point: CGPoint, to coordinateSpace: CALayer) -> CGPoint {
         let pointInSuper = CGPoint(x: frame.origin.x + point.x - bounds.origin.x, y: frame.origin.y + point.y - bounds.origin.y)
-        return ownerItem!.convert(pointInSuper, to: coordinateSpace)
+        return syncGuard(mainThread: ownerItem!.convert(pointInSuper, to: coordinateSpace))
     }
 
     public func convert(_ point: CGPoint, from coordinateSpace: CALayer) -> CGPoint {
-        let pointInSuper = ownerItem!.convert(point, from: coordinateSpace)
+        let pointInSuper = syncGuard(mainThread: ownerItem!.convert(point, from: coordinateSpace))
         return CGPoint(x: pointInSuper.x - frame.origin.x + bounds.origin.x, y: pointInSuper.y - frame.origin.y + bounds.origin.y)
     }
 
     public func convert(_ rect: CGRect, to coordinateSpace: CALayer) -> CGRect {
         let rectInSuper = CGRect(x: frame.origin.x + rect.origin.x - bounds.origin.x, y: frame.origin.y + rect.origin.y - bounds.origin.y, width: rect.width, height: rect.height)
-        return ownerItem!.convert(rectInSuper, to: coordinateSpace)
+        return syncGuard(mainThread: ownerItem!.convert(rectInSuper, to: coordinateSpace))
     }
 
     public func convert(_ rect: CGRect, from coordinateSpace: CALayer) -> CGRect {
-        let rectInSuper = ownerItem!.convert(rect, from: coordinateSpace)
+        let rectInSuper = syncGuard(mainThread: ownerItem!.convert(rect, from: coordinateSpace))
         return CGRect(x: rectInSuper.origin.x - frame.origin.x + bounds.origin.x, y: rectInSuper.origin.y - frame.origin.y + bounds.origin.y, width: rectInSuper.width, height: rectInSuper.height)
     }
 }

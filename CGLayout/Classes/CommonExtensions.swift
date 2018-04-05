@@ -21,6 +21,30 @@ internal func debugAction(_ action: () -> Void) {
 internal func printWarning(_ message: String) {
     #if DEBUG
         debugPrint("CGLayout warning: \(message)")
+        if ProcessInfo.processInfo.arguments.contains("CGL_THROW_ON_WARNING") { fatalError() }
+    #endif
+}
+
+@discardableResult
+func syncGuard<T>(mainThread action: @autoclosure () -> T) -> T {
+    return _syncGuard(action)
+}
+
+@discardableResult
+func syncGuard<T>(mainThread action: () -> T) -> T {
+    return _syncGuard(action)
+}
+
+@discardableResult
+func _syncGuard<T>(_ action: () -> T) -> T {
+    #if os(iOS) || os(tvOS) || os(macOS)
+        if !Thread.isMainThread {
+            return DispatchQueue.main.sync(execute: action)
+        } else {
+            return action()
+        }
+    #else
+        return action()
     #endif
 }
 
