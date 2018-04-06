@@ -1013,8 +1013,8 @@ func QuadraticEaseOut(t: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
 
 protocol ScrollAnimation {
     var beginTime: TimeInterval { get set }
-    func animate() -> Bool
-    func momentumScroll(by delta: CGPoint)
+    func animateX()
+    func animateY()
 }
 
 struct ScrollAnimationDecelerationComponent {
@@ -1024,6 +1024,7 @@ struct ScrollAnimationDecelerationComponent {
     var returnTime: TimeInterval
     var returnFrom: CGFloat
     var bounced: Bool
+    var bouncing: Bool
 }
 
 private let minimumBounceVelocityBeforeReturning: CGFloat = 100
@@ -1037,7 +1038,7 @@ private func Clamp(v: CGFloat, min: CGFloat, max: CGFloat) -> CGFloat {
 }
 
 private func ClampedVelocty(v: CGFloat) -> CGFloat {
-    let V: CGFloat = 200
+    let V: CGFloat = 500
     return Clamp(v: v, min: -V, max: V)
 }
 
@@ -1055,7 +1056,7 @@ private func BounceComponent(t: TimeInterval, c: inout ScrollAnimationDecelerati
     else if abs(to - c.position) > 0 {
         let F: CGFloat = Spring(velocity: c.velocity, position: c.position, restPosition: to, tightness: springTightness, dampening: springDampening)
         c.velocity += F * CGFloat(physicsTimeStep)
-        c.position += c.velocity * CGFloat(physicsTimeStep)
+        c.position += c.velocity.negated() * CGFloat(physicsTimeStep)
         c.bounced = true
         if abs(c.velocity) < minimumBounceVelocityBeforeReturning {
             c.returnFrom = c.position
@@ -1066,7 +1067,6 @@ private func BounceComponent(t: TimeInterval, c: inout ScrollAnimationDecelerati
     else {
         return true
     }
-
 }
 
 extension ScrollLayoutGuide {
@@ -1114,20 +1114,21 @@ public class ScrollAnimationDeceleration<Item: LayoutItem>: ScrollAnimation {
         self.scrollGuide = sg
 
         startVelocity = v
-        startPosition = sg.contentOffset
         lastMomentumTime = beginTime
         x = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
                                                  position: scrollGuide.contentOffset.x,
-                                                 velocity: ClampedVelocty(v: v.x),
+                                                 velocity: startVelocity.x,
                                                  returnTime: 0,
                                                  returnFrom: 0,
-                                                 bounced: false)
+                                                 bounced: false,
+                                                 bouncing: false)
         y = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
                                                  position: scrollGuide.contentOffset.y,
-                                                 velocity: ClampedVelocty(v: v.y),
+                                                 velocity: startVelocity.y,
                                                  returnTime: 0,
                                                  returnFrom: 0,
-                                                 bounced: false)
+                                                 bounced: false,
+                                                 bouncing: false)
         if x.velocity == 0 {
             x.bounced = true
             x.returnTime = beginTime
@@ -1140,65 +1141,78 @@ public class ScrollAnimationDeceleration<Item: LayoutItem>: ScrollAnimation {
         }
     }
 
-    public func animate() -> Bool {
+    func animateY() {
         let currentTime: TimeInterval = Date.timeIntervalSinceReferenceDate
-        let isFinishedWaitingForMomentumScroll: Bool = (currentTime - lastMomentumTime) > 0.15
-        var finished = false
-        while !finished && currentTime >= beginTime {
+        y.bouncing = true
+        while y.bouncing && currentTime >= beginTime {
             let confinedOffset = scrollGuide._confinedContentOffset(CGPoint(x: x.position, y: y.position))
-            let verticalIsFinished: Bool = BounceComponent(t: beginTime, c: &y, to: confinedOffset.y)
-            let horizontalIsFinished: Bool = BounceComponent(t: beginTime, c: &x, to: confinedOffset.x)
-            finished = verticalIsFinished && horizontalIsFinished && isFinishedWaitingForMomentumScroll
+            y.bouncing = !BounceComponent(t: beginTime, c: &y, to: confinedOffset.y)
             beginTime += physicsTimeStep
+            scrollGuide.contentOffset.y = y.position//min(max(-scrollGuide.bounds.height, y.position), scrollGuide.layoutBounds.maxY - scrollGuide.bounds.height)
         }
-        scrollGuide._setRestrainedContentOffset(CGPoint(x: x.position, y: y.position))
-        return finished
+    }
+
+    func animateX() {
+        let currentTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+        x.bouncing = true
+        while x.bouncing && currentTime >= beginTime {
+            let confinedOffset = scrollGuide._confinedContentOffset(CGPoint(x: x.position, y: y.position))
+            x.bouncing = !BounceComponent(t: beginTime, c: &x, to: confinedOffset.x)
+            beginTime += physicsTimeStep
+            scrollGuide.contentOffset.x = min(max(-scrollGuide.bounds.width/2, x.position), scrollGuide.layoutBounds.maxX - scrollGuide.bounds.width/2)
+        }
     }
 
     let timeInterval: CGFloat = 1/60
     let startVelocity: CGPoint
-    let startPosition: CGPoint
-    var bouncing = false
+    var needBouncing = true
+
     public func step(_ timer: Timer) {
+        func stopIfNeeded() {
+            if abs(x.velocity) <= 0.001 && abs(y.velocity) <= 0.001 {
+                timer.invalidate()
+            }
+        }
+
         guard let guide = scrollGuide, (abs(x.velocity) >= 0.001 && abs(y.velocity) >= 0.001) else {
             timer.invalidate()
             return
         }
 
         var offset = guide.contentOffset
-        if !bouncing {
+        if needBouncing {
+            if !x.bouncing {
+                offset.x += x.velocity.negated() * timeInterval
+            }
+            if !y.bouncing {
+                offset.y += y.velocity.negated() * timeInterval
+            }
+
+            guide.contentOffset = offset
+            if (offset.x < 0 || offset.x > scrollGuide.contentSize.width - scrollGuide.frame.width) {
+                x.position = offset.x
+                animateX()
+                stopIfNeeded()
+            }
+            if (offset.y < 0 || offset.y > scrollGuide.contentSize.height - scrollGuide.frame.height) {
+                y.position = offset.y
+                animateY()
+                stopIfNeeded()
+            }
+        } else {
             offset.x += x.velocity.negated() * timeInterval
             offset.y += y.velocity.negated() * timeInterval
-            guide.contentOffset = offset
-        }
-
-        if (offset.x < 0 || offset.x > scrollGuide.contentSize.width - scrollGuide.frame.width) ||
-            (offset.y < 0 || offset.y > scrollGuide.contentSize.height - scrollGuide.frame.height) {
-            bouncing = true
-            if animate() {
-                timer.invalidate()
-            }
-            return
+            guide._setRestrainedContentOffset(offset)
         }
 
         lastMomentumTime = Date.timeIntervalSinceReferenceDate
         let friction: CGFloat = 0.96
         let drag: CGFloat = pow(pow(friction, 60), CGFloat(lastMomentumTime - beginTime))
-        x.velocity = startVelocity.x * drag
-        y.velocity = startVelocity.y * drag
-    }
-
-    func momentumScroll(by delta: CGPoint) {
-        lastMomentumTime = Date.timeIntervalSinceReferenceDate
-        if !x.bounced {
-            x.position += delta.x
-            x.velocity = ClampedVelocty(v: delta.x / CGFloat(lastMomentumTime - x.decelerateTime))
-            x.decelerateTime = lastMomentumTime
+        if !x.bouncing {
+            x.velocity = startVelocity.x * drag
         }
-        if !y.bounced {
-            y.position += delta.y
-            y.velocity = ClampedVelocty(v: delta.y / CGFloat(lastMomentumTime - y.decelerateTime))
-            y.decelerateTime = lastMomentumTime
+        if !y.bouncing {
+            y.velocity = startVelocity.y * drag
         }
     }
 }

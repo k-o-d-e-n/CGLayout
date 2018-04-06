@@ -109,6 +109,7 @@ public extension RectBasedLayout {
     ///   - sourceRect: Source space
     ///   - constraints: Array of constraint items
     public func apply(for item: LayoutItem, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol]) {
+        debugFatalError(condition: item.superItem == nil, "Layout item is not in hierarchy")
         item.frame = layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)
     }
 

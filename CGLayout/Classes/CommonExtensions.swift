@@ -25,6 +25,22 @@ internal func printWarning(_ message: String) {
     #endif
 }
 
+public func debugLog(_ message: String, _ file: String = #file, _ line: Int = #line) {
+    debugAction {
+        debugPrint("File: \(file)")
+        debugPrint("Line: \(line)")
+        debugPrint("Message: \(message)")
+    }
+}
+
+internal func debugFatalError(condition: @autoclosure () -> Bool = true,
+                              _ message: String = "", _ file: String = #file, _ line: Int = #line) {
+    if condition() {
+        debugLog(message, file, line)
+        fatalError(message)
+    }
+}
+
 @discardableResult
 func syncGuard<T>(mainThread action: @autoclosure () -> T) -> T {
     return _syncGuard(action)
