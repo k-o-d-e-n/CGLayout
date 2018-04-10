@@ -36,3 +36,6 @@ Example/Pods/*
 !Example/Pods/Pods.xcodeproj/xcuserdata
 Podfile.lock
 Example/CGLayout.xcworkspace
+
+# swift build
+.build/
