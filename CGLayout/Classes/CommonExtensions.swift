@@ -123,30 +123,9 @@ public extension CALayer {
     }
 }
 
-extension Collection where IndexDistance == Int, Index == Int {
-    var halfIndex: (index: Self.Index, isCentered: Bool) {
-        let center: Double = Double(count / 2)
-        return (Int(center), center.rounded(.down) == center)
-    }
-}
-
 extension Bool {
     mutating func `switch`() {
         self = self ? false : true
-    }
-}
-
-extension Collection where IndexDistance == Index {
-    func halfSplitIterator() -> AnyIterator<Self.SubSequence.Iterator.Element> {
-        let firstIndex = count / 2
-        var left = prefix(through: firstIndex).reversed().makeIterator()
-        var right = suffix(from: firstIndex).makeIterator()
-
-        var fromLeft = true
-        return AnyIterator {
-            defer { fromLeft.switch() }
-            return fromLeft ? left.next() : right.next()
-        }
     }
 }
 

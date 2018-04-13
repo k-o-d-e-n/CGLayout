@@ -189,7 +189,7 @@ public protocol LayoutItem: class, RectBasedItem, LayoutCoordinateSpace {
     /// Internal space for layout subitems
     var layoutBounds: CGRect { get }
     /// Layout item that maintains this layout entity
-    weak var superItem: LayoutItem? { get }
+    var superItem: LayoutItem? { get }
     /// Entity that represents item in layout time
     var inLayoutTime: InLayoutTimeItem { get }
 

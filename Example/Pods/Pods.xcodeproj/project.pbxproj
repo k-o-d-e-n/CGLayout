@@ -7,54 +7,54 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0928D7B6A5F592784CBEC2D42B77490D /* CGLayout-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = CFD6B0092F07D1323B61F82A9B5F30D5 /* CGLayout-macOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		10006E31E5BB6DD371829D97CAB31572 /* LayoutItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257BA4FEB3498A5E9C8E174CF95D57A4 /* LayoutItemContainer.swift */; };
+		0928D7B6A5F592784CBEC2D42B77490D /* CGLayout-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F66A9EA724B06D2D352227BEDB7BD7B /* CGLayout-macOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		10006E31E5BB6DD371829D97CAB31572 /* LayoutItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583B9D1F4DC09B7FDD03F19556B243A /* LayoutItemContainer.swift */; };
 		1B934A8E123DFE10528D94481CECBC0E /* Pods-CGLayout-macOSTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = CCF692509300A63E4E0767E711BE8834 /* Pods-CGLayout-macOSTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		261E3160588144E65CE225589D0ABC97 /* Pods-CGLayout-tvOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D2E03A8CF0BE9019C8B42201229A122B /* Pods-CGLayout-tvOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2835D9837AC11237B4223B4023E0435C /* CGLayout-tvOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FF78EE4691BA73161F932E59F75E12C /* CGLayout-tvOS-dummy.m */; };
-		2BD050B07BD48D91962A8EF8BEAEEBAE /* CGLayout-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 24C7BCC733C40FE97889414C68F3068C /* CGLayout-iOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2835D9837AC11237B4223B4023E0435C /* CGLayout-tvOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 037BB5082B4638FB0F9D922663885563 /* CGLayout-tvOS-dummy.m */; };
+		2BD050B07BD48D91962A8EF8BEAEEBAE /* CGLayout-iOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 88CB3C8E8AAB9269ABE33F1F648CC5C1 /* CGLayout-iOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2EFBDF7AF161AC7CE8D1A66B94187EC0 /* Pods-CGLayout-macOSTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A35996B9EB003AAD78861B951C3E2F13 /* Pods-CGLayout-macOSTests-dummy.m */; };
 		305A3B32F6985468236FA93F1CA66153 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFB56E35108A1FCAA1F5604A02FFCDC5 /* Cocoa.framework */; };
-		31D591CD18C082C71ADC47B1333E79FB /* LayoutItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257BA4FEB3498A5E9C8E174CF95D57A4 /* LayoutItemContainer.swift */; };
+		31D591CD18C082C71ADC47B1333E79FB /* LayoutItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583B9D1F4DC09B7FDD03F19556B243A /* LayoutItemContainer.swift */; };
 		31EA875810DCFA4D7066503E0A6C63BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7461AAFB7A771BCEC6E4E09204991FB5 /* Foundation.framework */; };
 		3982787D7C0AE442E8E04E495F6E4AF8 /* Pods-CGLayout_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F229980F58F89C441DDDCD00D702568E /* Pods-CGLayout_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3BB37B0D8C2CA2FB61BDD7672C05E09C /* CGLayoutPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163472635BB679165DFFD95C31977030 /* CGLayoutPrivate.swift */; };
-		3BE00D7E9799FFB407AC306366EAF639 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AA43F093D2CA363699BEACD69F8AF0 /* CommonExtensions.swift */; };
+		3BB37B0D8C2CA2FB61BDD7672C05E09C /* CGLayoutPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79D853E760F38D0EA14D144FD8E445D /* CGLayoutPrivate.swift */; };
+		3BE00D7E9799FFB407AC306366EAF639 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D11CBD1215B6634AC59344B4DF26B3 /* CommonExtensions.swift */; };
 		444C16F4582CC83AADADBB242DBA4138 /* Pods-CGLayout-macOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 8BD834A51F603133F00CC6F1A8024114 /* Pods-CGLayout-macOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		448C99FF273864A21C887BDEB05E84DD /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01DC66740C0E2FA390F835129F26F77 /* CGLayout.swift */; };
+		448C99FF273864A21C887BDEB05E84DD /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7409BA72F9F023FC9F983F43CC642540 /* CGLayout.swift */; };
 		473983F5F297A89FBC200B699BDD0A93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7461AAFB7A771BCEC6E4E09204991FB5 /* Foundation.framework */; };
-		490015A99CC9D8E4F5119E297E9DBE99 /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF955ECC5403820E730FCAE9712797 /* CGLayoutExtended.swift */; };
-		49B4FB5F941E6881F8EAD98CCCA687D0 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AA43F093D2CA363699BEACD69F8AF0 /* CommonExtensions.swift */; };
+		490015A99CC9D8E4F5119E297E9DBE99 /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF52FC15BC4AF9347689B5B743F2AF56 /* CGLayoutExtended.swift */; };
+		49B4FB5F941E6881F8EAD98CCCA687D0 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D11CBD1215B6634AC59344B4DF26B3 /* CommonExtensions.swift */; };
 		4AA6342C515798BFF66DEEB1AEF13FC1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38A88E0776EAF5001831CAEFF93C9A0 /* Foundation.framework */; };
-		4E520943DE5E06ABCAA6838EDEF798D7 /* CGLayoutPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163472635BB679165DFFD95C31977030 /* CGLayoutPrivate.swift */; };
-		4F20BDB101E7D3163B99D53124465795 /* CGLayoutPrivateEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DCCCA0E34E156032612A534451682E /* CGLayoutPrivateEvolution.swift */; };
-		51756A9C8D672979BB02CFFEE2B2C219 /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF955ECC5403820E730FCAE9712797 /* CGLayoutExtended.swift */; };
+		4E520943DE5E06ABCAA6838EDEF798D7 /* CGLayoutPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79D853E760F38D0EA14D144FD8E445D /* CGLayoutPrivate.swift */; };
+		4F20BDB101E7D3163B99D53124465795 /* CGLayoutPrivateEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = B868F1D799377BC45065BC349C1501F5 /* CGLayoutPrivateEvolution.swift */; };
+		51756A9C8D672979BB02CFFEE2B2C219 /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF52FC15BC4AF9347689B5B743F2AF56 /* CGLayoutExtended.swift */; };
 		56CD6FA6946BA7D0F68556EF0138B806 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFB56E35108A1FCAA1F5604A02FFCDC5 /* Cocoa.framework */; };
-		7831D5D93577231D444D52A3D56A01A7 /* CGLayoutPrivateEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DCCCA0E34E156032612A534451682E /* CGLayoutPrivateEvolution.swift */; };
-		7DEA8491A12E70950C632168F5F756BB /* CGLayoutDeprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58EC7D8F4F4E8792A610982016FCBBE6 /* CGLayoutDeprecated.swift */; };
+		7831D5D93577231D444D52A3D56A01A7 /* CGLayoutPrivateEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = B868F1D799377BC45065BC349C1501F5 /* CGLayoutPrivateEvolution.swift */; };
+		7DEA8491A12E70950C632168F5F756BB /* CGLayoutDeprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD033A5794451908DB9A4B04180AF4 /* CGLayoutDeprecated.swift */; };
 		83A3BEF4A3848CEA1275B3E8F358AEEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B38A88E0776EAF5001831CAEFF93C9A0 /* Foundation.framework */; };
-		8744789D64F73603E61DD2DDB1693DE9 /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55ACE1E701E48FCB87FEDB6DF48FBD /* MultiCoordinateSpace.swift */; };
+		8744789D64F73603E61DD2DDB1693DE9 /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD72F6A1F4D674FC06C77172603CBCA9 /* MultiCoordinateSpace.swift */; };
 		87A1297B9CB85D9ECBC4CFEE6B326558 /* Pods-CGLayout_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EEA53948EA0828D3B7406D393CDD652 /* Pods-CGLayout_Example-dummy.m */; };
 		8C23D57EAC1F82584D008F61E9851D93 /* Pods-CGLayout_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B5F57964F15FDBCE74EC325BE90F11D0 /* Pods-CGLayout_Tests-dummy.m */; };
-		93D04D1CC466B06E9F8E1600F8A1C1AA /* CGLayout-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B938AF11DE45B308169707BF03056E /* CGLayout-iOS-dummy.m */; };
-		9586F80725C7C887FAA0A2307483129F /* LayoutItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257BA4FEB3498A5E9C8E174CF95D57A4 /* LayoutItemContainer.swift */; };
-		95A4261AB9A51B3864579AF87E42AF2F /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95AA43F093D2CA363699BEACD69F8AF0 /* CommonExtensions.swift */; };
-		9D98FACED2EBE37F64106052F7B6D448 /* CGLayoutDeprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58EC7D8F4F4E8792A610982016FCBBE6 /* CGLayoutDeprecated.swift */; };
+		93D04D1CC466B06E9F8E1600F8A1C1AA /* CGLayout-iOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 81CEBE881DF8861376BBF02FD57FD89B /* CGLayout-iOS-dummy.m */; };
+		9586F80725C7C887FAA0A2307483129F /* LayoutItemContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583B9D1F4DC09B7FDD03F19556B243A /* LayoutItemContainer.swift */; };
+		95A4261AB9A51B3864579AF87E42AF2F /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D11CBD1215B6634AC59344B4DF26B3 /* CommonExtensions.swift */; };
+		9D98FACED2EBE37F64106052F7B6D448 /* CGLayoutDeprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD033A5794451908DB9A4B04180AF4 /* CGLayoutDeprecated.swift */; };
 		A057D279ED579B4DCFB9E41351469A6D /* Pods-CGLayout_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 02AEA5B5D0C23C030F670688D184C042 /* Pods-CGLayout_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A2CAC0D2760570023DD8F88EA0BBCB5F /* CGLayout-tvOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F255C62FEE9C13F189C4915C252F890F /* CGLayout-tvOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ABD27C966D22E09285397351C97D1F3E /* CGLayout-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B15D5B5EE4A1F1DC8D03676FC3A0C4F7 /* CGLayout-macOS-dummy.m */; };
+		A2CAC0D2760570023DD8F88EA0BBCB5F /* CGLayout-tvOS-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A48F02EDB1DA787B1DECB20AB8F7554F /* CGLayout-tvOS-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		ABD27C966D22E09285397351C97D1F3E /* CGLayout-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 792E89162B941FC5D630C9980CCBF36D /* CGLayout-macOS-dummy.m */; };
 		C1ABEDB56E0881C8303F6136AAC6BC79 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFB56E35108A1FCAA1F5604A02FFCDC5 /* Cocoa.framework */; };
-		C376107C75310491B973A1684D7D2CFB /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01DC66740C0E2FA390F835129F26F77 /* CGLayout.swift */; };
+		C376107C75310491B973A1684D7D2CFB /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7409BA72F9F023FC9F983F43CC642540 /* CGLayout.swift */; };
 		C8F740339540D62AF57521D2AA987353 /* Pods-CGLayout-tvOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B0A3AE2D03FCDAA46B95385CC9BD20A /* Pods-CGLayout-tvOS-dummy.m */; };
-		CDBA2C5ACA9D0B32B73E0B1575CC774A /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF955ECC5403820E730FCAE9712797 /* CGLayoutExtended.swift */; };
-		D06E7EED60AD07D1DECBEBACDBA1263D /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01DC66740C0E2FA390F835129F26F77 /* CGLayout.swift */; };
+		CDBA2C5ACA9D0B32B73E0B1575CC774A /* CGLayoutExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF52FC15BC4AF9347689B5B743F2AF56 /* CGLayoutExtended.swift */; };
+		D06E7EED60AD07D1DECBEBACDBA1263D /* CGLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7409BA72F9F023FC9F983F43CC642540 /* CGLayout.swift */; };
 		D3A8F27D21B34EA033D3DD64D9DDAAE9 /* Pods-CGLayout-macOS-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = AE71AA7AE087A9E7FFD415DEB14E32C0 /* Pods-CGLayout-macOS-dummy.m */; };
 		F35A3B7B1A69E8066E04C91E2907A8EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7461AAFB7A771BCEC6E4E09204991FB5 /* Foundation.framework */; };
-		F55CEE6AE6577694253E524E5953D2C5 /* CGLayoutPrivateEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DCCCA0E34E156032612A534451682E /* CGLayoutPrivateEvolution.swift */; };
-		FAE7DCD572DF1F527D9A2B97A37DF134 /* CGLayoutPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163472635BB679165DFFD95C31977030 /* CGLayoutPrivate.swift */; };
-		FAEF7FF1E43E12719F7283C9C723AD1E /* CGLayoutDeprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58EC7D8F4F4E8792A610982016FCBBE6 /* CGLayoutDeprecated.swift */; };
-		FD580D7B6CBA525C6C3C100911388B38 /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55ACE1E701E48FCB87FEDB6DF48FBD /* MultiCoordinateSpace.swift */; };
-		FF690FCE256085096E23E0A66CB56F14 /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E55ACE1E701E48FCB87FEDB6DF48FBD /* MultiCoordinateSpace.swift */; };
+		F55CEE6AE6577694253E524E5953D2C5 /* CGLayoutPrivateEvolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = B868F1D799377BC45065BC349C1501F5 /* CGLayoutPrivateEvolution.swift */; };
+		FAE7DCD572DF1F527D9A2B97A37DF134 /* CGLayoutPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79D853E760F38D0EA14D144FD8E445D /* CGLayoutPrivate.swift */; };
+		FAEF7FF1E43E12719F7283C9C723AD1E /* CGLayoutDeprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDD033A5794451908DB9A4B04180AF4 /* CGLayoutDeprecated.swift */; };
+		FD580D7B6CBA525C6C3C100911388B38 /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD72F6A1F4D674FC06C77172603CBCA9 /* MultiCoordinateSpace.swift */; };
+		FF690FCE256085096E23E0A66CB56F14 /* MultiCoordinateSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD72F6A1F4D674FC06C77172603CBCA9 /* MultiCoordinateSpace.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,94 +82,358 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0235B032BB846417FBBF927597B3F82B /* Classes.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Classes.html; path = docs/Classes.html; sourceTree = "<group>"; };
+		027D063C9B4AFD5D67781BDC22DBFEB5 /* StackLayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StackLayoutGuide.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/StackLayoutGuide.html; sourceTree = "<group>"; };
 		02AEA5B5D0C23C030F670688D184C042 /* Pods-CGLayout_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout_Example-umbrella.h"; sourceTree = "<group>"; };
+		037BB5082B4638FB0F9D922663885563 /* CGLayout-tvOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "CGLayout-tvOS-dummy.m"; path = "../CGLayout-tvOS/CGLayout-tvOS-dummy.m"; sourceTree = "<group>"; };
+		048B15C0E431A994CE81EFA6534D41BA /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Right/Limit/Dependence.html; sourceTree = "<group>"; };
 		0495B017D77608F290603591C330D91F /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CGLayout.framework; path = "CGLayout-iOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		04F7F94960AAD11693FB8D9EA4A9C600 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = "../CGLayout-tvOS/Info.plist"; sourceTree = "<group>"; };
+		05F06934A095A677CB18610DC72E76A7 /* badge.svg */ = {isa = PBXFileReference; includeInIndex = 1; name = badge.svg; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/badge.svg; sourceTree = "<group>"; };
+		06131F79A863F1D87EC85CB99073BD73 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Trailing/Align/Dependence.html; sourceTree = "<group>"; };
 		0715B29BAF3E5845091404BE03EA7557 /* Pods-CGLayout_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		073FE8716A416201E4D5609D7ABAEE43 /* Center.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Center.html; path = docs/Structs/LayoutAnchor/Center.html; sourceTree = "<group>"; };
 		07A4F35D1AAD2B61C00B873924F0B97F /* Pods-CGLayout-macOS-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CGLayout-macOS-acknowledgements.markdown"; sourceTree = "<group>"; };
+		08CDB4CB61E689F2D72264129DCE141A /* LayoutConstraintProtocol.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutConstraintProtocol.html; path = docs/Protocols/LayoutConstraintProtocol.html; sourceTree = "<group>"; };
+		094184B8ED7A708971190EDC216F934F /* Extensions.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Extensions.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions.html; sourceTree = "<group>"; };
+		0BBE9B41F9084C6C9261DBA1D999DD00 /* StackLayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StackLayoutGuide.html; path = docs/Classes/StackLayoutGuide.html; sourceTree = "<group>"; };
+		0BCA5A872DB4E5282E4BE89EA595BD2B /* CGLayout-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "CGLayout-iOS.modulemap"; sourceTree = "<group>"; };
+		0BE789EE42E1A2648693C680ECE31D0E /* ViewPlaceholder.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ViewPlaceholder.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes/ViewPlaceholder.html; sourceTree = "<group>"; };
+		0C0D6708B4FAB0B10AD3DEB8E114DE17 /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Trailing/Pull.html; sourceTree = "<group>"; };
+		0D30231DF33BEFB5061B85082C331C54 /* StackLayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StackLayoutGuide.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes/StackLayoutGuide.html; sourceTree = "<group>"; };
+		0DCE6812D8316CB2742A3FD5F3226D16 /* Horizontal.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Horizontal.html; path = docs/Structs/Layout/Filling/Horizontal.html; sourceTree = "<group>"; };
+		0DDB0958846615D59095A8483ABB4375 /* ScrollLayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ScrollLayoutGuide.html; path = docs/Classes/ScrollLayoutGuide.html; sourceTree = "<group>"; };
 		0DE96167DEFD97195C395AA8631CA65C /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0E12CDE6D1D6BCD291D0FD1C67B0DEAA /* Typealiases.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Typealiases.html; path = docs/Typealiases.html; sourceTree = "<group>"; };
+		0F4AF825C75485C0788702E575146B27 /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Left/Limit.html; sourceTree = "<group>"; };
+		101652FF6AC370A8F951BB1665FB336B /* carat.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = carat.png; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/img/carat.png; sourceTree = "<group>"; };
+		109E2A0EEE6D1FBF7CDB2B0C5E4CAC4E /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Trailing/Limit.html; sourceTree = "<group>"; };
+		117126D84F54B1763AD75486E82D69C4 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Right/Pull/Dependence.html; sourceTree = "<group>"; };
+		11A0B62D51351EA297DEAC4FE428BA5A /* LayoutCoordinateSpace.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutCoordinateSpace.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/LayoutCoordinateSpace.html; sourceTree = "<group>"; };
 		12D1DDB78275F7990C30C4A2E7225FFE /* Pods_CGLayout_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_macOS.framework; path = "Pods-CGLayout-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		143B29AC1C857B37D3D134CF3E08D745 /* Pods-CGLayout_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CGLayout_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		163472635BB679165DFFD95C31977030 /* CGLayoutPrivate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayoutPrivate.swift; path = CGLayout/Classes/CGLayoutPrivate.swift; sourceTree = "<group>"; };
+		14F5BECF904A7F17E2342B8A36FCEC00 /* AdjustLayoutConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = AdjustLayoutConstraint.html; path = docs/Structs/AdjustLayoutConstraint.html; sourceTree = "<group>"; };
+		1583B9D1F4DC09B7FDD03F19556B243A /* LayoutItemContainer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutItemContainer.swift; path = CGLayout/Classes/LayoutItemContainer.swift; sourceTree = "<group>"; };
+		15CFB7604C8BCE89EAF60A52DD28B1E5 /* StringLayoutAnchor.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StringLayoutAnchor.html; path = docs/Structs/StringLayoutAnchor.html; sourceTree = "<group>"; };
+		16C6DBF8352081911F5642AFF36BF4D5 /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Left/Pull.html; sourceTree = "<group>"; };
+		1783305997D92B8CB5B813764784F377 /* CGLayout-iOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "CGLayout-iOS.xcconfig"; sourceTree = "<group>"; };
+		17F3CFC7A42C2DEE874BA2A40885FC64 /* LayoutBlockProtocol.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutBlockProtocol.html; path = docs/Protocols/LayoutBlockProtocol.html; sourceTree = "<group>"; };
+		19615E1ADC4E8EE020443344ED66D597 /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Top/Pull.html; sourceTree = "<group>"; };
+		1A059CCA35A7677C45EF1195B9BEEF9B /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/Structs/LayoutAnchor/Trailing/Align.html; sourceTree = "<group>"; };
 		1A3A198B0F984D53CE160CDE6EBDEF78 /* Pods-CGLayout_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout_Tests-resources.sh"; sourceTree = "<group>"; };
-		1D874531D3F3C4D385255DD78C5D1E84 /* CGLayout-iOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "CGLayout-iOS.xcconfig"; sourceTree = "<group>"; };
-		24C7BCC733C40FE97889414C68F3068C /* CGLayout-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CGLayout-iOS-umbrella.h"; sourceTree = "<group>"; };
-		257BA4FEB3498A5E9C8E174CF95D57A4 /* LayoutItemContainer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LayoutItemContainer.swift; path = CGLayout/Classes/LayoutItemContainer.swift; sourceTree = "<group>"; };
+		1D730E0490B489F855B3FA0ECFD05337 /* NSScrollView.html */ = {isa = PBXFileReference; includeInIndex = 1; name = NSScrollView.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/NSScrollView.html; sourceTree = "<group>"; };
+		1F59DAA41550D48F6327F571258CE18D /* search.json */ = {isa = PBXFileReference; includeInIndex = 1; name = search.json; path = docs/search.json; sourceTree = "<group>"; };
+		1F8ACDBF875E01ABC6FA1508451AF556 /* _RectAxisAnchor.html */ = {isa = PBXFileReference; includeInIndex = 1; name = _RectAxisAnchor.html; path = docs/Structs/_RectAxisAnchor.html; sourceTree = "<group>"; };
+		1FF2990FF78EE96A1A8EB83172FEFCCF /* NSScrollView.html */ = {isa = PBXFileReference; includeInIndex = 1; name = NSScrollView.html; path = docs/Extensions/NSScrollView.html; sourceTree = "<group>"; };
+		21A9711AC8BAED0D1083F1FAB119973F /* Classes.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Classes.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes.html; sourceTree = "<group>"; };
+		21D613139449D35693E08536EA02FEF4 /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Leading/Limit.html; sourceTree = "<group>"; };
+		243A8CF9AB4ABE626DE0F091D942603E /* Bottom.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Bottom.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Bottom.html; sourceTree = "<group>"; };
+		25026AD4E46BE40092A368C306743833 /* LayoutSnapshotProtocol.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutSnapshotProtocol.html; path = docs/Protocols/LayoutSnapshotProtocol.html; sourceTree = "<group>"; };
+		2545C4394DBA0233B897ABF3C1C67662 /* Origin.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Origin.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Center/Align/Dependence/Origin.html; sourceTree = "<group>"; };
 		258ACD06DBD0AD2C990012AF46D0BA54 /* Pods-CGLayout_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout_Example-resources.sh"; sourceTree = "<group>"; };
+		2608216F91723D33D8B7C2180BF0FEBF /* UIViewPlaceholder.html */ = {isa = PBXFileReference; includeInIndex = 1; name = UIViewPlaceholder.html; path = docs/Classes/UIViewPlaceholder.html; sourceTree = "<group>"; };
+		266371DC57C8D146DE2547D6C049973B /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Top/Align.html; sourceTree = "<group>"; };
+		2D196922C7923A7065C83160F789B38D /* Vertical.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Vertical.html; path = docs/Structs/Layout/Alignment/Vertical.html; sourceTree = "<group>"; };
+		2D4AA8F8542FE2B4DD6C386EE13280F1 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Top/Limit/Dependence.html; sourceTree = "<group>"; };
+		2DD3D7D28E6E83010C31BE9951314086 /* LayoutAnchor.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutAnchor.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor.html; sourceTree = "<group>"; };
+		30799294C766352000310FB9804449F9 /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/Structs/LayoutAnchor/Leading/Pull.html; sourceTree = "<group>"; };
 		315188DA8CC7668BA1F10F48192F9103 /* Pods-CGLayout-macOSTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-macOSTests-resources.sh"; sourceTree = "<group>"; };
+		325646E8C8E738C2A676069E54018AA1 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Right/Align.html; sourceTree = "<group>"; };
+		32B97648395A1D00DF7E88DAB343470E /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/Structs/LayoutAnchor/Trailing/Limit.html; sourceTree = "<group>"; };
+		3331DAB7A310B65CEC34BF92278082A1 /* Trailing.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Trailing.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Trailing.html; sourceTree = "<group>"; };
+		345A80285BCE437FA64AB13453AFB801 /* LayoutBlock.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutBlock.html; path = docs/Classes/LayoutBlock.html; sourceTree = "<group>"; };
 		34DF349874F6D31134644F3CF7510634 /* Pods-CGLayout-tvOS-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-tvOS-resources.sh"; sourceTree = "<group>"; };
+		3557BC48C3F44DE8E99C535336E1C458 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/Structs/LayoutAnchor/Center/Align.html; sourceTree = "<group>"; };
+		35843C7EFA8706783517BF73CA7B675D /* After.html */ = {isa = PBXFileReference; includeInIndex = 1; name = After.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutWorkspace/After.html; sourceTree = "<group>"; };
+		367CF11466FB1F0B598E0A9732EBF614 /* Filling.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Filling.html; path = docs/Structs/StackLayoutScheme/Filling.html; sourceTree = "<group>"; };
+		36CA682FB110CF2AC371E1B773386E07 /* InLayoutTimeItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = InLayoutTimeItem.html; path = docs/Protocols/InLayoutTimeItem.html; sourceTree = "<group>"; };
+		370D51522369EBB4F0BC0C5A3DF69C3B /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Right/Limit.html; sourceTree = "<group>"; };
+		3810A89C3B2DB1E4D012D5A9284BE558 /* StackLayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StackLayoutGuide.html; path = docs/Extensions/StackLayoutGuide.html; sourceTree = "<group>"; };
+		39FB2FD8DB8104B840DA9E20CC76E00B /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Trailing/Limit/Dependence.html; sourceTree = "<group>"; };
+		3BDD033A5794451908DB9A4B04180AF4 /* CGLayoutDeprecated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayoutDeprecated.swift; path = CGLayout/Classes/CGLayoutDeprecated.swift; sourceTree = "<group>"; };
+		3C6B53FA74EB19482A49CCCAB08467DC /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Leading/Pull/Dependence.html; sourceTree = "<group>"; };
+		3C8DEAFD128446377DB8DDB35E3F5ABB /* After.html */ = {isa = PBXFileReference; includeInIndex = 1; name = After.html; path = docs/Structs/LayoutWorkspace/After.html; sourceTree = "<group>"; };
+		3E6E95DDA73D69F2118C7B2F3E74A996 /* Vertical.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Vertical.html; path = docs/Structs/Layout/Filling/Vertical.html; sourceTree = "<group>"; };
+		3EEAED1EC3543B48497C9E92F1AB20A4 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Left/Align/Dependence.html; sourceTree = "<group>"; };
+		3F0D6AC7BF1146361373161A0F478A84 /* LayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutGuide.html; path = docs/Extensions/LayoutGuide.html; sourceTree = "<group>"; };
+		4008CCE059EEF4C91AC3E19ABAC51320 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Left/Limit/Dependence.html; sourceTree = "<group>"; };
+		40DD6CEF56F365E037131E0D385510EF /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/Structs/LayoutAnchor/Trailing/Pull.html; sourceTree = "<group>"; };
+		412DDE3C258B7E884F7343D93E0F20E6 /* Before.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Before.html; path = docs/Structs/LayoutWorkspace/Before.html; sourceTree = "<group>"; };
+		41A0B520C3392E1302C1498479BFD494 /* NSView.html */ = {isa = PBXFileReference; includeInIndex = 1; name = NSView.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/NSView.html; sourceTree = "<group>"; };
+		41CA65EF36F2D4988B279F5F570FC46E /* jazzy.css */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.css; path = docs/css/jazzy.css; sourceTree = "<group>"; };
+		41D6CF2398690F5A02AF8B68F8A95ACE /* Center.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Center.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Center/Align/Dependence/Center.html; sourceTree = "<group>"; };
 		424CF93DFE10E63F7637A3CAAEEB43E0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		427C2A694742E0553634119D42E0D558 /* StringLayoutAnchor.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StringLayoutAnchor.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/StringLayoutAnchor.html; sourceTree = "<group>"; };
+		4392F91E5CC879F586D1C11975348AE3 /* CGLayout-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; name = "CGLayout-macOS.modulemap"; path = "../CGLayout-macOS/CGLayout-macOS.modulemap"; sourceTree = "<group>"; };
 		43947E6278988A03ABE8D648497A439A /* Pods-CGLayout-tvOS-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CGLayout-tvOS-acknowledgements.markdown"; sourceTree = "<group>"; };
+		43E9AEA40CF0F866C53DD7462255D59D /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Left/Pull/Dependence.html; sourceTree = "<group>"; };
+		440F58879C84431FB8209CBAEDC7B868 /* Trailing.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Trailing.html; path = docs/Structs/LayoutAnchor/Trailing.html; sourceTree = "<group>"; };
+		4479B52B0EAFE1FFF445E5CF4870F5D0 /* LayoutPlaceholder.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutPlaceholder.html; path = docs/Classes/LayoutPlaceholder.html; sourceTree = "<group>"; };
+		44AA86F4BF92F9D29464457CF04CBD05 /* String.html */ = {isa = PBXFileReference; includeInIndex = 1; name = String.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/String.html; sourceTree = "<group>"; };
+		44CC1201104C1E11FD30F4AE3DCC36DB /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/Structs/LayoutAnchor/Leading/Limit.html; sourceTree = "<group>"; };
 		466809D682C83C5DD687C6C30CE3A4AA /* Pods-CGLayout_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		4AF79DA7F8BC50507EFCD6F3560E51E8 /* CGLayout-macOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "CGLayout-macOS.xcconfig"; path = "../CGLayout-macOS/CGLayout-macOS.xcconfig"; sourceTree = "<group>"; };
+		46AC3B303108148D038E9EE1BB2BFDA4 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Leading/Align/Dependence.html; sourceTree = "<group>"; };
+		46D74B6468A1CB71F7BE9DDB9FDD70C0 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Top/Limit/Dependence.html; sourceTree = "<group>"; };
+		47B821DDB1D8F833651C567595D90154 /* Alignment.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Alignment.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/StackLayoutScheme/Alignment.html; sourceTree = "<group>"; };
+		48F335DC5F38EC8F545F2B93AD699EDF /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Left/Align/Dependence.html; sourceTree = "<group>"; };
+		48F3AC3E5140C5D8D7732AA610DB5CA6 /* LayoutScheme.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutScheme.html; path = docs/Structs/LayoutScheme.html; sourceTree = "<group>"; };
+		4966D025EC603DB81E000131CB799871 /* UILayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = UILayoutGuide.html; path = docs/Extensions/UILayoutGuide.html; sourceTree = "<group>"; };
 		4B0A3AE2D03FCDAA46B95385CC9BD20A /* Pods-CGLayout-tvOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CGLayout-tvOS-dummy.m"; sourceTree = "<group>"; };
+		4C2A121A7F3A391174D70405A4E928B7 /* ViewPlaceholder.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ViewPlaceholder.html; path = docs/Classes/ViewPlaceholder.html; sourceTree = "<group>"; };
 		4CD5700F00B5901D250C180D63C1C609 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4CEF955ECC5403820E730FCAE9712797 /* CGLayoutExtended.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayoutExtended.swift; path = CGLayout/Classes/CGLayoutExtended.swift; sourceTree = "<group>"; };
 		4EEA53948EA0828D3B7406D393CDD652 /* Pods-CGLayout_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CGLayout_Example-dummy.m"; sourceTree = "<group>"; };
-		53320122283AA6E488B22407312E3544 /* CGLayout-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; name = "CGLayout-macOS.modulemap"; path = "../CGLayout-macOS/CGLayout-macOS.modulemap"; sourceTree = "<group>"; };
+		50067AA5FF4B1D12A019AA2C0D501128 /* LayoutBlock.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutBlock.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes/LayoutBlock.html; sourceTree = "<group>"; };
+		502292379FA1B3200BA9BFE7F926542B /* SelfSizedLayoutItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = SelfSizedLayoutItem.html; path = docs/Protocols/SelfSizedLayoutItem.html; sourceTree = "<group>"; };
+		50A53BC00517703492D4B6130796FFE0 /* LayerPlaceholder.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayerPlaceholder.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes/LayerPlaceholder.html; sourceTree = "<group>"; };
+		52F8532DAB4FA21A0CA25594D0C4BEEE /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = docs/docsets/CGLayout.docset/Contents/Info.plist; sourceTree = "<group>"; };
+		53BA50BD6568CCCB2D0AC62E73FEC1D7 /* Size.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Size.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Size.html; sourceTree = "<group>"; };
+		555E7634875FF2A4A964594F3840E51A /* LayoutWorkspace.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutWorkspace.html; path = docs/Structs/LayoutWorkspace.html; sourceTree = "<group>"; };
+		5576317F35185A2D59F37213D0C01599 /* LayoutPlaceholder.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutPlaceholder.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes/LayoutPlaceholder.html; sourceTree = "<group>"; };
 		5609DFCD14C4164389B87E83C68DB639 /* Pods-CGLayout-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		56E5ACC2F88B7DBD39C7B9FB06436A43 /* jquery.min.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jquery.min.js; path = docs/js/jquery.min.js; sourceTree = "<group>"; };
+		578DC3CBC4A819561E2D623E349EE415 /* Filling.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Filling.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/StackLayoutScheme/Filling.html; sourceTree = "<group>"; };
+		5797000969DA0A271A71FD72FAF2930A /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Top/Align/Dependence.html; sourceTree = "<group>"; };
 		57A65E829AC2F89B2ED9FBB961EB79B7 /* Pods_CGLayout_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_Example.framework; path = "Pods-CGLayout_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		58EC7D8F4F4E8792A610982016FCBBE6 /* CGLayoutDeprecated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayoutDeprecated.swift; path = CGLayout/Classes/CGLayoutDeprecated.swift; sourceTree = "<group>"; };
+		57CD7057C36EF63E69207503E6600D33 /* StackLayoutScheme.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StackLayoutScheme.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/StackLayoutScheme.html; sourceTree = "<group>"; };
+		57D6858DAC2FB03DA943609EEB8C4575 /* Leading.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Leading.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Leading.html; sourceTree = "<group>"; };
+		5AB46088DFE6F7B7EF884E24EBD5709E /* LayoutItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutItem.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/LayoutItem.html; sourceTree = "<group>"; };
 		5BF8C4F3A716E5C46EC9EF79EB174C8C /* Pods-CGLayout-tvOS-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CGLayout-tvOS-acknowledgements.plist"; sourceTree = "<group>"; };
-		5E55ACE1E701E48FCB87FEDB6DF48FBD /* MultiCoordinateSpace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultiCoordinateSpace.swift; path = CGLayout/Classes/MultiCoordinateSpace.swift; sourceTree = "<group>"; };
+		5DF567122A88FB4D9A6CDAE5B7A0B29E /* EdgeInsets.html */ = {isa = PBXFileReference; includeInIndex = 1; name = EdgeInsets.html; path = docs/Extensions/EdgeInsets.html; sourceTree = "<group>"; };
+		5F66A9EA724B06D2D352227BEDB7BD7B /* CGLayout-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-macOS-umbrella.h"; path = "../CGLayout-macOS/CGLayout-macOS-umbrella.h"; sourceTree = "<group>"; };
 		5F905395CE499B74109CAAA569443BD6 /* Pods-CGLayout_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout_Example.modulemap"; sourceTree = "<group>"; };
+		600C314EEFBDB46CD535F5856262D20A /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Bottom/Limit/Dependence.html; sourceTree = "<group>"; };
 		600E95172867BC51E09C5CBBFDFD5644 /* Pods-CGLayout-macOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-macOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		60AAA247B34D7E87B917587B0651D7CA /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Center/Align.html; sourceTree = "<group>"; };
+		60B40350DBFF229FCE660B7304369234 /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Top/Limit.html; sourceTree = "<group>"; };
+		6183D2B420D539C8695CA37882DD43C6 /* CALayer.html */ = {isa = PBXFileReference; includeInIndex = 1; name = CALayer.html; path = docs/Extensions/CALayer.html; sourceTree = "<group>"; };
+		6254E31EADDB77E1A8206E3E11731A23 /* CGLayout-tvOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; name = "CGLayout-tvOS.modulemap"; path = "../CGLayout-tvOS/CGLayout-tvOS.modulemap"; sourceTree = "<group>"; };
 		63199994CF00E2FDF4B60C3FA96B0BC3 /* Pods-CGLayout-macOS-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-macOS-resources.sh"; sourceTree = "<group>"; };
-		65A78F34A1A591FA9354F1A579F672C3 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6334E9161FA17EAE3B283A3D67996986 /* highlight.css */ = {isa = PBXFileReference; includeInIndex = 1; name = highlight.css; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/css/highlight.css; sourceTree = "<group>"; };
+		6348E11CA33BE4FD13EAFFE5039FB654 /* RectAxis.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectAxis.html; path = docs/Protocols/RectAxis.html; sourceTree = "<group>"; };
+		637A5302DE2FAFA303E9FC7968A9B48C /* Extended.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Extended.html; path = docs/Protocols/Extended.html; sourceTree = "<group>"; };
+		63AEDE50A9FC9C7AAA7772B175133CA6 /* Extensions.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Extensions.html; path = docs/Extensions.html; sourceTree = "<group>"; };
+		65E4E24997C2F263AF28A207674FC43E /* LayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutGuide.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/LayoutGuide.html; sourceTree = "<group>"; };
 		664122A068172AA59F07B8BB6EC7E2A9 /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CGLayout.framework; path = "CGLayout-tvOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66AE3306D82FA6457F4E31995ABF6D62 /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Right/Pull.html; sourceTree = "<group>"; };
+		678CBA608443AB7B5FDE5C9717145691 /* Left.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Left.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Left.html; sourceTree = "<group>"; };
+		679D7324217FD54D9C882C863F73397F /* Size.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Size.html; path = docs/Structs/LayoutAnchor/Size.html; sourceTree = "<group>"; };
 		68E9969692CDBF7C93C24BA952F1110C /* Pods-CGLayout-macOS-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CGLayout-macOS-acknowledgements.plist"; sourceTree = "<group>"; };
+		69277BFFCC44239DD35955E0AAE25500 /* gh.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = gh.png; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/img/gh.png; sourceTree = "<group>"; };
 		694DB2FAA431048C5445AA5DF43F3A5A /* Pods-CGLayout-macOSTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-macOSTests-frameworks.sh"; sourceTree = "<group>"; };
+		69F0EBB0BD893D834DD2826202430B54 /* RectBasedConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectBasedConstraint.html; path = docs/Protocols/RectBasedConstraint.html; sourceTree = "<group>"; };
+		69F22CBB96F4E2632B055EA149015FE2 /* dash.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = dash.png; path = docs/img/dash.png; sourceTree = "<group>"; };
+		6A1CE3A33456FB71E66F99BA9D498E22 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Bottom/Pull/Dependence.html; sourceTree = "<group>"; };
+		6A3BE578A55B95C5E03A637E883D0ABC /* Layout.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Layout.html; path = docs/Structs/Layout.html; sourceTree = "<group>"; };
 		6AF225F52253AE7094BDCC424F8E26A1 /* Pods-CGLayout_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout_Example-frameworks.sh"; sourceTree = "<group>"; };
 		6D71D31A98C266E22523805460CC8FA4 /* Pods-CGLayout-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-macOS.release.xcconfig"; sourceTree = "<group>"; };
+		6DD36FCC3DBF48851297A8F734EAE15D /* Before.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Before.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutWorkspace/Before.html; sourceTree = "<group>"; };
+		6FA80FD964FF8EF89C233F1161873979 /* ScrollDirection.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ScrollDirection.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/ScrollDirection.html; sourceTree = "<group>"; };
+		700AB5DED25C36A922D550ECF6B32DB2 /* CALayer.html */ = {isa = PBXFileReference; includeInIndex = 1; name = CALayer.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/CALayer.html; sourceTree = "<group>"; };
+		70C3493F3A203F7759D920563E48E70E /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Trailing/Align/Dependence.html; sourceTree = "<group>"; };
+		717C245ACB26CFFABA39AC8CCA481379 /* LayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutGuide.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes/LayoutGuide.html; sourceTree = "<group>"; };
+		7218C3411B82B125945FA74FA281A180 /* Alignment.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Alignment.html; path = docs/Structs/StackLayoutScheme/Alignment.html; sourceTree = "<group>"; };
+		7409BA72F9F023FC9F983F43CC642540 /* CGLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayout.swift; path = CGLayout/Classes/CGLayout.swift; sourceTree = "<group>"; };
 		7461AAFB7A771BCEC6E4E09204991FB5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		7503A2B8328D721A1AC5AC1CAE0A6186 /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/Structs/LayoutAnchor/Bottom/Pull.html; sourceTree = "<group>"; };
 		75A8B44B288C97764B8FB8065CB5E627 /* Pods-CGLayout-macOS-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-macOS-frameworks.sh"; sourceTree = "<group>"; };
 		7614C19562A0BB17F45171F4B799617C /* Pods-CGLayout_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout_Tests-frameworks.sh"; sourceTree = "<group>"; };
-		78B938AF11DE45B308169707BF03056E /* CGLayout-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CGLayout-iOS-dummy.m"; sourceTree = "<group>"; };
+		76581B6F21BCC607EF45AF908732F4F4 /* jquery.min.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jquery.min.js; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/js/jquery.min.js; sourceTree = "<group>"; };
+		76740F12BB6DC56554296178D69AE655 /* badge.svg */ = {isa = PBXFileReference; includeInIndex = 1; name = badge.svg; path = docs/badge.svg; sourceTree = "<group>"; };
+		768CEB16447772B5D4FDEEC43D15A7A5 /* Protocols.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Protocols.html; path = docs/Protocols.html; sourceTree = "<group>"; };
+		773A04A1E2BB003CE31698DECAC7C6AA /* CGRect.html */ = {isa = PBXFileReference; includeInIndex = 1; name = CGRect.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/CGRect.html; sourceTree = "<group>"; };
+		792E89162B941FC5D630C9980CCBF36D /* CGLayout-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "CGLayout-macOS-dummy.m"; path = "../CGLayout-macOS/CGLayout-macOS-dummy.m"; sourceTree = "<group>"; };
 		79DD4E76F81D0DF12E42510175BA38A2 /* Pods-CGLayout_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout_Example.release.xcconfig"; sourceTree = "<group>"; };
 		7A063DDD1B066A197A29F949B96C6D46 /* Pods_CGLayout_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_Tests.framework; path = "Pods-CGLayout_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AAD575825413549C358667883B803E0 /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CGLayout.framework; path = "CGLayout-macOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B1047F4A0859A30DD0AA48B61772ECB /* Pods-CGLayout_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		7C0C6C892A6C0AF13A8D6E4B4BA28FE0 /* Vertical.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Vertical.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/Layout/Filling/Vertical.html; sourceTree = "<group>"; };
+		7C20B3892AAAB0594631DF5A3CC20C52 /* LayoutScheme.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutScheme.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutScheme.html; sourceTree = "<group>"; };
 		7D75D1ACE7AE66710E20905ED5FCB653 /* Pods-CGLayout-macOSTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout-macOSTests.modulemap"; sourceTree = "<group>"; };
-		832CEEEB16C2155E75E69A7706812489 /* CGLayout-tvOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-tvOS-prefix.pch"; path = "../CGLayout-tvOS/CGLayout-tvOS-prefix.pch"; sourceTree = "<group>"; };
+		7E95D32EB33D2053CBEBC64F5D8CED10 /* ScrollLayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ScrollLayoutGuide.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes/ScrollLayoutGuide.html; sourceTree = "<group>"; };
+		81CEBE881DF8861376BBF02FD57FD89B /* CGLayout-iOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CGLayout-iOS-dummy.m"; sourceTree = "<group>"; };
+		828B7E9B13FFF01806B335FCD158ACFF /* Alignment.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Alignment.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/Layout/Alignment.html; sourceTree = "<group>"; };
+		829A5356078E34064AAA970E3A6A21DF /* String.html */ = {isa = PBXFileReference; includeInIndex = 1; name = String.html; path = docs/Extensions/String.html; sourceTree = "<group>"; };
+		831EA1B39CC5FBEBD4B8F9354AA33E54 /* Extended.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Extended.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/Extended.html; sourceTree = "<group>"; };
+		833DC59AC51CA95541D13430ADC46BA5 /* AnonymConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = AnonymConstraint.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/AnonymConstraint.html; sourceTree = "<group>"; };
+		834DFF85FAF3DC8D15647B44E07F7755 /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/Structs/LayoutAnchor/Left/Limit.html; sourceTree = "<group>"; };
+		83696E83F2D01AC7D878D1C7228CEAFF /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Trailing/Align.html; sourceTree = "<group>"; };
 		836C447A8A96C96D1561CABB57D40AED /* Pods-CGLayout-tvOS-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CGLayout-tvOS-frameworks.sh"; sourceTree = "<group>"; };
+		838717181900B5ECA0DE063D99B59B76 /* Distribution.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Distribution.html; path = docs/Structs/StackLayoutScheme/Distribution.html; sourceTree = "<group>"; };
 		846C366744E41759A5170B6118271971 /* Pods_CGLayout_macOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_macOSTests.framework; path = "Pods-CGLayout-macOSTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85FFA5893C090685BF9706111E2E72C6 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Top/Pull/Dependence.html; sourceTree = "<group>"; };
+		860EAFC4D85C28FDD7F32A8A4C7E7F99 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Leading/Pull/Dependence.html; sourceTree = "<group>"; };
+		86164122DC11E0141930EB74666D2813 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/Structs/LayoutAnchor/Leading/Align.html; sourceTree = "<group>"; };
+		876D1370212B0A231DAACA0CE8FC0900 /* Protocols.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Protocols.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols.html; sourceTree = "<group>"; };
+		88064FFCCC244AEDC53A7C2DEB8AB9F6 /* Structs.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Structs.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs.html; sourceTree = "<group>"; };
+		88CB3C8E8AAB9269ABE33F1F648CC5C1 /* CGLayout-iOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CGLayout-iOS-umbrella.h"; sourceTree = "<group>"; };
+		8946B47881D2BCE6BB91968B34AAA2D3 /* LayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutGuide.html; path = docs/Classes/LayoutGuide.html; sourceTree = "<group>"; };
 		8BD834A51F603133F00CC6F1A8024114 /* Pods-CGLayout-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout-macOS-umbrella.h"; sourceTree = "<group>"; };
 		8D4ECF3C6036A2A1108A5FE22513E66F /* Pods-CGLayout_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CGLayout_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		8E49B80E3F939C256D85551E733A8973 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8E61D2089E1B305D8617B146DE4BA441 /* Pods-CGLayout-macOSTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CGLayout-macOSTests-acknowledgements.plist"; sourceTree = "<group>"; };
-		8E8D95468396A4024415EC1EB7740859 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = "../CGLayout-macOS/Info.plist"; sourceTree = "<group>"; };
-		92F3DCC0E8328A78175B57207EC834DF /* CGLayout-iOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "CGLayout-iOS.modulemap"; sourceTree = "<group>"; };
+		8F38CA201BD7AB028282526A8014A672 /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/Structs/LayoutAnchor/Left/Pull.html; sourceTree = "<group>"; };
+		8F86750B98BFF2375BC7BDE36B1CDB66 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Bottom/Pull/Dependence.html; sourceTree = "<group>"; };
+		900D2F9593D0BBBD85CFF2C4886AEA3A /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Right/Align/Dependence.html; sourceTree = "<group>"; };
+		906D597A3E36259405DC1FEFBF580A50 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/Structs/LayoutAnchor/Top/Align.html; sourceTree = "<group>"; };
+		90D11CBD1215B6634AC59344B4DF26B3 /* CommonExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CommonExtensions.swift; path = CGLayout/Classes/CommonExtensions.swift; sourceTree = "<group>"; };
+		939C29D0688B2D6C935825CFEBC7FB5A /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Bottom/Align/Dependence.html; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		95AA43F093D2CA363699BEACD69F8AF0 /* CommonExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CommonExtensions.swift; path = CGLayout/Classes/CommonExtensions.swift; sourceTree = "<group>"; };
+		943CDC6B44A04F115F3FDCC604F925F6 /* RectBasedConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectBasedConstraint.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/RectBasedConstraint.html; sourceTree = "<group>"; };
+		9494770199C0DB63DCD3AA9B611378B9 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Right/Limit/Dependence.html; sourceTree = "<group>"; };
+		94CFD11CC39C04272D86BC9E5B57C78D /* UIScrollView.html */ = {isa = PBXFileReference; includeInIndex = 1; name = UIScrollView.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/UIScrollView.html; sourceTree = "<group>"; };
+		9557275C35C33EE0C185C96863A940B4 /* dash.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = dash.png; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/img/dash.png; sourceTree = "<group>"; };
+		9684E8513A235D5B0CC68EBBF70D2E33 /* LayoutBlock.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutBlock.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutBlock.html; sourceTree = "<group>"; };
+		96C10C6DF656F573F3DA52A561768A75 /* AdjustableLayoutItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = AdjustableLayoutItem.html; path = docs/Protocols/AdjustableLayoutItem.html; sourceTree = "<group>"; };
+		9849EFBA2AB043DF9B78D884F09BC753 /* jazzy.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.js; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/js/jazzy.js; sourceTree = "<group>"; };
+		98C80E6374FDB5581BC506B3955AE69C /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Center/Align/Dependence.html; sourceTree = "<group>"; };
+		9AC5DEA476B985FC6A9C7A35753F5762 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/Structs/LayoutAnchor/Right/Align.html; sourceTree = "<group>"; };
 		9B5604A9C031266AA394581F0C7F548B /* Pods-CGLayout-macOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout-macOS.modulemap"; sourceTree = "<group>"; };
+		9BA38A73EBC24AF634ECB293121E5FED /* LayoutCoordinateSpace.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutCoordinateSpace.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/LayoutCoordinateSpace.html; sourceTree = "<group>"; };
 		9C2F874F87AFF1BF4ACF5C2CB4259572 /* Pods_CGLayout_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CGLayout_tvOS.framework; path = "Pods-CGLayout-tvOS.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9FF78EE4691BA73161F932E59F75E12C /* CGLayout-tvOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "CGLayout-tvOS-dummy.m"; path = "../CGLayout-tvOS/CGLayout-tvOS-dummy.m"; sourceTree = "<group>"; };
+		9D6CBC1CA046B4F6FC9C3463A1864F99 /* Horizontal.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Horizontal.html; path = docs/Structs/Layout/Alignment/Horizontal.html; sourceTree = "<group>"; };
+		9D7F0A5979FB85D4764905246743AF4E /* undocumented.json */ = {isa = PBXFileReference; includeInIndex = 1; name = undocumented.json; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/undocumented.json; sourceTree = "<group>"; };
+		9ED75981A48A5B397B63840BCA52B33B /* LayoutConstraintProtocol.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutConstraintProtocol.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/LayoutConstraintProtocol.html; sourceTree = "<group>"; };
+		9F22C8EA16EFB857C46EB49F739206C3 /* LayoutConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutConstraint.html; path = docs/Structs/LayoutConstraint.html; sourceTree = "<group>"; };
+		A0F9674B38086C0E784DC6E72556715E /* LayoutCoordinateSpace.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutCoordinateSpace.html; path = docs/Protocols/LayoutCoordinateSpace.html; sourceTree = "<group>"; };
+		A11BD075315B728813C8C77F21629556 /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Bottom/Limit.html; sourceTree = "<group>"; };
+		A12EA3B682E4B07E75B70659604B615B /* Leading.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Leading.html; path = docs/Structs/LayoutAnchor/Leading.html; sourceTree = "<group>"; };
+		A2F5C6FFCC813CE84587D3501F0E831E /* UIView.html */ = {isa = PBXFileReference; includeInIndex = 1; name = UIView.html; path = docs/Extensions/UIView.html; sourceTree = "<group>"; };
 		A35996B9EB003AAD78861B951C3E2F13 /* Pods-CGLayout-macOSTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CGLayout-macOSTests-dummy.m"; sourceTree = "<group>"; };
+		A48F02EDB1DA787B1DECB20AB8F7554F /* CGLayout-tvOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-tvOS-umbrella.h"; path = "../CGLayout-tvOS/CGLayout-tvOS-umbrella.h"; sourceTree = "<group>"; };
+		A509526A5BE13F14A5F24DEBE0CE8DCF /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Right/Pull/Dependence.html; sourceTree = "<group>"; };
+		A5319659FAD6C98CA7CC07A8BD1B4014 /* UIScrollView.html */ = {isa = PBXFileReference; includeInIndex = 1; name = UIScrollView.html; path = docs/Extensions/UIScrollView.html; sourceTree = "<group>"; };
+		A6BF39A0EE19DF05D517FAB74B6C4AEB /* Horizontal.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Horizontal.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/Layout/Filling/Horizontal.html; sourceTree = "<group>"; };
+		A8C19684912EB5A89E9AE7E78BF24FAE /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Bottom/Pull.html; sourceTree = "<group>"; };
+		AA1988D4A3EC93A7B28576227C1DCCD2 /* ScrollDirection.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ScrollDirection.html; path = docs/Structs/ScrollDirection.html; sourceTree = "<group>"; };
+		AA9C07CA79E842226A0FB5D26909EDE0 /* Vertical.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Vertical.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/Layout/Alignment/Vertical.html; sourceTree = "<group>"; };
+		AB94B8DDF8B4776DE3FD35649D3F2B62 /* RectBasedLayout.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectBasedLayout.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/RectBasedLayout.html; sourceTree = "<group>"; };
+		ABD2A8C49A63BEFABEB64C4188ECD3FF /* Filling.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Filling.html; path = docs/Structs/Layout/Filling.html; sourceTree = "<group>"; };
+		ABE68B306C1982DD50E1C52CF57133D2 /* InLayoutTimeItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = InLayoutTimeItem.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/InLayoutTimeItem.html; sourceTree = "<group>"; };
+		AC3D0128ABA1AA5308F0E20DCD2A3128 /* LayoutBlockProtocol.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutBlockProtocol.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/LayoutBlockProtocol.html; sourceTree = "<group>"; };
+		AD2F87CBB242BDA35C8555F2591897BC /* Direction.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Direction.html; path = docs/Structs/StackLayoutScheme/Direction.html; sourceTree = "<group>"; };
+		AE057E00C07D208F25CA2A2392FC0335 /* StringLayoutConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StringLayoutConstraint.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/StringLayoutConstraint.html; sourceTree = "<group>"; };
 		AE71AA7AE087A9E7FFD415DEB14E32C0 /* Pods-CGLayout-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CGLayout-macOS-dummy.m"; sourceTree = "<group>"; };
-		B15D5B5EE4A1F1DC8D03676FC3A0C4F7 /* CGLayout-macOS-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "CGLayout-macOS-dummy.m"; path = "../CGLayout-macOS/CGLayout-macOS-dummy.m"; sourceTree = "<group>"; };
+		AE9727F54E4ED3920E0E1C532DAB941E /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Center/Align/Dependence.html; sourceTree = "<group>"; };
+		B05BC08CDD818D40D68295F0967C0556 /* RectBasedLayout.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectBasedLayout.html; path = docs/Protocols/RectBasedLayout.html; sourceTree = "<group>"; };
+		B1B0DFDFD92A40072E08CECBCF0B01A6 /* undocumented.json */ = {isa = PBXFileReference; includeInIndex = 1; name = undocumented.json; path = docs/undocumented.json; sourceTree = "<group>"; };
 		B38A88E0776EAF5001831CAEFF93C9A0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		B415266CE443C586B4312E9C5A05E4F1 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/Structs/LayoutAnchor/Left/Align.html; sourceTree = "<group>"; };
+		B41BFC78901A8665571A11E4F23B2F9B /* MutableLayoutConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = MutableLayoutConstraint.html; path = docs/Classes/MutableLayoutConstraint.html; sourceTree = "<group>"; };
+		B48A2ECED4AF119F71A8F1DE4E8298A1 /* Right.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Right.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Right.html; sourceTree = "<group>"; };
+		B58C5CCCB3EE48DDEDF47645C04E3D42 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Leading/Limit/Dependence.html; sourceTree = "<group>"; };
+		B5C94DEA1A3C86DFE6C4C53571CFA747 /* carat.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = carat.png; path = docs/img/carat.png; sourceTree = "<group>"; };
 		B5F57964F15FDBCE74EC325BE90F11D0 /* Pods-CGLayout_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CGLayout_Tests-dummy.m"; sourceTree = "<group>"; };
+		B61D5287BD48E4C4839219FE4B5B18B0 /* CGLayout-tvOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-tvOS-prefix.pch"; path = "../CGLayout-tvOS/CGLayout-tvOS-prefix.pch"; sourceTree = "<group>"; };
+		B6F5F9EDFC1AC1F950D7CE8B4DF5F9BA /* Right.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Right.html; path = docs/Structs/LayoutAnchor/Right.html; sourceTree = "<group>"; };
+		B79D853E760F38D0EA14D144FD8E445D /* CGLayoutPrivate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayoutPrivate.swift; path = CGLayout/Classes/CGLayoutPrivate.swift; sourceTree = "<group>"; };
+		B868F1D799377BC45065BC349C1501F5 /* CGLayoutPrivateEvolution.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayoutPrivateEvolution.swift; path = CGLayout/Classes/CGLayoutPrivateEvolution.swift; sourceTree = "<group>"; };
+		B8B82764B10BB8F85078F2B837CCE396 /* LayoutItemContainer.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutItemContainer.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/LayoutItemContainer.html; sourceTree = "<group>"; };
+		BAF512DFCEF7488CF18660C506812806 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Bottom/Align.html; sourceTree = "<group>"; };
+		BB0E960567A8BD6FAE32D076774FB712 /* Top.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Top.html; path = docs/Structs/LayoutAnchor/Top.html; sourceTree = "<group>"; };
+		BBA93AD92B10632AD98AFC09F43AD740 /* LayoutBlock.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutBlock.html; path = docs/Structs/LayoutBlock.html; sourceTree = "<group>"; };
+		BCE2B6F494C249219D72965A11401223 /* LayoutItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutItem.html; path = docs/Extensions/LayoutItem.html; sourceTree = "<group>"; };
+		BD4B765B721A785CE8F6BCCD189E168C /* Center.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Center.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Center.html; sourceTree = "<group>"; };
+		BE885BB1496E9F2F466299052FE4C23B /* index.html */ = {isa = PBXFileReference; includeInIndex = 1; name = index.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/index.html; sourceTree = "<group>"; };
+		BED1E5AA04919F9FA7208B706770640F /* LayoutConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutConstraint.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutConstraint.html; sourceTree = "<group>"; };
 		BF1A27E53C22FF6DC2FF117D73661AE3 /* Pods-CGLayout_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CGLayout_Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		BF52FC15BC4AF9347689B5B743F2AF56 /* CGLayoutExtended.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayoutExtended.swift; path = CGLayout/Classes/CGLayoutExtended.swift; sourceTree = "<group>"; };
+		BFCC150E77B85AF7581D3C4B46CBC6E1 /* LayoutItemContainer.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutItemContainer.html; path = docs/Protocols/LayoutItemContainer.html; sourceTree = "<group>"; };
+		BFFD6CB993C7B97E25FE0D6858EA12FE /* EdgeInsets.html */ = {isa = PBXFileReference; includeInIndex = 1; name = EdgeInsets.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/EdgeInsets.html; sourceTree = "<group>"; };
+		C0FE2E3BE028D27583E6B6E762462243 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Top/Align/Dependence.html; sourceTree = "<group>"; };
+		C2966DE8DB63960BCB2C16730523BA52 /* CGLayout-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CGLayout-iOS-prefix.pch"; sourceTree = "<group>"; };
 		C3AC44DC3D5FFDE55364E8DE791B766F /* Pods-CGLayout-macOSTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CGLayout-macOSTests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		C3EF92DCC0FA6E64ED466F30F4CED3B6 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Leading/Align.html; sourceTree = "<group>"; };
+		C4117131DDCE008B1AF4CE790AB628B2 /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/Structs/LayoutAnchor/Right/Limit.html; sourceTree = "<group>"; };
 		C4BB4BAC0F824B351EDB3872931C270F /* Pods-CGLayout-macOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-macOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		C51C60BF2F309EBD8928CBF4DE4DC51C /* UIViewPlaceholder.html */ = {isa = PBXFileReference; includeInIndex = 1; name = UIViewPlaceholder.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes/UIViewPlaceholder.html; sourceTree = "<group>"; };
+		C56C187ED3BA118E921A24F97E4F381D /* Direction.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Direction.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/StackLayoutScheme/Direction.html; sourceTree = "<group>"; };
+		C604435CFF47C2684C7F8F7908115FEE /* AdjustableLayoutItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = AdjustableLayoutItem.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/AdjustableLayoutItem.html; sourceTree = "<group>"; };
 		C6283877433D71C6A663B467F8E85152 /* Pods-CGLayout_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout_Tests.modulemap"; sourceTree = "<group>"; };
+		C654DB6F0F86AB7F54889B6BA765A7A7 /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Leading/Pull.html; sourceTree = "<group>"; };
+		C68669A5846C970D9E50C918549DFAFF /* Origin.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Origin.html; path = docs/Structs/LayoutAnchor/Center/Align/Dependence/Origin.html; sourceTree = "<group>"; };
+		C8C92A1D5B9D355DA91B9382352E823D /* NSControl.html */ = {isa = PBXFileReference; includeInIndex = 1; name = NSControl.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/NSControl.html; sourceTree = "<group>"; };
+		C8DBC8CA17DE68C66242C8B18C41C598 /* LayoutItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutItem.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/LayoutItem.html; sourceTree = "<group>"; };
+		C9BDF6E22ACA6D472F5AC3F9191B1C3B /* NSControl.html */ = {isa = PBXFileReference; includeInIndex = 1; name = NSControl.html; path = docs/Extensions/NSControl.html; sourceTree = "<group>"; };
+		C9F67FE2C48AAA36F153ACF72D98CED4 /* CGLayout-tvOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "CGLayout-tvOS.xcconfig"; path = "../CGLayout-tvOS/CGLayout-tvOS.xcconfig"; sourceTree = "<group>"; };
 		CBF84C614BE1AE3334BADEB51A0571FC /* Pods-CGLayout-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		CC79C5AD9C5967234775EDB7ED3AF550 /* Horizontal.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Horizontal.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/Layout/Alignment/Horizontal.html; sourceTree = "<group>"; };
 		CCF692509300A63E4E0767E711BE8834 /* Pods-CGLayout-macOSTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout-macOSTests-umbrella.h"; sourceTree = "<group>"; };
+		CD72F6A1F4D674FC06C77172603CBCA9 /* MultiCoordinateSpace.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MultiCoordinateSpace.swift; path = CGLayout/Classes/MultiCoordinateSpace.swift; sourceTree = "<group>"; };
+		CD7812E4FB06BB7FEBC85A5E785AC927 /* Center.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Center.html; path = docs/Structs/LayoutAnchor/Center/Align/Dependence/Center.html; sourceTree = "<group>"; };
+		CD7D3F82C42B1397A1FF5F235D1988FE /* _RectAxis.html */ = {isa = PBXFileReference; includeInIndex = 1; name = _RectAxis.html; path = docs/Structs/_RectAxis.html; sourceTree = "<group>"; };
+		CE143519177B57A70D7AEAD84D292F11 /* RectAxisAnchor.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectAxisAnchor.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/RectAxisAnchor.html; sourceTree = "<group>"; };
+		CE3EF88CA7839162DD737536816F5FA9 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Trailing/Pull/Dependence.html; sourceTree = "<group>"; };
+		CE5922D54DAB8422733ED882AA91B70B /* LayoutSnapshotProtocol.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutSnapshotProtocol.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/LayoutSnapshotProtocol.html; sourceTree = "<group>"; };
+		CE844A0FACE43B7573136879CFB2FA4A /* Layout.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Layout.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/Layout.html; sourceTree = "<group>"; };
 		CFB56E35108A1FCAA1F5604A02FFCDC5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		CFD6B0092F07D1323B61F82A9B5F30D5 /* CGLayout-macOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-macOS-umbrella.h"; path = "../CGLayout-macOS/CGLayout-macOS-umbrella.h"; sourceTree = "<group>"; };
-		D01DC66740C0E2FA390F835129F26F77 /* CGLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayout.swift; path = CGLayout/Classes/CGLayout.swift; sourceTree = "<group>"; };
+		D040351C8359A4D01E90086658C4C24F /* LayoutCoordinateSpace.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutCoordinateSpace.html; path = docs/Extensions/LayoutCoordinateSpace.html; sourceTree = "<group>"; };
+		D075E1F2EA2EF48F99A1825F061F9129 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		D22B1ACD63729C7C96BA95E07BCF1892 /* highlight.css */ = {isa = PBXFileReference; includeInIndex = 1; name = highlight.css; path = docs/css/highlight.css; sourceTree = "<group>"; };
+		D295C898D66B33C6097B40E4D4918225 /* AdjustLayoutConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = AdjustLayoutConstraint.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/AdjustLayoutConstraint.html; sourceTree = "<group>"; };
+		D2965B7C8CD0098F4CB2BEE269DB037B /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Right/Align/Dependence.html; sourceTree = "<group>"; };
+		D2B84F54390BB598912D9B6642E8E481 /* gh.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = gh.png; path = docs/img/gh.png; sourceTree = "<group>"; };
+		D2CFF80638563B551307D3040D267B6B /* RectAxis.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectAxis.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/RectAxis.html; sourceTree = "<group>"; };
 		D2E03A8CF0BE9019C8B42201229A122B /* Pods-CGLayout-tvOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout-tvOS-umbrella.h"; sourceTree = "<group>"; };
+		D5A37F3C178B0CD33ECAC7DAB5962B38 /* Bottom.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Bottom.html; path = docs/Structs/LayoutAnchor/Bottom.html; sourceTree = "<group>"; };
+		D8B1DCE57E2F6131E52CD8CBDDD09827 /* LayoutItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutItem.html; path = docs/Protocols/LayoutItem.html; sourceTree = "<group>"; };
 		D8C397FBA16C41E457BC461F8C133C39 /* Pods-CGLayout-tvOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CGLayout-tvOS.modulemap"; sourceTree = "<group>"; };
-		DC233915EDBEAC9A6B3CF772E4562335 /* CGLayout-tvOS.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; name = "CGLayout-tvOS.modulemap"; path = "../CGLayout-tvOS/CGLayout-tvOS.modulemap"; sourceTree = "<group>"; };
+		D98DA383882FBD5F00FBDC86995F4960 /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/Structs/LayoutAnchor/Bottom/Limit.html; sourceTree = "<group>"; };
+		DB8449DE0131811B00D46F185EB2297C /* jazzy.css */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.css; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/css/jazzy.css; sourceTree = "<group>"; };
+		DCEEF3AB151DC824E4B689B1C655573B /* Axis.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Axis.html; path = docs/Structs/StackLayoutScheme/Axis.html; sourceTree = "<group>"; };
+		DD5C1DF5DBD00F1F1C08012C34424563 /* RectBasedItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectBasedItem.html; path = docs/Protocols/RectBasedItem.html; sourceTree = "<group>"; };
+		DDC56E35E922B70EEC9587ECC70DE228 /* Top.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Top.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Top.html; sourceTree = "<group>"; };
+		DE500305E5427890401F861252DCAAE7 /* search.json */ = {isa = PBXFileReference; includeInIndex = 1; name = search.json; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/search.json; sourceTree = "<group>"; };
+		DF8A24BDE93CD417B31299A004058805 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Bottom/Align/Dependence.html; sourceTree = "<group>"; };
+		E06ABDC066CE55EC60126FE2427897EF /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = "../CGLayout-tvOS/Info.plist"; sourceTree = "<group>"; };
+		E09619573C8B38CDFFD056927D5C276E /* SelfSizedLayoutItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = SelfSizedLayoutItem.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/SelfSizedLayoutItem.html; sourceTree = "<group>"; };
+		E285097C661D72DBAD908484C5B91537 /* LayerPlaceholder.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayerPlaceholder.html; path = docs/Classes/LayerPlaceholder.html; sourceTree = "<group>"; };
+		E2CCAB92EA24D24599B853EFE63B8B47 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Leading/Limit/Dependence.html; sourceTree = "<group>"; };
+		E326213B6CA484117A42E2C7E6C3B9D1 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Trailing/Pull/Dependence.html; sourceTree = "<group>"; };
+		E328AC8F3FFEAA3996FDBE05E62C56E7 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Left/Align.html; sourceTree = "<group>"; };
+		E3CE85346F5BB5FBF384DBD3C57E0EFE /* Filling.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Filling.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/Layout/Filling.html; sourceTree = "<group>"; };
+		E415322B12F9A48B5D85A53A01EE15F0 /* LayoutAnchor.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutAnchor.html; path = docs/Structs/LayoutAnchor.html; sourceTree = "<group>"; };
+		E43F48E641B1DADA88BD37725912BB97 /* Align.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Align.html; path = docs/Structs/LayoutAnchor/Bottom/Align.html; sourceTree = "<group>"; };
 		E4C92AFEE5023AD0CB74DB3FDAE7AB44 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E535D234E41AFC840E1260934C8DCF80 /* CGLayout-macOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-macOS-prefix.pch"; path = "../CGLayout-macOS/CGLayout-macOS-prefix.pch"; sourceTree = "<group>"; };
-		E7DCCCA0E34E156032612A534451682E /* CGLayoutPrivateEvolution.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CGLayoutPrivateEvolution.swift; path = CGLayout/Classes/CGLayoutPrivateEvolution.swift; sourceTree = "<group>"; };
+		E64BED6200CAF03FDCF58C2E31F73F3B /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Bottom/Limit/Dependence.html; sourceTree = "<group>"; };
+		E66487E9D25715CF53C5424B794DEFA7 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = "../CGLayout-macOS/Info.plist"; sourceTree = "<group>"; };
+		E71D3D5D6517F4B3C91CC86849B96F0E /* StringLayoutConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StringLayoutConstraint.html; path = docs/Structs/StringLayoutConstraint.html; sourceTree = "<group>"; };
 		E85080490565C47041553F4D9A4E1F42 /* Pods-CGLayout-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CGLayout-macOS.debug.xcconfig"; sourceTree = "<group>"; };
-		F16DACFF3EC77555EF6829A5AE3C4563 /* CGLayout-tvOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "CGLayout-tvOS.xcconfig"; path = "../CGLayout-tvOS/CGLayout-tvOS.xcconfig"; sourceTree = "<group>"; };
+		E8E60E042C741EDEE7C8E30E4C7C4F70 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Top/Pull/Dependence.html; sourceTree = "<group>"; };
+		E8F8A70F01F59E4CDC07BD2ACEB54EB2 /* index.html */ = {isa = PBXFileReference; includeInIndex = 1; name = index.html; path = docs/index.html; sourceTree = "<group>"; };
+		E8F93C7CCD6FDED449D808443C408901 /* Limit.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Limit.html; path = docs/Structs/LayoutAnchor/Top/Limit.html; sourceTree = "<group>"; };
+		EB2128BFBAE547E00358D5C480AE11B1 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		EC295B6E8FF961F889BB17B696CC32DB /* Distribution.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Distribution.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/StackLayoutScheme/Distribution.html; sourceTree = "<group>"; };
+		EC3592D56E8EC7D797B6DC7B6DA1C764 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutAnchor/Left/Pull/Dependence.html; sourceTree = "<group>"; };
+		ED6A32FCC87C44F14AC4F4F3F542F9CE /* UILayoutGuide.html */ = {isa = PBXFileReference; includeInIndex = 1; name = UILayoutGuide.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/UILayoutGuide.html; sourceTree = "<group>"; };
+		ED85100C73F3E02EC00E59FD6E210799 /* Left.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Left.html; path = docs/Structs/LayoutAnchor/Left.html; sourceTree = "<group>"; };
+		EDF3547EB68BFBAAACA80FA43D07B248 /* CGLayout-macOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-macOS-prefix.pch"; path = "../CGLayout-macOS/CGLayout-macOS-prefix.pch"; sourceTree = "<group>"; };
+		EE3B33A1AB72AE7B19FED4581E81A768 /* _RectAxisAnchor.html */ = {isa = PBXFileReference; includeInIndex = 1; name = _RectAxisAnchor.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/_RectAxisAnchor.html; sourceTree = "<group>"; };
+		EE98A292626915786DAB535BC291A409 /* AnonymConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = AnonymConstraint.html; path = docs/Structs/AnonymConstraint.html; sourceTree = "<group>"; };
+		EEA14609CC727AA4300C4E8F6F59D401 /* CGRect.html */ = {isa = PBXFileReference; includeInIndex = 1; name = CGRect.html; path = docs/Extensions/CGRect.html; sourceTree = "<group>"; };
+		EEB3679C3243B1E1D3B96A3095E89AD4 /* CGLayout.tgz */ = {isa = PBXFileReference; includeInIndex = 1; name = CGLayout.tgz; path = docs/docsets/CGLayout.tgz; sourceTree = "<group>"; };
+		EF7C4AE4F0871E1828E6A81C13D92082 /* RectBasedItem.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectBasedItem.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Protocols/RectBasedItem.html; sourceTree = "<group>"; };
+		EFDAF60A3F89839C9312FEE588D05E38 /* MutableLayoutConstraint.html */ = {isa = PBXFileReference; includeInIndex = 1; name = MutableLayoutConstraint.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Classes/MutableLayoutConstraint.html; sourceTree = "<group>"; };
+		F0A5F7CA7E593DD499EBA5E3E8203750 /* Typealiases.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Typealiases.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Typealiases.html; sourceTree = "<group>"; };
+		F13D8BC9CE5CE3D287085E73328A508F /* RectAxisAnchor.html */ = {isa = PBXFileReference; includeInIndex = 1; name = RectAxisAnchor.html; path = docs/Protocols/RectAxisAnchor.html; sourceTree = "<group>"; };
+		F16D5ED243AB75F6BB8CB4F78FAB5FA5 /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/Structs/LayoutAnchor/Right/Pull.html; sourceTree = "<group>"; };
+		F16E1834C0A49FFFE1210DA898E85AB0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F1BF79CD460A1C1616E46B066ED59D36 /* UIView.html */ = {isa = PBXFileReference; includeInIndex = 1; name = UIView.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Extensions/UIView.html; sourceTree = "<group>"; };
 		F229980F58F89C441DDDCD00D702568E /* Pods-CGLayout_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CGLayout_Tests-umbrella.h"; sourceTree = "<group>"; };
-		F255C62FEE9C13F189C4915C252F890F /* CGLayout-tvOS-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "CGLayout-tvOS-umbrella.h"; path = "../CGLayout-tvOS/CGLayout-tvOS-umbrella.h"; sourceTree = "<group>"; };
-		F426B9E32D70A38E570A940661999A13 /* CGLayout-iOS-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CGLayout-iOS-prefix.pch"; sourceTree = "<group>"; };
+		F24DBA94CB51C8B5466C355CC1A8AB5A /* Pull.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Pull.html; path = docs/Structs/LayoutAnchor/Top/Pull.html; sourceTree = "<group>"; };
+		F25A88C3F5F4BD3D27FF76B22EC3EC4B /* LayoutWorkspace.html */ = {isa = PBXFileReference; includeInIndex = 1; name = LayoutWorkspace.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/LayoutWorkspace.html; sourceTree = "<group>"; };
+		F41A42CADA2A9F67926A0A0AFE945DDE /* _RectAxis.html */ = {isa = PBXFileReference; includeInIndex = 1; name = _RectAxis.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/_RectAxis.html; sourceTree = "<group>"; };
+		F6A18D6B24E78815790D3F306302C978 /* Structs.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Structs.html; path = docs/Structs.html; sourceTree = "<group>"; };
+		F72591488BB95EA665EBA34004F8C696 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Leading/Align/Dependence.html; sourceTree = "<group>"; };
+		F7E1E17D4566B95170C2DAFD6A6837D4 /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Trailing/Limit/Dependence.html; sourceTree = "<group>"; };
 		F865ACFB3BB258ACFC007726ADC79749 /* Pods-CGLayout_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CGLayout_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		F9438A66ECE35234AFD59612FF24F1BE /* Alignment.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Alignment.html; path = docs/Structs/Layout/Alignment.html; sourceTree = "<group>"; };
+		F991A2D0C91D1BF356032FD6CCB539FA /* jazzy.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.js; path = docs/js/jazzy.js; sourceTree = "<group>"; };
+		FB40F89F4380262CCA8958AF7AE18845 /* CGLayout-macOS.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "CGLayout-macOS.xcconfig"; path = "../CGLayout-macOS/CGLayout-macOS.xcconfig"; sourceTree = "<group>"; };
+		FBCEE1E4DFE7F5F6AB9DC4DB1A0B6B4F /* NSView.html */ = {isa = PBXFileReference; includeInIndex = 1; name = NSView.html; path = docs/Extensions/NSView.html; sourceTree = "<group>"; };
+		FCE564386154FA3441424D47CA043E47 /* Axis.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Axis.html; path = docs/docsets/CGLayout.docset/Contents/Resources/Documents/Structs/StackLayoutScheme/Axis.html; sourceTree = "<group>"; };
+		FD56C6CC3B6FA54A74577CA6B0444A93 /* StackLayoutScheme.html */ = {isa = PBXFileReference; includeInIndex = 1; name = StackLayoutScheme.html; path = docs/Structs/StackLayoutScheme.html; sourceTree = "<group>"; };
+		FDA47520B94C574B190DB53A275C2E1B /* CGLayout.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; path = CGLayout.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		FE3CEF98BD152A99334604A0F41CC56E /* Dependence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Dependence.html; path = docs/Structs/LayoutAnchor/Left/Limit/Dependence.html; sourceTree = "<group>"; };
+		FFF41077890C2E448BF577A70AEC984D /* docSet.dsidx */ = {isa = PBXFileReference; includeInIndex = 1; name = docSet.dsidx; path = docs/docsets/CGLayout.docset/Contents/Resources/docSet.dsidx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,6 +504,285 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01BE873A166D295F92861A3BB87AD2CD /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				F41A42CADA2A9F67926A0A0AFE945DDE /* _RectAxis.html */,
+				CD7D3F82C42B1397A1FF5F235D1988FE /* _RectAxis.html */,
+				1F8ACDBF875E01ABC6FA1508451AF556 /* _RectAxisAnchor.html */,
+				EE3B33A1AB72AE7B19FED4581E81A768 /* _RectAxisAnchor.html */,
+				C604435CFF47C2684C7F8F7908115FEE /* AdjustableLayoutItem.html */,
+				96C10C6DF656F573F3DA52A561768A75 /* AdjustableLayoutItem.html */,
+				14F5BECF904A7F17E2342B8A36FCEC00 /* AdjustLayoutConstraint.html */,
+				D295C898D66B33C6097B40E4D4918225 /* AdjustLayoutConstraint.html */,
+				3C8DEAFD128446377DB8DDB35E3F5ABB /* After.html */,
+				35843C7EFA8706783517BF73CA7B675D /* After.html */,
+				906D597A3E36259405DC1FEFBF580A50 /* Align.html */,
+				C3EF92DCC0FA6E64ED466F30F4CED3B6 /* Align.html */,
+				3557BC48C3F44DE8E99C535336E1C458 /* Align.html */,
+				83696E83F2D01AC7D878D1C7228CEAFF /* Align.html */,
+				86164122DC11E0141930EB74666D2813 /* Align.html */,
+				325646E8C8E738C2A676069E54018AA1 /* Align.html */,
+				1A059CCA35A7677C45EF1195B9BEEF9B /* Align.html */,
+				E328AC8F3FFEAA3996FDBE05E62C56E7 /* Align.html */,
+				B415266CE443C586B4312E9C5A05E4F1 /* Align.html */,
+				E43F48E641B1DADA88BD37725912BB97 /* Align.html */,
+				BAF512DFCEF7488CF18660C506812806 /* Align.html */,
+				9AC5DEA476B985FC6A9C7A35753F5762 /* Align.html */,
+				60AAA247B34D7E87B917587B0651D7CA /* Align.html */,
+				266371DC57C8D146DE2547D6C049973B /* Align.html */,
+				828B7E9B13FFF01806B335FCD158ACFF /* Alignment.html */,
+				F9438A66ECE35234AFD59612FF24F1BE /* Alignment.html */,
+				47B821DDB1D8F833651C567595D90154 /* Alignment.html */,
+				7218C3411B82B125945FA74FA281A180 /* Alignment.html */,
+				EE98A292626915786DAB535BC291A409 /* AnonymConstraint.html */,
+				833DC59AC51CA95541D13430ADC46BA5 /* AnonymConstraint.html */,
+				DCEEF3AB151DC824E4B689B1C655573B /* Axis.html */,
+				FCE564386154FA3441424D47CA043E47 /* Axis.html */,
+				76740F12BB6DC56554296178D69AE655 /* badge.svg */,
+				05F06934A095A677CB18610DC72E76A7 /* badge.svg */,
+				412DDE3C258B7E884F7343D93E0F20E6 /* Before.html */,
+				6DD36FCC3DBF48851297A8F734EAE15D /* Before.html */,
+				D5A37F3C178B0CD33ECAC7DAB5962B38 /* Bottom.html */,
+				243A8CF9AB4ABE626DE0F091D942603E /* Bottom.html */,
+				6183D2B420D539C8695CA37882DD43C6 /* CALayer.html */,
+				700AB5DED25C36A922D550ECF6B32DB2 /* CALayer.html */,
+				101652FF6AC370A8F951BB1665FB336B /* carat.png */,
+				B5C94DEA1A3C86DFE6C4C53571CFA747 /* carat.png */,
+				BD4B765B721A785CE8F6BCCD189E168C /* Center.html */,
+				41D6CF2398690F5A02AF8B68F8A95ACE /* Center.html */,
+				073FE8716A416201E4D5609D7ABAEE43 /* Center.html */,
+				CD7812E4FB06BB7FEBC85A5E785AC927 /* Center.html */,
+				FDA47520B94C574B190DB53A275C2E1B /* CGLayout.podspec */,
+				EEB3679C3243B1E1D3B96A3095E89AD4 /* CGLayout.tgz */,
+				773A04A1E2BB003CE31698DECAC7C6AA /* CGRect.html */,
+				EEA14609CC727AA4300C4E8F6F59D401 /* CGRect.html */,
+				21A9711AC8BAED0D1083F1FAB119973F /* Classes.html */,
+				0235B032BB846417FBBF927597B3F82B /* Classes.html */,
+				9557275C35C33EE0C185C96863A940B4 /* dash.png */,
+				69F22CBB96F4E2632B055EA149015FE2 /* dash.png */,
+				A509526A5BE13F14A5F24DEBE0CE8DCF /* Dependence.html */,
+				48F335DC5F38EC8F545F2B93AD699EDF /* Dependence.html */,
+				4008CCE059EEF4C91AC3E19ABAC51320 /* Dependence.html */,
+				3C6B53FA74EB19482A49CCCAB08467DC /* Dependence.html */,
+				EC3592D56E8EC7D797B6DC7B6DA1C764 /* Dependence.html */,
+				B58C5CCCB3EE48DDEDF47645C04E3D42 /* Dependence.html */,
+				900D2F9593D0BBBD85CFF2C4886AEA3A /* Dependence.html */,
+				46AC3B303108148D038E9EE1BB2BFDA4 /* Dependence.html */,
+				98C80E6374FDB5581BC506B3955AE69C /* Dependence.html */,
+				8F86750B98BFF2375BC7BDE36B1CDB66 /* Dependence.html */,
+				E64BED6200CAF03FDCF58C2E31F73F3B /* Dependence.html */,
+				DF8A24BDE93CD417B31299A004058805 /* Dependence.html */,
+				9494770199C0DB63DCD3AA9B611378B9 /* Dependence.html */,
+				117126D84F54B1763AD75486E82D69C4 /* Dependence.html */,
+				5797000969DA0A271A71FD72FAF2930A /* Dependence.html */,
+				2D4AA8F8542FE2B4DD6C386EE13280F1 /* Dependence.html */,
+				85FFA5893C090685BF9706111E2E72C6 /* Dependence.html */,
+				70C3493F3A203F7759D920563E48E70E /* Dependence.html */,
+				39FB2FD8DB8104B840DA9E20CC76E00B /* Dependence.html */,
+				CE3EF88CA7839162DD737536816F5FA9 /* Dependence.html */,
+				939C29D0688B2D6C935825CFEBC7FB5A /* Dependence.html */,
+				600C314EEFBDB46CD535F5856262D20A /* Dependence.html */,
+				6A1CE3A33456FB71E66F99BA9D498E22 /* Dependence.html */,
+				AE9727F54E4ED3920E0E1C532DAB941E /* Dependence.html */,
+				F72591488BB95EA665EBA34004F8C696 /* Dependence.html */,
+				E2CCAB92EA24D24599B853EFE63B8B47 /* Dependence.html */,
+				860EAFC4D85C28FDD7F32A8A4C7E7F99 /* Dependence.html */,
+				3EEAED1EC3543B48497C9E92F1AB20A4 /* Dependence.html */,
+				FE3CEF98BD152A99334604A0F41CC56E /* Dependence.html */,
+				43E9AEA40CF0F866C53DD7462255D59D /* Dependence.html */,
+				D2965B7C8CD0098F4CB2BEE269DB037B /* Dependence.html */,
+				048B15C0E431A994CE81EFA6534D41BA /* Dependence.html */,
+				F7E1E17D4566B95170C2DAFD6A6837D4 /* Dependence.html */,
+				C0FE2E3BE028D27583E6B6E762462243 /* Dependence.html */,
+				46D74B6468A1CB71F7BE9DDB9FDD70C0 /* Dependence.html */,
+				E8E60E042C741EDEE7C8E30E4C7C4F70 /* Dependence.html */,
+				E326213B6CA484117A42E2C7E6C3B9D1 /* Dependence.html */,
+				06131F79A863F1D87EC85CB99073BD73 /* Dependence.html */,
+				C56C187ED3BA118E921A24F97E4F381D /* Direction.html */,
+				AD2F87CBB242BDA35C8555F2591897BC /* Direction.html */,
+				838717181900B5ECA0DE063D99B59B76 /* Distribution.html */,
+				EC295B6E8FF961F889BB17B696CC32DB /* Distribution.html */,
+				FFF41077890C2E448BF577A70AEC984D /* docSet.dsidx */,
+				BFFD6CB993C7B97E25FE0D6858EA12FE /* EdgeInsets.html */,
+				5DF567122A88FB4D9A6CDAE5B7A0B29E /* EdgeInsets.html */,
+				637A5302DE2FAFA303E9FC7968A9B48C /* Extended.html */,
+				831EA1B39CC5FBEBD4B8F9354AA33E54 /* Extended.html */,
+				63AEDE50A9FC9C7AAA7772B175133CA6 /* Extensions.html */,
+				094184B8ED7A708971190EDC216F934F /* Extensions.html */,
+				E3CE85346F5BB5FBF384DBD3C57E0EFE /* Filling.html */,
+				578DC3CBC4A819561E2D623E349EE415 /* Filling.html */,
+				367CF11466FB1F0B598E0A9732EBF614 /* Filling.html */,
+				ABD2A8C49A63BEFABEB64C4188ECD3FF /* Filling.html */,
+				69277BFFCC44239DD35955E0AAE25500 /* gh.png */,
+				D2B84F54390BB598912D9B6642E8E481 /* gh.png */,
+				D22B1ACD63729C7C96BA95E07BCF1892 /* highlight.css */,
+				6334E9161FA17EAE3B283A3D67996986 /* highlight.css */,
+				9D6CBC1CA046B4F6FC9C3463A1864F99 /* Horizontal.html */,
+				CC79C5AD9C5967234775EDB7ED3AF550 /* Horizontal.html */,
+				A6BF39A0EE19DF05D517FAB74B6C4AEB /* Horizontal.html */,
+				0DCE6812D8316CB2742A3FD5F3226D16 /* Horizontal.html */,
+				E8F8A70F01F59E4CDC07BD2ACEB54EB2 /* index.html */,
+				BE885BB1496E9F2F466299052FE4C23B /* index.html */,
+				52F8532DAB4FA21A0CA25594D0C4BEEE /* Info.plist */,
+				ABE68B306C1982DD50E1C52CF57133D2 /* InLayoutTimeItem.html */,
+				36CA682FB110CF2AC371E1B773386E07 /* InLayoutTimeItem.html */,
+				DB8449DE0131811B00D46F185EB2297C /* jazzy.css */,
+				41CA65EF36F2D4988B279F5F570FC46E /* jazzy.css */,
+				9849EFBA2AB043DF9B78D884F09BC753 /* jazzy.js */,
+				F991A2D0C91D1BF356032FD6CCB539FA /* jazzy.js */,
+				56E5ACC2F88B7DBD39C7B9FB06436A43 /* jquery.min.js */,
+				76581B6F21BCC607EF45AF908732F4F4 /* jquery.min.js */,
+				E285097C661D72DBAD908484C5B91537 /* LayerPlaceholder.html */,
+				50A53BC00517703492D4B6130796FFE0 /* LayerPlaceholder.html */,
+				CE844A0FACE43B7573136879CFB2FA4A /* Layout.html */,
+				6A3BE578A55B95C5E03A637E883D0ABC /* Layout.html */,
+				E415322B12F9A48B5D85A53A01EE15F0 /* LayoutAnchor.html */,
+				2DD3D7D28E6E83010C31BE9951314086 /* LayoutAnchor.html */,
+				345A80285BCE437FA64AB13453AFB801 /* LayoutBlock.html */,
+				BBA93AD92B10632AD98AFC09F43AD740 /* LayoutBlock.html */,
+				50067AA5FF4B1D12A019AA2C0D501128 /* LayoutBlock.html */,
+				9684E8513A235D5B0CC68EBBF70D2E33 /* LayoutBlock.html */,
+				17F3CFC7A42C2DEE874BA2A40885FC64 /* LayoutBlockProtocol.html */,
+				AC3D0128ABA1AA5308F0E20DCD2A3128 /* LayoutBlockProtocol.html */,
+				BED1E5AA04919F9FA7208B706770640F /* LayoutConstraint.html */,
+				9F22C8EA16EFB857C46EB49F739206C3 /* LayoutConstraint.html */,
+				9ED75981A48A5B397B63840BCA52B33B /* LayoutConstraintProtocol.html */,
+				08CDB4CB61E689F2D72264129DCE141A /* LayoutConstraintProtocol.html */,
+				D040351C8359A4D01E90086658C4C24F /* LayoutCoordinateSpace.html */,
+				11A0B62D51351EA297DEAC4FE428BA5A /* LayoutCoordinateSpace.html */,
+				A0F9674B38086C0E784DC6E72556715E /* LayoutCoordinateSpace.html */,
+				9BA38A73EBC24AF634ECB293121E5FED /* LayoutCoordinateSpace.html */,
+				717C245ACB26CFFABA39AC8CCA481379 /* LayoutGuide.html */,
+				3F0D6AC7BF1146361373161A0F478A84 /* LayoutGuide.html */,
+				8946B47881D2BCE6BB91968B34AAA2D3 /* LayoutGuide.html */,
+				65E4E24997C2F263AF28A207674FC43E /* LayoutGuide.html */,
+				D8B1DCE57E2F6131E52CD8CBDDD09827 /* LayoutItem.html */,
+				C8DBC8CA17DE68C66242C8B18C41C598 /* LayoutItem.html */,
+				BCE2B6F494C249219D72965A11401223 /* LayoutItem.html */,
+				5AB46088DFE6F7B7EF884E24EBD5709E /* LayoutItem.html */,
+				BFCC150E77B85AF7581D3C4B46CBC6E1 /* LayoutItemContainer.html */,
+				B8B82764B10BB8F85078F2B837CCE396 /* LayoutItemContainer.html */,
+				4479B52B0EAFE1FFF445E5CF4870F5D0 /* LayoutPlaceholder.html */,
+				5576317F35185A2D59F37213D0C01599 /* LayoutPlaceholder.html */,
+				7C20B3892AAAB0594631DF5A3CC20C52 /* LayoutScheme.html */,
+				48F3AC3E5140C5D8D7732AA610DB5CA6 /* LayoutScheme.html */,
+				CE5922D54DAB8422733ED882AA91B70B /* LayoutSnapshotProtocol.html */,
+				25026AD4E46BE40092A368C306743833 /* LayoutSnapshotProtocol.html */,
+				555E7634875FF2A4A964594F3840E51A /* LayoutWorkspace.html */,
+				F25A88C3F5F4BD3D27FF76B22EC3EC4B /* LayoutWorkspace.html */,
+				A12EA3B682E4B07E75B70659604B615B /* Leading.html */,
+				57D6858DAC2FB03DA943609EEB8C4575 /* Leading.html */,
+				ED85100C73F3E02EC00E59FD6E210799 /* Left.html */,
+				678CBA608443AB7B5FDE5C9717145691 /* Left.html */,
+				EB2128BFBAE547E00358D5C480AE11B1 /* LICENSE */,
+				32B97648395A1D00DF7E88DAB343470E /* Limit.html */,
+				C4117131DDCE008B1AF4CE790AB628B2 /* Limit.html */,
+				60B40350DBFF229FCE660B7304369234 /* Limit.html */,
+				44CC1201104C1E11FD30F4AE3DCC36DB /* Limit.html */,
+				0F4AF825C75485C0788702E575146B27 /* Limit.html */,
+				E8F93C7CCD6FDED449D808443C408901 /* Limit.html */,
+				109E2A0EEE6D1FBF7CDB2B0C5E4CAC4E /* Limit.html */,
+				370D51522369EBB4F0BC0C5A3DF69C3B /* Limit.html */,
+				21D613139449D35693E08536EA02FEF4 /* Limit.html */,
+				A11BD075315B728813C8C77F21629556 /* Limit.html */,
+				834DFF85FAF3DC8D15647B44E07F7755 /* Limit.html */,
+				D98DA383882FBD5F00FBDC86995F4960 /* Limit.html */,
+				B41BFC78901A8665571A11E4F23B2F9B /* MutableLayoutConstraint.html */,
+				EFDAF60A3F89839C9312FEE588D05E38 /* MutableLayoutConstraint.html */,
+				C9BDF6E22ACA6D472F5AC3F9191B1C3B /* NSControl.html */,
+				C8C92A1D5B9D355DA91B9382352E823D /* NSControl.html */,
+				1D730E0490B489F855B3FA0ECFD05337 /* NSScrollView.html */,
+				1FF2990FF78EE96A1A8EB83172FEFCCF /* NSScrollView.html */,
+				41A0B520C3392E1302C1498479BFD494 /* NSView.html */,
+				FBCEE1E4DFE7F5F6AB9DC4DB1A0B6B4F /* NSView.html */,
+				2545C4394DBA0233B897ABF3C1C67662 /* Origin.html */,
+				C68669A5846C970D9E50C918549DFAFF /* Origin.html */,
+				876D1370212B0A231DAACA0CE8FC0900 /* Protocols.html */,
+				768CEB16447772B5D4FDEEC43D15A7A5 /* Protocols.html */,
+				40DD6CEF56F365E037131E0D385510EF /* Pull.html */,
+				7503A2B8328D721A1AC5AC1CAE0A6186 /* Pull.html */,
+				30799294C766352000310FB9804449F9 /* Pull.html */,
+				8F38CA201BD7AB028282526A8014A672 /* Pull.html */,
+				F16D5ED243AB75F6BB8CB4F78FAB5FA5 /* Pull.html */,
+				F24DBA94CB51C8B5466C355CC1A8AB5A /* Pull.html */,
+				A8C19684912EB5A89E9AE7E78BF24FAE /* Pull.html */,
+				C654DB6F0F86AB7F54889B6BA765A7A7 /* Pull.html */,
+				16C6DBF8352081911F5642AFF36BF4D5 /* Pull.html */,
+				66AE3306D82FA6457F4E31995ABF6D62 /* Pull.html */,
+				19615E1ADC4E8EE020443344ED66D597 /* Pull.html */,
+				0C0D6708B4FAB0B10AD3DEB8E114DE17 /* Pull.html */,
+				D075E1F2EA2EF48F99A1825F061F9129 /* README.md */,
+				D2CFF80638563B551307D3040D267B6B /* RectAxis.html */,
+				6348E11CA33BE4FD13EAFFE5039FB654 /* RectAxis.html */,
+				F13D8BC9CE5CE3D287085E73328A508F /* RectAxisAnchor.html */,
+				CE143519177B57A70D7AEAD84D292F11 /* RectAxisAnchor.html */,
+				69F0EBB0BD893D834DD2826202430B54 /* RectBasedConstraint.html */,
+				943CDC6B44A04F115F3FDCC604F925F6 /* RectBasedConstraint.html */,
+				DD5C1DF5DBD00F1F1C08012C34424563 /* RectBasedItem.html */,
+				EF7C4AE4F0871E1828E6A81C13D92082 /* RectBasedItem.html */,
+				AB94B8DDF8B4776DE3FD35649D3F2B62 /* RectBasedLayout.html */,
+				B05BC08CDD818D40D68295F0967C0556 /* RectBasedLayout.html */,
+				B48A2ECED4AF119F71A8F1DE4E8298A1 /* Right.html */,
+				B6F5F9EDFC1AC1F950D7CE8B4DF5F9BA /* Right.html */,
+				6FA80FD964FF8EF89C233F1161873979 /* ScrollDirection.html */,
+				AA1988D4A3EC93A7B28576227C1DCCD2 /* ScrollDirection.html */,
+				7E95D32EB33D2053CBEBC64F5D8CED10 /* ScrollLayoutGuide.html */,
+				0DDB0958846615D59095A8483ABB4375 /* ScrollLayoutGuide.html */,
+				DE500305E5427890401F861252DCAAE7 /* search.json */,
+				1F59DAA41550D48F6327F571258CE18D /* search.json */,
+				E09619573C8B38CDFFD056927D5C276E /* SelfSizedLayoutItem.html */,
+				502292379FA1B3200BA9BFE7F926542B /* SelfSizedLayoutItem.html */,
+				679D7324217FD54D9C882C863F73397F /* Size.html */,
+				53BA50BD6568CCCB2D0AC62E73FEC1D7 /* Size.html */,
+				027D063C9B4AFD5D67781BDC22DBFEB5 /* StackLayoutGuide.html */,
+				3810A89C3B2DB1E4D012D5A9284BE558 /* StackLayoutGuide.html */,
+				0BBE9B41F9084C6C9261DBA1D999DD00 /* StackLayoutGuide.html */,
+				0D30231DF33BEFB5061B85082C331C54 /* StackLayoutGuide.html */,
+				57CD7057C36EF63E69207503E6600D33 /* StackLayoutScheme.html */,
+				FD56C6CC3B6FA54A74577CA6B0444A93 /* StackLayoutScheme.html */,
+				44AA86F4BF92F9D29464457CF04CBD05 /* String.html */,
+				829A5356078E34064AAA970E3A6A21DF /* String.html */,
+				427C2A694742E0553634119D42E0D558 /* StringLayoutAnchor.html */,
+				15CFB7604C8BCE89EAF60A52DD28B1E5 /* StringLayoutAnchor.html */,
+				E71D3D5D6517F4B3C91CC86849B96F0E /* StringLayoutConstraint.html */,
+				AE057E00C07D208F25CA2A2392FC0335 /* StringLayoutConstraint.html */,
+				88064FFCCC244AEDC53A7C2DEB8AB9F6 /* Structs.html */,
+				F6A18D6B24E78815790D3F306302C978 /* Structs.html */,
+				DDC56E35E922B70EEC9587ECC70DE228 /* Top.html */,
+				BB0E960567A8BD6FAE32D076774FB712 /* Top.html */,
+				440F58879C84431FB8209CBAEDC7B868 /* Trailing.html */,
+				3331DAB7A310B65CEC34BF92278082A1 /* Trailing.html */,
+				0E12CDE6D1D6BCD291D0FD1C67B0DEAA /* Typealiases.html */,
+				F0A5F7CA7E593DD499EBA5E3E8203750 /* Typealiases.html */,
+				4966D025EC603DB81E000131CB799871 /* UILayoutGuide.html */,
+				ED6A32FCC87C44F14AC4F4F3F542F9CE /* UILayoutGuide.html */,
+				94CFD11CC39C04272D86BC9E5B57C78D /* UIScrollView.html */,
+				A5319659FAD6C98CA7CC07A8BD1B4014 /* UIScrollView.html */,
+				A2F5C6FFCC813CE84587D3501F0E831E /* UIView.html */,
+				F1BF79CD460A1C1616E46B066ED59D36 /* UIView.html */,
+				C51C60BF2F309EBD8928CBF4DE4DC51C /* UIViewPlaceholder.html */,
+				2608216F91723D33D8B7C2180BF0FEBF /* UIViewPlaceholder.html */,
+				B1B0DFDFD92A40072E08CECBCF0B01A6 /* undocumented.json */,
+				9D7F0A5979FB85D4764905246743AF4E /* undocumented.json */,
+				2D196922C7923A7065C83160F789B38D /* Vertical.html */,
+				AA9C07CA79E842226A0FB5D26909EDE0 /* Vertical.html */,
+				3E6E95DDA73D69F2118C7B2F3E74A996 /* Vertical.html */,
+				7C0C6C892A6C0AF13A8D6E4B4BA28FE0 /* Vertical.html */,
+				0BE789EE42E1A2648693C680ECE31D0E /* ViewPlaceholder.html */,
+				4C2A121A7F3A391174D70405A4E928B7 /* ViewPlaceholder.html */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		1BEF8BC14F4F8D8778C1DA7881784C06 /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				723B6A111F50A8EE96762FDD3949B574 /* CGLayout */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
 		55D5BB0B413244251723A5493F45EE4B /* tvOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,11 +817,29 @@
 			path = "Target Support Files/Pods-CGLayout_Tests";
 			sourceTree = "<group>";
 		};
+		723B6A111F50A8EE96762FDD3949B574 /* CGLayout */ = {
+			isa = PBXGroup;
+			children = (
+				7409BA72F9F023FC9F983F43CC642540 /* CGLayout.swift */,
+				3BDD033A5794451908DB9A4B04180AF4 /* CGLayoutDeprecated.swift */,
+				BF52FC15BC4AF9347689B5B743F2AF56 /* CGLayoutExtended.swift */,
+				B79D853E760F38D0EA14D144FD8E445D /* CGLayoutPrivate.swift */,
+				B868F1D799377BC45065BC349C1501F5 /* CGLayoutPrivateEvolution.swift */,
+				90D11CBD1215B6634AC59344B4DF26B3 /* CommonExtensions.swift */,
+				1583B9D1F4DC09B7FDD03F19556B243A /* LayoutItemContainer.swift */,
+				CD72F6A1F4D674FC06C77172603CBCA9 /* MultiCoordinateSpace.swift */,
+				01BE873A166D295F92861A3BB87AD2CD /* Pod */,
+				A5B459F1BFF0627A0336441597E03AC0 /* Support Files */,
+			);
+			name = CGLayout;
+			path = ../..;
+			sourceTree = "<group>";
+		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				E04A5038F05698FD28C1CA503A86B048 /* Development Pods */,
+				1BEF8BC14F4F8D8778C1DA7881784C06 /* Development Pods */,
 				E9474CE87C6AA9A851AEC24006206CAA /* Frameworks */,
 				A1CA53F0C5111A7854751C95E814A5EB /* Products */,
 				A5DF4AE593D3228FF9096B6CE9FE7C27 /* Targets Support Files */,
@@ -336,6 +897,32 @@
 			path = "Target Support Files/Pods-CGLayout-macOSTests";
 			sourceTree = "<group>";
 		};
+		A5B459F1BFF0627A0336441597E03AC0 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				0BCA5A872DB4E5282E4BE89EA595BD2B /* CGLayout-iOS.modulemap */,
+				1783305997D92B8CB5B813764784F377 /* CGLayout-iOS.xcconfig */,
+				81CEBE881DF8861376BBF02FD57FD89B /* CGLayout-iOS-dummy.m */,
+				C2966DE8DB63960BCB2C16730523BA52 /* CGLayout-iOS-prefix.pch */,
+				88CB3C8E8AAB9269ABE33F1F648CC5C1 /* CGLayout-iOS-umbrella.h */,
+				4392F91E5CC879F586D1C11975348AE3 /* CGLayout-macOS.modulemap */,
+				FB40F89F4380262CCA8958AF7AE18845 /* CGLayout-macOS.xcconfig */,
+				792E89162B941FC5D630C9980CCBF36D /* CGLayout-macOS-dummy.m */,
+				EDF3547EB68BFBAAACA80FA43D07B248 /* CGLayout-macOS-prefix.pch */,
+				5F66A9EA724B06D2D352227BEDB7BD7B /* CGLayout-macOS-umbrella.h */,
+				6254E31EADDB77E1A8206E3E11731A23 /* CGLayout-tvOS.modulemap */,
+				C9F67FE2C48AAA36F153ACF72D98CED4 /* CGLayout-tvOS.xcconfig */,
+				037BB5082B4638FB0F9D922663885563 /* CGLayout-tvOS-dummy.m */,
+				B61D5287BD48E4C4839219FE4B5B18B0 /* CGLayout-tvOS-prefix.pch */,
+				A48F02EDB1DA787B1DECB20AB8F7554F /* CGLayout-tvOS-umbrella.h */,
+				E06ABDC066CE55EC60126FE2427897EF /* Info.plist */,
+				F16E1834C0A49FFFE1210DA898E85AB0 /* Info.plist */,
+				E66487E9D25715CF53C5424B794DEFA7 /* Info.plist */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/CGLayout-iOS";
+			sourceTree = "<group>";
+		};
 		A5DF4AE593D3228FF9096B6CE9FE7C27 /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -366,23 +953,6 @@
 			path = "Target Support Files/Pods-CGLayout_Example";
 			sourceTree = "<group>";
 		};
-		D669F11D0BC42552B8A1E48382C45469 /* CGLayout */ = {
-			isa = PBXGroup;
-			children = (
-				D01DC66740C0E2FA390F835129F26F77 /* CGLayout.swift */,
-				58EC7D8F4F4E8792A610982016FCBBE6 /* CGLayoutDeprecated.swift */,
-				4CEF955ECC5403820E730FCAE9712797 /* CGLayoutExtended.swift */,
-				163472635BB679165DFFD95C31977030 /* CGLayoutPrivate.swift */,
-				E7DCCCA0E34E156032612A534451682E /* CGLayoutPrivateEvolution.swift */,
-				95AA43F093D2CA363699BEACD69F8AF0 /* CommonExtensions.swift */,
-				257BA4FEB3498A5E9C8E174CF95D57A4 /* LayoutItemContainer.swift */,
-				5E55ACE1E701E48FCB87FEDB6DF48FBD /* MultiCoordinateSpace.swift */,
-				EB539B283C930BB239C664A8E02A1E54 /* Support Files */,
-			);
-			name = CGLayout;
-			path = ../..;
-			sourceTree = "<group>";
-		};
 		DF7A78D5C03408C437A6C048145E7671 /* Pods-CGLayout-macOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -401,14 +971,6 @@
 			path = "Target Support Files/Pods-CGLayout-macOS";
 			sourceTree = "<group>";
 		};
-		E04A5038F05698FD28C1CA503A86B048 /* Development Pods */ = {
-			isa = PBXGroup;
-			children = (
-				D669F11D0BC42552B8A1E48382C45469 /* CGLayout */,
-			);
-			name = "Development Pods";
-			sourceTree = "<group>";
-		};
 		E9474CE87C6AA9A851AEC24006206CAA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -417,32 +979,6 @@
 				55D5BB0B413244251723A5493F45EE4B /* tvOS */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		EB539B283C930BB239C664A8E02A1E54 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				92F3DCC0E8328A78175B57207EC834DF /* CGLayout-iOS.modulemap */,
-				1D874531D3F3C4D385255DD78C5D1E84 /* CGLayout-iOS.xcconfig */,
-				78B938AF11DE45B308169707BF03056E /* CGLayout-iOS-dummy.m */,
-				F426B9E32D70A38E570A940661999A13 /* CGLayout-iOS-prefix.pch */,
-				24C7BCC733C40FE97889414C68F3068C /* CGLayout-iOS-umbrella.h */,
-				53320122283AA6E488B22407312E3544 /* CGLayout-macOS.modulemap */,
-				4AF79DA7F8BC50507EFCD6F3560E51E8 /* CGLayout-macOS.xcconfig */,
-				B15D5B5EE4A1F1DC8D03676FC3A0C4F7 /* CGLayout-macOS-dummy.m */,
-				E535D234E41AFC840E1260934C8DCF80 /* CGLayout-macOS-prefix.pch */,
-				CFD6B0092F07D1323B61F82A9B5F30D5 /* CGLayout-macOS-umbrella.h */,
-				DC233915EDBEAC9A6B3CF772E4562335 /* CGLayout-tvOS.modulemap */,
-				F16DACFF3EC77555EF6829A5AE3C4563 /* CGLayout-tvOS.xcconfig */,
-				9FF78EE4691BA73161F932E59F75E12C /* CGLayout-tvOS-dummy.m */,
-				832CEEEB16C2155E75E69A7706812489 /* CGLayout-tvOS-prefix.pch */,
-				F255C62FEE9C13F189C4915C252F890F /* CGLayout-tvOS-umbrella.h */,
-				04F7F94960AAD11693FB8D9EA4A9C600 /* Info.plist */,
-				65A78F34A1A591FA9354F1A579F672C3 /* Info.plist */,
-				8E8D95468396A4024415EC1EB7740859 /* Info.plist */,
-			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/CGLayout-iOS";
 			sourceTree = "<group>";
 		};
 		F436BBC45CEF494D3C1224DC7D294486 /* iOS */ = {
@@ -808,190 +1344,27 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		0094FBC62C9EB18001EB97C7EBEF6E63 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGNING_REQUIRED = NO;
-				COPY_PHASE_STRIP = YES;
-				ENABLE_NS_ASSERTIONS = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"POD_CONFIGURATION_RELEASE=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
-				STRIP_INSTALLED_PRODUCT = NO;
-				SYMROOT = "${SRCROOT}/../build";
-				TVOS_DEPLOYMENT_TARGET = 10.2;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		0F417A99277DECFCFD3FBEA843CF6FC7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 79DD4E76F81D0DF12E42510175BA38A2 /* Pods-CGLayout_Example.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout_Example/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_CGLayout_Example;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		26075686129569186EDEDD0BFD818796 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = CBF84C614BE1AE3334BADEB51A0571FC /* Pods-CGLayout-tvOS.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-tvOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_CGLayout_tvOS;
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 10.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		3227E8304CC693A39B5F03F9B6C478FA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4AF79DA7F8BC50507EFCD6F3560E51E8 /* CGLayout-macOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_VERSION = A;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-macOS/CGLayout-macOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CGLayout-macOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MODULEMAP_FILE = "Target Support Files/CGLayout-macOS/CGLayout-macOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = CGLayout;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		32F2CEB07AEBC14B7099F9CE7FABBF3E /* Debug */ = {
+		0CB8E706ADD38F51114614CB1E5C0385 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E85080490565C47041553F4D9A4E1F42 /* Pods-CGLayout-macOS.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_VERSION = A;
-				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-macOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-macOS/Pods-CGLayout-macOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
@@ -1001,37 +1374,64 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		35E5EE61F2E1C2E1DCEF92CDAAF5BF4C /* Release */ = {
+		10F39101E98E3133048E215F45789BFF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C4BB4BAC0F824B351EDB3872931C270F /* Pods-CGLayout-macOSTests.release.xcconfig */;
+			baseConfigurationReference = FB40F89F4380262CCA8958AF7AE18845 /* CGLayout-macOS.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_VERSION = A;
-				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-macOS/CGLayout-macOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/CGLayout-macOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MODULEMAP_FILE = "Target Support Files/CGLayout-macOS/CGLayout-macOS.modulemap";
+				PRODUCT_NAME = CGLayout;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		159E2D04B8C8EBCC2484649D667CBA2B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 600E95172867BC51E09C5CBBFDFD5644 /* Pods-CGLayout-macOSTests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-macOSTests/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-macOSTests/Pods-CGLayout-macOSTests.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
@@ -1042,195 +1442,62 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
-		};
-		3F1E51E60DAF96259184771FF186ADFC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1D874531D3F3C4D385255DD78C5D1E84 /* CGLayout-iOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-iOS/CGLayout-iOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CGLayout-iOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/CGLayout-iOS/CGLayout-iOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = CGLayout;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
 			name = Debug;
 		};
-		588410649100DA2CC38DD611311AB90F /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5609DFCD14C4164389B87E83C68DB639 /* Pods-CGLayout-tvOS.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-tvOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_CGLayout_tvOS;
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 10.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		6101D30100B05E1DBB84A811255C5451 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1D874531D3F3C4D385255DD78C5D1E84 /* CGLayout-iOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-iOS/CGLayout-iOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CGLayout-iOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/CGLayout-iOS/CGLayout-iOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = CGLayout;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		65158B65D2D0A9407BAD1BDB5713A84F /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7B1047F4A0859A30DD0AA48B61772ECB /* Pods-CGLayout_Tests.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout_Tests/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout_Tests/Pods-CGLayout_Tests.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_CGLayout_Tests;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		65D98209EA52FFEF84BCB8A13170D715 /* Debug */ = {
+		1CEAD4AAB528DBCA0B4C4750E110828B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGNING_REQUIRED = NO;
 				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"POD_CONFIGURATION_DEBUG=1",
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
 				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1239,31 +1506,27 @@
 			};
 			name = Debug;
 		};
-		8B50FF9DBD67611A02576EEBFF2A5262 /* Debug */ = {
+		341C55EDDBB05F729476EA60492674AB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4AF79DA7F8BC50507EFCD6F3560E51E8 /* CGLayout-macOS.xcconfig */;
+			baseConfigurationReference = FB40F89F4380262CCA8958AF7AE18845 /* CGLayout-macOS.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_VERSION = A;
-				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-macOS/CGLayout-macOS-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/CGLayout-macOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MODULEMAP_FILE = "Target Support Files/CGLayout-macOS/CGLayout-macOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = CGLayout;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1275,115 +1538,7 @@
 			};
 			name = Debug;
 		};
-		980820922F80A7FBAC341AFABD2FFC81 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0715B29BAF3E5845091404BE03EA7557 /* Pods-CGLayout_Tests.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout_Tests/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout_Tests/Pods-CGLayout_Tests.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_CGLayout_Tests;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		B4004A718FD9391B59507E31DCAC0DC9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F16DACFF3EC77555EF6829A5AE3C4563 /* CGLayout-tvOS.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-tvOS/CGLayout-tvOS-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CGLayout-tvOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/CGLayout-tvOS/CGLayout-tvOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = CGLayout;
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		C8F2083234AB999F8078D7F790F91FAE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 600E95172867BC51E09C5CBBFDFD5644 /* Pods-CGLayout-macOSTests.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_VERSION = A;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-macOSTests/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-macOSTests/Pods-CGLayout-macOSTests.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_CGLayout_macOSTests;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		CBCB2631324D3254B1BE8322CB3FEE00 /* Debug */ = {
+		38EA2605F25B703EAC2C64B75638EFEC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 466809D682C83C5DD687C6C30CE3A4AA /* Pods-CGLayout_Example.debug.xcconfig */;
 			buildSettings = {
@@ -1392,20 +1547,16 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout_Example/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
@@ -1415,74 +1566,62 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		D0E9949AF9C0BF2DACCB185A2B07808D /* Release */ = {
+		3A52E71ED3E417BD1679DA7D53F5D88F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6D71D31A98C266E22523805460CC8FA4 /* Pods-CGLayout-macOS.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_VERSION = A;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-macOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-macOS/Pods-CGLayout-macOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_CGLayout_macOS;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		F80F2A251C7D818D5C39619FAC6B168C /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F16DACFF3EC77555EF6829A5AE3C4563 /* CGLayout-tvOS.xcconfig */;
+			baseConfigurationReference = 0715B29BAF3E5845091404BE03EA7557 /* Pods-CGLayout_Tests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout_Tests/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout_Tests/Pods-CGLayout_Tests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_CGLayout_Tests;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		3DEBDAEE7A79EF56E25D21F63267BF5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C9F67FE2C48AAA36F153ACF72D98CED4 /* CGLayout-tvOS.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-tvOS/CGLayout-tvOS-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/CGLayout-tvOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/CGLayout-tvOS/CGLayout-tvOS.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = CGLayout;
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
@@ -1491,6 +1630,360 @@
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 10.0;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		41A71F4B3DB891E182897CD78A3DB64C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6D71D31A98C266E22523805460CC8FA4 /* Pods-CGLayout-macOS.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-macOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-macOS/Pods-CGLayout-macOS.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_CGLayout_macOS;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		4CC1C28AEAC023F2B5F1419C3D49432D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1783305997D92B8CB5B813764784F377 /* CGLayout-iOS.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-iOS/CGLayout-iOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/CGLayout-iOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/CGLayout-iOS/CGLayout-iOS.modulemap";
+				PRODUCT_NAME = CGLayout;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		72FC5A0287A07443A8A4A7CED8CD4381 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = NO_SIGNING/;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				TVOS_DEPLOYMENT_TARGET = 10.2;
+			};
+			name = Release;
+		};
+		7360AAA2F05841DDDB1267F5604F5D25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 79DD4E76F81D0DF12E42510175BA38A2 /* Pods-CGLayout_Example.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout_Example/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout_Example/Pods-CGLayout_Example.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_CGLayout_Example;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		87FB94ECB6297B3192E44AD7D7ADB31C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7B1047F4A0859A30DD0AA48B61772ECB /* Pods-CGLayout_Tests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout_Tests/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout_Tests/Pods-CGLayout_Tests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_CGLayout_Tests;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		A65FC073439B3E487AE7A5CD20DDCE68 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5609DFCD14C4164389B87E83C68DB639 /* Pods-CGLayout-tvOS.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-tvOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_CGLayout_tvOS;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 10.2;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		BFF860D7BFD7177A1F15D64FC49F0EAA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CBF84C614BE1AE3334BADEB51A0571FC /* Pods-CGLayout-tvOS.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-tvOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-tvOS/Pods-CGLayout-tvOS.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_CGLayout_tvOS;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 10.2;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		CBCABE976F0FDFE08C5E6571632ABB03 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1783305997D92B8CB5B813764784F377 /* CGLayout-iOS.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-iOS/CGLayout-iOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/CGLayout-iOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/CGLayout-iOS/CGLayout-iOS.modulemap";
+				PRODUCT_NAME = CGLayout;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		D265CCB721E0A3AB421AE8A354A33306 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C9F67FE2C48AAA36F153ACF72D98CED4 /* CGLayout-tvOS.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/CGLayout-tvOS/CGLayout-tvOS-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/CGLayout-tvOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/CGLayout-tvOS/CGLayout-tvOS.modulemap";
+				PRODUCT_NAME = CGLayout;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E761780DFF8627E2BF7224A90C1E73D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C4BB4BAC0F824B351EDB3872931C270F /* Pods-CGLayout-macOSTests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "Target Support Files/Pods-CGLayout-macOSTests/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MODULEMAP_FILE = "Target Support Files/Pods-CGLayout-macOSTests/Pods-CGLayout-macOSTests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_CGLayout_macOSTests;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1502,8 +1995,8 @@
 		156881C6FDDEAA9E584E8E27ACE8CBF1 /* Build configuration list for PBXNativeTarget "CGLayout-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				3F1E51E60DAF96259184771FF186ADFC /* Debug */,
-				6101D30100B05E1DBB84A811255C5451 /* Release */,
+				4CC1C28AEAC023F2B5F1419C3D49432D /* Debug */,
+				CBCABE976F0FDFE08C5E6571632ABB03 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1511,8 +2004,8 @@
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				65D98209EA52FFEF84BCB8A13170D715 /* Debug */,
-				0094FBC62C9EB18001EB97C7EBEF6E63 /* Release */,
+				1CEAD4AAB528DBCA0B4C4750E110828B /* Debug */,
+				72FC5A0287A07443A8A4A7CED8CD4381 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1520,8 +2013,8 @@
 		667FCF2EFFCBD214DE8670B30FF72685 /* Build configuration list for PBXNativeTarget "Pods-CGLayout_Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CBCB2631324D3254B1BE8322CB3FEE00 /* Debug */,
-				0F417A99277DECFCFD3FBEA843CF6FC7 /* Release */,
+				38EA2605F25B703EAC2C64B75638EFEC /* Debug */,
+				7360AAA2F05841DDDB1267F5604F5D25 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1529,8 +2022,8 @@
 		6FE5E07D4F7348EB6CE75FAE5F470519 /* Build configuration list for PBXNativeTarget "CGLayout-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8B50FF9DBD67611A02576EEBFF2A5262 /* Debug */,
-				3227E8304CC693A39B5F03F9B6C478FA /* Release */,
+				341C55EDDBB05F729476EA60492674AB /* Debug */,
+				10F39101E98E3133048E215F45789BFF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1538,8 +2031,8 @@
 		A0426E6F8D6A5CB038C62D434512A448 /* Build configuration list for PBXNativeTarget "Pods-CGLayout-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				32F2CEB07AEBC14B7099F9CE7FABBF3E /* Debug */,
-				D0E9949AF9C0BF2DACCB185A2B07808D /* Release */,
+				0CB8E706ADD38F51114614CB1E5C0385 /* Debug */,
+				41A71F4B3DB891E182897CD78A3DB64C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1547,8 +2040,8 @@
 		AF55EF85399D3FE528F6A65F11280682 /* Build configuration list for PBXNativeTarget "Pods-CGLayout-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				26075686129569186EDEDD0BFD818796 /* Debug */,
-				588410649100DA2CC38DD611311AB90F /* Release */,
+				BFF860D7BFD7177A1F15D64FC49F0EAA /* Debug */,
+				A65FC073439B3E487AE7A5CD20DDCE68 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1556,8 +2049,8 @@
 		E2F7D389340A304182657B99FF86F6D9 /* Build configuration list for PBXNativeTarget "Pods-CGLayout-macOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C8F2083234AB999F8078D7F790F91FAE /* Debug */,
-				35E5EE61F2E1C2E1DCEF92CDAAF5BF4C /* Release */,
+				159E2D04B8C8EBCC2484649D667CBA2B /* Debug */,
+				E761780DFF8627E2BF7224A90C1E73D7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1565,8 +2058,8 @@
 		EF408E867ECDF91FEBB72E779DEA57B9 /* Build configuration list for PBXNativeTarget "Pods-CGLayout_Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				980820922F80A7FBAC341AFABD2FFC81 /* Debug */,
-				65158B65D2D0A9407BAD1BDB5713A84F /* Release */,
+				3A52E71ED3E417BD1679DA7D53F5D88F /* Debug */,
+				87FB94ECB6297B3192E44AD7D7ADB31C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1574,8 +2067,8 @@
 		F1B61B742F701331267860481469A8C4 /* Build configuration list for PBXNativeTarget "CGLayout-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B4004A718FD9391B59507E31DCAC0DC9 /* Debug */,
-				F80F2A251C7D818D5C39619FAC6B168C /* Release */,
+				D265CCB721E0A3AB421AE8A354A33306 /* Debug */,
+				3DEBDAEE7A79EF56E25D21F63267BF5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
