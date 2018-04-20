@@ -175,10 +175,10 @@ public extension LayoutGuide {
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
-    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock(with: Layout.equal)
-    private weak var _item: Item?
+    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock()
+    private var _item: Item?
 
-    open weak var item: Item! {
+    open var item: Item! {
         set { _item = newValue }
         get {
             loadItemIfNeeded()
@@ -204,8 +204,12 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
     }
 
     open override func layout(in rect: CGRect) {
-        if isItemLoaded {
-            itemLayout.layout(in: rect)
+        itemLayout.layout(in: rect)
+    }
+
+    override func layout() {
+        if isItemLoaded, ownerItem != nil {
+            layout(in: layoutBounds)
         }
     }
 
@@ -214,6 +218,9 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
         if ownerItem == nil { item.removeFromSuperItem() }
     }
 }
+//extension LayoutPlaceholder: AdjustableLayoutItem where Item: AdjustableLayoutItem {
+//    public var contentConstraint: RectBasedConstraint { return item.contentConstraint }
+//}
 
 /// Base class for any layer placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
@@ -226,9 +233,42 @@ open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
 #if os(iOS) || os(tvOS)
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
-open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
+open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, AdjustableLayoutItem {
+    open var contentConstraint: RectBasedConstraint { return isItemLoaded ? item.contentConstraint : LayoutAnchor.equal }
+    var load: (() -> View)?
+    var didLoad: ((View) -> Void)?
+
+    public convenience init(_ load: @autoclosure @escaping () -> View,
+                            _ didLoad: ((View) -> Void)?) {
+        self.init(frame: .zero)
+        self.load = load
+        self.didLoad = didLoad
+    }
+
+    public convenience init(_ load: (() -> View)?,
+                            _ didLoad: ((View) -> Void)?) {
+        self.init(frame: .zero)
+        self.load = load
+        self.didLoad = didLoad
+    }
+
     open override func loadItem() {
-        item = add(View.self)
+        item = load?() ?? add(View.self)
+    }
+
+    open override func itemDidLoad() {
+        super.itemDidLoad()
+        if let owner = self.ownerItem {
+            owner.addSubview(item)
+        }
+        didLoad?(item)
+    }
+
+    open override func didAddToOwner() {
+        super.didAddToOwner()
+        if isItemLoaded, let owner = self.ownerItem {
+            owner.addSubview(item)
+        }
     }
 }
 
@@ -331,6 +371,15 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     /// - Returns: Converted rect
     public func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
         return rect
+    }
+}
+public extension AnonymConstraint {
+    init(transform: @escaping (inout CGRect) -> Void) {
+        self.init(anchors: [LayoutAnchor.equal]) {
+            var source = $0
+            transform(&source)
+            return source
+        }
     }
 }
 

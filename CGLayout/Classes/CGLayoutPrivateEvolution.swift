@@ -7,6 +7,123 @@
 
 import Foundation
 
+// How manage subviews?
+class LayoutController<Item: LayoutItem> {
+    func layoutItemDidLoad(_ item: Item) {
+        // subclass override
+    }
+    func layoutEnvironmentDidChange() {
+        // subclass override
+    }
+}
+
+protocol AutolayoutItem {
+    associatedtype Item: LayoutItem
+    var layoutController: LayoutController<Item>? { get set }
+}
+
+class LayoutGuideController: UIViewController, AutolayoutItem {
+    var layoutController: LayoutController<UIView>?
+
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        layoutController?.layoutItemDidLoad(view)
+    }
+
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        layoutController?.layoutEnvironmentDidChange()
+    }
+}
+
+#if os(iOS) || os(tvOS)
+/// Base class with layout skeleton implementation.
+open class AutolayoutViewController: UIViewController {
+    fileprivate lazy var internalLayout: LayoutScheme = self.loadInternalLayout()
+    public lazy internal(set) var layoutScheme: LayoutScheme = self.loadLayout()
+    public var upperLayoutGuide = LayoutGuide<UIView>(frame: .zero)
+    public var lowerLayoutGuide = LayoutGuide<UIView>(frame: .zero)
+
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+        view.add(layoutGuide: upperLayoutGuide)
+        view.add(layoutGuide: lowerLayoutGuide)
+    }
+
+    override open func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        internalLayout.layout()
+        update(scheme: &layoutScheme)
+        layout()
+    }
+
+    open func layout() {
+        layoutScheme.layout()
+    }
+
+    open func update(scheme: inout LayoutScheme) {
+        /// subclass override
+        /// use for update dynamic elements
+    }
+
+    open func loadLayout() -> LayoutScheme {
+        /// subclass override
+        /// layout = LayoutScheme(blocks: [LayoutBlockProtocol])
+        fatalError("You should override loading layout method")
+    }
+
+    open var contentInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: heightTopBars - view.frame.origin.y,
+                            left: 0,
+                            bottom: heightBottomBars - view.frame.maxY + UIScreen.main.bounds.height,
+                            right: 0)
+    }
+
+    var heightTopBars: CGFloat {
+        return UIApplication.shared.statusBarFrame.height + (navigationController.map { $0.isNavigationBarHidden ? 0 : $0.navigationBar.frame.height } ?? 0)
+    }
+    var heightBottomBars: CGFloat { return tabBarController.map { $0.tabBar.isHidden ? 0 : $0.tabBar.frame.height } ?? 0 }
+
+    fileprivate func loadInternalLayout() -> LayoutScheme {
+        let visible = { [unowned self] in UIEdgeInsetsInsetRect($0, self.contentInsets) }
+        return LayoutScheme(blocks: [
+            upperLayoutGuide.layoutBlock(with: Layout(x: .equal, y: .equal, width: .equal, height: .fixed(0)),
+                                         constraints: [AnonymConstraint(anchors: [LayoutAnchor.Top.limit(on: .inner)], constrainRect: visible)]),
+            lowerLayoutGuide.layoutBlock(with: Layout(x: .equal, y: .bottom(), width: .equal, height: .fixed(0)), constraints: [AnonymConstraint(anchors: [LayoutAnchor.Bottom.limit(on: .inner)], constrainRect: visible)])
+            ])
+    }
+}
+
+open class ScrollLayoutViewController: AutolayoutViewController {
+    // TODO: Check upper/lower layout guide positions
+    private var isNeedCalculateContent: Bool = true
+    public var scrollView: UIScrollView! { return view as! UIScrollView }
+    var isScrolling: Bool { return scrollView.isDragging || scrollView.isDecelerating || scrollView.isZooming }
+
+    open override func viewDidLayoutSubviews() {
+        if isNeedCalculateContent || !isScrolling {
+            internalLayout.layout()
+            update(scheme: &layoutScheme)
+            layout()
+            isNeedCalculateContent = false
+        }
+    }
+
+    open override func layout() {
+        super.layout()
+        let contentRect = layoutScheme.currentRect
+        scrollView.contentSize = CGSize(width: contentRect.maxX, height: contentRect.maxY)
+    }
+
+    public func setNeedsUpdateContentSize() {
+        isNeedCalculateContent = true
+        view.setNeedsLayout()
+    }
+}
+#endif
+
+// MARK: Layout
+
 public struct LayoutWorkspace {
     public struct Before {
         public static func align(axis: RectAxis, anchor: RectAxisAnchor) -> RectBasedConstraint { return Align(axis: axis, anchor: anchor) }

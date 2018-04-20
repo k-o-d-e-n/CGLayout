@@ -1896,6 +1896,8 @@ public struct Layout: RectBasedLayout {
             horizontal.formLayout(rect: &rect, in: source)
         }
 
+        public static var equal: Alignment { return Alignment(horizontal: .equal, vertical: .equal) }
+
         internal static func trailing(by axis: RectAxis, offset: CGFloat = 0) -> RectAxisLayout { return AxisTrailing(offset: offset, axis: axis) }
         struct AxisTrailing: RectAxisLayout {
             let offset: CGFloat
@@ -1945,6 +1947,13 @@ public struct Layout: RectBasedLayout {
             /// - Parameter base: Entity implements required behavior
             /// - Returns: Initialized entity
             static func build(_ base: RectBasedLayout) -> Layout.Alignment.Horizontal { return .init(base: base) }
+
+            public static var equal: Horizontal { return Horizontal(base: Equal()) }
+            private struct Equal: RectBasedLayout {
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.origin.x = source.origin.x
+                }
+            }
 
             /// Horizontal alignment by center of source rect
             ///
@@ -2001,6 +2010,13 @@ public struct Layout: RectBasedLayout {
             /// - Parameter base: Entity implements required behavior
             /// - Returns: Initialized entity
             static func build(_ base: RectBasedLayout) -> Layout.Alignment.Vertical { return .init(base: base) }
+
+            public static var equal: Vertical { return Vertical(base: Equal()) }
+            private struct Equal: RectBasedLayout {
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.origin.y = source.origin.y
+                }
+            }
 
             /// Vertical alignment by center of source rect
             ///
@@ -2065,6 +2081,8 @@ public struct Layout: RectBasedLayout {
             self.horizontal = horizontal
         }
 
+        public static var equal: Filling { return Filling(horizontal: .equal, vertical: .equal) }
+
         public struct Horizontal: RectBasedLayout, Extended {
             public typealias Conformed = RectBasedLayout
             fileprivate let base: RectBasedLayout
@@ -2084,10 +2102,12 @@ public struct Layout: RectBasedLayout {
             /// - Returns: Initialized entity
             static func build(_ base: RectBasedLayout) -> Layout.Filling.Horizontal { return .init(base: base) }
 
-//            public static var identity: Horizontal { return Horizontal(base: Identity()) }
-//            private struct Identity: RectBasedLayout {
-//                func layout(rect: inout CGRect, in source: CGRect) {}
-//            }
+            public static var equal: Horizontal { return Horizontal(base: Equal()) }
+            private struct Equal: RectBasedLayout {
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.size.width = source.width
+                }
+            }
 
             /// Provides rect with independed horizontal filling with fixed value
             ///
@@ -2144,10 +2164,12 @@ public struct Layout: RectBasedLayout {
             /// - Returns: Initialized entity
             static func build(_ base: RectBasedLayout) -> Layout.Filling.Vertical { return .init(base: base) }
 
-//            public static var identity: Vertical { return Vertical(base: Identity()) }
-//            private struct Identity: RectBasedLayout {
-//                func layout(rect: inout CGRect, in source: CGRect) {}
-//            }
+            public static var equal: Vertical { return Vertical(base: Equal()) }
+            private struct Equal: RectBasedLayout {
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.size.height = source.height
+                }
+            }
 
             /// Provides rect with independed vertical filling with fixed value
             ///
@@ -2209,10 +2231,6 @@ public extension Layout {
 }
 
 public extension Layout {
-    public init(vertical: (alignment: Alignment.Vertical, filling: Filling.Vertical), horizontal: (alignment: Alignment.Horizontal, filling: Filling.Horizontal)) {
-        self.init(alignment: Alignment(horizontal: horizontal.alignment, vertical: vertical.alignment),
-                  filling: Filling(horizontal: horizontal.filling, vertical: vertical.filling))
-    }
     /// Convinience initializer similar CGRect initializer.
     ///
     /// - Parameters:
@@ -2249,5 +2267,34 @@ extension Layout.Filling {
     public func apply<Item: LayoutItem>(with alignment: Layout.Alignment, for item: Item, use constraints: [ConstrainRect]) {
         apply(for: item, use: constraints)
         alignment.apply(for: item, use: constraints)
+    }
+}
+
+public struct AnyRectBasedLayout: RectBasedLayout {
+    private let layout: (inout CGRect, CGRect) -> Void
+    public init(_ layout: @escaping (inout CGRect, CGRect) -> Void) { self.layout = layout }
+    public func formLayout(rect: inout CGRect, in source: CGRect) {
+        layout(&rect, source)
+    }
+}
+
+public extension Layout.Filling.Vertical {
+    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Filling.Vertical {
+        return build(AnyRectBasedLayout { $0.size.height = use($1) })
+    }
+}
+public extension Layout.Filling.Horizontal {
+    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Filling.Horizontal {
+        return build(AnyRectBasedLayout { $0.size.width = use($1) })
+    }
+}
+public extension Layout.Alignment.Vertical {
+    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Vertical {
+        return build(AnyRectBasedLayout { $0.origin.y = use($1) })
+    }
+}
+public extension Layout.Alignment.Horizontal {
+    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Horizontal {
+        return build(AnyRectBasedLayout { $0.origin.x = use($1) })
     }
 }
