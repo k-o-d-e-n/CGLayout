@@ -25,7 +25,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
     var layoutBounds: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x + bounds.origin.x, y: frame.origin.y + bounds.origin.y), size: bounds.size) }
 
     /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
-    open fileprivate(set) weak var ownerItem: Super? {
+    open internal(set) weak var ownerItem: Super? {
         didSet { superItem = ownerItem; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
@@ -64,6 +64,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
 
     internal func layout() { layout(in: layoutBounds) }
 }
+
 #if os(iOS) || os(tvOS)
 public extension LayoutGuide where Super: UIView {
     /// Fabric method for generation layer with any type
@@ -106,6 +107,7 @@ public extension LayoutGuide where Super: UIView {
     }
 }
 #endif
+#if os(macOS) || os(iOS) || os(tvOS)
 public extension LayoutGuide where Super: CALayer {
     /// Fabric method for generation layer with any type
     ///
@@ -137,6 +139,7 @@ public extension CALayer {
         unsafeBitCast(layoutGuide, to: LayoutGuide<CALayer>.self).ownerItem = self
     }
 }
+#endif
 #if os(iOS) || os(tvOS)
 public extension UIView {
     /// Bind layout item to layout guide.
@@ -206,6 +209,7 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
     }
 }
 
+#if os(macOS) || os(iOS) || os(tvOS)
 /// Base class for any layer placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
@@ -213,6 +217,7 @@ open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
         item = add(Layer.self) // TODO: can be add to hierarchy on didSet `item`
     }
 }
+#endif
 
 #if os(iOS) || os(tvOS)
 /// Base class for any view placeholder that need dynamic position and/or size.
@@ -311,7 +316,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
     public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-        sourceRect = anchors.reduce(sourceRect) { $0.1.constrained(sourceRect: $0.0, by: rect) }
+        sourceRect = anchors.reduce(sourceRect) { $1.constrained(sourceRect: $0, by: rect) }
     }
 
     /// Converts rect from constraint coordinate space to destination coordinate space if needed.
@@ -327,6 +332,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
 
 // TODO: Create constraint for attributed string and other data oriented constraints
 
+#if os(macOS) || os(iOS) || os(tvOS)
 @available(OSX 10.11, *) /// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
 public struct StringLayoutAnchor: RectBasedConstraint {
     let string: String?
@@ -369,6 +375,7 @@ public extension String {
         return StringLayoutAnchor(string: self, options: options, attributes: attributes, context: context)
     }
 }
+#endif
 
 // MARK: Additional layout scheme
 
@@ -832,6 +839,7 @@ extension StackLayoutGuide where Parent: UIView {
     }
 }
 #endif
+#if os(macOS) || os(iOS) || os(tvOS)
 extension StackLayoutGuide where Parent: CALayer {
     /// Adds a layout guide to the end of the `arrangedItems` list.
     ///
@@ -874,6 +882,7 @@ extension StackLayoutGuide where Parent: CALayer {
         item.removeFromSuperItem()
     }
 }
+#endif
 
 // MARK: ScrollLayoutGuide
 

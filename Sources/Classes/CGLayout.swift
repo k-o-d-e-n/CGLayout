@@ -8,9 +8,10 @@
 
 #if os(iOS) || os(tvOS)
 import UIKit
-#endif
-#if os(macOS)
+#elseif os(macOS)
 import Cocoa
+#elseif os(Linux)
+import Foundation
 #endif
 
 // TODO: !! Comment all code

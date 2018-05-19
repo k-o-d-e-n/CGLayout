@@ -79,6 +79,7 @@ public struct AssociatedAnchor<Anchor: AnyRectAnchor> {
 
     fileprivate var constraints: [(LayoutItem?, RectBasedConstraint)] = []
 }
+#if os(iOS) || os(tvOS)
 extension UIView: AnchoredItem {
     private static var anchors: Anchors = Anchors(nil)
     public var anchors: RectAnchorDefining { return UIView.anchors.with(self) }
@@ -135,6 +136,7 @@ extension UIView: AnchoredItem {
         }
     }
 }
+#endif
 public struct AxisAnchorPointConstraint: RectBasedConstraint {
     let constrain: (inout CGRect, CGRect) -> Void
     public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {

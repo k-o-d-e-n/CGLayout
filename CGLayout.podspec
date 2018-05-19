@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CGLayout'
-  s.version          = '0.6'
+  s.version          = '0.6.1'
   s.summary          = 'Constraint-based autolayout system written on Swift. Not Autolayout wrapper.'
 
 # This description is used to generate tags and improve search results.
@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '10.0'
   s.osx.deployment_target = '10.10'
 
-  s.source_files = 'CGLayout/Classes/**/*'
+  s.source_files = 'Sources/Classes/**/*'
   
   # s.resource_bundles = {
   #   'CGLayout' => ['CGLayout/Assets/*.png']

@@ -19,6 +19,7 @@ public protocol LayoutItemContainer: LayoutItem {
     func setNeedsLayout()
 }
 
+#if os(macOS) || os(iOS) || os(tvOS)
 extension CALayer: LayoutItemContainer, InLayoutTimeItem {
     public var layoutBounds: CGRect { return bounds }
     public var inLayoutTime: InLayoutTimeItem { return self }
@@ -36,6 +37,7 @@ extension CALayer: LayoutItemContainer, InLayoutTimeItem {
         addSublayer(subItem)
     }
 }
+#endif
 
 #if os(iOS) || os(tvOS)
 extension UIView: LayoutItemContainer {
