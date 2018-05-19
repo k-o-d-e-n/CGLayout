@@ -15,8 +15,22 @@ extension Layer: ChildItem {
     func add<C>(to item: C) where C: View {
         item.layer.addSublayer(self)
     }
+    func add<C>(to item: C) where C: LayoutGuide<View> {
+        guard let owner = item.superItem else {
+            fatalError("Container \(type(of: item)) has not been added to hierarchy")
+        }
+
+        add(to: owner)
+    }
+    func add<C>(to item: C) where C: LayoutGuide<Layer> {
+        guard let owner = item.superItem else {
+            fatalError("Container \(type(of: item)) has not been added to hierarchy")
+        }
+
+        add(to: owner)
+    }
     func add<C>(to item: C) {
-        fatalError("Not supported container \(item)")
+        fatalError("Not supported container \(type(of: item)) for child \(type(of: self)). Implement func add<C>(to:) where C: \(type(of: item))")
     }
 }
 
@@ -28,9 +42,22 @@ extension View: ChildItem {
         item.layer.addSublayer(layer)
         item.addSubview(self)
     }
+    func add<C>(to item: C) where C: LayoutGuide<View> {
+        guard let owner = item.superItem else {
+            fatalError("Container \(type(of: item)) has not been added to hierarchy")
+        }
+
+        add(to: owner)
+    }
+    func add<C>(to item: C) where C: LayoutGuide<Layer> {
+        guard let owner = item.superItem else {
+            fatalError("Container \(type(of: item)) has not been added to hierarchy")
+        }
+
+        add(to: owner)
+    }
     func add<C>(to item: C) {
-        print("VIEW: \(item)")
-        fatalError("Not supported container \(item)")
+        fatalError("Not supported container \(type(of: item)) for child \(type(of: self)). Implement func add<C>(to:) where C: \(type(of: item))")
     }
 }
 
@@ -41,14 +68,14 @@ extension LayoutGuide: ChildItem {
     func add<C>(to item: C) where C: View, Super: View {
         item.add(layoutGuide: self)
     }
-    // func add<C>(to item: C) where C: View, Super: Layer {
-    //     item.layer.add(layoutGuide: self)
-    // }
-    // func add<C: Container>(to item: C) where C: LayoutGuide, C.Super == Super {
-    //     item.add(layoutGuide: self)
-    // }
+    func add<C>(to item: C) where C: View, Super: Layer {
+        item.layer.add(layoutGuide: self)
+    }
+    func add<C: Container>(to item: C) where C: LayoutGuide {
+        item.add(layoutGuide: self)
+    }
     func add<C>(to item: C) {
-        // fatalError("Not supported container \(item)")
+        fatalError("Not supported container \(type(of: item)) for child \(type(of: self)). Implement func add<C>(to:) where C: \(type(of: item))")
     }
 }
 
@@ -171,6 +198,15 @@ final class View: Container, InLayoutTimeItem {
     }
 }
 extension View {
+    func addChild(_ child: View) {
+        child.add(to: self)
+    }
+    func addChild(_ child: LayoutGuide<View>) {
+        child.add(to: self)
+    }
+    func addChild(_ child: LayoutGuide<Layer>) {
+        child.add(to: self)
+    }
     /// Bind layout item to layout guide.
     ///
     /// - Parameter layoutGuide: Layout guide for binding
@@ -188,7 +224,7 @@ class CGLayoutTests: XCTestCase {
 
         alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
-        XCTAssertTrue(view1.frame.minY == view2.frame.minY)
+        XCTAssertTrue(view1.frame.origin.y == view2.frame.origin.y)
     }
 
     func testContainer() {
@@ -213,6 +249,8 @@ class CGLayoutTests: XCTestCase {
 
         view.addChild(lg)
         view.addChild(subview)
+        // lg.add(to: view)
+        // subview.add(to: view)
 
         XCTAssertTrue(lg.ownerItem! === view)
         XCTAssertTrue(view.subviews.contains(where: { $0 === subview }))
