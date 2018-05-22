@@ -77,8 +77,8 @@ class ViewController: UIViewController {
         return ScrollLayoutGuide(contentItem: self.labelStack, direction: .vertical)
     }()
 
-    lazy var latestItemLayout = Layout(vertical: (.top(10), .boxed(20)),
-                                       horizontal: (.left(15), .fixed(30)))
+    lazy var latestItemLayout = Layout(alignment: Layout.Alignment(horizontal: .left(15), vertical: .top(10)),
+                                       filling: Layout.Filling(horizontal: .boxed(20), vertical: .fixed(30)))
     lazy var pulledLayout = Layout(x: .left(15), y: .top(10),
                                    width: .boxed(25), height: .boxed(20))
     lazy var bottomConstraint = LayoutAnchor.Bottom.limit(on: .inner)

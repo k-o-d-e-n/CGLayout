@@ -8,31 +8,44 @@
 import Foundation
 
 // How manage subviews?
-class LayoutController<Item: LayoutItem> {
-    func layoutItemDidLoad(_ item: Item) {
-        // subclass override
+public class LayoutManager<Item: LayoutItem>: NSObject {
+    weak var item: LayoutItem!
+    var scheme: LayoutScheme!
+    private(set) var isNeedLayout: Bool = false
+
+    func setNeedsLayout() {
+        if !isNeedLayout {
+            isNeedLayout = true
+            scheduleLayout()
+        }
     }
-    func layoutEnvironmentDidChange() {
-        // subclass override
+
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard change != nil, item != nil else {
+            return
+        }
+        scheduleLayout()
+    }
+
+    private func scheduleLayout() {
+        if #available(iOS 10.0, *) {
+            RunLoop.current.perform {
+                self.scheme.layout()
+                self.isNeedLayout = false
+            }
+        } else {
+            fatalError()
+        }
     }
 }
 
-protocol AutolayoutItem {
-    associatedtype Item: LayoutItem
-    var layoutController: LayoutController<Item>? { get set }
-}
-
-class LayoutGuideController: UIViewController, AutolayoutItem {
-    var layoutController: LayoutController<UIView>?
-
-    open override func viewDidLoad() {
-        super.viewDidLoad()
-        layoutController?.layoutItemDidLoad(view)
-    }
-
-    open override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        layoutController?.layoutEnvironmentDidChange()
+public extension LayoutManager where Item: UIView {
+    convenience init(view: UIView, scheme: LayoutScheme) {
+        self.init()
+        self.item = view
+        self.scheme = scheme
+        view.addObserver(self, forKeyPath: "layer.bounds", options: [], context: nil)
+        scheme.layout()
     }
 }
 

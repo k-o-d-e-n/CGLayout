@@ -35,9 +35,11 @@ public func debugLog(_ message: String, _ file: String = #file, _ line: Int = #l
 
 internal func debugFatalError(condition: @autoclosure () -> Bool = true,
                               _ message: String = "", _ file: String = #file, _ line: Int = #line) {
-    if condition() {
-        debugLog(message, file, line)
-        fatalError(message)
+    debugAction {
+        if condition() {
+            debugLog(message, file, line)
+            fatalError(message)
+        }
     }
 }
 

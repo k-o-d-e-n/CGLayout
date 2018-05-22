@@ -100,6 +100,7 @@ public extension RectBasedLayout {
     ///   - constraints: Array of constraint items
     public func apply(for item: LayoutItem, use constraints: [LayoutConstraintProtocol]) {
         // TODO: ! Add flag for using layout margins. IMPL: Apply 'inset' constraint from LayotAnchor to super bounds.
+        debugFatalError(condition: item.superItem == nil, "Layout item is not in hierarchy")
         apply(for: item, in: item.superItem!.layoutBounds, use: constraints)
     }
     /// Use for layout `LayoutItem` entity in constrained source space using constraints. Must call only on main thread.
@@ -925,6 +926,19 @@ public struct LayoutAnchor {
         ///   - rect: Rect for constrain
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
             sourceRect = rect
+        }
+    }
+
+    /// Constraint, that makes source rect equally to passed rect
+    public static var zero: RectBasedConstraint { return Equal() }
+    private struct Fixed: RectBasedConstraint {
+        /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            sourceRect = .zero
         }
     }
 
@@ -2226,6 +2240,26 @@ public extension Layout {
     private struct Equal: RectBasedLayout {
         func formLayout(rect: inout CGRect, in source: CGRect) {
             rect = source
+        }
+    }
+
+    /// Layout behavior, that makes passed rect equally to  rect
+    public static func equal(_ value: CGRect) -> RectBasedLayout { return Constantly(value: value) }
+    private struct Constantly: RectBasedLayout {
+        let value: CGRect
+        func formLayout(rect: inout CGRect, in source: CGRect) {
+            rect = value
+        }
+    }
+}
+
+extension LayoutAnchor {
+    /// Layout behavior, that makes passed rect equally to  rect
+    public static func equal(_ value: CGRect) -> RectBasedConstraint { return Constantly(value: value) }
+    private struct Constantly: RectBasedConstraint {
+        let value: CGRect
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            sourceRect = value
         }
     }
 }

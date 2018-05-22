@@ -60,11 +60,13 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
     ///
     /// - Parameter frame: New frame value.
     /// - Returns: Content rect
-    open func contentRect(forFrame frame: CGRect) -> CGRect { // TODO: Can use `inout`
+    open func contentRect(forFrame frame: CGRect) -> CGRect {
         return CGRect(origin: .zero, size: frame.size)
     }
 
-    internal func layout() { layout(in: layoutBounds) }
+    internal func layout() {
+        layout(in: layoutBounds)
+    }
 }
 #if os(iOS) || os(tvOS)
 public extension LayoutGuide where Super: UIView {
@@ -234,7 +236,7 @@ open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, AdjustableLayoutItem {
-    open var contentConstraint: RectBasedConstraint { return isItemLoaded ? item.contentConstraint : LayoutAnchor.equal }
+    open var contentConstraint: RectBasedConstraint { return isItemLoaded ? item.contentConstraint : LayoutAnchor.equal(.zero) }
     var load: (() -> View)?
     var didLoad: ((View) -> Void)?
 
