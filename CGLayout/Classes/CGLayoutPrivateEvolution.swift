@@ -9,11 +9,12 @@ import Foundation
 
 // How manage subviews?
 public class LayoutManager<Item: LayoutItem>: NSObject {
+    var deinitialization: (() -> Void)?
     weak var item: LayoutItem!
     var scheme: LayoutScheme!
     private(set) var isNeedLayout: Bool = false
 
-    func setNeedsLayout() {
+    public func setNeedsLayout() {
         if !isNeedLayout {
             isNeedLayout = true
             scheduleLayout()
@@ -37,6 +38,10 @@ public class LayoutManager<Item: LayoutItem>: NSObject {
             fatalError()
         }
     }
+
+    deinit {
+        deinitialization?()
+    }
 }
 
 public extension LayoutManager where Item: UIView {
@@ -44,6 +49,7 @@ public extension LayoutManager where Item: UIView {
         self.init()
         self.item = view
         self.scheme = scheme
+        self.deinitialization = { view.removeObserver(self, forKeyPath: "layer.bounds") }
         view.addObserver(self, forKeyPath: "layer.bounds", options: [], context: nil)
         scheme.layout()
     }

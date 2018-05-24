@@ -178,14 +178,11 @@ public extension LayoutGuide {
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
     open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock()
-    private var _item: Item?
+    fileprivate var _item: Item?
 
     open var item: Item! {
-        set { _item = newValue }
-        get {
-            loadItemIfNeeded()
-            return itemIfLoaded
-        }
+        loadItemIfNeeded()
+        return itemIfLoaded
     }
     open var isItemLoaded: Bool { return _item != nil }
     open var itemIfLoaded: Item? { return _item }
@@ -228,7 +225,7 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
     open override func loadItem() {
-        item = add(Layer.self) // TODO: can be add to hierarchy on didSet `item`
+        _item = add(Layer.self) // TODO: can be add to hierarchy on didSet `item`
     }
 }
 
@@ -255,7 +252,7 @@ open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, Adjus
     }
 
     open override func loadItem() {
-        item = load?() ?? add(View.self)
+        _item = load?() ?? add(View.self)
     }
 
     open override func itemDidLoad() {
@@ -299,6 +296,8 @@ public extension UILayoutGuide {
 
 @available(iOS 9.0, *)
 open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
+    var load: (() -> View)?
+    var didLoad: ((View) -> Void)?
     private weak var _view: View?
     open weak var view: View! {
         loadViewIfNeeded()
@@ -307,12 +306,32 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
     open var isViewLoaded: Bool { return _view != nil }
     open var viewIfLoaded: View? { return _view }
 
+    public convenience init(_ load: @autoclosure @escaping () -> View,
+                            _ didLoad: ((View) -> Void)?) {
+        self.init()
+        self.load = load
+        self.didLoad = didLoad
+    }
+
+    public convenience init(_ load: (() -> View)? = nil,
+                            _ didLoad: ((View) -> Void)?) {
+        self.init()
+        self.load = load
+        self.didLoad = didLoad
+    }
+
     open func loadView() {
-        _view = add(View.self)
+        if let l = load {
+            let v = l()
+            _view = v
+            owningView?.addSubview(v)
+        } else {
+            _view = add(View.self)
+        }
     }
 
     open func viewDidLoad() {
-        // subclass override
+        didLoad?(view)
     }
 
     open func loadViewIfNeeded() {
