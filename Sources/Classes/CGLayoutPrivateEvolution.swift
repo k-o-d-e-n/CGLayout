@@ -31,7 +31,7 @@ public protocol RectAnchorDefining {
 }
 extension RectAnchorDefining {
     // TODO: Bad implementation. Undefined behavior
-    fileprivate var constraints: Zip2Sequence<[LayoutItem?], [[RectBasedConstraint]]> {
+    var constraints: Zip2Sequence<[LayoutItem?], [[RectBasedConstraint]]> {
         var items: [LayoutItem] = []
         var constraints: [[RectBasedConstraint]] = []
         var anonymConstraints: [RectBasedConstraint] = []
@@ -53,13 +53,13 @@ extension RectAnchorDefining {
 
         // TODO: Unexpected priority
         origin.constraints.forEach(addition)
-        size.constraints.forEach(addition)
+        left.constraints.forEach(addition)
+        top.constraints.forEach(addition)
         width.constraints.forEach(addition)
         height.constraints.forEach(addition)
+        size.constraints.forEach(addition)
         center.constraints.forEach(addition) // TODO: center.horizontal, center.vertical
-        left.constraints.forEach(addition)
         right.constraints.forEach(addition)
-        top.constraints.forEach(addition)
         bottom.constraints.forEach(addition)
 
         return anonymConstraints.isEmpty ? zip(items, constraints) : zip([nil] + items, [anonymConstraints] + constraints)
@@ -69,7 +69,9 @@ public protocol AnchoredItem {
     var anchors: RectAnchorDefining { get }
 }
 public struct AssociatedAnchor<Anchor: AnyRectAnchor> {
-    weak var item: LayoutItem!
+    weak var item: LayoutItem! {
+        didSet { constraints.removeAll() }
+    }
     public let anchor: Anchor
 
     init(item: LayoutItem?, anchor: Anchor) {
@@ -79,6 +81,7 @@ public struct AssociatedAnchor<Anchor: AnyRectAnchor> {
 
     fileprivate var constraints: [(LayoutItem?, RectBasedConstraint)] = []
 }
+
 #if os(iOS) || os(tvOS)
 extension UIView: AnchoredItem {
     private static var anchors: Anchors = Anchors(nil)
@@ -170,6 +173,16 @@ extension RectAnchorPoint {
     public func pull<A2: RectAnchorPoint>(to a2: A2) -> AxisAnchorPointConstraint
         where Metric == A2.Metric, Axis == A2.Axis {
             return AxisAnchorPointConstraint { self.move(in: &$0, to: a2.get(for: $1)) }
+    }
+    public func limit<A2: RectAnchorPoint>(to a2: A2, compare: @escaping (Metric, Metric) -> Metric) -> AxisAnchorPointConstraint
+        where Metric == A2.Metric, Axis == A2.Axis {
+            return AxisAnchorPointConstraint {
+                let current = self.get(for: $0)
+                let limited = a2.get(for: $1)
+                if compare(current, limited) != current {
+                    self.move(in: &$0, to: limited)
+                }
+            }
     }
 }
 extension AssociatedAnchor where Anchor: RectAnchorPoint {
@@ -281,14 +294,14 @@ extension LayoutItem where Self: AnchoredItem {
         var anchors = self.anchors
         relating(&anchors)
         return LayoutBlock(item: self, layout: Layout.equal, constraints: anchors.constraints.map { item, constraints -> LayoutConstraintProtocol in
-            return item.map { LayoutConstraint(item: $0, constraints: constraints) } ?? AnonymConstraint(anchors: constraints)
+            return item.map { $0.layoutConstraint(for: constraints) } ?? AnonymConstraint(anchors: constraints)
         })
 //        return layoutBlock(with: Layout.equal, constraints: anchors.constraints)
     }
 }
 
 public protocol AnyRectAnchor {
-    associatedtype Metric
+    associatedtype Metric: Equatable
 //    func set(_ value: Metric, for rect: inout CGRect)
     func get(for rect: CGRect) -> Metric
 }
@@ -310,6 +323,8 @@ extension SizeRectAnchor where Metric == CGSize {
 //    public func scale(_ value: CGFloat, by scale: CGFloat, in rect: inout CGRect) { set(get(for: rect) * value, for: &rect) }
 }
 
+typealias CenterXAnchor = AxisCenterAnchor<_RectAxis.Horizontal>
+typealias CenterYAnchor = AxisCenterAnchor<_RectAxis.Vertical>
 public struct AxisCenterAnchor<Axis: RectAxis>: RectAnchorPoint {
     static var horizontal: AxisCenterAnchor<_RectAxis.Horizontal> { return .init(axis: .init()) }
     static var vertical: AxisCenterAnchor<_RectAxis.Vertical> { return .init(axis: .init()) }
@@ -670,7 +685,7 @@ struct _RectAnchor {
     static var sizeVertical = AnyAnchor<CGFloat>(getter: _RectAxis.vertical.get(sizeAt:))
     static var size = AnyAnchor<CGSize>(getter: { $0.size })//CGSize(width: _RectAxis.horizontal.get(sizeAt: $0), height: _RectAxis.vertical.get(sizeAt: $0)) })
 }
-struct AnyAnchor<Metric>: AnyRectAnchor /*, OptionSet*/ {
+struct AnyAnchor<Metric: Equatable>: AnyRectAnchor /*, OptionSet*/ {
     fileprivate let getter: (CGRect) -> Metric
     //    fileprivate let setter: (Metric, inout CGRect)
     //    func set(value: Metric, for rect: inout CGRect) { setter(value, &rect) }

@@ -16,6 +16,9 @@ internal func debugAction(_ action: () -> Void) {
     #if DEBUG
         action()
     #endif
+    // #if os(Linux)
+    action()
+    // #endif
 }
 
 internal func printWarning(_ message: String) {

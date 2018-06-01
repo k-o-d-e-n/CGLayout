@@ -1,0 +1,43 @@
+Single axis anchors:
+ 1. Left (horizontal), can constraints: (align, pull, limit)
+ 2. Top (vertical), can constraints: (align, pull, limit)
+ 3. Right (horizontal), can constraints: (align, pull, limit)
+ 4. Bottom (vertical), can constraints: (align, pull, limit)
+ 5. CenterX (horizontal), can constraints: (align, limit)
+ 6. CenterY (vertical), can constraints: (align, limit)
+ 7. Width (vertical), can constraints: (equal(scaled, boxed, fixed), autosized)
+ 8. Height (horizontal), can constraints: (equal(scaled, boxed, fixed), autosized)
+
+XY axis anchors:
+ 1. Origin, can constraints: (align, pull, limit)
+ 2. Center, can constraints: (align, limit)
+ 3. Size, can constraints: (equal(scaled, boxed, fixed), autosized)
+
+Constraint types:
+ 1. Positioning (changes origin) - align
+ 2. Sizing (changes size) - equal, autosizing(height, width)
+ 3. Adopt (can change origin and size) - pull, limit
+
+Constraints by applying sequence:
+ 1. Pull
+ 2. Limit // May be has unnecessary behavior
+ 3. Sizing
+ 4. Align
+
+Conflicted constraints:
+ 1. Sizing(equal, autosizing) - Adopt(pull) in the same axis // pull changed size
+ 2. Positioning(align) - Adopt(pull) in the same anchors // pull already makes align
+ 3. Adopt(pull) - Adopt(pull) in the same anchors // cannot pull to different locations
+ 4. Positioning(align) - Positioning(align) in the same axis // cannot align by different locations
+ 5. Positioning(align) - Adopt(Limit) in the same anchors // align already makes position that conformed limit
+ 6. Sizing(equal, autosizing) - Sizing(equal, autosizing) in the same anchors // cannot
+
+Can conflict constraints:
+ 1. Sizing(equal, autosizing) - Adopt(limit) in the same axis // limit can crop calculated size
+// 2. Positioning(align) - Sizing(equal, autosizing) // 
+
+Anchor possibilities:
+ 1. Evaluate constraints
+ 2. Resolve disrepancies
+ 3. Check on conflicts
+ 4. Resolve conflicts
