@@ -47,42 +47,21 @@ internal struct _SizeThatFitsConstraint: RectBasedConstraint {
 internal struct _MainThreadSizeThatFitsConstraint: RectBasedConstraint {
     weak var item: SelfSizedLayoutItem!
     func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-        guard Thread.isMainThread else {
-            DispatchQueue.main.sync { sourceRect.size = item.sizeThatFits(rect.size) }
-            return
-        }
-        sourceRect.size = item.sizeThatFits(rect.size)
+        sourceRect.size = syncGuard(mainThread: item.sizeThatFits(rect.size))
     }
 }
 
 internal struct _MainThreadItemInLayoutTime<Item: LayoutItem>: InLayoutTimeItem {
-    var superLayoutBounds: CGRect {
-        if Thread.isMainThread { return item.superItem!.layoutBounds }
-        var _bounds: CGRect?
-        DispatchQueue.main.sync { _bounds = item.superItem!.layoutBounds }
-        return _bounds!
+    var layoutBounds: CGRect { return syncGuard(mainThread: { item.layoutBounds }) }
+    var superLayoutBounds: CGRect { return syncGuard(mainThread: { item.superItem!.layoutBounds }) }
+    weak var superItem: LayoutItem? { return syncGuard(mainThread: { item.superItem }) }
+    var frame: CGRect {
+        set {}
+        get { return syncGuard { item.frame } }
     }
-    weak var superItem: LayoutItem? {
-        if Thread.isMainThread { return item.superItem }
-        var _super: LayoutItem?
-        DispatchQueue.main.sync { _super = item.superItem }
-        return _super
-    }
-    var frame: CGRect { set {}
-        get {
-            if Thread.isMainThread { return item.frame }
-            var _frame: CGRect?
-            DispatchQueue.main.sync { _frame = item.frame }
-            return _frame!
-        }
-    }
-    var bounds: CGRect { set {}
-        get {
-            if Thread.isMainThread { return item.bounds }
-            var _bounds: CGRect?
-            DispatchQueue.main.sync { _bounds = item.bounds }
-            return _bounds!
-        }
+    var bounds: CGRect {
+        set {}
+        get { return syncGuard { item.bounds } }
     }
 
     var item: Item

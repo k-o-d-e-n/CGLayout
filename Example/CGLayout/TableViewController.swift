@@ -45,10 +45,14 @@ class TableViewController: UITableViewController {
     let strings = "Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной \"рыбой\" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых используется Lorem Ipsum".components(separatedBy: ". ")
 
     let bottomView = UIView()
+    let bottomView2 = UIView()
     let layoutGuide = LayoutGuide<UITableView>(frame: UIScreen.main.bounds.insetBy(dx: 0, dy: 100))
     lazy var bottomViewBlock: LayoutBlock<UIView> = self.bottomView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(100), height: .fixed(50)),
-                                                                        constraints: [self.layoutGuide.layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .inner)]),
-                                                                                      self.view.layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .inner)])])
+                                                                                constraints: [self.layoutGuide.layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .inner)]),
+                                                                                              self.view.layoutConstraint(for: [LayoutAnchor.Bottom.pull(from: .inner)])])
+    lazy var bottomView2Block: LayoutBlock<UIView> = self.bottomView2.layoutBlock(with: Layout(x: .center(), y: .top(), width: .fixed(50), height: .fixed(50)),
+                                                                                  constraints: [self.layoutGuide.layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .inner)]),
+                                                                                                self.tableView.contentLayoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])])
 
     lazy var blocks: [ReuseLayoutBlock] = self.strings.map {
         ReuseLayoutBlock(layout: Layout.equal,
@@ -63,13 +67,16 @@ class TableViewController: UITableViewController {
 
         tableView.register(TextCell.self, forCellReuseIdentifier: "reuseIdentifier")
         bottomView.backgroundColor = .red
+        bottomView2.backgroundColor = .yellow
         tableView.addSubview(bottomView)
+        tableView.addSubview(bottomView2)
         tableView.add(layoutGuide: layoutGuide)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         bottomViewBlock.layout()
+        bottomView2Block.layout()
     }
 
     // MARK: - Table view data source

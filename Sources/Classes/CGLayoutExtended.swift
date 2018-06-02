@@ -8,6 +8,8 @@
 
 import Foundation
 
+// TODO: !!! LayoutGuide does not have link to super layout guide. For manage z-index subitems.
+
 // MARK: LayoutGuide and placeholders
 
 /// LayoutGuides will not show up in the view hierarchy, but may be used as layout item in
@@ -29,7 +31,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         didSet { superItem = ownerItem; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
-    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } }
+    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } } // TODO: if calculated frame does not changed subviews don`t update (UILabel)
     open /// Internal coordinate space of layout entity
     var bounds: CGRect { didSet { layout() } }
     open /// Layout item that maintained this layout entity
@@ -62,7 +64,9 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         return CGRect(origin: .zero, size: frame.size)
     }
 
-    internal func layout() { layout(in: layoutBounds) }
+    internal func layout() {
+        layout(in: layoutBounds)
+    }
 }
 
 #if os(iOS) || os(tvOS)
@@ -171,18 +175,17 @@ public extension LayoutGuide {
 
 // MARK: Placeholders
 
+// TODO: Add possible to make lazy configuration
+
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
-    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock(with: Layout.equal, constraints: [self.layoutConstraint(for: [LayoutAnchor.equal])])
-    private weak var _item: Item?
+    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock()
+    fileprivate var _item: Item?
 
-    open weak var item: Item! {
-        set { _item = newValue }
-        get {
-            loadItemIfNeeded()
-            return itemIfLoaded
-        }
+    open var item: Item! {
+        loadItemIfNeeded()
+        return itemIfLoaded
     }
     open var isItemLoaded: Bool { return _item != nil }
     open var itemIfLoaded: Item? { return _item }
@@ -203,18 +206,30 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
     }
 
     open override func layout(in rect: CGRect) {
-        if isItemLoaded {
-            itemLayout.layout(in: rect)
+        itemLayout.layout(in: rect)
+    }
+
+    override func layout() {
+        if isItemLoaded, ownerItem != nil {
+            layout(in: layoutBounds)
         }
     }
+
+    open override func didAddToOwner() {
+        super.didAddToOwner()
+        if ownerItem == nil { item.removeFromSuperItem() }
+    }
 }
+//extension LayoutPlaceholder: AdjustableLayoutItem where Item: AdjustableLayoutItem {
+//    public var contentConstraint: RectBasedConstraint { return item.contentConstraint }
+//}
 
 #if os(macOS) || os(iOS) || os(tvOS)
 /// Base class for any layer placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
     open override func loadItem() {
-        item = add(Layer.self) // TODO: can be add to hierarchy on didSet `item`
+        _item = add(Layer.self) // TODO: can be add to hierarchy on didSet `item`
     }
 }
 #endif
@@ -222,9 +237,42 @@ open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
 #if os(iOS) || os(tvOS)
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
-open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
+open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, AdjustableLayoutItem {
+    open var contentConstraint: RectBasedConstraint { return isItemLoaded ? item.contentConstraint : LayoutAnchor.equal(.zero) }
+    var load: (() -> View)?
+    var didLoad: ((View) -> Void)?
+
+    public convenience init(_ load: @autoclosure @escaping () -> View,
+                            _ didLoad: ((View) -> Void)?) {
+        self.init(frame: .zero)
+        self.load = load
+        self.didLoad = didLoad
+    }
+
+    public convenience init(_ load: (() -> View)?,
+                            _ didLoad: ((View) -> Void)?) {
+        self.init(frame: .zero)
+        self.load = load
+        self.didLoad = didLoad
+    }
+
     open override func loadItem() {
-        item = add(View.self)
+        _item = load?() ?? add(View.self)
+    }
+
+    open override func itemDidLoad() {
+        super.itemDidLoad()
+        if let owner = self.ownerItem {
+            owner.addSubview(item)
+        }
+        didLoad?(item)
+    }
+
+    open override func didAddToOwner() {
+        super.didAddToOwner()
+        if isItemLoaded, let owner = self.ownerItem {
+            owner.addSubview(item)
+        }
     }
 }
 
@@ -253,6 +301,8 @@ public extension UILayoutGuide {
 
 @available(iOS 9.0, *)
 open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
+    var load: (() -> View)?
+    var didLoad: ((View) -> Void)?
     private weak var _view: View?
     open weak var view: View! {
         loadViewIfNeeded()
@@ -261,12 +311,32 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
     open var isViewLoaded: Bool { return _view != nil }
     open var viewIfLoaded: View? { return _view }
 
+    public convenience init(_ load: @autoclosure @escaping () -> View,
+                            _ didLoad: ((View) -> Void)?) {
+        self.init()
+        self.load = load
+        self.didLoad = didLoad
+    }
+
+    public convenience init(_ load: (() -> View)? = nil,
+                            _ didLoad: ((View) -> Void)?) {
+        self.init()
+        self.load = load
+        self.didLoad = didLoad
+    }
+
     open func loadView() {
-        _view = add(View.self)
+        if let l = load {
+            let v = l()
+            _view = v
+            owningView?.addSubview(v)
+        } else {
+            _view = add(View.self)
+        }
     }
 
     open func viewDidLoad() {
-        // subclass override
+        didLoad?(view)
     }
 
     open func loadViewIfNeeded() {
@@ -327,6 +397,15 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     /// - Returns: Converted rect
     public func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
         return rect
+    }
+}
+public extension AnonymConstraint {
+    init(transform: @escaping (inout CGRect) -> Void) {
+        self.init(anchors: [LayoutAnchor.equal]) {
+            var source = $0
+            transform(&source)
+            return source
+        }
     }
 }
 
@@ -493,7 +572,7 @@ struct LayoutDistribution: RectBasedDistribution {
 }
 
 /// Protocol defines method for filling items
-protocol StackLayoutFilling {
+public protocol StackLayoutFilling {
     /// Performs filling for item in defined source space
     ///
     /// - Parameters:
@@ -503,7 +582,7 @@ protocol StackLayoutFilling {
     func filling(for item: LayoutItem, in source: CGRect) -> CGRect
 }
 extension Layout.Filling: StackLayoutFilling {
-    func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
+    public func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
         return layout(rect: item.frame, in: source)
     }
 }
@@ -535,6 +614,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         public static func fromHorizontalCenter(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromCenter(baseDistribution: LayoutDistribution.FromLeading(axis: _RectAxis.horizontal, spacing: spacing))) }
         public static func equalSpacingHorizontal() -> Distribution { return Distribution(base: LayoutDistribution.EqualSpacing(axis: _RectAxis.horizontal)) }
         public static func equalSpacingVertical() -> Distribution { return Distribution(base: LayoutDistribution.EqualSpacing(axis: _RectAxis.vertical)) }
+        // TODO: Add distribution with limited by size anchor (width, height)
     }
     public struct Alignment: RectAxisLayout {
         let layout: RectAxisLayout
@@ -560,8 +640,13 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             return .init(l)
         }
     }
-    public struct Filling: StackLayoutFilling {
+    public struct Filling: StackLayoutFilling, Extended {
         private let layout: StackLayoutFilling
+
+        public typealias Conformed = StackLayoutFilling
+        public static func build(_ base: StackLayoutFilling) -> StackLayoutScheme.Filling {
+            return Filling(layout: base)
+        }
 
         struct AutoDimension: StackLayoutFilling {
             fileprivate let defaultFilling: Layout.Filling
@@ -572,10 +657,11 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             }
         }
 
+        // TODO: Create auto dimension for axis (only height, only width, together)
         public static func autoDimension(`default` filling: Layout.Filling) -> Filling { return Filling(layout: AutoDimension(defaultFilling: filling)) }
         public static func custom(_ value: Layout.Filling) -> Filling { return Filling(layout: value) }
 
-        func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
+        public func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
             return layout.filling(for: item, in: source)
         }
     }
@@ -615,6 +701,11 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
             return blockFrame
         }, snapshotFrame: snapshotFrame ?? .zero)
+    }
+    public var currentRect: CGRect {
+        let items = self.items()
+        guard items.count > 0 else { fatalError(StackLayoutScheme.message(forNotActive: self)) }
+        return items.reduce(nil) { return $0?.union($1.frame) ?? $1.frame }!
     }
 
     public /// Calculate and apply frames layout items.
@@ -673,7 +764,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         let subItems = items()
         var snapshotFrame: CGRect?
         var iterator = subItems.makeIterator()
-        let frames = distribution.distribute(rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) },
+        let frames = distribution.distribute(rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
                                              in: sourceRect,
                                              iterator: {
                                                 completedRects.insert((iterator.next()!, $0), at: 0)
@@ -755,6 +846,8 @@ extension StackLayoutGuide: CustomDebugStringConvertible, CustomStringConvertibl
     public var debugDescription: String { return items.debugDescription }
     public var description: String { return items.description }
 }
+// TODO: Add throw exception on insert arranged item when ownerItem is nil
+// TODO: Remove methods not convinience, need add method with removing by index
 #if os(iOS) || os(tvOS)
 extension StackLayoutGuide where Parent: UIView {
     /// Adds a layout guide to the end of the `arrangedItems` list.
@@ -899,10 +992,21 @@ open class ScrollLayoutGuide<Super: LayoutItem>: LayoutGuide<Super> {
     }
 
     /// Point that defines offset for content origin
-    open var contentOffset: CGPoint { set { bounds.origin = newValue.negated() } get { return bounds.origin.negated() } }
+    open var contentOffset: CGPoint { set { bounds.origin = newValue } get { return bounds.origin } }
     /// Size of content
-    open var contentSize: CGSize { set { bounds.size = contentSize } get { return bounds.size } } // TODO: Size of bounds should be equal frame size.
+    open var contentSize: CGSize = .zero//{ set { bounds.size = contentSize } get { return bounds.size } } // TODO: Size of bounds should be equal frame size.
+    open var contentInset: EdgeInsets = .zero {
+        didSet {
+            if oldValue != contentInset {
+                let x = contentInset.left - oldValue.left
+                let y = contentInset.top - oldValue.top
 
+                contentOffset = CGPoint(x: contentOffset.x - x, y: contentOffset.y - y)
+            }
+        }
+    }
+
+    override public var layoutBounds: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x - contentOffset.x, y: frame.origin.y - contentOffset.y), size: contentSize) }
     /// Performs layout for subitems, which this layout guide manages, in layout space rect
     ///
     /// - Parameter rect: Space for layout
@@ -916,11 +1020,13 @@ open class ScrollLayoutGuide<Super: LayoutItem>: LayoutGuide<Super> {
     /// - Parameter frame: New frame value.
     /// - Returns: Content rect
     override open func contentRect(forFrame frame: CGRect) -> CGRect {
-        var contentRect = bounds
-        let lFrame = layoutBounds
-        let snapshotFrame = CGRect(x: lFrame.origin.x, y: lFrame.origin.y, width: max(contentRect.width, frame.width), height: max(contentRect.height, frame.height))
-        contentRect.size = layout.snapshot(for: snapshotFrame).snapshotFrame.distance(from: frame.origin)
-        return contentRect
+//        var contentRect = bounds
+//        let lFrame = layoutBounds
+//        let snapshotFrame = CGRect(x: lFrame.origin.x, y: lFrame.origin.y, width: max(contentRect.width, frame.width), height: max(contentRect.height, frame.height))
+//        contentRect.size = layout.snapshot(for: snapshotFrame).snapshotFrame.distance(from: frame.origin)
+//        return contentRect
+        var bounds = frame; bounds.origin = contentOffset
+        return bounds
     }
 }
 public extension ScrollLayoutGuide {
@@ -958,4 +1064,234 @@ public struct ScrollDirection: OptionSet {
     public static var horizontal: ScrollDirection = ScrollDirection(constraints: [.width()], rawValue: 1)
     public static var vertical: ScrollDirection = ScrollDirection(constraints: [.height()], rawValue: 2)
     public static var both: ScrollDirection = ScrollDirection(constraints: [.height(), .width()], rawValue: 0)
+}
+
+func LinearInterpolation(t: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
+    if t <= 0 {
+        return start
+    }
+    else if t >= 1 {
+        return end
+    }
+    else {
+        return t * end + (1 - t) * start
+    }
+}
+
+func QuadraticEaseOut(t: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
+    if t <= 0 {
+        return start
+    }
+    else if t >= 1 {
+        return end
+    }
+    else {
+        return LinearInterpolation(t: 2 * t - t * t, start: start, end: end)
+    }
+}
+
+protocol ScrollAnimation {
+    var beginTime: TimeInterval { get set }
+    func animateX()
+    func animateY()
+}
+
+struct ScrollAnimationDecelerationComponent {
+    var decelerateTime: TimeInterval
+    var position: CGFloat
+    var velocity: CGFloat
+    var returnTime: TimeInterval
+    var returnFrom: CGFloat
+    var bounced: Bool
+    var bouncing: Bool
+}
+
+private let minimumBounceVelocityBeforeReturning: CGFloat = 100
+private let returnAnimationDuration: TimeInterval = 0.33
+private let physicsTimeStep: TimeInterval = 1 / 120.0
+private let springTightness: CGFloat = 7
+private let springDampening: CGFloat = 15
+
+private func Clamp(v: CGFloat, min: CGFloat, max: CGFloat) -> CGFloat {
+    return (v < min) ? min : (v > max) ? max : v
+}
+
+private func ClampedVelocty(v: CGFloat) -> CGFloat {
+    let V: CGFloat = 500
+    return Clamp(v: v, min: -V, max: V)
+}
+
+private func Spring(velocity: CGFloat, position: CGFloat, restPosition: CGFloat, tightness: CGFloat, dampening: CGFloat) -> CGFloat {
+    let d: CGFloat = position - restPosition
+    return (-tightness * d) - (dampening * velocity)
+}
+
+private func BounceComponent(t: TimeInterval, c: inout ScrollAnimationDecelerationComponent, to: CGFloat) -> Bool {
+    if c.bounced && c.returnTime != 0 {
+        let returnBounceTime: TimeInterval = min(1, ((t - c.returnTime) / returnAnimationDuration))
+        c.position = QuadraticEaseOut(t: CGFloat(returnBounceTime), start: c.returnFrom, end: to)
+        return returnBounceTime == 1
+    }
+    else if abs(to - c.position) > 0 {
+        let F: CGFloat = Spring(velocity: c.velocity, position: c.position, restPosition: to, tightness: springTightness, dampening: springDampening)
+        c.velocity += F * CGFloat(physicsTimeStep)
+        c.position += -c.velocity * CGFloat(physicsTimeStep)
+        c.bounced = true
+        if abs(c.velocity) < minimumBounceVelocityBeforeReturning {
+            c.returnFrom = c.position
+            c.returnTime = t
+        }
+        return false
+    }
+    else {
+        return true
+    }
+}
+
+extension ScrollLayoutGuide {
+    func _confinedContentOffset(_ contentOffset: CGPoint) -> CGPoint {
+        let scrollerBounds: CGRect = EdgeInsetsInsetRect(bounds, contentInset)
+        var contentOffset = contentOffset
+        if (contentSize.width - contentOffset.x) < scrollerBounds.size.width {
+            contentOffset.x = contentSize.width - scrollerBounds.size.width
+        }
+        if (contentSize.height - contentOffset.y) < scrollerBounds.size.height {
+            contentOffset.y = contentSize.height - scrollerBounds.size.height
+        }
+        contentOffset.x = max(contentOffset.x, 0)
+        contentOffset.y = max(contentOffset.y, 0)
+        if contentSize.width <= scrollerBounds.size.width {
+            contentOffset.x = 0
+        }
+        if contentSize.height <= scrollerBounds.size.height {
+            contentOffset.y = 0
+        }
+        return contentOffset
+    }
+    func _setRestrainedContentOffset(_ offset: CGPoint) {
+        var offset = offset
+        let confinedOffset: CGPoint = _confinedContentOffset(offset)
+        let scrollerBounds: CGRect = EdgeInsetsInsetRect(bounds, contentInset)
+        if !(/*alwaysBounceHorizontal && */contentSize.width <= scrollerBounds.size.width) {
+            offset.x = confinedOffset.x
+        }
+        if !(/*alwaysBounceVertical && */contentSize.height <= scrollerBounds.size.height) {
+            offset.y = confinedOffset.y
+        }
+        contentOffset = offset
+    }
+}
+
+public class ScrollAnimationDeceleration<Item: LayoutItem>: ScrollAnimation {
+    private var x: ScrollAnimationDecelerationComponent
+    private var y: ScrollAnimationDecelerationComponent
+    private var lastMomentumTime: TimeInterval
+    private(set) weak var scrollGuide: ScrollLayoutGuide<Item>!
+    var beginTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+
+    public init(scrollGuide sg: ScrollLayoutGuide<Item>, velocity v: CGPoint) {
+        self.scrollGuide = sg
+
+        startVelocity = v
+        lastMomentumTime = beginTime
+        x = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
+                                                 position: scrollGuide.contentOffset.x,
+                                                 velocity: startVelocity.x,
+                                                 returnTime: 0,
+                                                 returnFrom: 0,
+                                                 bounced: false,
+                                                 bouncing: false)
+        y = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
+                                                 position: scrollGuide.contentOffset.y,
+                                                 velocity: startVelocity.y,
+                                                 returnTime: 0,
+                                                 returnFrom: 0,
+                                                 bounced: false,
+                                                 bouncing: false)
+        if x.velocity == 0 {
+            x.bounced = true
+            x.returnTime = beginTime
+            x.returnFrom = x.position
+        }
+        if y.velocity == 0 {
+            y.bounced = true
+            y.returnTime = beginTime
+            y.returnFrom = y.position
+        }
+    }
+
+    func animateY() {
+        let currentTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+        y.bouncing = true
+        while y.bouncing && currentTime >= beginTime {
+            let confinedOffset = scrollGuide._confinedContentOffset(CGPoint(x: x.position, y: y.position))
+            y.bouncing = !BounceComponent(t: beginTime, c: &y, to: confinedOffset.y)
+            beginTime += physicsTimeStep
+            scrollGuide.contentOffset.y = y.position//min(max(-scrollGuide.bounds.height, y.position), scrollGuide.layoutBounds.maxY - scrollGuide.bounds.height)
+        }
+    }
+
+    func animateX() {
+        let currentTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+        x.bouncing = true
+        while x.bouncing && currentTime >= beginTime {
+            let confinedOffset = scrollGuide._confinedContentOffset(CGPoint(x: x.position, y: y.position))
+            x.bouncing = !BounceComponent(t: beginTime, c: &x, to: confinedOffset.x)
+            beginTime += physicsTimeStep
+            scrollGuide.contentOffset.x = min(max(-scrollGuide.bounds.width/2, x.position), scrollGuide.layoutBounds.maxX - scrollGuide.bounds.width/2)
+        }
+    }
+
+    let timeInterval: CGFloat = 1/60
+    let startVelocity: CGPoint
+    var needBouncing = true
+
+    public func step(_ timer: Timer) {
+        func stopIfNeeded() {
+            if abs(x.velocity) <= 0.001 && abs(y.velocity) <= 0.001 {
+                timer.invalidate()
+            }
+        }
+
+        guard let guide = scrollGuide, (abs(x.velocity) >= 0.001 && abs(y.velocity) >= 0.001) else {
+            timer.invalidate()
+            return
+        }
+
+        var offset = guide.contentOffset
+        if needBouncing {
+            if !x.bouncing {
+                offset.x += -x.velocity * timeInterval
+            }
+            if !y.bouncing {
+                offset.y += -y.velocity * timeInterval
+            }
+
+            guide.contentOffset = offset
+            if (offset.x < 0 || offset.x > scrollGuide.contentSize.width - scrollGuide.frame.width) {
+                x.position = offset.x
+                animateX()
+                stopIfNeeded()
+            }
+            if (offset.y < 0 || offset.y > scrollGuide.contentSize.height - scrollGuide.frame.height) {
+                y.position = offset.y
+                animateY()
+                stopIfNeeded()
+            }
+        } else {
+            offset.x += -x.velocity * timeInterval
+            offset.y += -y.velocity * timeInterval
+            guide._setRestrainedContentOffset(offset)
+        }
+
+        lastMomentumTime = Date.timeIntervalSinceReferenceDate
+        let friction: CGFloat = 0.96
+        let drag: CGFloat = pow(pow(friction, 60), CGFloat(lastMomentumTime - beginTime))
+        if !x.bouncing {
+            x.velocity = startVelocity.x * drag
+        }
+        if !y.bouncing {
+            y.velocity = startVelocity.y * drag
+        }
+    }
 }

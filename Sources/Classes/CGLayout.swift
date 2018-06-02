@@ -101,6 +101,7 @@ public extension RectBasedLayout {
     ///   - constraints: Array of constraint items
     public func apply(for item: LayoutItem, use constraints: [LayoutConstraintProtocol]) {
         // TODO: ! Add flag for using layout margins. IMPL: Apply 'inset' constraint from LayotAnchor to super bounds.
+        debugFatalError(condition: item.superItem == nil, "Layout item is not in hierarchy")
         apply(for: item, in: item.superItem!.layoutBounds, use: constraints)
     }
     /// Use for layout `LayoutItem` entity in constrained source space using constraints. Must call only on main thread.
@@ -110,6 +111,7 @@ public extension RectBasedLayout {
     ///   - sourceRect: Source space
     ///   - constraints: Array of constraint items
     public func apply(for item: LayoutItem, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol]) {
+        debugFatalError(condition: item.superItem == nil, "Layout item is not in hierarchy")
         item.frame = layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)
     }
 
@@ -189,7 +191,7 @@ public protocol LayoutItem: class, RectBasedItem, LayoutCoordinateSpace {
     /// Internal space for layout subitems
     var layoutBounds: CGRect { get }
     /// Layout item that maintains this layout entity
-    weak var superItem: LayoutItem? { get }
+    var superItem: LayoutItem? { get }
     /// Entity that represents item in layout time
     var inLayoutTime: InLayoutTimeItem { get }
 
@@ -202,6 +204,8 @@ public protocol InLayoutTimeItem: RectBasedItem {
     var superItem: LayoutItem? { get }
     /// Internal layout space of super item
     var superLayoutBounds: CGRect { get }
+    /// Internal space for layout subitems
+    var layoutBounds: CGRect { get }
 }
 #if os(iOS) || os(tvOS)
 extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
@@ -256,18 +260,28 @@ extension LayoutItem {
     ///   - layout: Main layout for this entity
     ///   - constraints: Array of related constraint items
     /// - Returns: Related layout block
-    public func layoutBlock(with layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
+    public func layoutBlock(with layout: RectBasedLayout = Layout.equal, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
         return LayoutBlock(item: self, layout: layout, constraints: constraints)
+    }
+
+    func contentLayoutConstraint(for anchors: [RectBasedConstraint]) -> ContentLayoutConstraint {
+        return ContentLayoutConstraint(item: self, constraints: anchors)
     }
 }
 #if os(iOS) || os(tvOS)
-extension LayoutItem where Self: UIView {
+public extension LayoutItem where Self: UIView {
     /// Convenience getter for constraint item related to this entity
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related constraint item
-    public func layoutConstraint(for anchors: [RectBasedConstraint]) -> LayoutConstraint {
+    func layoutConstraint(for anchors: [RectBasedConstraint]) -> LayoutConstraint {
         var constraint = LayoutConstraint(item: self, constraints: anchors)
+        constraint.inLayoutTime = inLayoutTime
+        return constraint
+    }
+
+    func contentLayoutConstraint(for anchors: [RectBasedConstraint]) -> ContentLayoutConstraint {
+        var constraint = ContentLayoutConstraint(item: self, constraints: anchors)
         constraint.inLayoutTime = inLayoutTime
         return constraint
     }
@@ -416,7 +430,7 @@ public struct AdjustLayoutConstraint {
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     public /// Flag, defines that constraint may be used for layout
-    var isActive: Bool { return item?.superItem != nil }
+    var isActive: Bool { return item?.inLayoutTime.superItem != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return true }
@@ -454,6 +468,62 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     /// - Returns: Converted rect
     func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
         return rect
+    }
+}
+
+public struct ContentLayoutConstraint {
+    fileprivate let constraints: [RectBasedConstraint]
+    private(set) weak var item: LayoutItem?
+    internal var inLayoutTime: InLayoutTimeItem?
+    internal var inLayoutTimeItem: InLayoutTimeItem? {
+        return inLayoutTime ?? item?.inLayoutTime
+    }
+
+    public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
+        self.item = item
+        self.constraints = constraints
+    }
+}
+extension ContentLayoutConstraint: LayoutConstraintProtocol {
+    /// Flag, defines that constraint may be used for layout
+    public var isActive: Bool { return inLayoutTimeItem?.superItem != nil }
+
+    public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
+    var isIndependent: Bool { return false }
+
+    public /// `LayoutItem` object associated with this constraint
+    func layoutItem(is object: AnyObject) -> Bool { return item === object }
+
+    public /// Return rectangle for constrain source rect
+    ///
+    /// - Parameter currentSpace: Source rect in current state
+    /// - Parameter coordinateSpace: Working coordinate space
+    /// - Returns: Rect for constrain
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+        guard let layoutItem = inLayoutTimeItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+
+        return convert(rectIfNeeded: layoutItem.layoutBounds, to: coordinateSpace)
+    }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+        sourceRect = sourceRect.constrainedBy(rect: rect, use: constraints)
+    }
+
+    public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
+    ///
+    /// - Parameters:
+    ///   - rect: Initial rect
+    ///   - coordinateSpace: Destination coordinate space
+    /// - Returns: Converted rect
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
+        guard let item = self.item else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+
+        return coordinateSpace === item ? rect : coordinateSpace.convert(rect: rect, from: item)
     }
 }
 
@@ -509,6 +579,8 @@ public class MutableLayoutConstraint: LayoutConstraintProtocol {
 
 // MARK: LayoutBlock
 
+// TODO: Add take snapshot to specific level (or at least top level)
+
 /// Defines frame of layout block, and child blocks
 public protocol LayoutSnapshotProtocol {
     /// Frame of layout block represented as snapshot
@@ -523,12 +595,14 @@ extension CGRect: LayoutSnapshotProtocol {
     public var childSnapshots: [LayoutSnapshotProtocol] { return [] }
 }
 
+// TODO: ! Add snapshot getter for specific level of hierarchy
 /// Defines general methods for any layout block
 public protocol LayoutBlockProtocol {
     /// Flag, defines that block will be used for layout
     var isActive: Bool { get }
     /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol { get }
+    var currentRect: CGRect { get }
 
     /// Calculate and apply frames layout items.
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
@@ -600,6 +674,10 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
         guard let item = item else { fatalError(LayoutBlock.message(forNotActive: self)) }
         return item.inLayoutTime.frame
     }
+    public var currentRect: CGRect {
+        guard let item = item else { fatalError(LayoutBlock.message(forNotActive: self)) }
+        return item.inLayoutTime.frame
+    }
 
     public init(item: Item, layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) {
         self.item = item
@@ -667,10 +745,12 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
 
         item?.frame = snapshot.snapshotFrame
     }
+}
 
-    private static func message(forSkipped block: LayoutBlock) -> String { return "Layout block was skipped, because layout item not available in: \(self)" }
-    private static func message(forNotActive block: LayoutBlock) -> String { return "Layout block is not active, because layout item not available in: \(self)" }
-    private static func message(forMutating block: LayoutBlock) -> String { return "Mutating layout block is available only on main thread \(self)" }
+internal extension LayoutBlockProtocol {
+    static func message(forSkipped block: LayoutBlockProtocol) -> String { return "Layout block was skipped, because layout item not available in: \(self)" }
+    static func message(forNotActive block: LayoutBlockProtocol) -> String { return "Layout block is not active, because layout item not available in: \(self)" }
+    static func message(forMutating block: LayoutBlockProtocol) -> String { return "Mutating layout block is available only on main thread \(self)" }
 }
 
 /// LayoutScheme defines layout process for some layout blocks.
@@ -693,6 +773,11 @@ public struct LayoutScheme: LayoutBlockProtocol {
 
     public init(blocks: [LayoutBlockProtocol]) {
         self.blocks = blocks
+    }
+
+    public var currentRect: CGRect {
+        guard blocks.count > 0 else { fatalError(LayoutScheme.message(forNotActive: self)) }
+        return blocks.reduce(nil) { return $0?.union($1.currentRect) ?? $1.currentRect }!
     }
 
     public /// Calculate and apply frames layout items.
@@ -736,12 +821,12 @@ public struct LayoutScheme: LayoutBlockProtocol {
     ///   - completedRects: `LayoutItem` items with corrected frame
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
-        var snapshotFrame: CGRect!
+        var snapshotFrame: CGRect?
         return LayoutSnapshot(childSnapshots: blocks.map { block in
             let blockSnapshot = block.snapshot(for: sourceRect, completedRects: &completedRects)
             snapshotFrame = snapshotFrame?.union(blockSnapshot.snapshotFrame) ?? blockSnapshot.snapshotFrame
             return blockSnapshot
-        }, snapshotFrame: snapshotFrame)
+        }, snapshotFrame: snapshotFrame ?? .zero)
     }
 
     public mutating func insertLayout(block: LayoutBlockProtocol, to position: Int) {
@@ -761,6 +846,7 @@ public struct LayoutScheme: LayoutBlockProtocol {
 
 // TODO: ! Add center, baseline and other behaviors
 // TODO: !! Hide types that not used directly
+// TODO: RectBasedConstraint should have possible be wrapped by transformations (min, max, ...) 
 
 /// Provides set of anchor constraints
 public struct LayoutAnchor {
@@ -837,6 +923,19 @@ public struct LayoutAnchor {
         ///   - rect: Rect for constrain
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
             sourceRect = rect
+        }
+    }
+
+    /// Constraint, that makes source rect equally to passed rect
+    public static var zero: RectBasedConstraint { return Equal() }
+    private struct Fixed: RectBasedConstraint {
+        /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            sourceRect = .zero
         }
     }
 
@@ -1037,7 +1136,7 @@ public struct LayoutAnchor {
             ///   - sourceRect: Source space
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                sourceRect.size.height = rect.height.multiplied(by: multiplier)
+                sourceRect.size.height = rect.height * multiplier
             }
         }
 
@@ -1055,7 +1154,7 @@ public struct LayoutAnchor {
             ///   - sourceRect: Source space
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                sourceRect.size.width = rect.width.multiplied(by: multiplier)
+                sourceRect.size.width = rect.width * multiplier
             }
         }
     }
@@ -1436,6 +1535,8 @@ public struct Layout: RectBasedLayout {
             horizontal.formLayout(rect: &rect, in: source)
         }
 
+        public static var equal: Alignment { return Alignment(horizontal: .equal, vertical: .equal) }
+
         internal static func trailing(by axis: RectAxis, offset: CGFloat = 0) -> RectAxisLayout { return AxisTrailing(offset: offset, axis: axis) }
         struct AxisTrailing: RectAxisLayout {
             let offset: CGFloat
@@ -1485,6 +1586,13 @@ public struct Layout: RectBasedLayout {
             /// - Parameter base: Entity implements required behavior
             /// - Returns: Initialized entity
             static func build(_ base: RectBasedLayout) -> Layout.Alignment.Horizontal { return .init(base: base) }
+
+            public static var equal: Horizontal { return Horizontal(base: Equal()) }
+            private struct Equal: RectBasedLayout {
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.origin.x = source.origin.x
+                }
+            }
 
             /// Horizontal alignment by center of source rect
             ///
@@ -1541,6 +1649,13 @@ public struct Layout: RectBasedLayout {
             /// - Parameter base: Entity implements required behavior
             /// - Returns: Initialized entity
             static func build(_ base: RectBasedLayout) -> Layout.Alignment.Vertical { return .init(base: base) }
+
+            public static var equal: Vertical { return Vertical(base: Equal()) }
+            private struct Equal: RectBasedLayout {
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.origin.y = source.origin.y
+                }
+            }
 
             /// Vertical alignment by center of source rect
             ///
@@ -1605,6 +1720,8 @@ public struct Layout: RectBasedLayout {
             self.horizontal = horizontal
         }
 
+        public static var equal: Filling { return Filling(horizontal: .equal, vertical: .equal) }
+
         public struct Horizontal: RectBasedLayout, Extended {
             public typealias Conformed = RectBasedLayout
             fileprivate let base: RectBasedLayout
@@ -1624,10 +1741,12 @@ public struct Layout: RectBasedLayout {
             /// - Returns: Initialized entity
             static func build(_ base: RectBasedLayout) -> Layout.Filling.Horizontal { return .init(base: base) }
 
-//            public static var identity: Horizontal { return Horizontal(base: Identity()) }
-//            private struct Identity: RectBasedLayout {
-//                func layout(rect: inout CGRect, in source: CGRect) {}
-//            }
+            public static var equal: Horizontal { return Horizontal(base: Equal()) }
+            private struct Equal: RectBasedLayout {
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.size.width = source.width
+                }
+            }
 
             /// Provides rect with independed horizontal filling with fixed value
             ///
@@ -1649,7 +1768,7 @@ public struct Layout: RectBasedLayout {
             private struct Scaled: RectBasedLayout {
                 let scale: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
-                    rect.size.width = source.width.multiplied(by: scale)
+                    rect.size.width = source.width * scale
                 }
             }
 
@@ -1661,7 +1780,7 @@ public struct Layout: RectBasedLayout {
             private struct Boxed: RectBasedLayout {
                 let insets: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
-                    rect.size.width = max(0, source.width.subtracting(insets))
+                    rect.size.width = max(0, source.width - insets)
                 }
             }
         }
@@ -1684,10 +1803,12 @@ public struct Layout: RectBasedLayout {
             /// - Returns: Initialized entity
             static func build(_ base: RectBasedLayout) -> Layout.Filling.Vertical { return .init(base: base) }
 
-//            public static var identity: Vertical { return Vertical(base: Identity()) }
-//            private struct Identity: RectBasedLayout {
-//                func layout(rect: inout CGRect, in source: CGRect) {}
-//            }
+            public static var equal: Vertical { return Vertical(base: Equal()) }
+            private struct Equal: RectBasedLayout {
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.size.height = source.height
+                }
+            }
 
             /// Provides rect with independed vertical filling with fixed value
             ///
@@ -1709,7 +1830,7 @@ public struct Layout: RectBasedLayout {
             private struct Scaled: RectBasedLayout {
                 let scale: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
-                    rect.size.height = source.height.multiplied(by: scale)
+                    rect.size.height = source.height * scale
                 }
             }
 
@@ -1721,7 +1842,7 @@ public struct Layout: RectBasedLayout {
             private struct Boxed: RectBasedLayout {
                 let insets: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
-                    rect.size.height = max(0, source.height.subtracting(insets))
+                    rect.size.height = max(0, source.height - insets)
                 }
             }
         }
@@ -1746,13 +1867,29 @@ public extension Layout {
             rect = source
         }
     }
+
+    /// Layout behavior, that makes passed rect equally to  rect
+    public static func equal(_ value: CGRect) -> RectBasedLayout { return Constantly(value: value) }
+    private struct Constantly: RectBasedLayout {
+        let value: CGRect
+        func formLayout(rect: inout CGRect, in source: CGRect) {
+            rect = value
+        }
+    }
+}
+
+extension LayoutAnchor {
+    /// Layout behavior, that makes passed rect equally to  rect
+    public static func equal(_ value: CGRect) -> RectBasedConstraint { return Constantly(value: value) }
+    private struct Constantly: RectBasedConstraint {
+        let value: CGRect
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            sourceRect = value
+        }
+    }
 }
 
 public extension Layout {
-    public init(vertical: (alignment: Alignment.Vertical, filling: Filling.Vertical), horizontal: (alignment: Alignment.Horizontal, filling: Filling.Horizontal)) {
-        self.init(alignment: Alignment(horizontal: horizontal.alignment, vertical: vertical.alignment),
-                  filling: Filling(horizontal: horizontal.filling, vertical: vertical.filling))
-    }
     /// Convinience initializer similar CGRect initializer.
     ///
     /// - Parameters:
@@ -1789,5 +1926,34 @@ extension Layout.Filling {
     public func apply<Item: LayoutItem>(with alignment: Layout.Alignment, for item: Item, use constraints: [ConstrainRect]) {
         apply(for: item, use: constraints)
         alignment.apply(for: item, use: constraints)
+    }
+}
+
+public struct AnyRectBasedLayout: RectBasedLayout {
+    private let layout: (inout CGRect, CGRect) -> Void
+    public init(_ layout: @escaping (inout CGRect, CGRect) -> Void) { self.layout = layout }
+    public func formLayout(rect: inout CGRect, in source: CGRect) {
+        layout(&rect, source)
+    }
+}
+
+public extension Layout.Filling.Vertical {
+    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Filling.Vertical {
+        return build(AnyRectBasedLayout { $0.size.height = use($1) })
+    }
+}
+public extension Layout.Filling.Horizontal {
+    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Filling.Horizontal {
+        return build(AnyRectBasedLayout { $0.size.width = use($1) })
+    }
+}
+public extension Layout.Alignment.Vertical {
+    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Vertical {
+        return build(AnyRectBasedLayout { $0.origin.y = use($1) })
+    }
+}
+public extension Layout.Alignment.Horizontal {
+    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Horizontal {
+        return build(AnyRectBasedLayout { $0.origin.x = use($1) })
     }
 }

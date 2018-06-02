@@ -77,8 +77,8 @@ class ViewController: UIViewController {
         return ScrollLayoutGuide(contentItem: self.labelStack, direction: .vertical)
     }()
 
-    lazy var latestItemLayout = Layout(vertical: (.top(10), .boxed(20)),
-                                       horizontal: (.left(15), .fixed(30)))
+    lazy var latestItemLayout = Layout(alignment: Layout.Alignment(horizontal: .left(15), vertical: .top(10)),
+                                       filling: Layout.Filling(horizontal: .boxed(20), vertical: .fixed(30)))
     lazy var pulledLayout = Layout(x: .left(15), y: .top(10),
                                    width: .boxed(25), height: .boxed(20))
     lazy var bottomConstraint = LayoutAnchor.Bottom.limit(on: .inner)
@@ -125,6 +125,11 @@ class ViewController: UIViewController {
 
         scrollView.contentSize.height = view.frame.height.advanced(by: 2)
         scrollView.contentSize.width = view.frame.width
+
+        /// CALayer can insert by any index (work as zIndex)
+//        let testlayer = CALayer(frame: view.bounds)
+//        testlayer.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25).cgColor
+//        view.layer.insertSublayer(testlayer, at: .max)
     }
 
     override func viewDidLayoutSubviews() {
