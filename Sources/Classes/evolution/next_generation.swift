@@ -170,6 +170,16 @@ extension RectAnchorPoint {
         where Metric == A2.Metric, Axis == A2.Axis {
         return AxisAnchorPointConstraint { self.offset(rect: &$0, by: a2.get(for: $1)) }
     }
+    public func alignLimit<A2: RectAnchorPoint>(to a2: A2, compare: @escaping (Metric, Metric) -> Metric) -> AxisAnchorPointConstraint
+        where Metric == A2.Metric, Axis == A2.Axis {
+            return AxisAnchorPointConstraint {
+                let current = self.get(for: $0)
+                let limited = a2.get(for: $1)
+                if compare(current, limited) != current {
+                    self.offset(rect: &$0, by: limited)
+                }
+            }
+    }
     public func pull<A2: RectAnchorPoint>(to a2: A2) -> AxisAnchorPointConstraint
         where Metric == A2.Metric, Axis == A2.Axis {
             return AxisAnchorPointConstraint { self.move(in: &$0, to: a2.get(for: $1)) }
@@ -323,8 +333,8 @@ extension SizeRectAnchor where Metric == CGSize {
 //    public func scale(_ value: CGFloat, by scale: CGFloat, in rect: inout CGRect) { set(get(for: rect) * value, for: &rect) }
 }
 
-typealias CenterXAnchor = AxisCenterAnchor<_RectAxis.Horizontal>
-typealias CenterYAnchor = AxisCenterAnchor<_RectAxis.Vertical>
+public typealias CenterXAnchor = AxisCenterAnchor<_RectAxis.Horizontal>
+public typealias CenterYAnchor = AxisCenterAnchor<_RectAxis.Vertical>
 public struct AxisCenterAnchor<Axis: RectAxis>: RectAnchorPoint {
     static var horizontal: AxisCenterAnchor<_RectAxis.Horizontal> { return .init(axis: .init()) }
     static var vertical: AxisCenterAnchor<_RectAxis.Vertical> { return .init(axis: .init()) }

@@ -1,6 +1,6 @@
 //
 //  Layout.swift
-//  FirstAppObjC
+//  CGLayout
 //
 //  Created by Denis Koryttsev on 29/08/2017.
 //  Copyright © 2017 K-o-D-e-N. All rights reserved.

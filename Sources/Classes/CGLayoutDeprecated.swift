@@ -1,6 +1,6 @@
 //
 //  CGLayoutDeprecated.swift
-//  CGLayout-iOS
+//  CGLayout
 //
 //  Created by Denis Koryttsev on 07/10/2017.
 //

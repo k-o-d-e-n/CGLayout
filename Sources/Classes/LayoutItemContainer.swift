@@ -1,6 +1,6 @@
 //
 //  LayoutItemContainer.swift
-//  Pods
+//  CGLayout
 //
 //  Created by Denis Koryttsev on 01/10/2017.
 //

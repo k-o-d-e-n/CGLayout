@@ -1,6 +1,6 @@
 //
 //  CommonExtensions.swift
-//  Pods
+//  CGLayout
 //
 //  Created by Denis Koryttsev on 04/09/2017.
 //  Copyright © 2017 K-o-D-e-N. All rights reserved.
