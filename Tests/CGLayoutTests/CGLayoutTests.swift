@@ -224,7 +224,7 @@ class Window: View {
     //     get { return self }
     // }
 }
-class Label: View, AdjustableLayoutItem {
+class Label: View, AdjustableLayoutItem, TextPresentedItem {
     var text: String?
     var contentConstraint: RectBasedConstraint {
         struct Constraint: RectBasedConstraint {
@@ -237,6 +237,15 @@ class Label: View, AdjustableLayoutItem {
             }
         }
         return Constraint(this: self)
+    }
+
+    var baselinePosition: CGFloat = 14.0
+}
+extension LayoutItem where Self: Label {
+    func baselineLayoutConstraint(for anchors: [RectBasedConstraint]) -> BaselineLayoutConstraint {
+        var constraint = BaselineLayoutConstraint(item: self, constraints: anchors)
+        constraint.inLayoutTime = inLayoutTime
+        return constraint
     }
 }
 extension LayoutItem where Self: Window {
@@ -417,6 +426,37 @@ class CGLayoutTests: XCTestCase {
         XCTAssertTrue(view.layer.sublayers.contains(where: { $0 === subview.layer }))
     }
 
+    func testTextPresented() {
+        let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
+        let view = View(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
+        let label = Label(frame: CGRect(x: 0, y: 100, width: 200, height: 50))
+        window.addSubview(view)
+        window.addSubview(label)
+
+        let viewLayout = view.layoutBlock(constraints: [label.baselineLayoutConstraint(for: [LayoutAnchor.Bottom.align(by: .inner)])])
+
+        viewLayout.layout()
+
+        // print(view.frame)
+        XCTAssertTrue(view.frame.maxY == 100 + label.baselinePosition)
+    }
+
+    func testTextPresented2() {
+        let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
+        let label1 = Label(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
+        let label2 = Label(frame: CGRect(x: 0, y: 100, width: 200, height: 50))
+        label1.baselinePosition = 35.0
+        window.addSubview(label1)
+        window.addSubview(label2)
+
+        let label1Layout = label1.layoutBlock(constraints: [label2.baselineLayoutConstraint(for: [LayoutAnchor.Baseline.align(of: label1)])])
+
+        label1Layout.layout()
+
+        print(label1.frame)
+        XCTAssertTrue(label1.frame.minY == 100 + label2.baselinePosition - label1.baselinePosition)
+    }
+
     func testNewAnchors() {
         let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
         let sourceView = View(frame: CGRect(x: 100, y: 100, width: 300, height: 300))
@@ -522,7 +562,7 @@ class CGLayoutTests: XCTestCase {
 
         // print("Before: ", targetView.frame)
         layout.layout()
-        print("After: ", targetView.frame)
+        // print("After: ", targetView.frame)
 
         XCTAssertTrue(targetView.frame.origin.x == 150)
         XCTAssertTrue(targetView.frame.origin.y == 150)
@@ -535,6 +575,8 @@ class CGLayoutTests: XCTestCase {
         ("testTopAlignment", testTopAlignment),
         ("testContainer", testContainer),
         ("testContainer2", testContainer2),
+        ("testTextPresented", testTextPresented),
+        ("testTextPresented2", testTextPresented2),
         ("testNewAnchors", testNewAnchors),
         ("testNewAnchors2", testNewAnchors2),
         ("testNewAnchors3", testNewAnchors3),
