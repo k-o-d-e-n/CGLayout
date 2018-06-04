@@ -782,7 +782,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 /// Attention: before addition items to stack, need add stack layout guide to super layout item using `func add(layoutGuide:)` method.
 open class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, AdjustableLayoutItem, SelfSizedLayoutItem {
     private var insetAnchor: RectBasedConstraint?
-    fileprivate var items: [LayoutItem] = []
+    internal var items: [LayoutItem] = []
     /// StackLayoutScheme entity for configuring axis, distribution and other parameters.
     open lazy var scheme: StackLayoutScheme = StackLayoutScheme { [unowned self] in self.items }
     /// The list of items arranged by the stack layout guide
@@ -806,7 +806,7 @@ open class StackLayoutGuide<Parent: LayoutItemContainer>: LayoutGuide<Parent>, A
 //        }
     }
 
-    fileprivate func removeItem(_ item: LayoutItem) -> Bool {
+    internal func removeItem(_ item: LayoutItem) -> Bool {
         guard let index = items.index(where: { $0 === item }) else { return false }
         
         items.remove(at: index)

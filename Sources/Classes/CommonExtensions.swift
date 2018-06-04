@@ -8,24 +8,13 @@
 
 import Foundation
 
-internal func warning(_ isTruth: Bool, _ message: String) {
-    debugAction { if isTruth { printWarning(message) } }
-}
-
 internal func debugAction(_ action: () -> Void) {
     #if DEBUG
         action()
     #endif
 }
 
-internal func printWarning(_ message: String) {
-    #if DEBUG
-        debugPrint("CGLayout warning: \(message)")
-        if ProcessInfo.processInfo.arguments.contains("CGL_THROW_ON_WARNING") { fatalError() }
-    #endif
-}
-
-public func debugLog(_ message: String, _ file: String = #file, _ line: Int = #line) {
+internal func debugLog(_ message: String, _ file: String = #file, _ line: Int = #line) {
     debugAction {
         debugPrint("File: \(file)")
         debugPrint("Line: \(line)")
@@ -33,7 +22,20 @@ public func debugLog(_ message: String, _ file: String = #file, _ line: Int = #l
     }
 }
 
-internal func debugFatalError(condition: @autoclosure () -> Bool = true,
+internal func debugWarning(_ message: String) {
+    debugWarning(true, message)
+}
+
+internal func debugWarning(_ condition: @autoclosure () -> Bool, _ message: String) {
+    debugAction {
+        if condition() {
+            debugPrint("CGLayout WARNING: \(message)")
+            if ProcessInfo.processInfo.arguments.contains("CGL_THROW_ON_WARNING") { fatalError() }
+        }
+    }
+}
+
+internal func debugFatalError(_ condition: @autoclosure () -> Bool = true,
                               _ message: String = "", _ file: String = #file, _ line: Int = #line) {
     debugAction {
         if condition() {

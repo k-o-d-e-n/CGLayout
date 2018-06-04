@@ -101,7 +101,7 @@ public extension RectBasedLayout {
     ///   - constraints: Array of constraint items
     public func apply(for item: LayoutItem, use constraints: [LayoutConstraintProtocol]) {
         // TODO: ! Add flag for using layout margins. IMPL: Apply 'inset' constraint from LayotAnchor to super bounds.
-        debugFatalError(condition: item.superItem == nil, "Layout item is not in hierarchy")
+        debugFatalError(item.superItem == nil, "Layout item is not in hierarchy")
         apply(for: item, in: item.superItem!.layoutBounds, use: constraints)
     }
     /// Use for layout `LayoutItem` entity in constrained source space using constraints. Must call only on main thread.
@@ -111,7 +111,7 @@ public extension RectBasedLayout {
     ///   - sourceRect: Source space
     ///   - constraints: Array of constraint items
     public func apply(for item: LayoutItem, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol]) {
-        debugFatalError(condition: item.superItem == nil, "Layout item is not in hierarchy")
+        debugFatalError(item.superItem == nil, "Layout item is not in hierarchy")
         item.frame = layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)
     }
 
@@ -212,6 +212,15 @@ public protocol TextPresentedItem {
     var baselinePosition: CGFloat { get }
 }
 
+#if os(iOS) || os(tvOS) || os(macOS)
+extension CALayer: LayoutItem {
+    public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
+    public var layoutBounds: CGRect { return bounds }
+    public var superItem: LayoutItem? { return superlayer }
+    public func removeFromSuperItem() { removeFromSuperlayer() }
+}
+#endif
+
 #if os(iOS) || os(tvOS)
 extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
     /// Constraint, that defines content size for item
@@ -221,7 +230,7 @@ extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
     public /// Internal space for layout subitems
     var layoutBounds: CGRect { return bounds }
     /// Layout item that maintained this layout entity
-    public weak var superItem: LayoutItem? { return superview }
+    public var superItem: LayoutItem? { return superview }
     /// Removes layout item from hierarchy
     public func removeFromSuperItem() { removeFromSuperview() }
 }
@@ -753,7 +762,7 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     public /// Calculate and apply frames layout items.
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout() {
-        guard let item = item else { printWarning(LayoutBlock.message(forSkipped: self)); return }
+        guard let item = item else { return debugWarning(LayoutBlock.message(forSkipped: self)) }
 
         itemLayout.apply(for: item, use: constraints.lazy.filter { $0.isActive })
     }
@@ -762,7 +771,7 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
     ///
     /// - Parameter sourceRect: Source space
     func layout(in sourceRect: CGRect) {
-        guard let item = item else { printWarning(LayoutBlock.message(forSkipped: self)); return }
+        guard let item = item else { return debugWarning(LayoutBlock.message(forSkipped: self)) }
 
         itemLayout.apply(for: item, in: sourceRect, use: constraints.lazy.filter { $0.isActive })
     }
@@ -790,7 +799,7 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
         let source = constraints.lazy.filter { $0.isActive }.reduce(sourceRect) { (result, constraint) -> CGRect in
             let rect = constraint.isIndependent ? nil : completedRects.first { constraint.layoutItem(is: $0.0) }?.1
 
-            warning(!constraint.isIndependent && rect == nil, "Constraint operates with not actual frame of item: \(constraint)")
+            debugWarning(!constraint.isIndependent && rect == nil, "Constraint operates with not actual frame of item: \(constraint)")
 
             let constrainRect = rect.map { constraint.convert(rectIfNeeded: $0, to: superItem) } /// converts rect to current coordinate space if needed
                 ?? constraint.constrainRect(for: result, in: superItem)

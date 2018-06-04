@@ -14,20 +14,11 @@ import Foundation
 //}
 
 public protocol LayoutItemContainer: LayoutItem {
-    var sublayoutItems: [LayoutItem]? { get }
     func addSublayoutItem<SubItem: LayoutItem>(_ subItem: SubItem)
-    func setNeedsLayout()
 }
 
 #if os(macOS) || os(iOS) || os(tvOS)
-extension CALayer: LayoutItemContainer, InLayoutTimeItem {
-    public var layoutBounds: CGRect { return bounds }
-    public var inLayoutTime: InLayoutTimeItem { return self }
-    public var superLayoutBounds: CGRect { return superItem!.layoutBounds }
-    public weak var superItem: LayoutItem? { return superlayer }
-    public var sublayoutItems: [LayoutItem]? { return sublayers }
-    public func removeFromSuperItem() { removeFromSuperlayer() }
-
+extension CALayer: LayoutItemContainer {
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
 
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {
@@ -36,13 +27,15 @@ extension CALayer: LayoutItemContainer, InLayoutTimeItem {
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
         addSublayer(subItem)
     }
+    public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : UIView {
+        addSublayer(subItem.layer)
+        debugWarning("Adds 'UIView' element to 'CALayer' element directly has ambiguous behavior")
+    }
 }
 #endif
 
 #if os(iOS) || os(tvOS)
 extension UIView: LayoutItemContainer {
-    public var sublayoutItems: [LayoutItem]? { return subviews }
-
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
 
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {

@@ -3,4 +3,5 @@ import XCTest
 
 XCTMain([
     testCase(CGLayoutTests.allTests),
+    testCase(Tests.allTests)
 ])
