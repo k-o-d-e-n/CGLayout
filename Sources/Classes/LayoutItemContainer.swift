@@ -19,7 +19,11 @@ public protocol LayoutItemContainer: LayoutItem {
 
 #if os(macOS) || os(iOS) || os(tvOS)
 extension CALayer: LayoutItemContainer {
-    public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
+    public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {
+        debugFatalError("\(self) cannot add subitem \(subItem). Reason: Undefined type of subitem")
+
+        // TODO: Implement addition subitem with type cast
+    }
 
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {
         add(layoutGuide: subItem)
@@ -36,7 +40,11 @@ extension CALayer: LayoutItemContainer {
 
 #if os(iOS) || os(tvOS)
 extension UIView: LayoutItemContainer {
-    public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {}
+    public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutItem {
+        debugFatalError("\(self) cannot add subitem \(subItem). Reason: Undefined type of subitem")
+
+        // TODO: Implement addition subitem with type cast
+    }
 
     public func addSublayoutItem<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {
         layer.add(layoutGuide: subItem)
