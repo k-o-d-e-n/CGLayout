@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // "type": "",
+            "request": "launch",
+            "name": "Test",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "swift-test"
+        },
+        {
+            // "type": "",
+            "request": "launch",
+            "name": "Build",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "swift-build"
+        }
+    ]
+}

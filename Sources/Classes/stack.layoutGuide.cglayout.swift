@@ -14,14 +14,22 @@ import Foundation
 
 /// Base protocol for any layout distribution
 protocol RectBasedDistribution {
-    func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect]
+    func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect)
+}
+extension RectBasedDistribution {
+    func distribute(rects: [CGRect], in sourceRect: CGRect) -> [CGRect] {
+        let pointer = UnsafeMutablePointer<CGRect>.allocate(capacity: rects.count)
+        pointer.initialize(from: rects)
+        formDistribute(rectsBy: pointer, count: rects.count, in: sourceRect)
+        return (0..<rects.count).map { pointer[$0] }
+    }
 }
 
 /// Implementation space for distributions
 struct LayoutDistribution: RectBasedDistribution {
     private let base: RectBasedDistribution
-    func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect] {
-        return base.distribute(rects: rects, in: sourceRect, iterator: iterator)
+    func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
+        return base.formDistribute(rectsBy: pointer, count: count, in: sourceRect)
     }
 
     /// Defines distribution arranged items from leading side (top, left) in specific axis.
@@ -37,8 +45,9 @@ struct LayoutDistribution: RectBasedDistribution {
         let axis: RectAxis
         let spacing: CGFloat
 
-        func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect] {
-            return LayoutDistribution.distributeFromLeading(rects: rects, in: sourceRect, by: axis, spacing: spacing, iterator: iterator)
+        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
+            let rects = LayoutDistribution.distributeFromLeading(rects: (0..<count).map { pointer[$0] }, in: sourceRect, by: axis, spacing: spacing)
+            (0..<count).forEach { pointer[$0] = rects[$0] }
         }
     }
     /// Defines distribution arranged items from trailing side (bottom, right) in specific axis.
@@ -54,8 +63,9 @@ struct LayoutDistribution: RectBasedDistribution {
         let axis: RectAxis
         let spacing: CGFloat
 
-        func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect] {
-            return LayoutDistribution.distributeFromTrailing(rects: rects, in: sourceRect, by: axis, spacing: spacing, iterator: iterator)
+        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
+            let rects = LayoutDistribution.distributeFromTrailing(rects: (0..<count).map { pointer[$0] }, in: sourceRect, by: axis, spacing: spacing)
+            (0..<count).forEach { pointer[$0] = rects[$0] }
         }
     }
 
@@ -71,17 +81,16 @@ struct LayoutDistribution: RectBasedDistribution {
         let baseDistribution: RectBasedDistribution & AxisEntity
         var axis: RectAxis { return baseDistribution.axis }
 
-        func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect] {
-            let frames = baseDistribution.distribute(rects: rects, in: sourceRect, iterator: {_ in})
-            let offset = axis.get(midOf: sourceRect) - (((axis.get(maxOf: frames.last!) - axis.get(minOf: frames.first!)) / 2) + axis.get(minOf: frames.first!))
+        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
+            baseDistribution.formDistribute(rectsBy: pointer, count: count, in: sourceRect)
+            let first = pointer[0]
+            let last = pointer[count-1]
+            let offset = axis.get(midOf: sourceRect) - (((axis.get(maxOf: last) - axis.get(minOf: first)) / 2) + axis.get(minOf: first))
 
-            return frames.map {
-                let offsetRect = axis.offset(rect: $0, by: offset)
-                iterator(offsetRect)
-                return offsetRect
+            (0..<count).forEach {
+                pointer[$0] = axis.offset(rect: pointer[$0], by: offset)
             }
         }
-
     }
     /// Defines distribution with equally spaces between arranged items.
     ///
@@ -92,29 +101,29 @@ struct LayoutDistribution: RectBasedDistribution {
         func by(axis: RectAxis) -> LayoutDistribution.EqualSpacing { return .init(axis: axis) }
         let axis: RectAxis
 
-        func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void) -> [CGRect] {
-            let fullLength = rects.reduce(0) { $0 + axis.get(sizeAt: $1) }
-            let spacing = (axis.get(sizeAt: sourceRect) - fullLength) / CGFloat(rects.count - 1)
+        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
+            var rects = (0..<count).map { pointer[$0] }
+            let fullLength = rects.reduce(0.0) { $0 + axis.get(sizeAt: $1) }
+            let spacing = (axis.get(sizeAt: sourceRect) - fullLength) / CGFloat(count - 1)
 
-            return LayoutDistribution.distributeFromLeading(rects: rects, in: sourceRect, by: axis, spacing: spacing, iterator: iterator)
+            rects = LayoutDistribution.distributeFromLeading(rects: rects, in: sourceRect, by: axis, spacing: spacing)
+            (0..<count).forEach { pointer[$0] = rects[$0] }
         }
     }
-    static func distributeFromLeading(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat, iterator: (CGRect) -> Void) -> [CGRect] {
+    static func distributeFromLeading(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat) -> [CGRect] {
         var previous: CGRect?
         return rects.map { rect in
             var rect = rect
             axis.set(origin: (previous.map { _ in spacing } ?? 0) + (previous.map { axis.get(maxOf: $0) } ?? axis.get(minOf: sourceRect)), for: &rect)
-            iterator(rect)
             previous = rect
             return rect
         }
     }
-    static func distributeFromTrailing(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat, iterator: (CGRect) -> Void) -> [CGRect] {
+    static func distributeFromTrailing(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat) -> [CGRect] {
         var previous: CGRect?
         return rects.map { rect in
             var rect = rect
             axis.set(origin: (previous.map { _ in -spacing } ?? 0) + (previous.map { axis.get(minOf: $0) } ?? (axis.get(maxOf: sourceRect))) - axis.get(sizeAt: rect), for: &rect)
-            iterator(rect)
             previous = rect
             return rect
         }
@@ -151,9 +160,8 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         private let base: RectBasedDistribution & AxisEntity
         internal var axis: RectAxis { return base.axis }
 
-        @discardableResult
-        func distribute(rects: [CGRect], in sourceRect: CGRect, iterator: (CGRect) -> Void = {_ in}) -> [CGRect] {
-            return base.distribute(rects: rects, in: sourceRect, iterator: iterator)
+        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
+            return base.formDistribute(rectsBy: pointer, count: count, in: sourceRect)
         }
 
         public static func fromLeft(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromLeading(axis: _RectAxis.horizontal, spacing: spacing)) }
@@ -264,11 +272,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         let subItems = items()
         guard let sourceRect = subItems.first?.superItem!.frame else { return }
 
-        let frames: [CGRect] = subItems.map { subItem in
-            return alignment.layout(rect: filling.filling(for: subItem, in: sourceRect), in: sourceRect)
-        }
-        var itemsIterator = subItems.makeIterator()
-        distribution.distribute(rects: frames, in: sourceRect, iterator: { itemsIterator.next()?.frame = $0 })
+        layout(in: sourceRect)
     }
 
     public /// Calculate and apply frames layout items in custom space.
@@ -276,11 +280,11 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     /// - Parameter sourceRect: Source space
     func layout(in sourceRect: CGRect) {
         let subItems = items()
-        let frames: [CGRect] = subItems.map { subItem in
+        var frames: [CGRect] = subItems.map { subItem in
             return alignment.layout(rect: filling.filling(for: subItem, in: sourceRect), in: sourceRect)
         }
-        var itemsIterator = subItems.makeIterator()
-        distribution.distribute(rects: frames, in: sourceRect, iterator: { itemsIterator.next()?.frame = $0 })
+        frames = distribution.distribute(rects: frames, in: sourceRect)
+        zip(subItems, frames).forEach { $0.frame = $1 }
     }
 
     public /// Applying frames from snapshot to `LayoutItem` items in this block.
@@ -312,15 +316,15 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
         let subItems = items()
-        var snapshotFrame: CGRect?
+        let frames = distribution.distribute(
+            rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
+            in: sourceRect
+        )
         var iterator = subItems.makeIterator()
-        let frames = distribution.distribute(rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
-                                             in: sourceRect,
-                                             iterator: {
-                                                completedRects.insert((iterator.next()!, $0), at: 0)
-                                                snapshotFrame = snapshotFrame?.union($0) ?? $0
-
-        })
+        let snapshotFrame = frames.reduce(into: frames.first) { snapRect, current in
+            completedRects.insert((iterator.next()!, current), at: 0)
+            snapRect = snapRect?.union(current) ?? current
+        }
         return LayoutSnapshot(childSnapshots: frames, snapshotFrame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
     }
 }

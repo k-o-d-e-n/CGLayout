@@ -1,0 +1,6 @@
+{
+    // The fully path to the sourcekite(SDE's LS backend).
+    "swift.path.sourcekite": "/home/k-o-d-e-n/Downloads/sourcekite/.build/release/sourcekite",
+    // The fully path to the swift driver binary.
+    "swift.path.swift_driver_bin": "/opt/swift-4.1-RELEASE-ubuntu16.10/"
+}

@@ -753,7 +753,7 @@ extension Tests {
         let distribution = LayoutDistribution.fromTrailing(by: _RectAxis.vertical, spacing: 2)
 
         var previous: CGRect?
-        let distributedFrames = distribution.distribute(rects: frames, in: bounds, iterator: {_ in})
+        let distributedFrames = distribution.distribute(rects: frames, in: bounds)
 
         var iterator = distributedFrames.makeIterator()
         previous = iterator.next()
@@ -763,6 +763,42 @@ extension Tests {
 
             previous = next
         }
+    }
+    func testLayoutDistributionFunc1Performance() {
+        func distribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
+            let size = sourceRect.width / CGFloat(count)
+            for i in (0..<count) {
+                pointer[i].origin.x = CGFloat(i) * size
+                pointer[i].size.width = size
+            }
+        }
+        let count = 2
+        let pointer = UnsafeMutablePointer<CGRect>.allocate(capacity: count)
+        pointer.initialize(from: [.zero, .zero])
+        self.measure {
+            distribute(rectsBy: pointer, count: count, in: CGRect(x: 0, y: 0, width: 200, height: 200))
+        }
+        print((0..<count).map { pointer[$0] })
+    }
+    func testLayoutDistributionFunc2Performance() {
+        func distribute(rects: inout [UnsafeMutablePointer<CGRect>], in sourceRect: CGRect) {
+            let count = CGFloat(rects.count)
+            let size = sourceRect.width / count
+            for (i, pointer) in rects.enumerated() {
+                pointer.pointee.origin.x = CGFloat(i) * size
+                pointer.pointee.size.width = size
+            }
+        }
+        var rect1: CGRect = .zero
+        var rect2: CGRect = .zero
+        var rects: [UnsafeMutablePointer<CGRect>] = [
+            UnsafeMutablePointer<CGRect>(&rect1), 
+            UnsafeMutablePointer<CGRect>(&rect2)
+        ]
+        self.measure {
+            distribute(rects: &rects, in: CGRect(x: 0, y: 0, width: 200, height: 200))
+        }
+        print(rects.map { $0.pointee })
     }
     func testStackLayoutScheme() {
         let views = (0..<5).map { _ in View(frame: .random(in: bounds)) }
@@ -990,6 +1026,8 @@ extension Tests {
         ("testCurrentSnapshotEqualLayoutDirectly", testCurrentSnapshotEqualLayoutDirectly),
         ("testCoordinateSpacePointLayoutGuide", testCoordinateSpacePointLayoutGuide),
         ("testLayoutDistribution", testLayoutDistribution),
+        ("testLayoutDistributionFunc1Performance", testLayoutDistributionFunc1Performance),
+        ("testLayoutDistributionFunc2Performance", testLayoutDistributionFunc2Performance),
         ("testStackLayoutScheme", testStackLayoutScheme),
         ("testStackLayoutGuideSizeThatFits", testStackLayoutGuideSizeThatFits),
         ("testStackLayoutGuideAddRemoveLayoutItems", testStackLayoutGuideAddRemoveLayoutItems),
