@@ -467,11 +467,11 @@ extension SizeRectAnchor where Metric == CGSize {
 //    public func scale(_ value: CGFloat, by scale: CGFloat, in rect: inout CGRect) { set(get(for: rect) * value, for: &rect) }
 }
 
-public typealias CenterXAnchor = AxisCenterAnchor<_RectAxis.Horizontal>
-public typealias CenterYAnchor = AxisCenterAnchor<_RectAxis.Vertical>
+public typealias CenterXAnchor = AxisCenterAnchor<CGRectAxis.Horizontal>
+public typealias CenterYAnchor = AxisCenterAnchor<CGRectAxis.Vertical>
 public struct AxisCenterAnchor<Axis: RectAxis>: RectAnchorPoint {
-    static var horizontal: AxisCenterAnchor<_RectAxis.Horizontal> { return .init(axis: .init()) }
-    static var vertical: AxisCenterAnchor<_RectAxis.Vertical> { return .init(axis: .init()) }
+    static var horizontal: AxisCenterAnchor<CGRectAxis.Horizontal> { return .init(axis: .init()) }
+    static var vertical: AxisCenterAnchor<CGRectAxis.Vertical> { return .init(axis: .init()) }
 
     public let axis: Axis
     public func offset(rect: inout CGRect, by value: CGFloat) { axis.offset(midOf: &rect, to: value) }
@@ -479,19 +479,19 @@ public struct AxisCenterAnchor<Axis: RectAxis>: RectAnchorPoint {
     public func get(for rect: CGRect) -> CGFloat { return axis.get(midOf: rect) }
 }
 public struct BottomAnchor: RectAnchorPoint {
-    public let axis = _RectAxis.vertical
+    public let axis = CGRectAxis.vertical
     public func offset(rect: inout CGRect, by value: CGFloat) { axis.offset(maxOf: &rect, to: value) }
     public func move(in rect: inout CGRect, to value: CGFloat) { axis.move(maxOf: &rect, to: value) }
     public func get(for rect: CGRect) -> CGFloat { return axis.get(maxOf: rect) }
 }
 public struct RightAnchor: RectAnchorPoint {
-    public let axis = _RectAxis.horizontal
+    public let axis = CGRectAxis.horizontal
     public func offset(rect: inout CGRect, by value: CGFloat) { axis.offset(maxOf: &rect, to: value) }
     public func move(in rect: inout CGRect, to value: CGFloat) { axis.move(maxOf: &rect, to: value) }
     public func get(for rect: CGRect) -> CGFloat { return axis.get(maxOf: rect) }
 }
-public typealias WidthAnchor = AxisSizeAnchor<_RectAxis.Horizontal>
-public typealias HeightAnchor = AxisSizeAnchor<_RectAxis.Vertical>
+public typealias WidthAnchor = AxisSizeAnchor<CGRectAxis.Horizontal>
+public typealias HeightAnchor = AxisSizeAnchor<CGRectAxis.Vertical>
 public struct AxisSizeAnchor<Axis: RectAxis>: AxisLayoutEntity, SizeRectAnchor {
     static var width: WidthAnchor { return .init(axis: .init()) }
     static var height: HeightAnchor { return .init(axis: .init()) }
@@ -501,19 +501,19 @@ public struct AxisSizeAnchor<Axis: RectAxis>: AxisLayoutEntity, SizeRectAnchor {
     public func get(for rect: CGRect) -> CGFloat { return axis.get(sizeAt: rect) }
 }
 public struct TopAnchor: RectAnchorPoint {
-    public let axis = _RectAxis.vertical
+    public let axis = CGRectAxis.vertical
     public func offset(rect: inout CGRect, by value: CGFloat) { axis.offset(minOf: &rect, to: value) }
     public func move(in rect: inout CGRect, to value: CGFloat) { axis.move(minOf: &rect, to: value) }
     public func get(for rect: CGRect) -> CGFloat { return axis.get(minOf: rect) }
 }
 public struct LeftAnchor: RectAnchorPoint {
-    public let axis = _RectAxis.horizontal
+    public let axis = CGRectAxis.horizontal
     public func offset(rect: inout CGRect, by value: CGFloat) { axis.offset(minOf: &rect, to: value) }
     public func move(in rect: inout CGRect, to value: CGFloat) { axis.move(minOf: &rect, to: value) }
     public func get(for rect: CGRect) -> CGFloat { return axis.get(minOf: rect) }
 }
-public typealias HorizontalAnchor = AnyAxisAnchorPoint<_RectAxis.Horizontal>
-public typealias VerticalAnchor = AnyAxisAnchorPoint<_RectAxis.Vertical>
+public typealias HorizontalAnchor = AnyAxisAnchorPoint<CGRectAxis.Horizontal>
+public typealias VerticalAnchor = AnyAxisAnchorPoint<CGRectAxis.Vertical>
 public struct AnyAxisAnchorPoint<Axis: RectAxis>: RectAnchorPoint {
     let offset: (inout CGRect, CGFloat) -> Void
     let move: (inout CGRect, CGFloat) -> Void
@@ -532,9 +532,9 @@ public struct AnyAxisAnchorPoint<Axis: RectAxis>: RectAnchorPoint {
     public func get(for rect: CGRect) -> CGFloat { return get(rect) }
 }
 public struct CenterAnchor: RectAnchorPoint {
-    public let axis = _RectAxis.xy
-    public var horizontal: AxisCenterAnchor<_RectAxis.Horizontal> { return .horizontal }
-    public var vertical: AxisCenterAnchor<_RectAxis.Vertical> { return .vertical }
+    public let axis = CGRectAxis.xy
+    public var horizontal: AxisCenterAnchor<CGRectAxis.Horizontal> { return .horizontal }
+    public var vertical: AxisCenterAnchor<CGRectAxis.Vertical> { return .vertical }
     public func offset(rect: inout CGRect, by value: CGPoint) {
         horizontal.offset(rect: &rect, by: value.x)
         vertical.offset(rect: &rect, by: value.y)
@@ -548,7 +548,7 @@ public struct CenterAnchor: RectAnchorPoint {
     public func get(for rect: CGRect) -> CGPoint { return CGPoint(x: horizontal.get(for: rect), y: vertical.get(for: rect)) }
 }
 public struct OriginAnchor: RectAnchorPoint {
-    public let axis = _RectAxis.xy
+    public let axis = CGRectAxis.xy
     let horizontalAnchor: HorizontalAnchor
     let verticalAnchor: VerticalAnchor
     public func offset(rect: inout CGRect, by value: CGPoint) {
@@ -567,7 +567,9 @@ public struct SizeAnchor: SizeRectAnchor {
     public typealias Metric = CGSize
 }
 
-public protocol RectAxis { // TODO: Add associatedtype Metric, 
+public protocol RectAxis { // TODO: Add associatedtype Metric,
+    var isHorizontal: Bool { get }
+    var isVertical: Bool { get }
     func set(size: CGFloat, for rect: inout CGRect)
     func get(sizeAt rect: CGRect) -> CGFloat
     func set(origin: CGFloat, for rect: inout CGRect)
@@ -611,12 +613,14 @@ extension RectAxis {
     func move(maxOf rect: inout CGRect, to newMax: CGFloat) { set(size: max(0, newMax - get(minOf: rect)), for: &rect) }
 }
 extension RectAxis {
-    func transverse() -> RectAxis { return self is _RectAxis.Horizontal ? _RectAxis.vertical : _RectAxis.horizontal }
+    func transverse() -> RectAxis { return self is CGRectAxis.Horizontal ? CGRectAxis.vertical : CGRectAxis.horizontal }
 }
 
-public struct _RectAxis: RectAxis {
+public struct CGRectAxis: RectAxis {
     let base: RectAxis
 
+    public var isHorizontal: Bool { return base.isHorizontal }
+    public var isVertical: Bool { return base.isVertical }
     public func set(size: CGFloat, for rect: inout CGRect) { base.set(size: size, for: &rect) }
     public func set(origin: CGFloat, for rect: inout CGRect) { base.set(origin: origin, for: &rect) }
     public func get(originAt rect: CGRect) -> CGFloat { return base.get(originAt: rect) }
@@ -626,11 +630,13 @@ public struct _RectAxis: RectAxis {
     public func get(midOf rect: CGRect) -> CGFloat { return base.get(midOf: rect) }
     public func offset(rect: CGRect, by value: CGFloat) -> CGRect { return base.offset(rect: rect, by: value) }
 
-    public static var xy: _RectAxis.XY = .init()
+    public static var xy: CGRectAxis.XY = .init()
     public struct XY: RectAxis {
-        let x = _RectAxis.horizontal
-        let y = _RectAxis.vertical
+        let x = CGRectAxis.horizontal
+        let y = CGRectAxis.vertical
 
+        public var isHorizontal: Bool { return true }
+        public var isVertical: Bool { return true }
         public func set(size: CGFloat, for rect: inout CGRect) { x.set(size: size, for: &rect); y.set(size: size, for: &rect) }
         public func set(origin: CGFloat, for rect: inout CGRect) { x.set(origin: origin, for: &rect); y.set(origin: origin, for: &rect) }
         public func get(originAt rect: CGRect) -> CGFloat { return rect.origin.x }
@@ -641,8 +647,10 @@ public struct _RectAxis: RectAxis {
         public func offset(rect: CGRect, by value: CGFloat) -> CGRect { return rect.offsetBy(dx: value, dy: value) }
     }
 
-    public static var horizontal: _RectAxis.Horizontal = Horizontal()
+    public static var horizontal: CGRectAxis.Horizontal = Horizontal()
     public struct Horizontal: RectAxis {
+        public var isHorizontal: Bool { return true }
+        public var isVertical: Bool { return false }
         public func set(size: CGFloat, for rect: inout CGRect) { rect.size.width = size }
         public func set(origin: CGFloat, for rect: inout CGRect) { rect.origin.x = origin }
         public func get(originAt rect: CGRect) -> CGFloat { return rect.origin.x }
@@ -673,8 +681,10 @@ public struct _RectAxis: RectAxis {
 //        func move(maxOf rect: inout CGRect, to newMax: CGFloat) { rect.size.width = max(0, newMax - rect.minX) }
     }
 
-    public static var vertical: _RectAxis.Vertical = Vertical()
+    public static var vertical: CGRectAxis.Vertical = Vertical()
     public struct Vertical: RectAxis {
+        public var isHorizontal: Bool { return false }
+        public var isVertical: Bool { return true }
         public func set(size: CGFloat, for rect: inout CGRect) { rect.size.height = size }
         public func set(origin: CGFloat, for rect: inout CGRect) { rect.origin.y = origin }
         public func get(sizeAt rect: CGRect) -> CGFloat { return rect.height }
@@ -818,16 +828,16 @@ public struct LayoutWorkspace {
 }
 
 struct _RectAnchor {
-    static var leadingHorizontal = AnyAnchor<CGFloat>(getter: _RectAxis.horizontal.get(minOf:))
-    static var trailingHorizontal = AnyAnchor<CGFloat>(getter: _RectAxis.horizontal.get(maxOf:))
-    static var leadingVertical = AnyAnchor<CGFloat>(getter: _RectAxis.vertical.get(minOf:))
-    static var trailingVertical = AnyAnchor<CGFloat>(getter: _RectAxis.vertical.get(maxOf:))
-    static var centerHorizontal = AnyAnchor<CGFloat>(getter: _RectAxis.horizontal.get(midOf:))
-    static var centerVertical = AnyAnchor<CGFloat>(getter: _RectAxis.vertical.get(midOf:))
-    static var center = AnyAnchor<CGPoint>(getter: { CGPoint(x: _RectAxis.horizontal.get(midOf: $0), y: _RectAxis.vertical.get(midOf: $0)) })
-    static var sizeHorizontal = AnyAnchor<CGFloat>(getter: _RectAxis.horizontal.get(sizeAt:))
-    static var sizeVertical = AnyAnchor<CGFloat>(getter: _RectAxis.vertical.get(sizeAt:))
-    static var size = AnyAnchor<CGSize>(getter: { $0.size })//CGSize(width: _RectAxis.horizontal.get(sizeAt: $0), height: _RectAxis.vertical.get(sizeAt: $0)) })
+    static var leadingHorizontal = AnyAnchor<CGFloat>(getter: CGRectAxis.horizontal.get(minOf:))
+    static var trailingHorizontal = AnyAnchor<CGFloat>(getter: CGRectAxis.horizontal.get(maxOf:))
+    static var leadingVertical = AnyAnchor<CGFloat>(getter: CGRectAxis.vertical.get(minOf:))
+    static var trailingVertical = AnyAnchor<CGFloat>(getter: CGRectAxis.vertical.get(maxOf:))
+    static var centerHorizontal = AnyAnchor<CGFloat>(getter: CGRectAxis.horizontal.get(midOf:))
+    static var centerVertical = AnyAnchor<CGFloat>(getter: CGRectAxis.vertical.get(midOf:))
+    static var center = AnyAnchor<CGPoint>(getter: { CGPoint(x: CGRectAxis.horizontal.get(midOf: $0), y: CGRectAxis.vertical.get(midOf: $0)) })
+    static var sizeHorizontal = AnyAnchor<CGFloat>(getter: CGRectAxis.horizontal.get(sizeAt:))
+    static var sizeVertical = AnyAnchor<CGFloat>(getter: CGRectAxis.vertical.get(sizeAt:))
+    static var size = AnyAnchor<CGSize>(getter: { $0.size })//CGSize(width: CGRectAxis.horizontal.get(sizeAt: $0), height: CGRectAxis.vertical.get(sizeAt: $0)) })
 }
 struct AnyAnchor<Metric: Equatable>: AnyRectAnchor /*, OptionSet*/ {
     fileprivate let getter: (CGRect) -> Metric
@@ -840,7 +850,7 @@ public protocol RectAxisAnchor {
     //    func set(value: CGFloat, for rect: inout CGRect, in axis: RectAxis)
     func get(for rect: CGRect, in axis: RectAxis) -> CGFloat
 }
-public struct _RectAxisAnchor {
+public struct CGRectAxisAnchor {
     public static var leading: RectAxisAnchor = Leading()
     struct Leading: RectAxisAnchor {
         func get(for rect: CGRect, in axis: RectAxis) -> CGFloat {

@@ -138,8 +138,8 @@ public extension SideAnchor {
     mutating func pull<A: AnchoredLayoutItem, A2: RectAnchorPoint>(to a2: SideAnchor<A, A2>)
         where Anchor.Metric == A2.Metric, Anchor.Axis == A2.Axis {
             debugAction {
-                let hasSize = (anchors.width.isDefined && anchor.axis is _RectAxis.Horizontal) ||
-                        	  (anchors.height.isDefined && anchor.axis is _RectAxis.Vertical)
+                let hasSize = (anchors.width.isDefined && anchor.axis.isHorizontal) ||
+                        	  (anchors.height.isDefined && anchor.axis.isVertical)
                 // print(pullConstraint != nil, alignConstraint != nil, hasSize)
                 if alignConstraint != nil {
                     print("We already have align constraint. If you need pull just remove align constraint")
@@ -279,8 +279,8 @@ public extension SideAnchor where Anchor == BottomAnchor {
 public extension DimensionAnchor {
     fileprivate func checkConflictsOnAddContentConstraint() {
         debugAction {
-            let hasPull = ((anchors.left.pullConstraint != nil || anchors.right.pullConstraint != nil) && anchor.axis is _RectAxis.Horizontal) ||
-                        ((anchors.bottom.pullConstraint != nil || anchors.top.pullConstraint != nil) && anchor.axis is _RectAxis.Vertical)
+            let hasPull = ((anchors.left.pullConstraint != nil || anchors.right.pullConstraint != nil) && anchor.axis.isHorizontal) ||
+                        ((anchors.bottom.pullConstraint != nil || anchors.top.pullConstraint != nil) && anchor.axis.isVertical)
             // print(contentConstraint != nil, anonymConstraint != nil, associatedConstraint != nil, hasPull)
             if contentConstraint != nil {
                 print("We already have content constraint. It will be replaced")
@@ -295,8 +295,8 @@ public extension DimensionAnchor {
     }
     fileprivate func checkConflictsOnAddAnonymConstraint() {
         debugAction {
-            let hasPull = ((anchors.left.pullConstraint != nil || anchors.right.pullConstraint != nil) && anchor.axis is _RectAxis.Horizontal) ||
-                        ((anchors.bottom.pullConstraint != nil || anchors.top.pullConstraint != nil) && anchor.axis is _RectAxis.Vertical)
+            let hasPull = ((anchors.left.pullConstraint != nil || anchors.right.pullConstraint != nil) && anchor.axis.isHorizontal) ||
+                        ((anchors.bottom.pullConstraint != nil || anchors.top.pullConstraint != nil) && anchor.axis.isVertical)
             // print(contentConstraint != nil, anonymConstraint != nil, associatedConstraint != nil, hasPull)
             if contentConstraint != nil {
                 print("We already have content constraint. We can get unexpected result")
@@ -311,8 +311,8 @@ public extension DimensionAnchor {
     }
     fileprivate func checkConflictsOnAddEqualConstraint() {
         debugAction {
-            let hasPull = ((anchors.left.pullConstraint != nil || anchors.right.pullConstraint != nil) && anchor.axis is _RectAxis.Horizontal) ||
-                        ((anchors.bottom.pullConstraint != nil || anchors.top.pullConstraint != nil) && anchor.axis is _RectAxis.Vertical)
+            let hasPull = ((anchors.left.pullConstraint != nil || anchors.right.pullConstraint != nil) && anchor.axis.isHorizontal) ||
+                        ((anchors.bottom.pullConstraint != nil || anchors.top.pullConstraint != nil) && anchor.axis.isVertical)
             // print(contentConstraint != nil, anonymConstraint != nil, associatedConstraint != nil, hasPull)
             if contentConstraint != nil {
                 print("We already have content constraint. We can get unexpected result")

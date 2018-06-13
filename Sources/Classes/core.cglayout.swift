@@ -348,12 +348,12 @@ public struct LayoutAnchor {
             }
 
             public static var center: AlignDependence {
-                return AlignDependence(base: ConstraintsAggregator([LayoutWorkspace.Center.align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.center),
-                                                                    LayoutWorkspace.Center.align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.center)]))
+                return AlignDependence(base: ConstraintsAggregator([LayoutWorkspace.Center.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.center),
+                                                                    LayoutWorkspace.Center.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.center)]))
             }
             public static var origin: AlignDependence {
-                return AlignDependence(base: ConstraintsAggregator([LayoutWorkspace.After.align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.center),
-                                                                    LayoutWorkspace.After.align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.center)]))
+                return AlignDependence(base: ConstraintsAggregator([LayoutWorkspace.After.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.center),
+                                                                    LayoutWorkspace.After.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.center)]))
             }
             /// ...
         }
@@ -660,8 +660,8 @@ public struct LayoutAnchor {
                 base.formConstrain(sourceRect: &sourceRect, by: rect)
             }
             
-            public static var inner: AlignDependence { return AlignDependence(base: LayoutWorkspace.Before.align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)) }
-            public static var outer: AlignDependence { return AlignDependence(base: LayoutWorkspace.After.align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)) }
+            public static var inner: AlignDependence { return AlignDependence(base: LayoutWorkspace.Before.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+            public static var outer: AlignDependence { return AlignDependence(base: LayoutWorkspace.After.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
         }
 
         // TODO: May be need use Limit as returned type to have strong type.
@@ -682,8 +682,8 @@ public struct LayoutAnchor {
                 base.formConstrain(sourceRect: &sourceRect, by: rect)
             }
 
-            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)) }
-            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)) }
+            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
         }
 
         /// Returns constraint, that pulls source rect to bottom of passed rect. If source rect intersects bottom of passed rect, source rect will be cropped, else will pulled with changing size.
@@ -703,8 +703,8 @@ public struct LayoutAnchor {
                 base.formConstrain(sourceRect: &sourceRect, by: rect)
             }
 
-            public static var inner: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)) }
-            public static var outer: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)) }
+            public static var inner: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+            public static var outer: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
         }
     }
 
@@ -742,8 +742,8 @@ public struct LayoutAnchor {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)) }
-            public static var outer: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)) }
+            public static var inner: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
+            public static var outer: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
         }
 
         /// Returns constraint, that limits source rect by right of passed rect. If source rect intersects right of passed rect, source rect will be cropped, else will not changed.
@@ -761,8 +761,8 @@ public struct LayoutAnchor {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)) }
-            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)) }
+            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
+            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
         }
 
         /// Returns constraint, that pulls source rect to right of passed rect. If source rect intersects right of passed rect, source rect will be cropped, else will pulled with changing size.
@@ -780,8 +780,8 @@ public struct LayoutAnchor {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)) }
-            public static var outer: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)) }
+            public static var inner: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
+            public static var outer: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
         }
     }
 
@@ -819,8 +819,8 @@ public struct LayoutAnchor {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)) }
-            public static var outer: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)) }
+            public static var inner: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
+            public static var outer: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
         }
 
         /// Returns constraint, that limits source rect by left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will not changed.
@@ -838,8 +838,8 @@ public struct LayoutAnchor {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)) }
-            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)) }
+            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
+            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
         }
         
         /// Returns constraint, that pulls source rect to left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will pulled with changing size.
@@ -857,8 +857,8 @@ public struct LayoutAnchor {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)) }
-            public static var outer: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)) }
+            public static var inner: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
+            public static var outer: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
         }
     }
 
@@ -898,8 +898,8 @@ public struct LayoutAnchor {
                 base.formConstrain(sourceRect: &sourceRect, by: rect)
             }
 
-            public static var inner: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)) }
-            public static var outer: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)) }
+            public static var inner: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+            public static var outer: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
         }
 
         /// Returns constraint, that limits source rect by top of passed rect. If source rect intersects top of passed rect, source rect will be cropped, else will not changed.
@@ -918,8 +918,8 @@ public struct LayoutAnchor {
                 base.formConstrain(sourceRect: &sourceRect, by: rect)
             }
 
-            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)) }
-            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)) }
+            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
         }
 
         /// Returns constraint, that pulls source rect to top of passed rect. If source rect intersects top of passed rect, source rect will be cropped, else will pulled with changing size.
@@ -938,8 +938,8 @@ public struct LayoutAnchor {
                 base.formConstrain(sourceRect: &sourceRect, by: rect)
             }
 
-            public static var inner: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)) }
-            public static var outer: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)) }
+            public static var inner: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+            public static var outer: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
         }
     }
 }

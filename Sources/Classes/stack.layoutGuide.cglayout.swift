@@ -14,239 +14,157 @@ import Foundation
 
 /// Base protocol for any layout distribution
 protocol RectBasedDistribution {
-    func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect)
-}
-extension RectBasedDistribution {
-    func distribute(rects: [CGRect], in sourceRect: CGRect) -> [CGRect] {
-        let pointer = UnsafeMutablePointer<CGRect>.allocate(capacity: rects.count)
-        pointer.initialize(from: rects)
-        formDistribute(rectsBy: pointer, count: rects.count, in: sourceRect)
-        return (0..<rects.count).map { pointer[$0] }
-    }
+    func distribute(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis) -> [CGRect] // TODO: Make lazy collection generic
 }
 
-/// Implementation space for distributions
-struct LayoutDistribution: RectBasedDistribution {
-    private let base: RectBasedDistribution
-    func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
-        return base.formDistribute(rectsBy: pointer, count: count, in: sourceRect)
+func distributeFromLeading(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat) -> [CGRect] {
+    var previous: CGRect?
+    return rects.map { rect in
+        var rect = rect
+        axis.set(origin: (previous.map { _ in spacing } ?? 0) + (previous.map { axis.get(maxOf: $0) } ?? axis.get(minOf: sourceRect)), for: &rect)
+        previous = rect
+        return rect
     }
+}
+func distributeFromTrailing(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat) -> [CGRect] {
+    var previous: CGRect?
+    return rects.map { rect in
+        var rect = rect
+        axis.set(origin: (previous.map { _ in -spacing } ?? 0) + (previous.map { axis.get(minOf: $0) } ?? (axis.get(maxOf: sourceRect))) - axis.get(sizeAt: rect), for: &rect)
+        previous = rect
+        return rect
+    }
+}
+func alignByCenter(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis) -> [CGRect] {
+    let offset = axis.get(midOf: sourceRect) - (((axis.get(maxOf: rects.last!) - axis.get(minOf: rects.first!)) / 2) + axis.get(minOf: rects.first!))
+    return rects.map { axis.offset(rect: $0, by: offset) }
+}
 
-    /// Defines distribution arranged items from leading side (top, left) in specific axis.
-    ///
-    /// - Parameters:
-    ///   - axis: Axis for distribution
-    ///   - spacing: Value of space between arranged items
-    /// - Returns: LayoutDistribution entity
-    static func fromLeading(by axis: RectAxis, spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromLeading(axis: axis, spacing: spacing)) }
-    fileprivate struct FromLeading: RectBasedDistribution, AxisEntity {
-        func by(axis: RectAxis) -> LayoutDistribution.FromLeading { return .init(axis: axis, spacing: spacing) }
+func space(for rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis) -> CGFloat {
+    let fullLength = rects.reduce(0) { $0 + axis.get(sizeAt: $1) }
+    return (axis.get(sizeAt: sourceRect) - fullLength) / CGFloat(rects.count - 1)
+}
 
-        let axis: RectAxis
-        let spacing: CGFloat
+public struct StackDistribution: RectBasedDistribution {
+    public enum Spacing {
+        case equally
+        case equal(CGFloat)
+    }
+    public struct Alignment: RectAxisLayout { 
+        let layout: RectAxisLayout 
+        var axis: RectAxis { return layout.axis } 
 
-        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
-            let rects = LayoutDistribution.distributeFromLeading(rects: (0..<count).map { pointer[$0] }, in: sourceRect, by: axis, spacing: spacing)
-            (0..<count).forEach { pointer[$0] = rects[$0] }
+        init<T: RectAxisLayout>(_ layout: T) { 
+            self.layout = layout 
+        } 
+        init(_ layout: RectAxisLayout) { 
+            self.layout = layout 
+        } 
+
+        public static func leading(_ offset: CGFloat = 0) -> Alignment { return Alignment(Layout.Alignment.leading(by: CGRectAxis.vertical, offset: offset)) } 
+        public static func trailing(_ offset: CGFloat = 0) -> Alignment { return Alignment(Layout.Alignment.trailing(by: CGRectAxis.vertical, offset: offset)) } 
+        public static func center(_ offset: CGFloat = 0) -> Alignment { return Alignment(Layout.Alignment.center(by: CGRectAxis.vertical, offset: offset)) } 
+
+        public func formLayout(rect: inout CGRect, in source: CGRect) { 
+            layout.formLayout(rect: &rect, in: source) 
         }
+
+        func by(axis: RectAxis) -> Alignment { 
+            let l = layout.by(axis: axis) 
+            return .init(l) 
+        } 
     }
-    /// Defines distribution arranged items from trailing side (bottom, right) in specific axis.
-    ///
-    /// - Parameters:
-    ///   - axis: Axis for distribution
-    ///   - spacing: Value of space between arranged items
-    /// - Returns: LayoutDistribution entity
-    static func fromTrailing(by axis: RectAxis, spacing: CGFloat) -> LayoutDistribution { return LayoutDistribution(base: FromTrailing(axis: axis, spacing: spacing)) }
-    fileprivate struct FromTrailing: RectBasedDistribution, AxisEntity {
-        func by(axis: RectAxis) -> LayoutDistribution.FromTrailing { return .init(axis: axis, spacing: spacing) }
-
-        let axis: RectAxis
-        let spacing: CGFloat
-
-        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
-            let rects = LayoutDistribution.distributeFromTrailing(rects: (0..<count).map { pointer[$0] }, in: sourceRect, by: axis, spacing: spacing)
-            (0..<count).forEach { pointer[$0] = rects[$0] }
-        }
+    public enum Direction {
+        case fromLeading
+        case fromTrailing
+        case fromCenter
     }
-
-    /// Defines distribution arranged items from center anchor point in specific axis.
-    ///
-    /// - Parameter baseDistribution: Distribution that will be used for defining dependency between arranged items. In common cases it is left and top distribution.
-    /// - Returns: LayoutDistribution entity
-    static func fromCenter(baseDistribution: RectBasedDistribution & AxisEntity) -> LayoutDistribution {
-        return LayoutDistribution(base: FromCenter(baseDistribution: baseDistribution))
+    public enum Filling {
+        case equally
+        case equal(CGFloat)
     }
-    fileprivate struct FromCenter: RectBasedDistribution, AxisEntity {
-        func by(axis: RectAxis) -> LayoutDistribution.FromCenter { return .init(baseDistribution: baseDistribution) }
-        let baseDistribution: RectBasedDistribution & AxisEntity
-        var axis: RectAxis { return baseDistribution.axis }
-
-        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
-            baseDistribution.formDistribute(rectsBy: pointer, count: count, in: sourceRect)
-            let first = pointer[0]
-            let last = pointer[count-1]
-            let offset = axis.get(midOf: sourceRect) - (((axis.get(maxOf: last) - axis.get(minOf: first)) / 2) + axis.get(minOf: first))
-
-            (0..<count).forEach {
-                pointer[$0] = axis.offset(rect: pointer[$0], by: offset)
+    var spacing: Spacing
+    var alignment: Alignment
+    var direction: Direction
+    var filling: Filling
+    
+    public func distribute(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis) -> [CGRect] {
+        let fill: CGFloat = {
+            let count = CGFloat(rects.count)
+            switch self.filling {
+            case .equal(let val):
+                return val
+            case .equally:
+                return axis.get(sizeAt: sourceRect) / count 
             }
-        }
-    }
-    /// Defines distribution with equally spaces between arranged items.
-    ///
-    /// - Parameter axis: Axis for distribution
-    /// - Returns: LayoutDistribution entity
-    static func equalSpacing(axis: RectAxis) -> LayoutDistribution { return LayoutDistribution(base: EqualSpacing(axis: axis)) }
-    fileprivate struct EqualSpacing: RectBasedDistribution, AxisEntity {
-        func by(axis: RectAxis) -> LayoutDistribution.EqualSpacing { return .init(axis: axis) }
-        let axis: RectAxis
+        }()
 
-        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
-            var rects = (0..<count).map { pointer[$0] }
-            let fullLength = rects.reduce(0.0) { $0 + axis.get(sizeAt: $1) }
-            let spacing = (axis.get(sizeAt: sourceRect) - fullLength) / CGFloat(count - 1)
-
-            rects = LayoutDistribution.distributeFromLeading(rects: rects, in: sourceRect, by: axis, spacing: spacing)
-            (0..<count).forEach { pointer[$0] = rects[$0] }
-        }
-    }
-    static func distributeFromLeading(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat) -> [CGRect] {
-        var previous: CGRect?
-        return rects.map { rect in
+        let filledRects = rects.map { rect -> CGRect in
             var rect = rect
-            axis.set(origin: (previous.map { _ in spacing } ?? 0) + (previous.map { axis.get(maxOf: $0) } ?? axis.get(minOf: sourceRect)), for: &rect)
-            previous = rect
+            axis.set(size: fill, for: &rect)
             return rect
         }
-    }
-    static func distributeFromTrailing(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat) -> [CGRect] {
-        var previous: CGRect?
-        return rects.map { rect in
-            var rect = rect
-            axis.set(origin: (previous.map { _ in -spacing } ?? 0) + (previous.map { axis.get(minOf: $0) } ?? (axis.get(maxOf: sourceRect))) - axis.get(sizeAt: rect), for: &rect)
-            previous = rect
-            return rect
+
+        let spacing: CGFloat = {
+            switch self.spacing {
+            case .equally:
+                return space(for: filledRects, in: sourceRect, by: axis)
+            case .equal(let space):
+                return space
+            }
+        }()
+
+        let alignedRects = filledRects.map { alignment.layout(rect: $0, in: sourceRect) }
+        switch direction {
+        case .fromLeading:
+            return distributeFromLeading(rects: alignedRects, in: sourceRect, by: axis, spacing: spacing)
+        case .fromTrailing:
+            return distributeFromTrailing(rects: alignedRects, in: sourceRect, by: axis, spacing: spacing)
+        case .fromCenter:
+            let leftDistributedRects = distributeFromLeading(rects: alignedRects, in: sourceRect, by: axis, spacing: spacing)
+            return alignByCenter(rects: leftDistributedRects, in: sourceRect, by: axis)
         }
     }
 }
-
-/// Protocol defines method for filling items
-public protocol StackLayoutFilling {
-    /// Performs filling for item in defined source space
-    ///
-    /// - Parameters:
-    ///   - item: Item for filling
-    ///   - source: Source space
-    /// - Returns: Modified rect
-    func filling(for item: LayoutItem, in source: CGRect) -> CGRect
-}
-extension Layout.Filling: StackLayoutFilling {
-    public func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
-        return layout(rect: item.frame, in: source)
-    }
-}
-
-// TODO: Implement stack layout scheme, collection and others
-// TODO: Add to stack layout scheme circle type
 
 // TODO: StackLayoutScheme lost multihierarchy layout. Research this. // Comment: Probably would be not available.
 /// Defines layout for arranged items
 public struct StackLayoutScheme: LayoutBlockProtocol {
     private var items: () -> [LayoutItem]
 
-    public struct Distribution: RectBasedDistribution, AxisEntity {
-        func by(axis: RectAxis) -> StackLayoutScheme.Distribution { return .init(base: base.by(axis: axis)) }
-
-        private let base: RectBasedDistribution & AxisEntity
-        internal var axis: RectAxis { return base.axis }
-
-        func formDistribute(rectsBy pointer: UnsafeMutablePointer<CGRect>, count: Int, in sourceRect: CGRect) {
-            return base.formDistribute(rectsBy: pointer, count: count, in: sourceRect)
-        }
-
-        public static func fromLeft(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromLeading(axis: _RectAxis.horizontal, spacing: spacing)) }
-        public static func fromRight(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromTrailing(axis: _RectAxis.horizontal, spacing: spacing)) }
-        public static func fromTop(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromLeading(axis: _RectAxis.vertical, spacing: spacing)) }
-        public static func fromBottom(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromTrailing(axis: _RectAxis.vertical, spacing: spacing)) }
-        public static func fromVerticalCenter(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromCenter(baseDistribution: LayoutDistribution.FromLeading(axis: _RectAxis.vertical, spacing: spacing))) }
-        public static func fromHorizontalCenter(spacing: CGFloat) -> Distribution { return Distribution(base: LayoutDistribution.FromCenter(baseDistribution: LayoutDistribution.FromLeading(axis: _RectAxis.horizontal, spacing: spacing))) }
-        public static func equalSpacingHorizontal() -> Distribution { return Distribution(base: LayoutDistribution.EqualSpacing(axis: _RectAxis.horizontal)) }
-        public static func equalSpacingVertical() -> Distribution { return Distribution(base: LayoutDistribution.EqualSpacing(axis: _RectAxis.vertical)) }
-        // TODO: Add distribution with limited by size anchor (width, height)
-    }
-    public struct Alignment: RectAxisLayout {
-        let layout: RectAxisLayout
-        var axis: RectAxis { return layout.axis }
-
-        init<T: RectAxisLayout>(_ layout: T) {
-            self.layout = layout
-        }
-        init(_ layout: RectAxisLayout) {
-            self.layout = layout
-        }
-
-        public static func leading(_ offset: CGFloat = 0) -> Alignment { return Alignment(Layout.Alignment.leading(by: _RectAxis.vertical, offset: offset)) }
-        public static func trailing(_ offset: CGFloat = 0) -> Alignment { return Alignment(Layout.Alignment.trailing(by: _RectAxis.vertical, offset: offset)) }
-        public static func center(_ offset: CGFloat = 0) -> Alignment { return Alignment(Layout.Alignment.center(by: _RectAxis.vertical, offset: offset)) }
-
-        public func formLayout(rect: inout CGRect, in source: CGRect) {
-            layout.formLayout(rect: &rect, in: source)
-        }
-
-        func by(axis: RectAxis) -> StackLayoutScheme.Alignment {
-            let l = layout.by(axis: axis)
-            return .init(l)
-        }
-    }
-    public struct Filling: StackLayoutFilling, Extended {
-        private let layout: StackLayoutFilling
-
-        public typealias Conformed = StackLayoutFilling
-        public static func build(_ base: StackLayoutFilling) -> StackLayoutScheme.Filling {
-            return Filling(layout: base)
-        }
-
-        struct AutoDimension: StackLayoutFilling {
-            fileprivate let defaultFilling: Layout.Filling
-            func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
-                guard let adjustItem = item as? AdjustableLayoutItem else { return defaultFilling.layout(rect: item.frame, in: source) }
-
-                return adjustItem.contentConstraint.constrained(sourceRect: adjustItem.frame, by: source)
-            }
-        }
-
-        // TODO: Create auto dimension for axis (only height, only width, together)
-        public static func autoDimension(`default` filling: Layout.Filling) -> Filling { return Filling(layout: AutoDimension(defaultFilling: filling)) }
-        public static func custom(_ value: Layout.Filling) -> Filling { return Filling(layout: value) }
-
-        public func filling(for item: LayoutItem, in source: CGRect) -> CGRect {
-            return layout.filling(for: item, in: source)
-        }
-    }
-
     public /// Flag, defines that block will be used for layout
     var isActive: Bool { return true }
-
-    /// Current layout axis
-    public var axis: RectAxis { return distribution.axis }
-    /// Current distribution for arranged items
-    public var distribution: Distribution = .fromLeft(spacing: 0) {
-        didSet { _alignment = alignment.by(axis: axis.transverse()) }
-    }
-    private var _alignment: Alignment = .leading()
-    /// Alignment for arranged items in transverse axis
-    public var alignment: Alignment {
-        set { _alignment = newValue.by(axis: axis.transverse()) }
-        get { return _alignment }
-    }
-    /// Filling in source space
-    public var filling: Filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .scaled(1)))
 
     /// Designed initializer
     ///
     /// - Parameter items: Closure provides items
     public init(items: @escaping () -> [LayoutItem]) {
         self.items = items
+    }
+
+    public var axis: RectAxis = CGRectAxis.horizontal {
+        didSet { alignment = alignment.by(axis: axis.transverse()) }
+    }
+
+    private var distribution: StackDistribution = StackDistribution(spacing: .equally, 
+                                                                    alignment: .center(), 
+                                                                    direction: .fromLeading,
+                                                                    filling: .equally)
+    public var spacing: StackDistribution.Spacing {
+        set { distribution.spacing = newValue }
+        get { return distribution.spacing }
+    }
+    public var alignment: StackDistribution.Alignment {
+        set { distribution.alignment = newValue.by(axis: axis.transverse()) }
+        get { return distribution.alignment }
+    }
+    public var filling: StackDistribution.Filling {
+        set { distribution.filling = newValue }
+        get { return distribution.filling }
+    }
+    public var direction: StackDistribution.Direction {
+        set { distribution.direction = newValue }
+        get { return distribution.direction }
     }
 
     // MARK: LayoutBlockProtocol
@@ -280,11 +198,8 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     /// - Parameter sourceRect: Source space
     func layout(in sourceRect: CGRect) {
         let subItems = items()
-        var frames: [CGRect] = subItems.map { subItem in
-            return alignment.layout(rect: filling.filling(for: subItem, in: sourceRect), in: sourceRect)
-        }
-        frames = distribution.distribute(rects: frames, in: sourceRect)
-        zip(subItems, frames).forEach { $0.frame = $1 }
+        let frames = distribution.distribute(rects: subItems.map { $0.inLayoutTime.frame }, in: sourceRect, by: axis)
+        zip(subItems, frames).forEach { $0.0.frame = $0.1 }
     }
 
     public /// Applying frames from snapshot to `LayoutItem` items in this block.
@@ -317,8 +232,9 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
         let subItems = items()
         let frames = distribution.distribute(
-            rects: subItems.map { alignment.layout(rect: filling.filling(for: $0, in: sourceRect), in: sourceRect) }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
-            in: sourceRect
+            rects: subItems.map { $0.inLayoutTime.frame }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
+            in: sourceRect,
+            by: axis
         )
         var iterator = subItems.makeIterator()
         let snapshotFrame = frames.reduce(into: frames.first) { snapRect, current in
