@@ -14,10 +14,10 @@ import Foundation
 
 /// Base protocol for any layout distribution
 protocol RectBasedDistribution {
-    func distribute(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis) -> [CGRect] // TODO: Make lazy collection generic
+    func distribute(rects: [CGRect], in sourceRect: CGRect, along axis: RectAxis) -> [CGRect] // TODO: Make lazy collection generic
 }
 
-func distributeFromLeading(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat) -> [CGRect] {
+func distributeFromLeading(rects: [CGRect], in sourceRect: CGRect, along axis: RectAxis, spacing: CGFloat) -> [CGRect] {
     var previous: CGRect?
     return rects.map { rect in
         var rect = rect
@@ -26,7 +26,7 @@ func distributeFromLeading(rects: [CGRect], in sourceRect: CGRect, by axis: Rect
         return rect
     }
 }
-func distributeFromTrailing(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis, spacing: CGFloat) -> [CGRect] {
+func distributeFromTrailing(rects: [CGRect], in sourceRect: CGRect, along axis: RectAxis, spacing: CGFloat) -> [CGRect] {
     var previous: CGRect?
     return rects.map { rect in
         var rect = rect
@@ -35,12 +35,12 @@ func distributeFromTrailing(rects: [CGRect], in sourceRect: CGRect, by axis: Rec
         return rect
     }
 }
-func alignByCenter(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis) -> [CGRect] {
+func alignByCenter(rects: [CGRect], in sourceRect: CGRect, along axis: RectAxis) -> [CGRect] {
     let offset = axis.get(midOf: sourceRect) - (((axis.get(maxOf: rects.last!) - axis.get(minOf: rects.first!)) / 2) + axis.get(minOf: rects.first!))
     return rects.map { axis.offset(rect: $0, by: offset) }
 }
 
-func space(for rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis) -> CGFloat {
+func space(for rects: [CGRect], in sourceRect: CGRect, along axis: RectAxis) -> CGFloat {
     let fullLength = rects.reduce(0) { $0 + axis.get(sizeAt: $1) }
     return (axis.get(sizeAt: sourceRect) - fullLength) / CGFloat(rects.count - 1)
 }
@@ -83,12 +83,13 @@ public struct StackDistribution: RectBasedDistribution {
         case equally
         case equal(CGFloat)
     }
+
     var spacing: Spacing
     var alignment: Alignment
     var direction: Direction
     var filling: Filling
     
-    public func distribute(rects: [CGRect], in sourceRect: CGRect, by axis: RectAxis) -> [CGRect] {
+    public func distribute(rects: [CGRect], in sourceRect: CGRect, along axis: RectAxis) -> [CGRect] {
         let fill: CGFloat = {
             let count = CGFloat(rects.count)
             switch self.filling {
@@ -108,7 +109,7 @@ public struct StackDistribution: RectBasedDistribution {
         let spacing: CGFloat = {
             switch self.spacing {
             case .equally:
-                return space(for: filledRects, in: sourceRect, by: axis)
+                return space(for: filledRects, in: sourceRect, along: axis)
             case .equal(let space):
                 return space
             }
@@ -117,12 +118,12 @@ public struct StackDistribution: RectBasedDistribution {
         let alignedRects = filledRects.map { alignment.layout(rect: $0, in: sourceRect) }
         switch direction {
         case .fromLeading:
-            return distributeFromLeading(rects: alignedRects, in: sourceRect, by: axis, spacing: spacing)
+            return distributeFromLeading(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
         case .fromTrailing:
-            return distributeFromTrailing(rects: alignedRects, in: sourceRect, by: axis, spacing: spacing)
+            return distributeFromTrailing(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
         case .fromCenter:
-            let leftDistributedRects = distributeFromLeading(rects: alignedRects, in: sourceRect, by: axis, spacing: spacing)
-            return alignByCenter(rects: leftDistributedRects, in: sourceRect, by: axis)
+            let leftDistributedRects = distributeFromLeading(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
+            return alignByCenter(rects: leftDistributedRects, in: sourceRect, along: axis)
         }
     }
 }
@@ -198,7 +199,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     /// - Parameter sourceRect: Source space
     func layout(in sourceRect: CGRect) {
         let subItems = items()
-        let frames = distribution.distribute(rects: subItems.map { $0.inLayoutTime.frame }, in: sourceRect, by: axis)
+        let frames = distribution.distribute(rects: subItems.map { $0.inLayoutTime.frame }, in: sourceRect, along: axis)
         zip(subItems, frames).forEach { $0.0.frame = $0.1 }
     }
 
@@ -234,7 +235,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         let frames = distribution.distribute(
             rects: subItems.map { $0.inLayoutTime.frame }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
             in: sourceRect,
-            by: axis
+            along: axis
         )
         var iterator = subItems.makeIterator()
         let snapshotFrame = frames.reduce(into: frames.first) { snapRect, current in

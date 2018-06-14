@@ -1420,3 +1420,15 @@ public extension Layout.Alignment.Horizontal {
         return build(AnyRectBasedLayout { $0.origin.x = use($1) })
     }
 }
+
+public struct AnyRectBasedConstraint: RectBasedConstraint {
+    let action: (inout CGRect, CGRect) -> Void
+
+    init(_ action: @escaping (inout CGRect, CGRect) -> Void) {
+        self.action = action
+    }
+
+    public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+        action(&sourceRect, rect)
+    }
+}

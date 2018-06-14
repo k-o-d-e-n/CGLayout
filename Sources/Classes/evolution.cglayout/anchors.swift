@@ -18,10 +18,10 @@ public struct SideAnchor<Item: AnchoredLayoutItem, Anchor: RectAnchorPoint> {
         self.anchor = anchor
     }
 
-    var pullConstraint: (LayoutItem, AxisAnchorPointConstraint)? = nil
-    var limitConstraints: [(LayoutItem, AxisAnchorPointConstraint)] = []
-    var alignConstraint: (LayoutItem, AxisAnchorPointConstraint)? = nil
-    var alignLimitConstraints: [(LayoutItem, AxisAnchorPointConstraint)] = []
+    var pullConstraint: (LayoutItem, AnyRectBasedConstraint)? = nil
+    var limitConstraints: [(LayoutItem, AnyRectBasedConstraint)] = []
+    var alignConstraint: (LayoutItem, AnyRectBasedConstraint)? = nil
+    var alignLimitConstraints: [(LayoutItem, AnyRectBasedConstraint)] = []
 }
 
 public struct DimensionAnchor<Item: AnchoredLayoutItem, Anchor: AxisLayoutEntity & SizeRectAnchor> {
@@ -36,8 +36,8 @@ public struct DimensionAnchor<Item: AnchoredLayoutItem, Anchor: AxisLayoutEntity
     }
 
     var contentConstraint: LayoutConstraintProtocol?
-    var associatedConstraint: (LayoutItem, AnchorSizeConstraint)?
-    var anonymConstraint: AnchorSizeConstraint?
+    var associatedConstraint: (LayoutItem, AnyRectBasedConstraint)?
+    var anonymConstraint: AnyRectBasedConstraint?
 
     var isDefined: Bool {
         return contentConstraint != nil || associatedConstraint != nil || anonymConstraint != nil
