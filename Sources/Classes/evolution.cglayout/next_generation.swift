@@ -333,7 +333,7 @@ public struct SizeAnchor: SizeRectAnchor {
 public protocol RectAxis { // TODO: Add associatedtype Metric,
     var isHorizontal: Bool { get }
     var isVertical: Bool { get }
-    var transverse: RectAxis { get }
+    func transverse() -> RectAxis
     func set(size: CGFloat, for rect: inout CGRect)
     func get(sizeAt rect: CGRect) -> CGFloat
     func set(origin: CGFloat, for rect: inout CGRect)
@@ -365,7 +365,7 @@ extension RectAxis {
         set(size: max(0, size), for: &rect)
     }
     func move(maxOf rect: inout CGRect, to newMax: CGFloat) { set(size: max(0, newMax - get(minOf: rect)), for: &rect) }
-    func transverse() -> RectAxis { return isHorizontal ? CGRectAxis.vertical : CGRectAxis.horizontal }
+    public func transverse() -> RectAxis { return isHorizontal ? CGRectAxis.vertical : CGRectAxis.horizontal }
 }
 
 public struct CGRectAxis: RectAxis {
@@ -373,7 +373,6 @@ public struct CGRectAxis: RectAxis {
 
     public var isHorizontal: Bool { return base.isHorizontal }
     public var isVertical: Bool { return base.isVertical }
-    public var transverse: RectAxis { return base.transverse }
     public func set(size: CGFloat, for rect: inout CGRect) { base.set(size: size, for: &rect) }
     public func set(origin: CGFloat, for rect: inout CGRect) { base.set(origin: origin, for: &rect) }
     public func get(originAt rect: CGRect) -> CGFloat { return base.get(originAt: rect) }
@@ -390,7 +389,7 @@ public struct CGRectAxis: RectAxis {
 
         public var isHorizontal: Bool { return true }
         public var isVertical: Bool { return true }
-        public var transverse: RectAxis { return self }
+        public func transverse() -> RectAxis { return self }
         public func set(size: CGFloat, for rect: inout CGRect) { x.set(size: size, for: &rect); y.set(size: size, for: &rect) }
         public func set(origin: CGFloat, for rect: inout CGRect) { x.set(origin: origin, for: &rect); y.set(origin: origin, for: &rect) }
         public func get(originAt rect: CGRect) -> CGFloat { return rect.origin.x }
@@ -405,7 +404,6 @@ public struct CGRectAxis: RectAxis {
     public struct Horizontal: RectAxis {
         public var isHorizontal: Bool { return true }
         public var isVertical: Bool { return false }
-        public var transverse: RectAxis { return CGRectAxis.vertical }
         public func set(size: CGFloat, for rect: inout CGRect) { rect.size.width = size }
         public func set(origin: CGFloat, for rect: inout CGRect) { rect.origin.x = origin }
         public func get(originAt rect: CGRect) -> CGFloat { return rect.origin.x }
@@ -420,7 +418,6 @@ public struct CGRectAxis: RectAxis {
     public struct Vertical: RectAxis {
         public var isHorizontal: Bool { return false }
         public var isVertical: Bool { return true }
-        public var transverse: RectAxis { return CGRectAxis.horizontal }
         public func set(size: CGFloat, for rect: inout CGRect) { rect.size.height = size }
         public func set(origin: CGFloat, for rect: inout CGRect) { rect.origin.y = origin }
         public func get(sizeAt rect: CGRect) -> CGFloat { return rect.height }

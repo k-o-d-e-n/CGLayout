@@ -100,9 +100,11 @@ public struct StackDistribution: RectBasedDistribution {
             }
         }()
 
+        let transverseAxis = axis.transverse()
         let filledRects = rects.map { rect -> CGRect in
             var rect = rect
             axis.set(size: fill, for: &rect)
+            transverseAxis.set(size: transverseAxis.get(sizeAt: sourceRect), for: &rect)
             return rect
         }
 

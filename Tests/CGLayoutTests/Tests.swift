@@ -750,10 +750,8 @@ extension Tests {
 extension Tests {
     func testLayoutDistribution() {
         let frames = (0..<5).map { _ in CGRect.random(in: bounds) }
-        let distribution = LayoutDistribution.fromTrailing(by: _RectAxis.vertical, spacing: 2)
-
         var previous: CGRect?
-        let distributedFrames = distribution.distribute(rects: frames, in: bounds)
+        let distributedFrames = distributeFromTrailing(rects: frames, in: bounds, along: CGRectAxis.vertical, spacing: 2)
 
         var iterator = distributedFrames.makeIterator()
         previous = iterator.next()
@@ -803,9 +801,12 @@ extension Tests {
     func testStackLayoutScheme() {
         let views = (0..<5).map { _ in View(frame: .random(in: bounds)) }
         var stack = StackLayoutScheme(items: { views })
-        stack.distribution = .fromRight(spacing: 0)
+//        stack.distribution = .fromRight(spacing: 0)
+        stack.spacing = .equal(0)
+        stack.direction = .fromLeading
         stack.alignment = .center()
-        stack.filling = .custom(Layout.Filling(horizontal: .fixed(20), vertical: .scaled(1)))
+//        stack.filling = .custom(Layout.Filling(horizontal: .fixed(20), vertical: .scaled(1)))
+        stack.filling = .equal(20)
 
         stack.layout(in: bounds)
 
@@ -813,8 +814,10 @@ extension Tests {
     }
     func testStackLayoutGuideSizeThatFits() {
         let stackGuide = StackLayoutGuide<View>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
-        stackGuide.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(30), vertical: .scaled(1)))
-        stackGuide.scheme.distribution = .fromLeft(spacing: 5)
+//        stackGuide.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(30), vertical: .scaled(1)))
+//        stackGuide.scheme.distribution = .fromLeft(spacing: 5)
+        stackGuide.scheme.filling = .equal(30)
+        stackGuide.scheme.spacing = .equal(5)
 
         stackGuide.addArrangedItem(View(frame: .random(in: stackGuide.bounds)))
         stackGuide.addArrangedItem(View(frame: .random(in: stackGuide.bounds)))
@@ -909,8 +912,8 @@ extension Tests {
 
 extension Tests {
     func testLayoutWorkspaceBeforeLeadingAlign() {
-        let leftAlign = LayoutWorkspace.Before.Align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)
-        let topAlign = LayoutWorkspace.Before.Align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)
+        let leftAlign = LayoutWorkspace.Before.Align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)
+        let topAlign = LayoutWorkspace.Before.Align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)
         let rect1 = CGRect.random(in: bounds)
         var rect2 = CGRect.random(in: bounds)
 
@@ -921,8 +924,8 @@ extension Tests {
         XCTAssertTrue(rect2.bottom == rect1.top)
     }
     func testLayoutWorkspaceAfterLeadingAlign() {
-        let leftAlign = LayoutWorkspace.After.Align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.leading)
-        let topAlign = LayoutWorkspace.After.Align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.leading)
+        let leftAlign = LayoutWorkspace.After.Align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)
+        let topAlign = LayoutWorkspace.After.Align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)
         let rect1 = CGRect.random(in: bounds)
         var rect2 = CGRect.random(in: bounds)
 
@@ -933,8 +936,8 @@ extension Tests {
         XCTAssertTrue(rect2.top == rect1.top)
     }
     func testLayoutWorkspaceBeforeTrailingAlign() {
-        let rightAlign = LayoutWorkspace.Before.Align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)
-        let bottomAlign = LayoutWorkspace.Before.Align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)
+        let rightAlign = LayoutWorkspace.Before.Align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)
+        let bottomAlign = LayoutWorkspace.Before.Align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)
         let rect1 = CGRect.random(in: bounds)
         var rect2 = CGRect.random(in: bounds)
 
@@ -945,8 +948,8 @@ extension Tests {
         XCTAssertTrue(rect2.bottom == rect1.bottom)
     }
     func testLayoutWorkspaceAfterTrailingAlign() {
-        let rightAlign = LayoutWorkspace.After.Align(axis: _RectAxis.horizontal, anchor: _RectAxisAnchor.trailing)
-        let bottomAlign = LayoutWorkspace.After.Align(axis: _RectAxis.vertical, anchor: _RectAxisAnchor.trailing)
+        let rightAlign = LayoutWorkspace.After.Align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)
+        let bottomAlign = LayoutWorkspace.After.Align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)
         let rect1 = CGRect.random(in: bounds)
         var rect2 = CGRect.random(in: bounds)
 
@@ -955,20 +958,6 @@ extension Tests {
 
         XCTAssertTrue(rect2.left == rect1.right)
         XCTAssertTrue(rect2.top == rect1.bottom)
-    }
-    func testAnchors() {
-        let view = View(frame: .random(in: bounds))
-
-        XCTAssertTrue(view.frame.size == view.anchors.size.anchor.get(for: view.frame))
-    }
-    func testMeasurementAnchors() {
-        let view = View(frame: .random(in: bounds))
-
-        let size = view.anchors.size
-        measure {
-//            _ = view.frame.size
-            _ = size.anchor.get(for: view.frame)
-        }
     }
 }
 
@@ -1035,8 +1024,6 @@ extension Tests {
         ("testLayoutWorkspaceBeforeLeadingAlign", testLayoutWorkspaceBeforeLeadingAlign),
         ("testLayoutWorkspaceAfterLeadingAlign", testLayoutWorkspaceAfterLeadingAlign),
         ("testLayoutWorkspaceBeforeTrailingAlign", testLayoutWorkspaceBeforeTrailingAlign),
-        ("testLayoutWorkspaceAfterTrailingAlign", testLayoutWorkspaceAfterTrailingAlign),
-        ("testAnchors", testAnchors),
-        ("testMeasurementAnchors", testMeasurementAnchors)
+        ("testLayoutWorkspaceAfterTrailingAlign", testLayoutWorkspaceAfterTrailingAlign)
     ]
 }

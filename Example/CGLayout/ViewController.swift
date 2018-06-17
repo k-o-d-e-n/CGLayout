@@ -43,32 +43,45 @@ class ViewController: UIViewController {
 
     lazy var stackScheme: StackLayoutScheme = { [unowned self] in
         var stack = StackLayoutScheme { Array(self.subviews[0..<7]) }
-        stack.distribution = .fromBottom(spacing: 10)
+        stack.axis = CGRectAxis.vertical
+        stack.spacing = .equal(10)
+//        stack.distribution = .fromBottom(spacing: 10)
+        stack.direction = .fromTrailing
         stack.alignment = .leading(215)
-        stack.filling = .custom(Layout.Filling(horizontal: .boxed(235), vertical: .fixed(50)))
+//        stack.filling = .custom(Layout.Filling(horizontal: .boxed(235), vertical: .fixed(50)))
+        stack.filling = .equal(50)
 
         return stack
     }()
     lazy var stackLayoutGuide: StackLayoutGuide<UIView> = {
         let stack = StackLayoutGuide<UIView>(frame: .zero)
+        stack.scheme.axis = CGRectAxis.vertical
         stack.contentInsets.top = 5
-        stack.scheme.distribution = .fromTop(spacing: 5)
+//        stack.scheme.distribution = .fromTop(spacing: 5)
+        stack.scheme.direction = .fromLeading
         stack.scheme.alignment = .leading(2)
-        stack.scheme.filling = .custom(Layout.Filling(horizontal: .boxed(4), vertical: .fixed(20)))
+//        stack.scheme.filling = .custom(Layout.Filling(horizontal: .boxed(4), vertical: .fixed(20)))
+        stack.scheme.filling = .equal(20)
 
         return stack
     }()
     lazy var substackLayoutGuide: StackLayoutGuide<UIView> = {
         let stack = StackLayoutGuide<UIView>(frame: .zero)
-        stack.scheme.distribution = .equalSpacingHorizontal()
-        stack.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(20), vertical: .scaled(1)))
+//        stack.scheme.distribution = .equalSpacingHorizontal()
+        stack.scheme.direction = .fromCenter
+        stack.scheme.spacing = .equally
+//        stack.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(20), vertical: .scaled(1)))
+        stack.scheme.filling = .equal(20)
 
         return stack
     }()
     lazy var labelStack: StackLayoutGuide<UIView> = {
         let stack = StackLayoutGuide<UIView>(frame: .zero)
-        stack.scheme.distribution = .fromTop(spacing: 2)
-        stack.scheme.filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .fixed(1)))
+        stack.scheme.axis = CGRectAxis.vertical
+//        stack.scheme.distribution = .fromTop(spacing: 2)
+        stack.scheme.direction = .fromLeading
+//        stack.scheme.filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .fixed(1)))
+        stack.scheme.filling = .equal(1)
         stack.contentInsets.bottom = 2
 
         return stack
@@ -162,13 +175,17 @@ class ViewController: UIViewController {
 //                                                                        subviews[7].anchorPointConstraint(for: [.align(centeredView.superview!.anchors.leading.anchor,
 //                                                                                                                       by: subviews[7].anchors.leading.anchor)])])
 
-        let centeredViewLayout = centeredView.layout { (anchors) in
+        let centeredViewLayout = centeredView.block { (anchors) in
             /// anchors should contains reference on view. `align` method should be mutating and to store binded anchors
 //            anchors.center.align(by: subviews[7].anchors.center)
-            anchors.size.scaled(by: subviews[7].anchors.size, scale: 0.5)
+//            anchors.size.scaled(by: subviews[7].anchors.size, scale: 0.5)
+            anchors.width.scaled(by: subviews[7].layoutAnchors.width, scale: 0.5)
+            anchors.height.scaled(by: subviews[7].layoutAnchors.height, scale: 0.5)
 //            anchors.size.equal(to: CGSize(width: 50, height: 20))
-            anchors.origin.align(by: subviews[7].anchors.origin)
-            anchors.bottom.pull(to: subviews[7].anchors.bottom)
+//            anchors.origin.align(by: subviews[7].anchors.origin)
+            anchors.left.align(by: subviews[7].layoutAnchors.left)
+            anchors.right.align(by: subviews[7].layoutAnchors.right)
+            anchors.bottom.pull(to: subviews[7].layoutAnchors.bottom)
         }
 
         /// centeredView.layoutBlock(with: layout, constraints: [.align(.bottom, by: subview.bottom), .limit(.left, on: subview.right)])

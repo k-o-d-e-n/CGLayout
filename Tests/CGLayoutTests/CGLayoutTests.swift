@@ -1,6 +1,8 @@
 import XCTest
 @testable import CGLayout
 
+#if os(Linux)
+
 class CGLayoutTests: XCTestCase {
     let bounds = CGRect(x: 0, y: 0, width: 500, height: 500)
 	func testTopAlignment() {
@@ -217,3 +219,5 @@ class CGLayoutTests: XCTestCase {
         ("testNewAnchors4", testNewAnchors4)
     ]
 }
+
+#endif

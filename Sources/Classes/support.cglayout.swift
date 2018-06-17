@@ -37,13 +37,13 @@ extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
     public func removeFromSuperItem() { removeFromSuperview() }
 }
 extension UILabel: TextPresentedItem {
-    var baselinePosition: CGFloat {
+    public var baselinePosition: CGFloat {
         return textRect(forBounds: bounds, limitedToNumberOfLines: numberOfLines).origin.y + font.ascender
     }
 }
-extension UITextView: TextPresentedItem { // UITextView scrollable, because baseLine is not responsible
-    var baselinePosition: CGFloat {
-        return UIEdgeInsetsInsetRect(CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height), textContainerInsets).origin.y + font.ascender
+extension UITextView: TextPresentedItem { // UITextView scrollable, because baseLine is not responsibpublic le
+    public var baselinePosition: CGFloat {
+        return UIEdgeInsetsInsetRect(CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height), textContainerInset).origin.y + (font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)).ascender
     }
 }
 extension UIScrollView {

@@ -49,6 +49,20 @@ public protocol AnchoredLayoutItem: LayoutItem {
 	var layoutAnchors: LayoutAnchors<Item> { get }
 }
 
+extension LayoutItem where Self: AnchoredLayoutItem {
+    public func block(with layout: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
+        var anchors = unsafeBitCast(self.layoutAnchors, to: LayoutAnchors<Self>.self)
+        layout(&anchors)
+        return LayoutBlock(item: self, layout: Layout.equal, constraints: anchors.constraints())
+    }
+}
+
+#if os(iOS) || os(tvOS)
+extension UIView: AnchoredLayoutItem {
+    public var layoutAnchors: LayoutAnchors<UIView> { return LayoutAnchors(self) }
+}
+#endif
+
 protocol Anchors: class {
     associatedtype Item: AnchoredLayoutItem & LayoutItem
     var left: SideAnchor<Item, LeftAnchor> { get set }
@@ -87,12 +101,12 @@ public class LayoutAnchors<V: AnchoredLayoutItem>: Anchors {
         centerX.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         centerY.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
 
-        left.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        right.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        bottom.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        top.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        centerX.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        centerY.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = left.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = right.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = bottom.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = top.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = centerX.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = centerY.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         
         width.anonymConstraint.map { layoutConstraints.append(AnonymConstraint(anchors: [$0])) }
         height.anonymConstraint.map { layoutConstraints.append(AnonymConstraint(anchors: [$0])) }
@@ -108,12 +122,12 @@ public class LayoutAnchors<V: AnchoredLayoutItem>: Anchors {
         centerX.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         centerY.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
 
-        left.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        right.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        bottom.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        top.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        centerX.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        centerY.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = left.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = right.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = bottom.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = top.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = centerX.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = centerY.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
 
         return layoutConstraints
     }

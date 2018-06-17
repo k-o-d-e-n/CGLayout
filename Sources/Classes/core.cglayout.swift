@@ -230,7 +230,7 @@ extension LayoutItem {
         return LayoutBlock(item: self, layout: layout, constraints: constraints)
     }
 
-    func contentLayoutConstraint(for anchors: [RectBasedConstraint]) -> ContentLayoutConstraint {
+    public func contentLayoutConstraint(for anchors: [RectBasedConstraint]) -> ContentLayoutConstraint {
         return ContentLayoutConstraint(item: self, constraints: anchors)
     }
 }
