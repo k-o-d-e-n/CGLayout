@@ -226,7 +226,7 @@ extension LayoutItem {
     ///   - layout: Main layout for this entity
     ///   - constraints: Array of related constraint items
     /// - Returns: Related layout block
-    public func layoutBlock(with layout: RectBasedLayout = Layout.equal, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
+    public func layoutBlock(with layout: Layout = Layout.equal, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
         return LayoutBlock(item: self, layout: layout, constraints: constraints)
     }
 
@@ -948,8 +948,8 @@ public struct LayoutAnchor {
 
 /// Main layout structure. Use his for positioning and filling in source rect (which can be constrained using `RectBasedConstraint` constraints).
 public struct Layout: RectBasedLayout {
-    private let alignment: Alignment
-    private let filling: Filling
+    fileprivate let alignment: Alignment
+    fileprivate let filling: Filling
 
     /// Designed initializer
     ///
@@ -974,8 +974,8 @@ public struct Layout: RectBasedLayout {
 
     /// Alignment part of main layout.
     public struct Alignment: RectBasedLayout {
-        private let horizontal: Horizontal
-        private let vertical: Vertical
+        fileprivate let horizontal: Horizontal
+        fileprivate let vertical: Vertical
 
         /// Designed initializer
         ///
@@ -1324,12 +1324,7 @@ public struct Configuration {
 
 public extension Layout {
     /// Layout behavior, that makes passed rect equally to space rect
-    public static var equal: RectBasedLayout { return Equal() }
-    private struct Equal: RectBasedLayout {
-        func formLayout(rect: inout CGRect, in source: CGRect) {
-            rect = source
-        }
-    }
+    public static var equal: Layout { return Layout(x: .equal, y: .equal, width: .equal, height: .equal) }
 
     /// Layout behavior, that makes passed rect equally to  rect
     public static func equal(_ value: CGRect) -> RectBasedLayout { return Constantly(value: value) }
@@ -1363,6 +1358,23 @@ public extension Layout {
     public init(x: Alignment.Horizontal, y: Alignment.Vertical, width: Filling.Horizontal, height: Filling.Vertical) {
         self.init(alignment: Alignment(horizontal: x, vertical: y),
                   filling: Filling(horizontal: width, vertical: height))
+    }
+
+    public func with(height: Filling.Vertical) -> Layout {
+        return Layout(x: alignment.horizontal, y: alignment.vertical,
+                      width: filling.horizontal, height: height)
+    }
+    public func with(width: Filling.Horizontal) -> Layout {
+        return Layout(x: alignment.horizontal, y: alignment.vertical,
+                      width: width, height: filling.vertical)
+    }
+    public func with(y: Alignment.Vertical) -> Layout {
+        return Layout(x: alignment.horizontal, y: y,
+                      width: filling.horizontal, height: filling.vertical)
+    }
+    public func with(x: Alignment.Horizontal) -> Layout {
+        return Layout(x: x, y: alignment.vertical,
+                      width: filling.horizontal, height: filling.vertical)
     }
 }
 
