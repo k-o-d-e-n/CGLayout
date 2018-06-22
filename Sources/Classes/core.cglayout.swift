@@ -102,7 +102,7 @@ public extension RectBasedLayout {
     public func apply(for item: LayoutItem, use constraints: [LayoutConstraintProtocol]) {
         // TODO: ! Add flag for using layout margins. IMPL: Apply 'inset' constraint from LayotAnchor to super bounds.
         debugFatalError(item.superItem == nil, "Layout item is not in hierarchy")
-        apply(for: item, in: item.superItem!.layoutBounds, use: constraints)
+        apply(for: item, in: item.superItem!.layoutBounds, use: constraints) // TODO: Can use bounds and layoutBounds
     }
     /// Use for layout `LayoutItem` entity in constrained source space using constraints. Must call only on main thread.
     ///

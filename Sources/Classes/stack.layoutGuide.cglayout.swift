@@ -1,5 +1,5 @@
 //
-//  CGLayoutExtended.swift
+//  stack.layoutGuide.cglayout.swift
 //  CGLayout
 //
 //  Created by Denis Koryttsev on 04/09/2017.
@@ -7,6 +7,8 @@
 //
 
 import Foundation
+
+/// Version - Alpha
 
 // TODO: Create RectAxisBasedDistribution as subprotocol RectBasedDistribution. Probably will contain `axis` property
 // TODO: Try to built RectBasedLayout, RectBasedConstraint, RectBasedDistribution on RectAxis.

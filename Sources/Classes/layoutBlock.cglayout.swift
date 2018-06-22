@@ -266,10 +266,10 @@ public struct LayoutScheme: LayoutBlockProtocol {
         }, snapshotFrame: snapshotFrame ?? .zero)
     }
 
-    public mutating func insertLayout(block: LayoutBlockProtocol, to position: Int) {
+    public mutating func insertLayout(block: LayoutBlockProtocol, to position: Int? = nil) {
         guard Thread.isMainThread else { fatalError("Mutating layout scheme is available only on main thread") }
 
-        blocks.insert(block, at: position)
+        blocks.insert(block, at: position ?? blocks.count)
     }
 
     public mutating func removeInactiveBlocks() {
