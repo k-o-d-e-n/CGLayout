@@ -94,6 +94,12 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
 
     public var isActive: Bool { return item?.superItem != nil }
 
+    public func setItem(_ item: Item?) {
+        guard Thread.isMainThread else { fatalError(LayoutBlock.message(forMutating: self)) }
+        
+        self.item = item
+    }
+
     public func setLayout(_ layout: RectBasedLayout) {
         guard Thread.isMainThread else { fatalError(LayoutBlock.message(forMutating: self)) }
 
@@ -116,7 +122,7 @@ public final class LayoutBlock<Item: LayoutItem>: LayoutBlockProtocol {
         return item.inLayoutTime.frame
     }
 
-    public init(item: Item, layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) {
+    public init(item: Item?, layout: RectBasedLayout, constraints: [LayoutConstraintProtocol] = []) {
         self.item = item
         self.itemLayout = layout
         self.constraints = constraints

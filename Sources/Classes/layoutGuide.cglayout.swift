@@ -238,7 +238,7 @@ open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, AdjustableLayoutItem {
-    open var contentConstraint: RectBasedConstraint { return isItemLoaded ? item.contentConstraint : LayoutAnchor.equal(.zero) }
+    open var contentConstraint: RectBasedConstraint { return isItemLoaded ? _SizeThatFitsConstraint(item: item) : LayoutAnchor.equal(.zero) }
     var load: (() -> View)?
     var didLoad: ((View) -> Void)?
 

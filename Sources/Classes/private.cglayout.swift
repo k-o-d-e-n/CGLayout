@@ -53,11 +53,11 @@ internal struct _MainThreadItemInLayoutTime<Item: LayoutItem>: InLayoutTimeItem 
     var superLayoutBounds: CGRect { return syncGuard(mainThread: { item.superItem!.layoutBounds }) }
     weak var superItem: LayoutItem? { return syncGuard(mainThread: { item.superItem }) }
     var frame: CGRect {
-        set {}
+        set { syncGuard { item.frame = newValue } }
         get { return syncGuard { item.frame } }
     }
     var bounds: CGRect {
-        set {}
+        set { syncGuard { item.bounds = newValue } }
         get { return syncGuard { item.bounds } }
     }
 

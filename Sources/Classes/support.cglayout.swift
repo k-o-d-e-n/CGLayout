@@ -24,9 +24,7 @@ extension CALayer: LayoutItem {
 #endif
 
 #if os(iOS) || os(tvOS)
-extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
-    /// Constraint, that defines content size for item
-    public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) } // TODO: For UILabel need calculate through .boundingRect function
+extension UIView: SelfSizedLayoutItem {
     public /// Entity that represents item in layout time
     var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
     public /// Internal space for layout subitems
@@ -36,7 +34,59 @@ extension UIView: SelfSizedLayoutItem, AdjustableLayoutItem {
     /// Removes layout item from hierarchy
     public func removeFromSuperItem() { removeFromSuperview() }
 }
-extension UILabel: TextPresentedItem {
+extension UIImageView: AdjustableLayoutItem {
+    struct ContentConstraint: RectBasedConstraint {
+        unowned var imageView: UIImageView
+
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            if let image = syncGuard(mainThread: imageView.image) {
+                let imageSize = image.size
+                let minWidth = rect.width < rect.height
+                switch syncGuard(mainThread: imageView.contentMode) {
+                case .scaleAspectFit:
+                    if minWidth {
+                        sourceRect.size.width = rect.width
+                        sourceRect.size.height = (imageSize.height / imageSize.width) * rect.width
+                    } else {
+                        sourceRect.size.height = rect.height
+                        sourceRect.size.width = (imageSize.width / imageSize.height) * rect.height
+                    }
+                case .scaleAspectFill:
+                    if minWidth {
+                        sourceRect.size.height = rect.height
+                        sourceRect.size.width = (imageSize.width / imageSize.height) * rect.height
+                    } else {
+                        sourceRect.size.width = rect.width
+                        sourceRect.size.height = (imageSize.height / imageSize.width) * rect.width
+                    }
+                default: break
+                }
+            } else {
+                sourceRect.size = .zero
+            }
+        }
+    }
+    public var contentConstraint: RectBasedConstraint {
+        return ContentConstraint(imageView: self)
+    }
+}
+extension UILabel: TextPresentedItem, AdjustableLayoutItem {
+    struct ContentConstraint: RectBasedConstraint {
+        unowned let label: UILabel
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            if let attrTxt = syncGuard(mainThread: label.attributedText) {
+                sourceRect.size = attrTxt.boundingRect(with: rect.size, options: .usesLineFragmentOrigin, context: nil).size
+            } else if let txt = syncGuard(mainThread: label.text) {
+                sourceRect.size = txt.boundingRect(with: rect.size, options: .usesLineFragmentOrigin,
+                                                   attributes: [NSFontAttributeName: label.font], context: nil).size
+            } else {
+                sourceRect.size = .zero
+            }
+        }
+    }
+    public var contentConstraint: RectBasedConstraint {
+        return ContentConstraint(label: self)
+    }
     public var baselinePosition: CGFloat {
         return textRect(forBounds: bounds, limitedToNumberOfLines: numberOfLines).origin.y + font.ascender
     }
