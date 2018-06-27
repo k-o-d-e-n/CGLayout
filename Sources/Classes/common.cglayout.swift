@@ -99,7 +99,7 @@ extension CGRect {
     }
     func applying(edgeInsets: EdgeInsets) -> CGRect { var this = self; this.apply(edgeInsets: edgeInsets); return this }
 
-    public func asLayout() -> RectBasedLayout { return Layout(x: .left(origin.x), y: .top(origin.y), width: .fixed(width), height: .fixed(height)) }
+    public func asLayout() -> Layout { return Layout(x: .left(origin.x), y: .top(origin.y), width: .fixed(width), height: .fixed(height)) }
 }
 
 func EdgeInsetsInsetRect(_ rect: CGRect, _ edgeInsets: EdgeInsets) -> CGRect {

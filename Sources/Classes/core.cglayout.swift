@@ -1033,7 +1033,7 @@ public struct Layout: RectBasedLayout {
 
         public struct Horizontal: RectBasedLayout, Extended {
             public typealias Conformed = RectBasedLayout
-            private let base: RectBasedLayout
+            fileprivate let base: RectBasedLayout
             private init(base: RectBasedLayout) { self.base = base }
 
             public /// Performing layout of given rect inside available rect.
@@ -1051,7 +1051,7 @@ public struct Layout: RectBasedLayout {
             static func build(_ base: RectBasedLayout) -> Layout.Alignment.Horizontal { return .init(base: base) }
 
             public static var equal: Horizontal { return Horizontal(base: Equal()) }
-            private struct Equal: RectBasedLayout {
+            fileprivate struct Equal: RectBasedLayout {
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.origin.x = source.origin.x
                 }
@@ -1062,7 +1062,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter offset: Offset value. Positive value gives offset to right.
             /// - Returns: Center alignment typed by Horizontal
             public static func center(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Center(offset: offset)) }
-            private struct Center: RectBasedLayout {
+            fileprivate struct Center: RectBasedLayout {
                 let offset: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.origin.x = source.midX - (rect.width / 2) + offset
@@ -1073,7 +1073,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter offset: Offset value. Positive value gives offset to right.
             /// - Returns: Left alignment typed by Horizontal
             public static func left(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Left(offset: offset)) }
-            private struct Left: RectBasedLayout {
+            fileprivate struct Left: RectBasedLayout {
                 let offset: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.origin.x = source.origin.x + offset
@@ -1084,7 +1084,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter offset: Offset value. Positive value gives offset to left.
             /// - Returns: Right alignment typed by Horizontal
             public static func right(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Right(offset: offset)) }
-            private struct Right: RectBasedLayout {
+            fileprivate struct Right: RectBasedLayout {
                 let offset: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.origin.x = source.maxX - rect.width - offset
@@ -1096,7 +1096,7 @@ public struct Layout: RectBasedLayout {
         }
         public struct Vertical: RectBasedLayout, Extended {
             public typealias Conformed = RectBasedLayout
-            private let base: RectBasedLayout
+            fileprivate let base: RectBasedLayout
             private init(base: RectBasedLayout) { self.base = base }
 
             public /// Performing layout of given rect inside available rect.
@@ -1114,7 +1114,7 @@ public struct Layout: RectBasedLayout {
             static func build(_ base: RectBasedLayout) -> Layout.Alignment.Vertical { return .init(base: base) }
 
             public static var equal: Vertical { return Vertical(base: Equal()) }
-            private struct Equal: RectBasedLayout {
+            fileprivate struct Equal: RectBasedLayout {
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.origin.y = source.origin.y
                 }
@@ -1125,7 +1125,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter offset: Offset value. Positive value gives offset to bottom.
             /// - Returns: Center alignment typed by 'Vertical'
             public static func center(_ offset: CGFloat = 0) -> Vertical { return Vertical(base: Center(offset: offset)) }
-            private struct Center: RectBasedLayout {
+            fileprivate struct Center: RectBasedLayout {
                 let offset: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.origin.y = source.midY - (rect.height / 2) + offset
@@ -1136,7 +1136,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter offset: Offset value. Positive value gives offset to bottom.
             /// - Returns: Top alignment typed by 'Vertical'
             public static func top(_ offset: CGFloat = 0) -> Vertical { return Vertical(base: Top(offset: offset)) }
-            private struct Top: RectBasedLayout {
+            fileprivate struct Top: RectBasedLayout {
                 let offset: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.origin.y = source.origin.y + offset
@@ -1147,7 +1147,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter offset: Offset value. Positive value gives offset to top.
             /// - Returns: Bottom alignment typed by 'Vertical'
             public static func bottom(_ offset: CGFloat = 0) -> Vertical { return Vertical(base: Bottom(offset: offset)) }
-            private struct Bottom: RectBasedLayout {
+            fileprivate struct Bottom: RectBasedLayout {
                 let offset: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.origin.y = source.maxY - rect.height - offset
@@ -1205,7 +1205,7 @@ public struct Layout: RectBasedLayout {
             static func build(_ base: RectBasedLayout) -> Layout.Filling.Horizontal { return .init(base: base) }
 
             public static var equal: Horizontal { return Horizontal(base: Equal()) }
-            private struct Equal: RectBasedLayout {
+            fileprivate struct Equal: RectBasedLayout {
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.size.width = source.width
                 }
@@ -1216,7 +1216,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter value: Value of width
             /// - Returns: Fixed behavior typed by 'Horizontal'
             public static func fixed(_ value: CGFloat) -> Horizontal { return Horizontal(base: Fixed(value: value)) }
-            private struct Fixed: RectBasedLayout {
+            fileprivate struct Fixed: RectBasedLayout {
                 let value: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.size.width = value
@@ -1228,7 +1228,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter scale: Scale value.
             /// - Returns: Scaled behavior typed by 'Horizontal'
             public static func scaled(_ scale: CGFloat) -> Horizontal { return Horizontal(base: Scaled(scale: scale)) }
-            private struct Scaled: RectBasedLayout {
+            fileprivate struct Scaled: RectBasedLayout {
                 let scale: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.size.width = source.width * scale
@@ -1240,7 +1240,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter insets: Value to use for adjusting the source rectangle
             /// - Returns: Boxed behavior typed by 'Horizontal'
             public static func boxed(_ insets: CGFloat) -> Horizontal { return Horizontal(base: Boxed(insets: insets)) }
-            private struct Boxed: RectBasedLayout {
+            fileprivate struct Boxed: RectBasedLayout {
                 let insets: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.size.width = max(0, source.width - insets)
@@ -1267,7 +1267,7 @@ public struct Layout: RectBasedLayout {
             static func build(_ base: RectBasedLayout) -> Layout.Filling.Vertical { return .init(base: base) }
 
             public static var equal: Vertical { return Vertical(base: Equal()) }
-            private struct Equal: RectBasedLayout {
+            fileprivate struct Equal: RectBasedLayout {
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.size.height = source.height
                 }
@@ -1278,7 +1278,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter value: Value of height
             /// - Returns: Fixed behavior typed by 'Vertical'
             public static func fixed(_ value: CGFloat) -> Vertical { return Vertical(base: Fixed(value: value)) }
-            private struct Fixed: RectBasedLayout {
+            fileprivate struct Fixed: RectBasedLayout {
                 let value: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.size.height = value
@@ -1290,7 +1290,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter scale: Scale value.
             /// - Returns: Scaled behavior typed by 'Vertical'
             public static func scaled(_ scale: CGFloat) -> Vertical { return Vertical(base: Scaled(scale: scale)) }
-            private struct Scaled: RectBasedLayout {
+            fileprivate struct Scaled: RectBasedLayout {
                 let scale: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.size.height = source.height * scale
@@ -1302,7 +1302,7 @@ public struct Layout: RectBasedLayout {
             /// - Parameter insets: Value to use for adjusting the source rectangle
             /// - Returns: Boxed behavior typed by 'Vertical'
             public static func boxed(_ insets: CGFloat) -> Vertical { return Vertical(base: Boxed(insets: insets)) }
-            private struct Boxed: RectBasedLayout {
+            fileprivate struct Boxed: RectBasedLayout {
                 let insets: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.size.height = max(0, source.height - insets)
@@ -1412,9 +1412,25 @@ public struct AnyRectBasedLayout: RectBasedLayout {
     }
 }
 
+extension Layout.Filling.Vertical: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+    public init(floatLiteral value: Float) {
+        self.base = Fixed(value: CGFloat(value))
+    }
+    public init(integerLiteral value: Int) {
+        self.base = Fixed(value: CGFloat(value))
+    }
+}
 public extension Layout.Filling.Vertical {
     static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Filling.Vertical {
         return build(AnyRectBasedLayout { $0.size.height = use($1) })
+    }
+}
+extension Layout.Filling.Horizontal: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+    public init(floatLiteral value: Float) {
+        self.base = Fixed(value: CGFloat(value))
+    }
+    public init(integerLiteral value: Int) {
+        self.base = Fixed(value: CGFloat(value))
     }
 }
 public extension Layout.Filling.Horizontal {
@@ -1422,9 +1438,25 @@ public extension Layout.Filling.Horizontal {
         return build(AnyRectBasedLayout { $0.size.width = use($1) })
     }
 }
+extension Layout.Alignment.Vertical: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+    public init(floatLiteral value: Float) {
+        self.base = Top(offset: CGFloat(value))
+    }
+    public init(integerLiteral value: Int) {
+        self.base = Top(offset: CGFloat(value))
+    }
+}
 public extension Layout.Alignment.Vertical {
     static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Vertical {
         return build(AnyRectBasedLayout { $0.origin.y = use($1) })
+    }
+}
+extension Layout.Alignment.Horizontal: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+    public init(floatLiteral value: Float) {
+        self.base = Left(offset: CGFloat(value))
+    }
+    public init(integerLiteral value: Int) {
+        self.base = Left(offset: CGFloat(value))
     }
 }
 public extension Layout.Alignment.Horizontal {

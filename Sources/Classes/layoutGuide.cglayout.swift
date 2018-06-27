@@ -284,7 +284,7 @@ public extension UILayoutGuide {
     ///
     /// - Parameter type: Type of view
     /// - Returns: Generated view
-    func build<V: UIView>(_ type: V.Type) -> V { return V(frame: frame) }
+    func build<V: UIView>(_ type: V.Type) -> V { return V() }
     /// Generates view and adds to `superItem` hierarchy
     ///
     /// - Parameter type: Type of view
