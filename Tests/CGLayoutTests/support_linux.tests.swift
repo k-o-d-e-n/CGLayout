@@ -484,18 +484,6 @@ extension LayoutItem where Self: Window {
         return WindowLayoutConstraint(item: self, constraints: anchors)
     }
 }
-extension LayoutItem where Self: View {
-    func layout(with relating: (inout RectAnchorDefining) -> Void) -> LayoutBlock<Self> {
-        var anchors = self.anchors
-        relating(&anchors)
-        return LayoutBlock(item: self, layout: Layout.equal, constraints: anchors.constraints.map { item, constraints -> LayoutConstraintProtocol in
-            let constraint = item.map({ v -> LayoutConstraintProtocol in
-                return (v as? Window)?.layoutConstraint(for: constraints) ?? v.layoutConstraint(for: constraints) 
-            }) 
-            return constraint ?? AnonymConstraint(anchors: constraints)
-        })
-    }
-}
 
 public class WindowLayoutConstraint: LayoutConstraintProtocol {
     fileprivate let constraints: [RectBasedConstraint]

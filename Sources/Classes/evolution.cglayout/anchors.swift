@@ -107,7 +107,7 @@ public class LayoutAnchors<V: AnchoredLayoutItem>: Anchors {
     public lazy var width: DimensionAnchor<V, WidthAnchor> = .init(anchors: self, anchor: .width)
     public lazy var height: DimensionAnchor<V, HeightAnchor> = .init(anchors: self, anchor: .height)
 
-    fileprivate func constraints(builder constraint: (LayoutItem, [RectBasedConstraint]) -> LayoutConstraintProtocol = { $0.layoutConstraint(for: $1) }) -> [LayoutConstraintProtocol] {
+    internal func constraints(builder constraint: (LayoutItem, [RectBasedConstraint]) -> LayoutConstraintProtocol = { $0.layoutConstraint(for: $1) }) -> [LayoutConstraintProtocol] {
         var layoutConstraints: [LayoutConstraintProtocol] = []
 
         left.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
