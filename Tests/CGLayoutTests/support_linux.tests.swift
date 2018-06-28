@@ -540,65 +540,6 @@ public class WindowLayoutConstraint: LayoutConstraintProtocol {
 
 /// anchors
 
-extension View: AnchoredItem {
-    private static var anchors: RectAnchors = RectAnchors(nil)
-    public var anchors: RectAnchorDefining { return View.anchors.with(self) }
-    public struct RectAnchors: RectAnchorDefining {
-        var view: View? {
-            didSet {
-                if let view = view {
-                    bind(view)
-                }
-            }
-        }
-        init(_ view: View?) {
-            self.view = view
-            if let view = view {
-                self.bind(view)
-            }
-        }
-        public var left: AssociatedAnchor<LeftAnchor> = .init(item: nil, anchor: .init())
-        public var right: AssociatedAnchor<RightAnchor> = .init(item: nil, anchor: .init())
-        public var bottom: AssociatedAnchor<VerticalAnchor> = .init(item: nil, anchor: .init(BottomAnchor()))
-        public var top: AssociatedAnchor<VerticalAnchor> = .init(item: nil, anchor: .init(TopAnchor()))
-        public var leading: AssociatedAnchor<HorizontalAnchor> = .init(item: nil, anchor: .init(LeftAnchor()))
-        public var trailing: AssociatedAnchor<HorizontalAnchor> = .init(item: nil, anchor: .init(RightAnchor()))
-        public var center: AssociatedAnchor<CenterAnchor> = .init(item: nil, anchor: .init())
-        public var width: AssociatedAnchor<WidthAnchor> = .init(item: nil, anchor: .width)
-        public var height: AssociatedAnchor<HeightAnchor> = .init(item: nil, anchor: .height)
-        public var size: AssociatedAnchor<SizeAnchor> = .init(item: nil, anchor: .init())
-        public var origin: AssociatedAnchor<OriginAnchor> = .init(item: nil, anchor: .init(horizontalAnchor: .init(LeftAnchor()), verticalAnchor: .init(TopAnchor())))
-
-        mutating func loadTrailingLeading() {
-            guard let view = view else { return }
-            let left: AssociatedAnchor<HorizontalAnchor> = .init(item: nil, anchor: .init(LeftAnchor()))
-            let right: AssociatedAnchor<HorizontalAnchor> = .init(item: nil, anchor: .init(RightAnchor()))
-            // leading = View.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft ? right : left
-            // trailing = View.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft ? left : right
-            leading = left
-            trailing = right
-        }
-
-        func with(_ view: View) -> RectAnchors {
-            var anchors = self
-            anchors.view = view
-            return anchors
-        }
-        private mutating func bind(_ view: View) {
-            left.item = view
-            right.item = view
-            bottom.item = view
-            top.item = view
-            loadTrailingLeading()
-            center.item = view
-            width.item = view
-            height.item = view
-            size.item = view
-            origin.item = view
-        }
-    }
-}
-
 extension View: AnchoredLayoutItem {   
 }
 extension LayoutItem where Self: View {

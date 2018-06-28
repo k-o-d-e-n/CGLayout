@@ -92,31 +92,6 @@ class CGLayoutTests: XCTestCase {
         XCTAssertTrue(label1.frame.minY == 100 + label2.baselinePosition - label1.baselinePosition)
     }
 
-    func testNewAnchors() {
-        let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
-        let sourceView = View(frame: CGRect(x: 100, y: 100, width: 300, height: 300))
-        let targetView = View(frame: .zero)
-        window.addSubview(sourceView)
-        sourceView.addSubview(targetView)
-        let layout = targetView.layout { (anchors) in
-            anchors.size.equal(to: CGSize(width: 200, height: 40))
-            anchors.center.align(by: sourceView.anchors.center)
-            // anchors.top.align(by: sourceView.anchors.bottom)
-            // anchors.origin.align(by: associatedView.anchors.origin)
-            // anchors.top.align(by: window.anchors.top)
-            // anchors.bottom.pull(to: sourceView.anchors.bottom)
-        }
-
-        // print("Before: ", targetView.frame)
-        layout.layout()
-        // print("After: ", targetView.frame)
-
-        XCTAssertTrue(targetView.frame.origin.x == ((500 - 200) - 200) / 2)
-        XCTAssertTrue(targetView.frame.origin.y == ((500 - 200) - 40) / 2)
-        XCTAssertTrue(targetView.frame.size.width == 200)
-        XCTAssertTrue(targetView.frame.size.height == 40)
-    }
-
     func testNewAnchors2() {
         let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
         let sourceView = View(frame: CGRect(x: 100, y: 100, width: 300, height: 300))
@@ -213,7 +188,6 @@ class CGLayoutTests: XCTestCase {
         ("testContainer3", testContainer3),
         ("testTextPresented", testTextPresented),
         ("testTextPresented2", testTextPresented2),
-        ("testNewAnchors", testNewAnchors),
         ("testNewAnchors2", testNewAnchors2),
         ("testNewAnchors3", testNewAnchors3),
         ("testNewAnchors4", testNewAnchors4)
