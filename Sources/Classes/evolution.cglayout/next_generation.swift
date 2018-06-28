@@ -93,20 +93,14 @@ open class AutolayoutViewController: UIViewController {
         fatalError("You should override loading layout method")
     }
 
-    open var contentInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: heightTopBars - view.frame.origin.y,
-                            left: 0,
-                            bottom: heightBottomBars - view.frame.maxY + UIScreen.main.bounds.height,
-                            right: 0)
-    }
-
-    var heightTopBars: CGFloat {
-        return UIApplication.shared.statusBarFrame.height + (navigationController.map { $0.isNavigationBarHidden ? 0 : $0.navigationBar.frame.height } ?? 0)
-    }
-    var heightBottomBars: CGFloat { return tabBarController.map { $0.tabBar.isHidden ? 0 : $0.tabBar.frame.height } ?? 0 }
-
     fileprivate func loadInternalLayout() -> LayoutScheme {
-        let visible = { [unowned self] in UIEdgeInsetsInsetRect($0, self.contentInsets) }
+        let visible: (CGRect) -> CGRect = { [unowned self] rect in
+            if #available(iOS 11, *) {
+                return UIEdgeInsetsInsetRect(rect, self.view.safeAreaInsets)
+            } else {
+                return UIEdgeInsetsInsetRect(rect, self.view.layoutMargins)
+            }
+        }
         return LayoutScheme(blocks: [
             upperLayoutGuide.layoutBlock(with: Layout(x: .equal, y: .equal, width: .equal, height: .fixed(0)),
                                          constraints: [AnonymConstraint(anchors: [LayoutAnchor.Top.limit(on: .inner)], constrainRect: visible)]),
