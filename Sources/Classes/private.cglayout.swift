@@ -5,7 +5,13 @@
 //  Created by Denis Koryttsev on 07/10/2017.
 //
 
+#if os(iOS) || os(tvOS)
+import UIKit
+#elseif os(macOS)
+import Cocoa
+#elseif os(Linux)
 import Foundation
+#endif
 
 // MARK: Protocols
 

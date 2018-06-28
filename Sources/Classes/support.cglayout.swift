@@ -27,7 +27,7 @@ extension CALayer: LayoutItem {
 extension UIView: SelfSizedLayoutItem {
     public /// Entity that represents item in layout time
     var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
-    public /// Internal space for layout subitems
+    @objc public /// Internal space for layout subitems
     var layoutBounds: CGRect { return bounds }
     /// Layout item that maintained this layout entity
     public var superItem: LayoutItem? { return superview }
@@ -78,7 +78,7 @@ extension UILabel: TextPresentedItem, AdjustableLayoutItem {
                 sourceRect.size = attrTxt.boundingRect(with: rect.size, options: .usesLineFragmentOrigin, context: nil).size
             } else if let txt = syncGuard(mainThread: label.text) {
                 sourceRect.size = txt.boundingRect(with: rect.size, options: .usesLineFragmentOrigin,
-                                                   attributes: [NSFontAttributeName: label.font], context: nil).size
+                                                   attributes: [NSAttributedStringKey.font: label.font], context: nil).size
             } else {
                 sourceRect.size = .zero
             }
@@ -109,7 +109,7 @@ extension NSView: LayoutItem {
     var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
     public /// Layout item that maintains this layout entity
     weak var superItem: LayoutItem? { return superview }
-    public /// Internal space for layout subitems
+    @objc public /// Internal space for layout subitems
     var layoutBounds: CGRect { return bounds }
 }
 extension NSScrollView {

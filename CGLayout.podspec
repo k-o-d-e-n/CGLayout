@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CGLayout'
-  s.version          = '0.6.1'
+  s.version          = '0.6.5'
   s.summary          = 'Constraint-based autolayout system written on Swift. Not Autolayout wrapper.'
 
 # This description is used to generate tags and improve search results.

@@ -1,4 +1,11 @@
+#if os(iOS) || os(tvOS)
+import UIKit
+#elseif os(macOS)
+import Cocoa
+#elseif os(Linux)
 import Foundation
+#endif
+
 @testable import CGLayout
 
 extension CGRect {

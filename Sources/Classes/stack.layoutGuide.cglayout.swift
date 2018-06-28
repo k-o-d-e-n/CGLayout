@@ -6,7 +6,13 @@
 //  Copyright © 2017 K-o-D-e-N. All rights reserved.
 //
 
+#if os(iOS) || os(tvOS)
+import UIKit
+#elseif os(macOS)
+import Cocoa
+#elseif os(Linux)
 import Foundation
+#endif
 
 /// Version - Alpha
 

@@ -5,7 +5,13 @@
 //  Created by Denis Koryttsev on 21/06/2018.
 //
 
+#if os(iOS) || os(tvOS)
+import UIKit
+#elseif os(macOS)
+import Cocoa
+#elseif os(Linux)
 import Foundation
+#endif
 
 /// Version - Pre Alpha
 

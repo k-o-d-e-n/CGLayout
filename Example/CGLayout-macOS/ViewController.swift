@@ -32,14 +32,17 @@ class ViewController: NSViewController {
 
     lazy var stackScheme: StackLayoutScheme = { [unowned self] in
         var stack = StackLayoutScheme(items: { Array(self.subviews[0..<7]) })
-        stack.distribution = .fromBottom(spacing: 10)
+        stack.axis = CGRectAxis.vertical
+        stack.spacing = .equal(10)
+        //        stack.distribution = .fromBottom(spacing: 10)
+        stack.direction = .fromTrailing
         stack.alignment = .leading(215)
-        stack.filling = .custom(Layout.Filling(horizontal: .boxed(235), vertical: .fixed(50)))
+        //        stack.filling = .custom(Layout.Filling(horizontal: .boxed(235), vertical: .fixed(50)))
+        stack.filling = .equal(50)
 
         return stack
     }()
-    lazy var latestItemLayout = Layout(vertical: (.top(10), .boxed(20)),
-                                       horizontal: (.left(15), .fixed(30)))
+    lazy var latestItemLayout = Layout(x: 15, y: 10, width: 30, height: .boxed(20))
     lazy var pulledLayout = Layout(x: .left(15), y: .top(10),
                                    width: .boxed(25), height: .boxed(20))
     lazy var bottomConstraint = LayoutAnchor.Bottom.limit(on: .inner)

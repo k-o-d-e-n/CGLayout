@@ -5,7 +5,13 @@
 //  Created by Denis Koryttsev on 02/06/2018.
 //
 
+#if os(iOS) || os(tvOS)
+import UIKit
+#elseif os(macOS)
+import Cocoa
+#elseif os(Linux)
 import Foundation
+#endif
 
 public struct SideAnchor<Item: AnchoredLayoutItem, Anchor: RectAnchorPoint> {
     unowned var anchors: LayoutAnchors<Item>

@@ -404,8 +404,8 @@ public extension AnonymConstraint {
 @available(OSX 10.11, *) /// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
 public struct StringLayoutAnchor: RectBasedConstraint {
     let string: String?
-    let attributes: [String: Any]?
-    let options: NSStringDrawingOptions
+    let attributes: [NSAttributedStringKey: Any]?
+    let options: NSString.DrawingOptions
     let context: NSStringDrawingContext?
 
     /// Designed initializer
@@ -415,7 +415,7 @@ public struct StringLayoutAnchor: RectBasedConstraint {
     ///   - options: String drawing options.
     ///   - attributes: A dictionary of text attributes to be applied to the string. These are the same attributes that can be applied to an NSAttributedString object, but in the case of NSString objects, the attributes apply to the entire string, rather than ranges within the string.
     ///   - context: The string drawing context to use for the receiver, specifying minimum scale factor and tracking adjustments.
-    public init(string: String?, options: NSStringDrawingOptions = .usesLineFragmentOrigin, attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) {
+    public init(string: String?, options: NSString.DrawingOptions = .usesLineFragmentOrigin, attributes: [NSAttributedStringKey: Any]? = nil, context: NSStringDrawingContext? = nil) {
         self.string = string
         self.attributes = attributes
         self.context = context
@@ -439,7 +439,7 @@ public extension String {
     ///   - context: Drawing context
     /// - Returns: String-based constraint
     @available(OSX 10.11, *)
-    func layoutConstraint(with options: NSStringDrawingOptions = .usesLineFragmentOrigin, attributes: [String: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutAnchor {
+    func layoutConstraint(with options: NSString.DrawingOptions = .usesLineFragmentOrigin, attributes: [NSAttributedStringKey: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutAnchor {
         return StringLayoutAnchor(string: self, options: options, attributes: attributes, context: context)
     }
 }

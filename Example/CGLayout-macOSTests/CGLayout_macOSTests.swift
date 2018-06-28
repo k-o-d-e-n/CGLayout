@@ -30,7 +30,8 @@ class CGLayout_macOSTests: XCTestCase {
         XCTAssertTrue(rect == CGRect(x: 15, y: 30, width: 105, height: 170))
     }
     func testCoordinateSpaceCGRect() {
-        let window = NSApplication.shared().mainWindow!
+        let window = NSWindow(contentRect: NSRect(origin: .zero, size: CGSize(width: 500, height: 500)),
+                              styleMask: .borderless, backing: .nonretained, defer: false)
         let bounds = window.frame
         let superview = NSScrollView(frame: bounds.insetBy(dx: 100, dy: 100))
         window.contentView = superview

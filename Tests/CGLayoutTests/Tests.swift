@@ -656,10 +656,20 @@ extension Tests {
     func testCoordinateSpacePointLayoutGuide() {
         let superview = View(frame: bounds.insetBy(dx: 100, dy: 100))
         let guide = LayoutGuide<Layer>(frame: CGRect(x: 20, y: 10, width: 40, height: 60))
+        #if os(macOS)
+        superview.wantsLayer = true
+        superview.layer!.add(layoutGuide: guide)
+        #else
         superview.layer.add(layoutGuide: guide)
+        #endif
 
+        #if os(macOS)
+        let converted = superview.layer!.convert(point: CGPoint(x: 10, y: -5), from: guide)
+        let converted2 = guide.convert(point: CGPoint(x: 150, y: 0), from: superview.layer!)
+        #else
         let converted = superview.layer.convert(point: CGPoint(x: 10, y: -5), from: guide)
         let converted2 = guide.convert(point: CGPoint(x: 150, y: 0), from: superview.layer)
+        #endif
 
         XCTAssertTrue(converted.x == 30)
         XCTAssertTrue(converted.y == 5)
@@ -669,7 +679,7 @@ extension Tests {
     }
 #if os(iOS)
     func testCoordinateSpaceCGRect() {
-        let window = UIApplication.shared.delegate!.window!!
+        let window = UIWindow(frame: bounds)
         let superview = UIScrollView(frame: bounds.insetBy(dx: 100, dy: 100))
         window.addSubview(superview)
         superview.contentSize = bounds.size
@@ -812,6 +822,7 @@ extension Tests {
 
         XCTAssertTrue(Int(stack.currentSnapshot.snapshotFrame.width) == views.count * 20)
     }
+    #if os(iOS)
     func testStackLayoutGuideSizeThatFits() {
         let stackGuide = StackLayoutGuide<View>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
 //        stackGuide.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(30), vertical: .scaled(1)))
@@ -867,32 +878,15 @@ extension Tests {
         XCTAssertNil(sublayer.superItem)
         XCTAssertNil(layoutGuide.ownerItem)
     }
+    #endif
 }
 
 // MARK: Measures
 
 #if os(iOS)
 extension Tests {
-    func testPerformanceLayoutSecondViewController() {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewController")
-        controller.loadViewIfNeeded()
-
-        self.measure {
-            controller.view.setNeedsLayout()
-            controller.view.layoutIfNeeded()
-        }
-    }
-    func testPerformanceAutoLayoutSecondViewController() {
-        let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SecondViewControllerAutoLayout") 
-        controller.loadViewIfNeeded()
-
-        self.measure {
-            controller.view.setNeedsLayout()
-            controller.view.layoutIfNeeded()
-        }
-    }
     func testCoordinateSpacePerformance() {
-        let window = UIApplication.shared.delegate!.window!!
+        let window = UIWindow(frame: bounds)
         let superview = UIScrollView(frame: bounds.insetBy(dx: 100, dy: 100))
         window.addSubview(superview)
         superview.contentSize = bounds.size
@@ -979,51 +973,59 @@ extension Tests {
 }
 
 extension Tests {
-    static var allTests = [
-        ("testLayout", testLayout),
-        ("testPerformanceLayout", testPerformanceLayout),
-        ("testTopAlignment", testTopAlignment),
-        ("testTopAlignmentWithOffset", testTopAlignmentWithOffset),
-        ("testBottomAlignment", testBottomAlignment),
-        ("testBottomAlignmentWithOffset", testBottomAlignmentWithOffset), 
-        ("testLeftAlignment", testLeftAlignment),
-        ("testLeftAlignmentWithOffset", testLeftAlignmentWithOffset),
-        ("testRightAlignment", testRightAlignment),
-        ("testRightAlignmentWithOffset", testRightAlignmentWithOffset),
-        ("testFillingFixed", testFillingFixed),
-        ("testFillingScaled", testFillingScaled),
-        ("testFillingBoxed", testFillingBoxed),
-        ("testAnchorBottomAlign", testAnchorBottomAlign),
-        ("testAnchorBottomLimit", testAnchorBottomLimit),
-        ("testAnchorBottomPull", testAnchorBottomPull),
-        ("testAnchorRightAlign", testAnchorRightAlign),
-        ("testAnchorRightLimit", testAnchorRightLimit),
-        ("testAnchorRightPull", testAnchorRightPull),
-        ("testAnchorLeftAlign", testAnchorLeftAlign),
-        ("testAnchorLeftLimit", testAnchorLeftLimit),
-        ("testAnchorLeftPull", testAnchorLeftPull),
-        ("testAnchorTopAlign", testAnchorTopAlign),
-        ("testAnchorTopLimit", testAnchorTopLimit),
-        ("testAnchorTopPull", testAnchorTopPull),
-        ("testCenterToCenterAnchor", testCenterToCenterAnchor),
-        ("testCenterToOriginAnchor", testCenterToOriginAnchor),
-        ("testHeightAnchor", testHeightAnchor),
-        ("testWidthAnchor", testWidthAnchor),
-        ("testInsetAnchor", testInsetAnchor),
-        ("testSnapshotEqualLayoutDirectly", testSnapshotEqualLayoutDirectly),
-        ("testApplyingSnapshotEqualLayoutDirectly", testApplyingSnapshotEqualLayoutDirectly),
-        ("testCurrentSnapshotEqualLayoutDirectly", testCurrentSnapshotEqualLayoutDirectly),
-        ("testCoordinateSpacePointLayoutGuide", testCoordinateSpacePointLayoutGuide),
-        ("testLayoutDistribution", testLayoutDistribution),
-        ("testLayoutDistributionFunc1Performance", testLayoutDistributionFunc1Performance),
-        ("testLayoutDistributionFunc2Performance", testLayoutDistributionFunc2Performance),
-        ("testStackLayoutScheme", testStackLayoutScheme),
-        ("testStackLayoutGuideSizeThatFits", testStackLayoutGuideSizeThatFits),
-        ("testStackLayoutGuideAddRemoveLayoutItems", testStackLayoutGuideAddRemoveLayoutItems),
-        ("testRemoveStackLayoutFromSuperItem", testRemoveStackLayoutFromSuperItem),
-        ("testLayoutWorkspaceBeforeLeadingAlign", testLayoutWorkspaceBeforeLeadingAlign),
-        ("testLayoutWorkspaceAfterLeadingAlign", testLayoutWorkspaceAfterLeadingAlign),
-        ("testLayoutWorkspaceBeforeTrailingAlign", testLayoutWorkspaceBeforeTrailingAlign),
-        ("testLayoutWorkspaceAfterTrailingAlign", testLayoutWorkspaceAfterTrailingAlign)
-    ]
+    static var allTests: [(String, (Tests) -> () -> ())] {
+        var tests = [
+            ("testLayout", testLayout),
+            ("testPerformanceLayout", testPerformanceLayout),
+            ("testTopAlignment", testTopAlignment),
+            ("testTopAlignmentWithOffset", testTopAlignmentWithOffset),
+            ("testBottomAlignment", testBottomAlignment),
+            ("testBottomAlignmentWithOffset", testBottomAlignmentWithOffset),
+            ("testLeftAlignment", testLeftAlignment),
+            ("testLeftAlignmentWithOffset", testLeftAlignmentWithOffset),
+            ("testRightAlignment", testRightAlignment),
+            ("testRightAlignmentWithOffset", testRightAlignmentWithOffset),
+            ("testFillingFixed", testFillingFixed),
+            ("testFillingScaled", testFillingScaled),
+            ("testFillingBoxed", testFillingBoxed),
+            ("testAnchorBottomAlign", testAnchorBottomAlign),
+            ("testAnchorBottomLimit", testAnchorBottomLimit),
+            ("testAnchorBottomPull", testAnchorBottomPull),
+            ("testAnchorRightAlign", testAnchorRightAlign),
+            ("testAnchorRightLimit", testAnchorRightLimit),
+            ("testAnchorRightPull", testAnchorRightPull),
+            ("testAnchorLeftAlign", testAnchorLeftAlign),
+            ("testAnchorLeftLimit", testAnchorLeftLimit),
+            ("testAnchorLeftPull", testAnchorLeftPull),
+            ("testAnchorTopAlign", testAnchorTopAlign),
+            ("testAnchorTopLimit", testAnchorTopLimit),
+            ("testAnchorTopPull", testAnchorTopPull),
+            ("testCenterToCenterAnchor", testCenterToCenterAnchor),
+            ("testCenterToOriginAnchor", testCenterToOriginAnchor),
+            ("testHeightAnchor", testHeightAnchor),
+            ("testWidthAnchor", testWidthAnchor),
+            ("testInsetAnchor", testInsetAnchor),
+            ("testSnapshotEqualLayoutDirectly", testSnapshotEqualLayoutDirectly),
+            ("testApplyingSnapshotEqualLayoutDirectly", testApplyingSnapshotEqualLayoutDirectly),
+            ("testCurrentSnapshotEqualLayoutDirectly", testCurrentSnapshotEqualLayoutDirectly),
+            ("testCoordinateSpacePointLayoutGuide", testCoordinateSpacePointLayoutGuide),
+            ("testLayoutDistribution", testLayoutDistribution),
+            ("testLayoutDistributionFunc1Performance", testLayoutDistributionFunc1Performance),
+            ("testLayoutDistributionFunc2Performance", testLayoutDistributionFunc2Performance),
+            ("testStackLayoutScheme", testStackLayoutScheme),
+            ("testLayoutWorkspaceBeforeLeadingAlign", testLayoutWorkspaceBeforeLeadingAlign),
+            ("testLayoutWorkspaceAfterLeadingAlign", testLayoutWorkspaceAfterLeadingAlign),
+            ("testLayoutWorkspaceBeforeTrailingAlign", testLayoutWorkspaceBeforeTrailingAlign),
+            ("testLayoutWorkspaceAfterTrailingAlign", testLayoutWorkspaceAfterTrailingAlign)
+        ]
+
+        #if os(iOS)
+        tests += [
+            ("testStackLayoutGuideSizeThatFits", testStackLayoutGuideSizeThatFits),
+            ("testStackLayoutGuideAddRemoveLayoutItems", testStackLayoutGuideAddRemoveLayoutItems),
+            ("testRemoveStackLayoutFromSuperItem", testRemoveStackLayoutFromSuperItem)
+        ]
+        #endif
+        return tests
+    }
 }

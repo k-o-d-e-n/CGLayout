@@ -5,10 +5,17 @@
 //  Created by Denis Koryttsev on 07/10/2017.
 //
 
+#if os(iOS) || os(tvOS)
+import UIKit
+#elseif os(macOS)
+import Cocoa
+#elseif os(Linux)
 import Foundation
+#endif
 
 #if os(macOS) || os(iOS) || os(tvOS)
-// How manage subviews?
+
+@available(macOS 10.12, iOS 10.0, *)
 public class LayoutManager<Item: LayoutItem>: NSObject {
     var deinitialization: (() -> Void)?
     weak var item: LayoutItem!
@@ -30,13 +37,9 @@ public class LayoutManager<Item: LayoutItem>: NSObject {
     }
 
     private func scheduleLayout() {
-        if #available(iOS 10.0, *) {
-            RunLoop.current.perform {
-                self.scheme.layout()
-                self.isNeedLayout = false
-            }
-        } else {
-            fatalError()
+        RunLoop.current.perform {
+            self.scheme.layout()
+            self.isNeedLayout = false
         }
     }
 
@@ -47,6 +50,7 @@ public class LayoutManager<Item: LayoutItem>: NSObject {
 #endif
 
 #if os(iOS) || os(tvOS)
+@available(iOS 10.0, *)
 public extension LayoutManager where Item: UIView {
     convenience init(view: UIView, scheme: LayoutScheme) {
         self.init()
@@ -95,7 +99,7 @@ open class AutolayoutViewController: UIViewController {
 
     fileprivate func loadInternalLayout() -> LayoutScheme {
         let visible: (CGRect) -> CGRect = { [unowned self] rect in
-            if #available(iOS 11, *) {
+            if #available(iOS 11.0, tvOS 11.0, *) {
                 return UIEdgeInsetsInsetRect(rect, self.view.safeAreaInsets)
             } else {
                 return UIEdgeInsetsInsetRect(rect, self.view.layoutMargins)

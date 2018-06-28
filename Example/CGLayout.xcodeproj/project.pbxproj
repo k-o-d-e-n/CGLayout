@@ -56,6 +56,13 @@
 			remoteGlobalIDString = A4232A221F82D58E00016A8A;
 			remoteInfo = "CGLayout-macOS";
 		};
+		A4CEB91E20E547C7003C3F72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A4232A221F82D58E00016A8A;
+			remoteInfo = "CGLayout-macOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -356,6 +363,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				A4CEB91F20E547C7003C3F72 /* PBXTargetDependency */,
 				607FACE71AFB9204008FA782 /* PBXTargetDependency */,
 			);
 			name = CGLayout_Tests;
@@ -850,6 +858,11 @@
 			isa = PBXTargetDependency;
 			target = A4232A221F82D58E00016A8A /* CGLayout-macOS */;
 			targetProxy = A4232A3D1F82E94500016A8A /* PBXContainerItemProxy */;
+		};
+		A4CEB91F20E547C7003C3F72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A4232A221F82D58E00016A8A /* CGLayout-macOS */;
+			targetProxy = A4CEB91E20E547C7003C3F72 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
