@@ -54,6 +54,7 @@ class TableViewController: UITableViewController {
                                                                                   constraints: [self.layoutGuide.layoutConstraint(for: [.bottom(.limit(on: .inner))]),
                                                                                                 self.tableView.contentLayoutConstraint(for: [.bottom(.align(by: .outer))])])
 
+    @available(iOS 10.0, *)
     lazy var blocks: [ReuseLayoutBlock] = self.strings.map {
         ReuseLayoutBlock(layout: Layout.equal,
                          targetConstraints: [Inset(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20))],
@@ -97,7 +98,11 @@ class TableViewController: UITableViewController {
         guard let cell = cell as? TextCell else { return }
 
         cell.label.text = strings[indexPath.row]
-        blocks[indexPath.row].apply(for: cell.label)
+        if #available(iOS 10.0, *) {
+            blocks[indexPath.row].apply(for: cell.label)
+        } else {
+            // Fallback on earlier versions
+        }
 //        Layout.equal.apply(for: cell.label, use: [(cell.bounds, LayoutAnchor.insets(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)))])
     }
 
@@ -106,7 +111,11 @@ class TableViewController: UITableViewController {
 //        let expandedRect = CGRect(origin: .zero, size: CGSize(width: tableView.frame.width - 40, height: CGFloat.greatestFiniteMagnitude))
 //
 //        return stringConstraint.constrained(sourceRect: .zero, by: expandedRect).height.rounded(.up) + 20
-        return blocks[indexPath.row].contentRect(fitting: CGRect(origin: .zero, size: CGSize(width: tableView.frame.width, height: CGFloat.greatestFiniteMagnitude))).height.rounded(.up)
+        if #available(iOS 10.0, *) {
+            return blocks[indexPath.row].contentRect(fitting: CGRect(origin: .zero, size: CGSize(width: tableView.frame.width, height: CGFloat.greatestFiniteMagnitude))).height.rounded(.up)
+        } else {
+            return 100
+        }
     }
 
     /*

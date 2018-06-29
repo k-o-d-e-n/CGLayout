@@ -22,9 +22,12 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://github.com/k-o-d-e-n/CGLayout'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'k-o-d-e-n' => 'koden.u8800@gmail.com' }
+  s.author           = { 'Denis Koryttsev' => 'koden.u8800@gmail.com' }
   s.source           = { :git => 'https://github.com/k-o-d-e-n/CGLayout.git', :tag => '0.6.5_beta' }
   s.social_media_url = 'https://twitter.com/K_o_D_e_N'
+  s.documentation_url = 'https://k-o-d-e-n.github.io/CGLayout/'
+
+  s.swift_version = '4.1'
 
   s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '10.0'

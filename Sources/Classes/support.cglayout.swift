@@ -91,11 +91,6 @@ extension UILabel: TextPresentedElement, AdjustableLayoutElement {
         return textRect(forBounds: bounds, limitedToNumberOfLines: numberOfLines).origin.y + font.ascender
     }
 }
-extension UITextView: TextPresentedElement { // UITextView scrollable, because baseLine is not responsibpublic le
-    public var baselinePosition: CGFloat {
-        return UIEdgeInsetsInsetRect(CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height), textContainerInset).origin.y + (font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)).ascender
-    }
-}
 extension UIScrollView {
     public /// Internal space for layout subelements
     override var layoutBounds: CGRect { return CGRect(origin: .zero, size: contentSize) }

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>LimitDependence Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Struct/LimitDependence" class="dashAnchor"></a>
+    <a title="LimitDependence Structure Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">CGLayout Docs</a> (57% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">CGLayout Reference</a>
+        <img id="carat" src="../../img/carat.png" />
+        LimitDependence Structure Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Classes/LayerPlaceholder.html">LayerPlaceholder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/LayoutBlock.html">LayoutBlock</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/LayoutGuide.html">LayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/LayoutPlaceholder.html">LayoutPlaceholder</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/MutableLayoutConstraint.html">MutableLayoutConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/ScrollAnimationDeceleration.html">ScrollAnimationDeceleration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/ScrollLayoutGuide.html">ScrollLayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/StackLayoutGuide.html">StackLayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Classes/ViewPlaceholder.html">ViewPlaceholder</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Enums/LayoutAnchor.html">LayoutAnchor</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Extensions/CALayer.html">CALayer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/CALayer.html">CALayer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/CGRect.html">CGRect</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/EdgeInsets.html">EdgeInsets</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/LayoutCoordinateSpace.html">LayoutCoordinateSpace</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/LayoutGuide.html">LayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/NSControl.html">NSControl</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/NSScrollView.html">NSScrollView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/NSView.html">NSView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/StackLayoutGuide.html">StackLayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/UIImageView.html">UIImageView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/UILabel.html">UILabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/UIScrollView.html">UIScrollView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Extensions/UIView.html">UIView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Protocols/AdaptiveLayoutElement.html">AdaptiveLayoutElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/AdjustableLayoutElement.html">AdjustableLayoutElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/ElementInLayoutTime.html">ElementInLayoutTime</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/Extended.html">Extended</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/LayoutConstraintProtocol.html">LayoutConstraintProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/LayoutCoordinateSpace.html">LayoutCoordinateSpace</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/LayoutElement.html">LayoutElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/LayoutElementsContainer.html">LayoutElementsContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/LayoutSnapshotProtocol.html">LayoutSnapshotProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/RectBasedConstraint.html">RectBasedConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/RectBasedElement.html">RectBasedElement</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/RectBasedLayout.html">RectBasedLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Protocols/TextPresentedElement.html">TextPresentedElement</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Structs/AdjustLayoutConstraint.html">AdjustLayoutConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/AnonymConstraint.html">AnonymConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/AnyRectBasedConstraint.html">AnyRectBasedConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/AnyRectBasedLayout.html">AnyRectBasedLayout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Baseline.html">Baseline</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/BaselineLayoutConstraint.html">BaselineLayoutConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Bottom.html">Bottom</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Bottom/AlignDependence.html">– AlignDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Bottom/LimitDependence.html">– LimitDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Bottom/PullDependence.html">– PullDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Center.html">Center</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Center/AlignDependence.html">– AlignDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs.html#/s:8CGLayout13ConfigurationV">Configuration</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/ContentLayoutConstraint.html">ContentLayoutConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Equal.html">Equal</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Inset.html">Inset</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Layout.html">Layout</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Layout/Alignment.html">– Alignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Layout/Filling.html">– Filling</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/LayoutConstraint.html">LayoutConstraint</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/LayoutScheme.html">LayoutScheme</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Leading.html">Leading</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Leading/Align.html">– Align</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Leading/Limit.html">– Limit</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Leading/Pull.html">– Pull</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Left.html">Left</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Left/AlignDependence.html">– AlignDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Left/LimitDependence.html">– LimitDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Left/PullDependence.html">– PullDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Right.html">Right</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Right/AlignDependence.html">– AlignDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Right/LimitDependence.html">– LimitDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Right/PullDependence.html">– PullDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/ScrollDirection.html">ScrollDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Size.html">Size</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/StackDistribution.html">StackDistribution</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/StackDistribution/Spacing.html">– Spacing</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/StackDistribution/Alignment.html">– Alignment</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/StackDistribution/Direction.html">– Direction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/StackDistribution/Filling.html">– Filling</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/StackLayoutScheme.html">StackLayoutScheme</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/StringLayoutAnchor.html">StringLayoutAnchor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Top.html">Top</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Top/AlignDependence.html">– AlignDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Top/LimitDependence.html">– LimitDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Top/PullDependence.html">– PullDependence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Trailing.html">Trailing</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Trailing/Align.html">– Align</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Trailing/Limit.html">– Limit</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Structs/Trailing/Pull.html">– Pull</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Typealiases.html#/s:8CGLayout13ConstrainRecta">ConstrainRect</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Typealiases.html#/EdgeInsets">EdgeInsets</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Typealiases.html#/s:8CGLayout10EdgeInsetsa">EdgeInsets</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>LimitDependence</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LimitDependence</span> <span class="p">:</span> <span class="kt"><a href="../../Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>Undocumented</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout19RectBasedConstraintP13formConstrainySC6CGRectVz06sourceB0_AF2bytF"></a>
+                    <a name="//apple_ref/swift/Method/formConstrain(sourceRect:by:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout19RectBasedConstraintP13formConstrainySC6CGRectVz06sourceB0_AF2bytF">formConstrain(sourceRect:by:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Main function for constrain source space by other rect</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">formConstrain</span><span class="p">(</span><span class="nv">sourceRect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">by</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sourceRect</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Source space</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>rect</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Rect for constrain</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout4LeftV15LimitDependenceV5innerAEvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/inner" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout4LeftV15LimitDependenceV5innerAEvpZ">inner</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">inner</span><span class="p">:</span> <span class="kt">LimitDependence</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout4LeftV15LimitDependenceV5outerAEvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/outer" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout4LeftV15LimitDependenceV5outerAEvpZ">outer</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">outer</span><span class="p">:</span> <span class="kt">LimitDependence</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2018 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2018-06-29)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

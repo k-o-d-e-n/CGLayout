@@ -516,7 +516,7 @@ extension LayoutElement where Self: View {
         var anchors = unsafeBitCast(self.layoutAnchors, to: LayoutAnchors<Self>.self)
         layout(&anchors)
         return LayoutBlock(element: self, layout: Layout.equal, constraints: anchors.constraints { v, constraints in
-            return (v as? Window)?.layoutConstraint(for: constraints) ?? LayoutConstraint(element: v, constraints: constraints)
+            return (v as? Window)?.layoutConstraint(for: constraints) ?? (LayoutConstraint(element: v, constraints: constraints) as LayoutConstraintProtocol)
         })
     }
 }
