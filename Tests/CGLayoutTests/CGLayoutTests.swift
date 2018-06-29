@@ -24,7 +24,7 @@ class CGLayoutTests: XCTestCase {
         view.addSubItem(.layoutGuide(.inView(lg)))
         view.addSubItem(.view(subview))
 
-        XCTAssertTrue(lg.ownerItem! === view)
+        XCTAssertTrue(lg.ownerElement! === view)
         XCTAssertTrue(view.subviews.contains(where: { $0 === subview }))
         XCTAssertTrue(view.layer.sublayers.contains(where: { $0 === subview.layer }))
     }
@@ -45,7 +45,7 @@ class CGLayoutTests: XCTestCase {
         // lg.add(to: view)
         // subview.add(to: view)
 
-        XCTAssertTrue(lg.ownerItem! === view)
+        XCTAssertTrue(lg.ownerElement! === view)
         XCTAssertTrue(view.subviews.contains(where: { $0 === subview }))
         XCTAssertTrue(view.layer.sublayers.contains(where: { $0 === subview.layer }))
     }
@@ -68,7 +68,7 @@ class CGLayoutTests: XCTestCase {
         window.addSubview(view)
         window.addSubview(label)
 
-        let viewLayout = view.layoutBlock(constraints: [label.baselineLayoutConstraint(for: [LayoutAnchor.Bottom.align(by: .inner)])])
+        let viewLayout = view.layoutBlock(constraints: [label.baselineLayoutConstraint(for: [.bottom(.align(by: .inner))])])
 
         viewLayout.layout()
 
@@ -84,7 +84,7 @@ class CGLayoutTests: XCTestCase {
         window.addSubview(label1)
         window.addSubview(label2)
 
-        let label1Layout = label1.layoutBlock(constraints: [label2.baselineLayoutConstraint(for: [LayoutAnchor.Baseline.align(of: label1)])])
+        let label1Layout = label1.layoutBlock(constraints: [label2.baselineLayoutConstraint(for: [.baseline(.align(of: label1))])])
 
         label1Layout.layout()
 
