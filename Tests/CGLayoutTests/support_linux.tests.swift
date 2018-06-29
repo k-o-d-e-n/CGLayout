@@ -452,10 +452,8 @@ class Label: View, AdjustableLayoutElement, TextPresentedElement {
     var baselinePosition: CGFloat = 14.0
 }
 extension LayoutElement where Self: Label {
-    func baselineLayoutConstraint(for anchors: [RectBasedConstraint]) -> BaselineLayoutConstraint {
-        var constraint = BaselineLayoutConstraint(element: self, constraints: anchors)
-        constraint.inLayoutTime = inLayoutTime
-        return constraint
+    func baselineLayoutConstraint(for anchors: [LayoutAnchor]) -> BaselineLayoutConstraint {
+        return BaselineLayoutConstraint(element: self, constraints: anchors.map { $0.constraint })
     }
 }
 extension LayoutElement where Self: Window {
@@ -518,7 +516,7 @@ extension LayoutElement where Self: View {
         var anchors = unsafeBitCast(self.layoutAnchors, to: LayoutAnchors<Self>.self)
         layout(&anchors)
         return LayoutBlock(element: self, layout: Layout.equal, constraints: anchors.constraints { v, constraints in
-            return (v as? Window)?.layoutConstraint(for: constraints) ?? v.layoutConstraint(for: constraints.map { $0.constraint })
+            return (v as? Window)?.layoutConstraint(for: constraints) ?? LayoutConstraint(element: v, constraints: constraints)
         })
     }
 }

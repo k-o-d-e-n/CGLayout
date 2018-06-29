@@ -232,8 +232,8 @@ public extension LayoutElement where Self: TextPresentedElement {
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related constraint element
-    func baselineLayoutConstraint(for anchors: [Baseline]) -> BaselineLayoutConstraint {
-        return BaselineLayoutConstraint(element: self, constraints: anchors)
+    func baselineLayoutConstraint(for anchors: [LayoutAnchor]) -> BaselineLayoutConstraint {
+        return BaselineLayoutConstraint(element: self, constraints: anchors.map { $0.constraint })
     }
 }
 
