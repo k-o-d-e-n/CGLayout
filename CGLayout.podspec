@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Denis Koryttsev' => 'koden.u8800@gmail.com' }
-  s.source           = { :git => 'https://github.com/k-o-d-e-n/CGLayout.git', :tag => '0.6.5_beta' }
+  s.source           = { :git => 'https://github.com/k-o-d-e-n/CGLayout.git', :tag => '0.6.6_beta' }
   s.social_media_url = 'https://twitter.com/K_o_D_e_N'
   s.documentation_url = 'https://k-o-d-e-n.github.io/CGLayout/'
 
