@@ -18,7 +18,7 @@ import Foundation
 // MARK: ScrollLayoutGuide
 
 /// Layout guide that provides interface for scrolling content
-open class ScrollLayoutGuide<Super: LayoutItem>: LayoutGuide<Super> {
+open class ScrollLayoutGuide<Super: LayoutElement>: LayoutGuide<Super> {
     private var layout: LayoutBlockProtocol
 
     /// Designed initializer
@@ -32,7 +32,7 @@ open class ScrollLayoutGuide<Super: LayoutItem>: LayoutGuide<Super> {
     /// Point that defines offset for content origin
     open var contentOffset: CGPoint { set { bounds.origin = newValue } get { return bounds.origin } }
     /// Size of content
-    open var contentSize: CGSize = .zero//{ set { bounds.size = contentSize } get { return bounds.size } } // TODO: Size of bounds should be equal frame size.
+    open var contentSize: CGSize = .zero
     open var contentInset: EdgeInsets = .zero {
         didSet {
             if oldValue != contentInset {
@@ -45,7 +45,7 @@ open class ScrollLayoutGuide<Super: LayoutItem>: LayoutGuide<Super> {
     }
 
     override public var layoutBounds: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x - contentOffset.x, y: frame.origin.y - contentOffset.y), size: contentSize) }
-    /// Performs layout for subitems, which this layout guide manages, in layout space rect
+    /// Performs layout for subelements, which this layout guide manages, in layout space rect
     ///
     /// - Parameter rect: Space for layout
     override open func layout(in rect: CGRect) {
@@ -68,13 +68,13 @@ open class ScrollLayoutGuide<Super: LayoutItem>: LayoutGuide<Super> {
     }
 }
 public extension ScrollLayoutGuide {
-    /// Convinience initializer for adjustable layout items.
-    /// Initializes layout guide with layout block constrained to calculated size of item.
+    /// Convinience initializer for adjustable layout elements.
+    /// Initializes layout guide with layout block constrained to calculated size of element.
     ///
     /// - Parameters:
     ///   - contentItem: Item that defines content
     ///   - direction: Scroll direction
-    public convenience init<Item: AdjustableLayoutItem>(contentItem: Item, direction: ScrollDirection) {
+    public convenience init<Item: AdjustableLayoutElement>(contentItem: Item, direction: ScrollDirection) {
         self.init(layout: contentItem.layoutBlock(with: Layout.equal, constraints: [contentItem.adjustLayoutConstraint(for: direction.constraints)]))
     }
 }
@@ -92,9 +92,9 @@ public struct ScrollDirection: OptionSet {
         }
     }
 
-    let constraints: [LayoutAnchor.Size]
+    let constraints: [Size]
 
-    init(constraints: [LayoutAnchor.Size], rawValue: Int) {
+    init(constraints: [Size], rawValue: Int) {
         self.constraints = constraints
         self.rawValue = rawValue
     }
@@ -220,7 +220,7 @@ extension ScrollLayoutGuide {
     }
 }
 
-public class ScrollAnimationDeceleration<Item: LayoutItem>: ScrollAnimation {
+public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
     private var x: ScrollAnimationDecelerationComponent
     private var y: ScrollAnimationDecelerationComponent
     private var lastMomentumTime: TimeInterval

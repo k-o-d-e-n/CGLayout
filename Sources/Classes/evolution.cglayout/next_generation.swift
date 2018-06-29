@@ -16,9 +16,9 @@ import Foundation
 #if os(macOS) || os(iOS) || os(tvOS)
 
 @available(macOS 10.12, iOS 10.0, *)
-public class LayoutManager<Item: LayoutItem>: NSObject {
+public class LayoutManager<Item: LayoutElement>: NSObject {
     var deinitialization: (() -> Void)?
-    weak var item: LayoutItem!
+    weak var item: LayoutElement!
     var scheme: LayoutScheme!
     private(set) var isNeedLayout: Bool = false
 
@@ -106,15 +106,19 @@ open class AutolayoutViewController: UIViewController {
             }
         }
         return LayoutScheme(blocks: [
-            upperLayoutGuide.layoutBlock(with: Layout(x: .equal, y: .equal, width: .equal, height: .fixed(0)),
-                                         constraints: [AnonymConstraint(anchors: [LayoutAnchor.Top.limit(on: .inner)], constrainRect: visible)]),
-            lowerLayoutGuide.layoutBlock(with: Layout(x: .equal, y: .bottom(), width: .equal, height: .fixed(0)), constraints: [AnonymConstraint(anchors: [LayoutAnchor.Bottom.limit(on: .inner)], constrainRect: visible)])
-            ])
+            upperLayoutGuide.layoutBlock(
+                with: Layout(x: .equal, y: .equal, width: .equal, height: .fixed(0)),
+                constraints: [AnonymConstraint(anchors: [Top.limit(on: .inner)], constrainRect: visible)]
+            ),
+            lowerLayoutGuide.layoutBlock(
+                with: Layout(x: .equal, y: .bottom(), width: .equal, height: .fixed(0)),
+                constraints: [AnonymConstraint(anchors: [Bottom.limit(on: .inner)], constrainRect: visible)]
+            )
+        ])
     }
 }
 
 open class ScrollLayoutViewController: AutolayoutViewController {
-    // TODO: Check upper/lower layout guide positions
     private var isNeedCalculateContent: Bool = true
     public var scrollView: UIScrollView! { return view as! UIScrollView }
     var isScrolling: Bool { return scrollView.isDragging || scrollView.isDecelerating || scrollView.isZooming }
@@ -381,7 +385,8 @@ public struct CGRectAxis: RectAxis {
     public func offset(rect: CGRect, by value: CGFloat) -> CGRect { return base.offset(rect: rect, by: value) }
 
     public static var xy: CGRectAxis.XY = .init()
-    public struct XY: RectAxis { // TODO: Not completed
+    /// not completed
+    public struct XY: RectAxis { // TODO:
         let x = CGRectAxis.horizontal
         let y = CGRectAxis.vertical
 

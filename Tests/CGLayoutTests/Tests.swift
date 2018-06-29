@@ -11,6 +11,22 @@ import XCTest
     typealias Layer = CALayer
 #endif
 
+extension CGRect {
+    static func random(in source: CGRect) -> CGRect {
+        let randomValue: (CGFloat) -> CGFloat = { pattern -> CGFloat in
+            #if os(Linux)
+            return CGFloat(SwiftGlibc.random() % Int(pattern))
+            #else
+            return CGFloat(arc4random_uniform(UInt32(pattern)))
+            #endif
+        }
+        let o = CGPoint(x: randomValue(source.width), y: randomValue(source.height))
+        let s = CGSize(width: randomValue(source.width - o.x), height: randomValue(source.height - o.y))
+
+        return CGRect(origin: o, size: s)
+    }
+}
+
 class Tests: XCTestCase {
     let bounds = CGRect(x: 0, y: 0, width: 1024, height: 800)
     
@@ -203,14 +219,13 @@ extension Tests {
 
 // MARK: LayoutAnchor
 
-// TODO: Separate inner and outer, also positions frames to yourself tests
 extension Tests {
     func testAnchorBottomAlign() {
-        let outer = LayoutAnchor.Bottom.align(by: .outer)
+        let outer = Bottom.align(by: .outer)
         var rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
 
-        let inner = LayoutAnchor.Bottom.align(by: .inner)
+        let inner = Bottom.align(by: .inner)
         var rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
 
@@ -221,13 +236,13 @@ extension Tests {
         XCTAssertTrue(rect3.maxY == rect4.maxY)
     }
     func testAnchorBottomLimit() {
-        let outer = LayoutAnchor.Bottom.limit(on: .outer)
+        let outer = Bottom.limit(on: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isRect1AboveBottomRect2 = rect1.maxY <= rect2.maxY
         let isRect1BelowBottomRect2 = rect1.minY >= rect2.maxY
 
-        let inner = LayoutAnchor.Bottom.limit(on: .inner)
+        let inner = Bottom.limit(on: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isRect3AboveBottomRect4 = rect3.maxY <= rect4.maxY
@@ -258,12 +273,12 @@ extension Tests {
         }
     }
     func testAnchorBottomPull() {
-        let outer = LayoutAnchor.Bottom.pull(from: .outer)
+        let outer = Bottom.pull(from: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isBottomRect1BelowBottomRect2 = rect1.maxY > rect2.maxY
 
-        let inner = LayoutAnchor.Bottom.pull(from: .inner)
+        let inner = Bottom.pull(from: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isTopRect3AboveBottomRect4 = rect3.minY < rect4.maxY
@@ -285,11 +300,11 @@ extension Tests {
     }
     
     func testAnchorRightAlign() {
-        let outer = LayoutAnchor.Right.align(by: .outer)
+        let outer = Right.align(by: .outer)
         var rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
 
-        let inner = LayoutAnchor.Right.align(by: .inner)
+        let inner = Right.align(by: .inner)
         var rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
 
@@ -300,13 +315,13 @@ extension Tests {
         XCTAssertTrue(rect3.maxX == rect4.maxX)
     }
     func testAnchorRightLimit() {
-        let outer = LayoutAnchor.Right.limit(on: .outer)
+        let outer = Right.limit(on: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isRect1BeforeRightRect2 = rect1.maxX <= rect2.maxX
         let isRect1AfterRightRect2 = rect1.minX >= rect2.maxX
 
-        let inner = LayoutAnchor.Right.limit(on: .inner)
+        let inner = Right.limit(on: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isRect3BeforeRightRect4 = rect3.maxX <= rect4.maxX
@@ -337,12 +352,12 @@ extension Tests {
         }
     }
     func testAnchorRightPull() {
-        let outer = LayoutAnchor.Right.pull(from: .outer)
+        let outer = Right.pull(from: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isRightRect1AfterRightRect2 = rect1.maxX > rect2.maxX
 
-        let inner = LayoutAnchor.Right.pull(from: .inner)
+        let inner = Right.pull(from: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isLeftRect3BeforeRightRect4 = rect3.minX < rect4.maxX
@@ -364,11 +379,11 @@ extension Tests {
     }
 
     func testAnchorLeftAlign() {
-        let outer = LayoutAnchor.Left.align(by: .outer)
+        let outer = Left.align(by: .outer)
         var rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
 
-        let inner = LayoutAnchor.Left.align(by: .inner)
+        let inner = Left.align(by: .inner)
         var rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
 
@@ -379,13 +394,13 @@ extension Tests {
         XCTAssertTrue(rect3.minX == rect4.minX)
     }
     func testAnchorLeftLimit() {
-        let outer = LayoutAnchor.Left.limit(on: .outer)
+        let outer = Left.limit(on: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isRect1BeforeLeftRect2 = rect1.maxX <= rect2.minX
         let isRect1AfterLeftRect2 = rect1.minX >= rect2.minX
 
-        let inner = LayoutAnchor.Left.limit(on: .inner)
+        let inner = Left.limit(on: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isRect3BeforeLeftRect4 = rect3.maxX <= rect4.minX
@@ -416,12 +431,12 @@ extension Tests {
         }
     }
     func testAnchorLeftPull() {
-        let outer = LayoutAnchor.Left.pull(from: .outer)
+        let outer = Left.pull(from: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isLeftRect1BeforeLeftRect2 = rect1.left < rect2.left
 
-        let inner = LayoutAnchor.Left.pull(from: .inner)
+        let inner = Left.pull(from: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isRightRect3BeforeLeftRect4 = rect3.right < rect4.left
@@ -443,11 +458,11 @@ extension Tests {
     }
 
     func testAnchorTopAlign() {
-        let outer = LayoutAnchor.Top.align(by: .outer)
+        let outer = Top.align(by: .outer)
         var rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
 
-        let inner = LayoutAnchor.Top.align(by: .inner)
+        let inner = Top.align(by: .inner)
         var rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
 
@@ -458,13 +473,13 @@ extension Tests {
         XCTAssertTrue(rect3.top == rect4.top)
     }
     func testAnchorTopLimit() {
-        let outer = LayoutAnchor.Top.limit(on: .outer)
+        let outer = Top.limit(on: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isRect1AboveTopRect2 = rect1.bottom <= rect2.top
         let isRect1BelowTopRect2 = rect1.top >= rect2.top
 
-        let inner = LayoutAnchor.Top.limit(on: .inner)
+        let inner = Top.limit(on: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isRect3AboveTopRect4 = rect3.bottom <= rect4.top
@@ -495,12 +510,12 @@ extension Tests {
         }
     }
     func testAnchorTopPull() {
-        let outer = LayoutAnchor.Top.pull(from: .outer)
+        let outer = Top.pull(from: .outer)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
         let isTopRect1AboveTopRect2 = rect1.top < rect2.top
 
-        let inner = LayoutAnchor.Top.pull(from: .inner)
+        let inner = Top.pull(from: .inner)
         let rect3 = CGRect.random(in: bounds)
         let rect4 = CGRect.random(in: bounds)
         let isBottomRect3AboveTopRect4 = rect3.bottom < rect4.top
@@ -522,7 +537,7 @@ extension Tests {
     }
 
     func testCenterToCenterAnchor() {
-        let centerAnchor = LayoutAnchor.Center.align(by: .center)
+        let centerAnchor = Center.align(by: .center)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
 
@@ -533,7 +548,7 @@ extension Tests {
     }
 
     func testCenterToOriginAnchor() {
-        let centerAnchor = LayoutAnchor.Center.align(by: .origin)
+        let centerAnchor = Center.align(by: .origin)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
 
@@ -544,7 +559,7 @@ extension Tests {
     }
 
     func testHeightAnchor() {
-        let heightAnchor = LayoutAnchor.Size.height()
+        let heightAnchor = Size.height()
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
 
@@ -556,7 +571,7 @@ extension Tests {
     }
 
     func testWidthAnchor() {
-        let widthAnchor = LayoutAnchor.Size.width(2)
+        let widthAnchor = Size.width(2)
         let rect1 = CGRect.random(in: bounds)
         let rect2 = CGRect.random(in: bounds)
 
@@ -569,7 +584,7 @@ extension Tests {
 
     func testInsetAnchor() {
         let insets = EdgeInsets(top: -20, left: 0, bottom: 10, right: 5)
-        let insetAnchor = LayoutAnchor.insets(insets)
+        let insetAnchor = Inset(insets)
         let rect1 = CGRect.random(in: bounds)
 
         let resultRect1 = insetAnchor.constrained(sourceRect: rect1, by: .zero) // second rect has no effect
@@ -588,7 +603,7 @@ extension Tests {
         subviews.forEach(View.addSubview(superview))
         let blocks = (0..<5).map { i in
             subviews[i].layoutBlock(with: Layout(x: .center(), y: .top(2), width: .scaled(0.9), height: .fixed(20)),
-                                    constraints: i == 0 ? [] : [subviews[i - 1].layoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])])
+                                    constraints: i == 0 ? [] : [subviews[i - 1].layoutConstraint(for: [.bottom(.align(by: .outer))])])
         }
         let scheme = LayoutScheme(blocks: blocks)
 
@@ -613,7 +628,7 @@ extension Tests {
 
             let blocks = (0..<5).map { i in
                 subviews[i].layoutBlock(with: Layout(x: .center(), y: .top(2), width: .scaled(0.9), height: .fixed(20)),
-                                        constraints: i == 0 ? [] : [subviews[i - 1].layoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])])
+                                        constraints: i == 0 ? [] : [subviews[i - 1].layoutConstraint(for: [.bottom(.align(by: .outer))])])
             }
 
             let scheme = LayoutScheme(blocks: blocks)
@@ -638,7 +653,7 @@ extension Tests {
         subviews.forEach(View.addSubview(superview))
         let blocks = (0..<5).map { i in
             subviews[i].layoutBlock(with: Layout(x: .center(), y: .top(2), width: .scaled(0.9), height: .fixed(20)),
-                                    constraints: i == 0 ? [] : [subviews[i - 1].layoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])])
+                                    constraints: i == 0 ? [] : [subviews[i - 1].layoutConstraint(for: [.bottom(.align(by: .outer))])])
         }
         let scheme = LayoutScheme(blocks: blocks)
 
@@ -830,9 +845,9 @@ extension Tests {
         stackGuide.scheme.filling = .equal(30)
         stackGuide.scheme.spacing = .equal(5)
 
-        stackGuide.addArrangedItem(View(frame: .random(in: stackGuide.bounds)))
-        stackGuide.addArrangedItem(View(frame: .random(in: stackGuide.bounds)))
-        stackGuide.addArrangedItem(View(frame: .random(in: stackGuide.bounds)))
+        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
+        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
+        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
 
         XCTAssertTrue(CGSize(width: 100, height: 200) == stackGuide.sizeThatFits(stackGuide.bounds.size))
     }
@@ -842,23 +857,23 @@ extension Tests {
         view.add(layoutGuide: stackGuide)
 
         let subview = View(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedItem(subview)
+        stackGuide.addArrangedElement(subview)
         let sublayer = Layer(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedItem(sublayer)
+        stackGuide.addArrangedElement(sublayer)
         let layoutGuide = LayoutGuide<Layer>(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedItem(layoutGuide)
+        stackGuide.addArrangedElement(layoutGuide)
 
-        XCTAssertTrue(subview.superItem === view)
-        XCTAssertTrue(sublayer.superItem === view.layer)
-        XCTAssertTrue(layoutGuide.ownerItem === view.layer)
+        XCTAssertTrue(subview.superElement === view)
+        XCTAssertTrue(sublayer.superElement === view.layer)
+        XCTAssertTrue(layoutGuide.ownerElement === view.layer)
 
-        stackGuide.removeArrangedItem(subview)
-        stackGuide.removeArrangedItem(sublayer)
-        stackGuide.removeArrangedItem(layoutGuide)
+        stackGuide.removeArrangedElement(subview)
+        stackGuide.removeArrangedElement(sublayer)
+        stackGuide.removeArrangedElement(layoutGuide)
 
-        XCTAssertNil(subview.superItem)
-        XCTAssertNil(sublayer.superItem)
-        XCTAssertNil(layoutGuide.ownerItem)
+        XCTAssertNil(subview.superElement)
+        XCTAssertNil(sublayer.superElement)
+        XCTAssertNil(layoutGuide.ownerElement)
     }
     func testRemoveStackLayoutFromSuperItem() {
         let view = View()
@@ -866,17 +881,17 @@ extension Tests {
         view.add(layoutGuide: stackGuide)
 
         let subview = View(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedItem(subview)
+        stackGuide.addArrangedElement(subview)
         let sublayer = Layer(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedItem(sublayer)
+        stackGuide.addArrangedElement(sublayer)
         let layoutGuide = LayoutGuide<Layer>(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedItem(layoutGuide)
+        stackGuide.addArrangedElement(layoutGuide)
 
-        stackGuide.removeFromSuperItem()
+        stackGuide.removeFromSuperElement()
 
-        XCTAssertNil(subview.superItem)
-        XCTAssertNil(sublayer.superItem)
-        XCTAssertNil(layoutGuide.ownerItem)
+        XCTAssertNil(subview.superElement)
+        XCTAssertNil(sublayer.superElement)
+        XCTAssertNil(layoutGuide.ownerElement)
     }
     #endif
 }

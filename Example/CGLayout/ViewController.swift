@@ -13,14 +13,14 @@ class LabelPlaceholder: ViewPlaceholder<UILabel> {
     var font: UIFont?
     var textColor: UIColor?
     override var frame: CGRect {
-        didSet { itemIfLoaded?.frame = frame }
+        didSet { elementIfLoaded?.frame = frame }
     }
 
-    open override func itemDidLoad() {
-        super.itemDidLoad()
+    open override func elementDidLoad() {
+        super.elementDidLoad()
 
-        item.font = font
-        item.textColor = textColor
+        element.font = font
+        element.textColor = textColor
     }
 
     convenience init() {
@@ -94,8 +94,8 @@ class ViewController: UIViewController {
                                        filling: Layout.Filling(horizontal: .boxed(20), vertical: .fixed(30)))
     lazy var pulledLayout = Layout(x: .left(15), y: .top(10),
                                    width: .boxed(25), height: .boxed(20))
-    lazy var bottomConstraint = LayoutAnchor.Bottom.limit(on: .inner)
-    lazy var rightConstraint = LayoutAnchor.Right.limit(on: .outer)
+    lazy var bottomConstraint = Bottom.limit(on: .inner)
+    lazy var rightConstraint = Right.limit(on: .outer)
 
     lazy var labelPlaceholder: LabelPlaceholder = LabelPlaceholder(font: .systemFont(ofSize: 24), textColor: .red)
 
@@ -121,20 +121,20 @@ class ViewController: UIViewController {
         pulledView.add(layoutGuide: stackLayoutGuide)
         pulledView.add(layoutGuide: labelStack)
         pulledView.add(layoutGuide: scrollLayoutGuide)
-        stackLayoutGuide.addArrangedItem(UIView(backgroundColor: .brown))
-        stackLayoutGuide.addArrangedItem(UIView(backgroundColor: .yellow))
-        stackLayoutGuide.addArrangedItem(CALayer(backgroundColor: .green))
-        stackLayoutGuide.addArrangedItem(substackLayoutGuide)
-        substackLayoutGuide.addArrangedItem(UIView(backgroundColor: .brown))
-        substackLayoutGuide.addArrangedItem(CALayer(backgroundColor: .yellow))
-        substackLayoutGuide.addArrangedItem(UIView(backgroundColor: .green))
+        stackLayoutGuide.addArrangedElement(UIView(backgroundColor: .brown))
+        stackLayoutGuide.addArrangedElement(UIView(backgroundColor: .yellow))
+        stackLayoutGuide.addArrangedElement(CALayer(backgroundColor: .green))
+        stackLayoutGuide.addArrangedElement(substackLayoutGuide)
+        substackLayoutGuide.addArrangedElement(UIView(backgroundColor: .brown))
+        substackLayoutGuide.addArrangedElement(CALayer(backgroundColor: .yellow))
+        substackLayoutGuide.addArrangedElement(UIView(backgroundColor: .green))
 
-        labelStack.addArrangedItem(UILabel(text: "Some string"))
-        labelStack.addArrangedItem(CALayer(backgroundColor: .black))
-        labelStack.addArrangedItem(UILabel(text: "Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне."))
-        labelStack.addArrangedItem(CALayer(backgroundColor: .black))
-        labelStack.addArrangedItem(UILabel(text: "В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов."))
-        labelStack.addArrangedItem(CALayer(backgroundColor: .black))
+        labelStack.addArrangedElement(UILabel(text: "Some string"))
+        labelStack.addArrangedElement(CALayer(backgroundColor: .black))
+        labelStack.addArrangedElement(UILabel(text: "Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне."))
+        labelStack.addArrangedElement(CALayer(backgroundColor: .black))
+        labelStack.addArrangedElement(UILabel(text: "В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов."))
+        labelStack.addArrangedElement(CALayer(backgroundColor: .black))
 
         scrollView.contentSize.height = view.frame.height.advanced(by: 2)
         scrollView.contentSize.width = view.frame.width
@@ -153,18 +153,22 @@ class ViewController: UIViewController {
         var preview = self.subviews[0..<7].last
         let lastPreview = self.subviews[0..<7].last
         subviews[7..<10].forEach { subview in
-            let constraints: [ConstrainRect] = [(lastPreview!.frame, bottomConstraint), (constrainedRect, rightConstraint)]
-            let constraint: [ConstrainRect] = preview === lastPreview ? [] : [(preview!.frame, rightConstraint)]
+            let constraints: [ConstrainRect] = [(lastPreview!.frame, [bottomConstraint]), (constrainedRect, [rightConstraint])]
+            let constraint: [ConstrainRect] = preview === lastPreview ? [] : [(preview!.frame, [rightConstraint])]
             latestItemLayout.apply(for: subview, use: constraints + constraint)
             preview = subview
         }
 
-        let topConstraint: LayoutAnchor.Top = traitCollection.verticalSizeClass == .compact ? .pull(from: .outer) : .limit(on: .outer)
+        let topConstraint: RectBasedConstraint = traitCollection.verticalSizeClass == .compact ? Top.pull(from: .outer) : Top.limit(on: .outer)
 
-        labelPlaceholder.layoutBlock(with: Layout(x: .right(), y: .top(), width: .scaled(0.6), height: .fixed(100)), constraints: [(topLayoutGuide as! UIView).layoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])]).layout()
+        labelPlaceholder.layoutBlock(with: Layout(x: .right(), y: .top(), width: .scaled(0.6), height: .fixed(100)), constraints: [(topLayoutGuide as! UIView).layoutConstraint(for: [.bottom(.align(by: .outer))])]).layout()
 
-        pulledLayout.apply(for: pulledView, use: [((topLayoutGuide as! UIView).frame, LayoutAnchor.Bottom.limit(on: .outer)), (labelPlaceholder.frame, LayoutAnchor.Left.limit(on: .outer)),
-                                                  (subviews[1].frame, LayoutAnchor.Left.limit(on: .outer)), (subviews.first!.frame, topConstraint)])
+        pulledLayout.apply(for: pulledView, use: [
+            ((topLayoutGuide as! UIView).frame, [Bottom.limit(on: .outer)]),
+            (labelPlaceholder.frame, [Left.limit(on: .outer)]),
+            (subviews[1].frame, [Left.limit(on: .outer)]),
+            (subviews.first!.frame, [topConstraint])
+        ])
         Layout.equal.apply(for: stackLayoutGuide)
 
         subviews[7].semanticContentAttribute = .forceRightToLeft
@@ -197,16 +201,16 @@ class ViewController: UIViewController {
 //        centeredView.anchors.bottom.offset(rect: &centeredView.frame, by: subviews[7].anchors.bottom.get(for: subviews[7].frame))
         
         // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space. 
-        navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.layoutConstraint(for: [LayoutAnchor.equal])]).layout()
+        navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.layoutConstraint(for: [.equally])]).layout()
 
         let subviewLayout = subview.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(50), height: .fixed(1)),
-                            constraints: [centeredView.layoutConstraint(for: [LayoutAnchor.equal])])
+                                                constraints: [centeredView.layoutConstraint(for: [.equally])])
         let subviewScheme = LayoutScheme(blocks: [centeredViewLayout, subviewLayout])
         let snapshotSubview = subviewScheme.snapshot(for: view.bounds, constrainRects: [(subviews[7], subviews[7].frame)]) /// example use constrain rects 
         subviewScheme.apply(snapshot: snapshotSubview)
 
         scrollLayoutGuide.layoutBlock(with: Layout.equal,
-                                      constraints: [pulledView.layoutConstraint(for: [LayoutAnchor.Size.height(), LayoutAnchor.Size.width()])]).layout()
+                                      constraints: [pulledView.layoutConstraint(for: [.size(.height()), .size(.width())])]).layout()
         let pan = UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:)))
         pan.require(toFail: scrollView.panGestureRecognizer)
         pulledView.addGestureRecognizer(pan)
@@ -228,7 +232,7 @@ class ViewController: UIViewController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        labelPlaceholder.item.text = "Placeholder label"
+        labelPlaceholder.element.text = "Placeholder label"
     }
 }
 

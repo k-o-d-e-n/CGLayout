@@ -32,8 +32,8 @@
 		A4579C351F59E86800893AB2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A4879D0D1F93A4B400BCBF0E /* ScrollLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4879D0C1F93A4B400BCBF0E /* ScrollLayoutViewController.swift */; };
-		A4B96E6D20D6D9CF003C7803 /* support_linux.tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B96E6B20D6D9CF003C7803 /* support_linux.tests.swift */; };
 		A4B96E6E20D6D9CF003C7803 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B96E6C20D6D9CF003C7803 /* Tests.swift */; };
+		A4DE587E20E65178002B7678 /* support_linux.tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B96E6B20D6D9CF003C7803 /* support_linux.tests.swift */; };
 		A4DECF99206FFA76006933C4 /* CGLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DECF97206FFA76006933C4 /* CGLayoutTests.swift */; };
 		AA207DB93A95FD0B83A04761 /* Pods_CGLayout_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AF282E152D179C9353E356 /* Pods_CGLayout_Tests.framework */; };
 		B635776618CF077E9FE44524 /* Pods_CGLayout_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 229950F7B0B7736994BF5766 /* Pods_CGLayout_tvOS.framework */; };
@@ -811,8 +811,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */,
+				A4DE587E20E65178002B7678 /* support_linux.tests.swift in Sources */,
 				A4B96E6E20D6D9CF003C7803 /* Tests.swift in Sources */,
-				A4B96E6D20D6D9CF003C7803 /* support_linux.tests.swift in Sources */,
 				A4DECF99206FFA76006933C4 /* CGLayoutTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -996,7 +996,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 39RU298KG9;
 				INFOPLIST_FILE = CGLayout/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
@@ -1012,7 +1012,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 39RU298KG9;
 				INFOPLIST_FILE = CGLayout/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";

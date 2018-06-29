@@ -42,22 +42,22 @@ internal struct LayoutSnapshot: LayoutSnapshotProtocol {
 }
 
 internal struct _SizeThatFitsConstraint: RectBasedConstraint {
-    weak var item: SelfSizedLayoutItem!
+    weak var item: AdaptiveLayoutElement!
     func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect.size = item.sizeThatFits(rect.size)
     }
 }
 internal struct _MainThreadSizeThatFitsConstraint: RectBasedConstraint {
-    weak var item: SelfSizedLayoutItem!
+    weak var item: AdaptiveLayoutElement!
     func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
         sourceRect.size = syncGuard(mainThread: item.sizeThatFits(rect.size))
     }
 }
 
-internal struct _MainThreadItemInLayoutTime<Item: LayoutItem>: InLayoutTimeItem {
+internal struct _MainThreadItemInLayoutTime<Item: LayoutElement>: ElementInLayoutTime {
     var layoutBounds: CGRect { return syncGuard(mainThread: { item.layoutBounds }) }
-    var superLayoutBounds: CGRect { return syncGuard(mainThread: { item.superItem!.layoutBounds }) }
-    weak var superItem: LayoutItem? { return syncGuard(mainThread: { item.superItem }) }
+    var superLayoutBounds: CGRect { return syncGuard(mainThread: { item.superElement!.layoutBounds }) }
+    weak var superElement: LayoutElement? { return syncGuard(mainThread: { item.superElement }) }
     var frame: CGRect {
         set { syncGuard { item.frame = newValue } }
         get { return syncGuard { item.frame } }

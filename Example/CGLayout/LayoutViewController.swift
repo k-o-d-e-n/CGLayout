@@ -16,6 +16,7 @@ final class ContentView: UIView {
     }
 }
 
+@available(iOS 10.0, *)
 class LayoutViewController: UIViewController {
     var contentView: ContentView!
     var layoutManager: LayoutManager<UIView>!

@@ -36,8 +36,8 @@ struct ReuseLayoutBlock {
     func contentRect(fitting rect: CGRect) -> CGRect {
         return contentConstraints.reduce(rect) { $1.constrained(sourceRect: $0, by: rect) }
     }
-    func apply(for item: LayoutItem) {
-        layout.apply(for: item, use: targetConstraints.map { (item.superItem!.bounds, $0) })
+    func apply(for item: LayoutElement) {
+        layout.apply(for: item, use: [(item.superElement!.bounds, targetConstraints)])
     }
 }
 
@@ -48,18 +48,18 @@ class TableViewController: UITableViewController {
     let bottomView2 = UIView()
     let layoutGuide = LayoutGuide<UITableView>(frame: UIScreen.main.bounds.insetBy(dx: 0, dy: 100))
     lazy var bottomViewBlock: LayoutBlock<UIView> = self.bottomView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(100), height: .fixed(50)),
-                                                                                constraints: [self.layoutGuide.layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .inner)]),
-                                                                                              self.view.layoutConstraint(for: [LayoutAnchor.Bottom.pull(from: .inner)])])
+                                                                                constraints: [self.layoutGuide.layoutConstraint(for: [.bottom(.limit(on: .inner))]),
+                                                                                              self.view.layoutConstraint(for: [.bottom(.pull(from: .inner))])])
     lazy var bottomView2Block: LayoutBlock<UIView> = self.bottomView2.layoutBlock(with: Layout(x: .center(), y: .top(), width: .fixed(50), height: .fixed(50)),
-                                                                                  constraints: [self.layoutGuide.layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .inner)]),
-                                                                                                self.tableView.contentLayoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])])
+                                                                                  constraints: [self.layoutGuide.layoutConstraint(for: [.bottom(.limit(on: .inner))]),
+                                                                                                self.tableView.contentLayoutConstraint(for: [.bottom(.align(by: .outer))])])
 
     lazy var blocks: [ReuseLayoutBlock] = self.strings.map {
         ReuseLayoutBlock(layout: Layout.equal,
-                         targetConstraints: [LayoutAnchor.insets(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20))],
-                         contentConstraints: [LayoutAnchor.insets(UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)),
-                                              $0.layoutConstraint(attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14)]),
-                                              LayoutAnchor.insets(UIEdgeInsets(top: -10, left: 0, bottom: -10, right: 0))])
+                         targetConstraints: [Inset(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20))],
+                         contentConstraints: [Inset(UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)),
+                                              $0.layoutConstraint(attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]),
+                                              Inset(UIEdgeInsets(top: -10, left: 0, bottom: -10, right: 0))])
     }
 
     override func viewDidLoad() {

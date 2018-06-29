@@ -18,10 +18,10 @@ open class UIAdjustViewPlaceholder<View: UIView>: UIViewPlaceholder<View> {
             view.bottomAnchor.constraint(equalTo: bottomAnchor),
             view.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
-        view.setContentHuggingPriority(UILayoutPriorityRequired, for: .horizontal)
-        view.setContentHuggingPriority(UILayoutPriorityRequired, for: .vertical)
-        view.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
-        view.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
+        view.setContentHuggingPriority(.required, for: .horizontal)
+        view.setContentHuggingPriority(.required, for: .vertical)
+        view.setContentCompressionResistancePriority(.required, for: .vertical)
+        view.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 }
 

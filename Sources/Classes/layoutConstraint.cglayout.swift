@@ -17,31 +17,30 @@ import Foundation
 // MARK: LayoutConstraint
 
 /// Provides rect for constrain source space. Used for related constraints.
-// TODO: Change protocol definition. It is not exactly describe layout constraint.
 public protocol LayoutConstraintProtocol: RectBasedConstraint {
     /// Flag, defines that constraint may be used for layout
     var isActive: Bool { get }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { get }
-    /// `LayoutItem` object associated with this constraint
-    func layoutItem(is object: AnyObject) -> Bool
+    /// `LayoutElement` object associated with this constraint
+    func layoutElement(is object: AnyObject) -> Bool
     /// Return rectangle for constrain source rect
     ///
     /// - Parameter currentSpace: Source rect in current state
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect
     /// Converts rect from constraint coordinate space to destination coordinate space if needed.
     ///
     /// - Parameters:
     ///   - rect: Initial rect
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect
 }
 extension LayoutConstraintProtocol {
-    internal func constrained(sourceRect: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
-        return constrained(sourceRect: sourceRect, by: constrainRect(for: sourceRect, in: coordinateSpace))
+    internal func constrain(sourceRect: inout CGRect, in coordinateSpace: LayoutElement) {
+        formConstrain(sourceRect: &sourceRect, by: constrainRect(for: sourceRect, in: coordinateSpace))
     }
 }
 public extension LayoutConstraintProtocol {
@@ -54,32 +53,30 @@ public extension LayoutConstraintProtocol {
     }
 }
 
-// TODO: Define for LayoutConstraint rect for restriction (bounds, frame, layoutFrame)
-
-/// Simple related constraint. Contains anchor constraints and layout item as source of frame for constrain
+/// Simple related constraint. Contains anchor constraints and layout element as source of frame for constrain
 public struct LayoutConstraint {
     fileprivate let constraints: [RectBasedConstraint]
-    private(set) weak var item: LayoutItem?
-    internal var inLayoutTime: InLayoutTimeItem?
-    internal var inLayoutTimeItem: InLayoutTimeItem? {
+    private(set) weak var item: LayoutElement?
+    internal var inLayoutTime: ElementInLayoutTime?
+    internal var inLayoutTimeItem: ElementInLayoutTime? {
         return inLayoutTime ?? item?.inLayoutTime
     }
 
-    public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
-        self.item = item
-        self.inLayoutTime = item.inLayoutTime
+    public init(element: LayoutElement, constraints: [RectBasedConstraint]) {
+        self.item = element
+        self.inLayoutTime = element.inLayoutTime
         self.constraints = constraints
     }
 }
 extension LayoutConstraint: LayoutConstraintProtocol {
     /// Flag, defines that constraint may be used for layout
-    public var isActive: Bool { return inLayoutTimeItem?.superItem != nil }
+    public var isActive: Bool { return inLayoutTimeItem?.superElement != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return false }
 
-    public /// `LayoutItem` object associated with this constraint
-    func layoutItem(is object: AnyObject) -> Bool {
+    public /// `LayoutElement` object associated with this constraint
+    func layoutElement(is object: AnyObject) -> Bool {
         return item === object
     }
 
@@ -88,7 +85,7 @@ extension LayoutConstraint: LayoutConstraintProtocol {
     /// - Parameter currentSpace: Source rect in current state
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect {
         guard let layoutItem = inLayoutTimeItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
 
         return convert(rectIfNeeded: layoutItem.frame, to: coordinateSpace)
@@ -109,32 +106,32 @@ extension LayoutConstraint: LayoutConstraintProtocol {
     ///   - rect: Initial rect
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
-        guard let superLayoutItem = inLayoutTimeItem?.superItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect {
+        guard let superLayoutItem = inLayoutTimeItem?.superElement else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
 
         return coordinateSpace === superLayoutItem ? rect : coordinateSpace.convert(rect: rect, from: superLayoutItem)
     }
 }
 
-/// Related constraint for adjust size of source space. Contains size constraints and layout item for calculate size.
+/// Related constraint for adjust size of source space. Contains size constraints and layout element for calculate size.
 public struct AdjustLayoutConstraint {
-    let constraints: [LayoutAnchor.Size]
-    private(set) weak var item: AdjustableLayoutItem?
+    let constraints: [Size]
+    private(set) weak var item: AdjustableLayoutElement?
 
-    public init(item: AdjustableLayoutItem, constraints: [LayoutAnchor.Size]) {
-        self.item = item
+    public init(element: AdjustableLayoutElement, constraints: [Size]) {
+        self.item = element
         self.constraints = constraints
     }
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     public /// Flag, defines that constraint may be used for layout
-    var isActive: Bool { return item?.inLayoutTime.superItem != nil }
+    var isActive: Bool { return item?.inLayoutTime.superElement != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return true }
 
-    public /// `LayoutItem` object associated with this constraint
-    func layoutItem(is object: AnyObject) -> Bool {
+    public /// `LayoutElement` object associated with this constraint
+    func layoutElement(is object: AnyObject) -> Bool {
         return item === object
     }
 
@@ -143,7 +140,7 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     /// - Parameter currentSpace: Source rect in current state
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect {
         return currentSpace
     }
 
@@ -153,7 +150,7 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
     func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-        guard let item = item else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+        guard let item = item else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
 
         sourceRect = sourceRect.constrainedBy(rect: item.contentConstraint.constrained(sourceRect: rect, by: rect), use: constraints)
     }
@@ -164,42 +161,43 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     ///   - rect: Initial rect
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect {
         return rect
     }
 }
 
+/// Related constraint that uses internal bounds to constrain, defined in 'layoutBounds' property
 public struct ContentLayoutConstraint {
     fileprivate let constraints: [RectBasedConstraint]
-    private(set) weak var item: LayoutItem?
-    internal var inLayoutTime: InLayoutTimeItem?
-    internal var inLayoutTimeItem: InLayoutTimeItem? {
+    private(set) weak var item: LayoutElement?
+    internal var inLayoutTime: ElementInLayoutTime?
+    internal var inLayoutTimeItem: ElementInLayoutTime? {
         return inLayoutTime ?? item?.inLayoutTime
     }
 
-    public init(item: LayoutItem, constraints: [RectBasedConstraint]) {
-        self.item = item
-        self.inLayoutTime = item.inLayoutTime
+    public init(element: LayoutElement, constraints: [RectBasedConstraint]) {
+        self.item = element
+        self.inLayoutTime = element.inLayoutTime
         self.constraints = constraints
     }
 }
 extension ContentLayoutConstraint: LayoutConstraintProtocol {
     /// Flag, defines that constraint may be used for layout
-    public var isActive: Bool { return inLayoutTimeItem?.superItem != nil }
+    public var isActive: Bool { return inLayoutTimeItem?.superElement != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return false }
 
-    public /// `LayoutItem` object associated with this constraint
-    func layoutItem(is object: AnyObject) -> Bool { return item === object }
+    public /// `LayoutElement` object associated with this constraint
+    func layoutElement(is object: AnyObject) -> Bool { return item === object }
 
     public /// Return rectangle for constrain source rect
     ///
     /// - Parameter currentSpace: Source rect in current state
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
-        guard let layoutItem = inLayoutTimeItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect {
+        guard let layoutItem = inLayoutTimeItem else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
 
         return convert(rectIfNeeded: layoutItem.layoutBounds, to: coordinateSpace)
     }
@@ -219,8 +217,8 @@ extension ContentLayoutConstraint: LayoutConstraintProtocol {
     ///   - rect: Initial rect
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
-        guard let item = self.item else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect {
+        guard let item = self.item else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
 
         return coordinateSpace === item ? rect : coordinateSpace.convert(rect: rect, from: item)
     }
@@ -228,38 +226,38 @@ extension ContentLayoutConstraint: LayoutConstraintProtocol {
 
 /// Related constraint for base line.
 public struct BaselineLayoutConstraint {
-    public typealias Item = LayoutItem & TextPresentedItem
+    public typealias Item = LayoutElement & TextPresentedElement
     fileprivate let constraints: [RectBasedConstraint]
     private(set) weak var item: Item?
-    internal var inLayoutTime: InLayoutTimeItem?
-    internal var inLayoutTimeItem: InLayoutTimeItem? {
+    internal var inLayoutTime: ElementInLayoutTime?
+    internal var inLayoutTimeItem: ElementInLayoutTime? {
         return inLayoutTime ?? item?.inLayoutTime
     }
 
-    public init(item: Item, constraints: [RectBasedConstraint]) {
-        self.item = item
-        self.inLayoutTime = item.inLayoutTime
+    public init(element: Item, constraints: [RectBasedConstraint]) {
+        self.item = element
+        self.inLayoutTime = element.inLayoutTime
         self.constraints = constraints
     }
 }
 extension BaselineLayoutConstraint: LayoutConstraintProtocol {
     /// Flag, defines that constraint may be used for layout
-    public var isActive: Bool { return inLayoutTimeItem?.superItem != nil }
+    public var isActive: Bool { return inLayoutTimeItem?.superElement != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return false }
 
-    public /// `LayoutItem` object associated with this constraint
-    func layoutItem(is object: AnyObject) -> Bool { return item === object }
+    public /// `LayoutElement` object associated with this constraint
+    func layoutElement(is object: AnyObject) -> Bool { return item === object }
 
     public /// Return rectangle for constrain source rect
     ///
     /// - Parameter currentSpace: Source rect in current state
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
-        guard let layoutItem = item else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
-        // TODO: use InLayoutTimeItem
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect {
+        guard let layoutItem = item else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
+        // TODO: use ElementInLayoutTime
         var rect = layoutItem.frame
         rect.origin.y += layoutItem.baselinePosition
         rect.size.height = 0
@@ -281,8 +279,8 @@ extension BaselineLayoutConstraint: LayoutConstraintProtocol {
     ///   - rect: Initial rect
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
-        guard let superLayoutItem = inLayoutTimeItem?.superItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect {
+        guard let superLayoutItem = inLayoutTimeItem?.superElement else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
 
         return coordinateSpace === superLayoutItem ? rect : coordinateSpace.convert(rect: rect, from: superLayoutItem)
     }
@@ -322,17 +320,17 @@ public class MutableLayoutConstraint: LayoutConstraintProtocol {
     ///   - rect: Initial rect
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect { return base.convert(rectIfNeeded: rect, to: coordinateSpace) }
+    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect { return base.convert(rectIfNeeded: rect, to: coordinateSpace) }
 
     public /// Return rectangle for constrain source rect
     ///
     /// - Parameter currentSpace: Source rect in current state
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect { return base.constrainRect(for: currentSpace, in: coordinateSpace) }
+    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect { return base.constrainRect(for: currentSpace, in: coordinateSpace) }
 
-    public /// `LayoutItem` object associated with this constraint
-    func layoutItem(is object: AnyObject) -> Bool { return base.layoutItem(is: object) }
+    public /// `LayoutElement` object associated with this constraint
+    func layoutElement(is object: AnyObject) -> Bool { return base.layoutElement(is: object) }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return base.isIndependent }
@@ -355,8 +353,8 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     public var isIndependent: Bool { return true }
 
-    /// `LayoutItem` object associated with this constraint
-    public func layoutItem(is object: AnyObject) -> Bool {
+    /// `LayoutElement` object associated with this constraint
+    public func layoutElement(is object: AnyObject) -> Bool {
         return false
     }
 
@@ -365,7 +363,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     /// - Parameter currentSpace: Source rect in current state
     /// - Parameter coordinateSpace: Working coordinate space
     /// - Returns: Rect for constrain
-    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutItem) -> CGRect {
+    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect {
         return constrainRect?(currentSpace) ?? currentSpace
     }
 
@@ -384,13 +382,13 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     ///   - rect: Initial rect
     ///   - coordinateSpace: Destination coordinate space
     /// - Returns: Converted rect
-    public func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutItem) -> CGRect {
+    public func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect {
         return rect
     }
 }
 public extension AnonymConstraint {
     init(transform: @escaping (inout CGRect) -> Void) {
-        self.init(anchors: [LayoutAnchor.equal]) {
+        self.init(anchors: [Equal()]) {
             var source = $0
             transform(&source)
             return source
@@ -401,11 +399,18 @@ public extension AnonymConstraint {
 // TODO: Create constraint for attributed string and other data oriented constraints
 
 #if os(macOS) || os(iOS) || os(tvOS)
+public extension String {
+    #if os(macOS)
+    typealias DrawingOptions = NSString.DrawingOptions
+    #elseif os(iOS) || os(tvOS)
+    typealias DrawingOptions = NSStringDrawingOptions
+    #endif
+}
 @available(OSX 10.11, *) /// Size-based constraint for constrain source rect by size of string. The size to draw gets from restrictive rect.
 public struct StringLayoutAnchor: RectBasedConstraint {
     let string: String?
     let attributes: [NSAttributedStringKey: Any]?
-    let options: NSString.DrawingOptions
+    let options: String.DrawingOptions
     let context: NSStringDrawingContext?
 
     /// Designed initializer
@@ -415,7 +420,7 @@ public struct StringLayoutAnchor: RectBasedConstraint {
     ///   - options: String drawing options.
     ///   - attributes: A dictionary of text attributes to be applied to the string. These are the same attributes that can be applied to an NSAttributedString object, but in the case of NSString objects, the attributes apply to the entire string, rather than ranges within the string.
     ///   - context: The string drawing context to use for the receiver, specifying minimum scale factor and tracking adjustments.
-    public init(string: String?, options: NSString.DrawingOptions = .usesLineFragmentOrigin, attributes: [NSAttributedStringKey: Any]? = nil, context: NSStringDrawingContext? = nil) {
+    public init(string: String?, options: String.DrawingOptions = .usesLineFragmentOrigin, attributes: [NSAttributedStringKey: Any]? = nil, context: NSStringDrawingContext? = nil) {
         self.string = string
         self.attributes = attributes
         self.context = context
@@ -438,8 +443,8 @@ public extension String {
     ///   - attributes: String attributes
     ///   - context: Drawing context
     /// - Returns: String-based constraint
-    @available(OSX 10.11, *)
-    func layoutConstraint(with options: NSString.DrawingOptions = .usesLineFragmentOrigin, attributes: [NSAttributedStringKey: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutAnchor {
+    @available(OSX 10.11, iOS 10.0, *)
+    func layoutConstraint(with options: String.DrawingOptions = .usesLineFragmentOrigin, attributes: [NSAttributedStringKey: Any]? = nil, context: NSStringDrawingContext? = nil) -> StringLayoutAnchor {
         return StringLayoutAnchor(string: self, options: options, attributes: attributes, context: context)
     }
 }

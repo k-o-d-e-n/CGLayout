@@ -14,17 +14,6 @@ import Cocoa
 import Foundation
 #endif
 
-// TODO: !! Comment all code
-// TODO: ! Add RTL (right to left language)
-// TODO: ! Add support UITraitCollection
-// TODO: !! Optimization for macOS API
-// TODO: !!! Resolve problem with create offset for adjusted views.
-// TODO: ! Add CGRect.integral
-// TODO: !! Add implementation description variables if needed
-// TODO: ! Move reduce to inout with swift 4
-
-// TODO: !!! Tests for new code
-
 /// Defines method for wrapping entity with base behavior to this type.
 public protocol Extended {
     associatedtype Conformed
@@ -48,7 +37,7 @@ public protocol RectBasedLayout {
 }
 
 /// Tuple of rect and constraint for constrain other rect
-public typealias ConstrainRect = (rect: CGRect, constraint: RectBasedConstraint)
+public typealias ConstrainRect = (rect: CGRect, constraints: [RectBasedConstraint])
 
 public extension RectBasedLayout {
     /// Wrapper for main layout function. This is used for working with immutable values.
@@ -63,68 +52,66 @@ public extension RectBasedLayout {
         return rect
     }
 
-    /// Used for layout `LayoutItem` entity in constrained bounds of parent item using constraints. Must call only on main thread.
+    /// Used for layout `LayoutElement` entity in constrained bounds of parent element using constraints. Must call only on main thread.
     ///
     /// - Parameters:
-    ///   - item: Item for layout
+    ///   - element: Element for layout
     ///   - constraints: Array of tuples with rect and constraint
-    public func apply(for item: LayoutItem, use constraints: [ConstrainRect] = []) {
-        item.frame = layout(rect: item.frame, in: item.superItem!.layoutBounds, use: constraints)
+    public func apply(for item: LayoutElement, use constraints: [ConstrainRect] = []) {
+        item.frame = layout(rect: item.frame, in: item.superElement!.layoutBounds, use: constraints)
     }
-    /// Used for layout `LayoutItem` entity in constrained source space using constraints. Must call only on main thread.
+    /// Used for layout `LayoutElement` entity in constrained source space using constraints. Must call only on main thread.
     ///
     /// - Parameters:
-    ///   - item: Item for layout
+    ///   - element: Element for layout
     ///   - source: Source space
     ///   - constraints: Array of tuples with rect and constraint
-    public func apply(for item: LayoutItem, in source: CGRect, use constraints: [ConstrainRect] = []) {
+    public func apply(for item: LayoutElement, in source: CGRect, use constraints: [ConstrainRect] = []) {
         item.frame = layout(rect: item.frame, in: source, use: constraints)
     }
 
-    /// Calculates frame of `LayoutItem` entity in constrained source space using constraints.
+    /// Calculates frame of `LayoutElement` entity in constrained source space using constraints.
     ///
     /// - Parameters:
-    ///   - item: Item for layout
-    ///   - constraints: Array of constraint items
+    ///   - element: Element for layout
+    ///   - constraints: Array of constraint elements
     /// - Returns: Array of tuples with rect and constraint
     public func layout(rect: CGRect, in sourceRect: CGRect, use constraints: [ConstrainRect] = []) -> CGRect {
-        let source = constraints.reduce(sourceRect) { (result, constrained) -> CGRect in
-            return result.constrainedBy(rect: constrained.rect, use: constrained.constraint)
-        }
-        return layout(rect: rect, in: source)
+        return layout(rect: rect, in: constraints.reduce(into: sourceRect) { (result, constrained) in
+            result = result.constrainedBy(rect: constrained.rect, use: constrained.constraints)
+        })
     }
 
-    /// Use for layout `LayoutItem` entity in constrained bounds of parent item using constraints. Must call only on main thread.
+    /// Use for layout `LayoutElement` entity in constrained bounds of parent element using constraints. Must call only on main thread.
     ///
     /// - Parameters:
-    ///   - item: Item for layout
-    ///   - constraints: Array of constraint items
-    public func apply(for item: LayoutItem, use constraints: [LayoutConstraintProtocol]) {
-        // TODO: ! Add flag for using layout margins. IMPL: Apply 'inset' constraint from LayotAnchor to super bounds.
-        debugFatalError(item.superItem == nil, "Layout item is not in hierarchy")
-        apply(for: item, in: item.superItem!.layoutBounds, use: constraints) // TODO: Can use bounds and layoutBounds
+    ///   - element: Element for layout
+    ///   - constraints: Array of constraint elements
+    public func apply(for item: LayoutElement, use constraints: [LayoutConstraintProtocol]) {
+        debugFatalError(item.superElement == nil, "Layout item is not in hierarchy")
+        apply(for: item, in: item.superElement!.layoutBounds, use: constraints)
     }
-    /// Use for layout `LayoutItem` entity in constrained source space using constraints. Must call only on main thread.
+    /// Use for layout `LayoutElement` entity in constrained source space using constraints. Must call only on main thread.
     ///
     /// - Parameters:
-    ///   - item: Item for layout
+    ///   - element: Element for layout
     ///   - sourceRect: Source space
-    ///   - constraints: Array of constraint items
-    public func apply(for item: LayoutItem, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol]) {
-        debugFatalError(item.superItem == nil, "Layout item is not in hierarchy")
-        item.frame = layout(rect: item.frame, from: item.superItem!, in: sourceRect, use: constraints)
+    ///   - constraints: Array of constraint elements
+    public func apply(for item: LayoutElement, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol]) {
+        debugFatalError(item.superElement == nil, "Layout element is not in hierarchy")
+        item.frame = layout(rect: item.frame, from: item.superElement!, in: sourceRect, use: constraints)
     }
 
-    /// Calculates frame of `LayoutItem` entity in constrained source space using constraints.
+    /// Calculates frame of `LayoutElement` entity in constrained source space using constraints.
     ///
     /// - Parameters:
     ///   - rect: Rect for layout
-    ///   - item: `LayoutItem` item contained `rect`
+    ///   - element: `LayoutElement` contained `rect`
     ///   - sourceRect: Space for layout
-    ///   - constraints: Array of constraint items
-    /// - Returns: Corrected frame of layout item
-    public func layout(rect: CGRect, from item: LayoutItem, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol] = []) -> CGRect {
-        return layout(rect: rect, in: constraints.reduce(sourceRect) { $1.constrained(sourceRect: $0, in: item) })
+    ///   - constraints: Array of constraint elements
+    /// - Returns: Corrected frame of layout element
+    public func layout(rect: CGRect, from item: LayoutElement, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol] = []) -> CGRect {
+        return layout(rect: rect, in: constraints.reduce(into: sourceRect) { $1.constrain(sourceRect: &$0, in: item) })
     }
 }
 
@@ -160,7 +147,7 @@ extension CGRect {
     ///   - constraints: List of constraints
     /// - Returns: Constrained source rect
     func constrainedBy(rect: CGRect, use constraints: [RectBasedConstraint]) -> CGRect {
-        return constraints.reduce(self) { $1.constrained(sourceRect: $0, by: rect) }
+        return constraints.reduce(into: self) { $1.formConstrain(sourceRect: &$0, by: rect) }
     }
     /// Convenience method for constrain
     ///
@@ -173,9 +160,9 @@ extension CGRect {
     }
 }
 
-// MARK: LayoutItem
+// MARK: LayoutElement
 
-public protocol RectBasedItem {
+public protocol RectBasedElement {
     /// External representation of layout entity in coordinate space
     var frame: CGRect { get set }
     /// Internal coordinate space of layout entity
@@ -183,456 +170,200 @@ public protocol RectBasedItem {
 }
 
 /// Protocol for any layout element
-public protocol LayoutItem: class, RectBasedItem, LayoutCoordinateSpace {
+public protocol LayoutElement: class, RectBasedElement, LayoutCoordinateSpace {
     /// External representation of layout entity in coordinate space
     var frame: CGRect { get set }
     /// Internal coordinate space of layout entity
     var bounds: CGRect { get set }
-    /// Internal space for layout subitems
+    /// Internal space for layout subelements
     var layoutBounds: CGRect { get }
-    /// Layout item that maintains this layout entity
-    var superItem: LayoutItem? { get }
-    /// Entity that represents item in layout time
-    var inLayoutTime: InLayoutTimeItem { get }
-    /// Removes layout item from hierarchy
-    func removeFromSuperItem()
+    /// Layout element that maintains this layout entity
+    var superElement: LayoutElement? { get }
+    /// Entity that represents element in layout time
+    var inLayoutTime: ElementInLayoutTime { get }
+    /// Removes layout element from hierarchy
+    func removeFromSuperElement()
 }
 
-public protocol InLayoutTimeItem: RectBasedItem {
-    /// Layout item that maintains this layout entity
-    var superItem: LayoutItem? { get }
-    /// Internal layout space of super item
+/// Defines requirements for thread confined wrapper of layout element
+public protocol ElementInLayoutTime: RectBasedElement {
+    /// Layout element that maintains this layout entity
+    var superElement: LayoutElement? { get }
+    /// Internal layout space of super element
     var superLayoutBounds: CGRect { get }
-    /// Internal space for layout subitems
+    /// Internal space for layout subelements
     var layoutBounds: CGRect { get }
 }
 
-public protocol TextPresentedItem {
-    // Defines y-position from origin in internal coordinate space
+/// Protocol for text elements. Provides their specific parameters.
+public protocol TextPresentedElement {
+    /// Defines y-position from origin in internal coordinate space
     var baselinePosition: CGFloat { get }
 }
 
-extension LayoutItem {
-    /// Convenience getter for constraint item related to this entity
+extension LayoutElement {
+    /// Convenience getter for constraint element related to this entity
     ///
     /// - Parameter anchors: Array of anchor constraints
-    /// - Returns: Related constraint item
-    public func layoutConstraint(for anchors: [RectBasedConstraint]) -> LayoutConstraint {
-        return LayoutConstraint(item: self, constraints: anchors)
+    /// - Returns: Related constraint element
+    public func layoutConstraint(for anchors: [LayoutAnchor]) -> LayoutConstraint {
+        return LayoutConstraint(element: self, constraints: anchors.map { $0.constraint })
     }
     /// Convenience getter for layout block related to this entity
     ///
     /// - Parameters:
     ///   - layout: Main layout for this entity
-    ///   - constraints: Array of related constraint items
+    ///   - constraints: Array of related constraint elements
     /// - Returns: Related layout block
     public func layoutBlock(with layout: Layout = Layout.equal, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
-        return LayoutBlock(item: self, layout: layout, constraints: constraints)
+        return LayoutBlock(element: self, layout: layout, constraints: constraints)
     }
 
-    public func contentLayoutConstraint(for anchors: [RectBasedConstraint]) -> ContentLayoutConstraint {
-        return ContentLayoutConstraint(item: self, constraints: anchors)
+    /// Convenience getter for constraint that uses internal bounds to constrain, defined in 'layoutBounds' property
+    ///
+    /// - Parameter anchors: Array of anchor constraints
+    /// - Returns: Related constraint element
+    public func contentLayoutConstraint(for anchors: [LayoutAnchor]) -> ContentLayoutConstraint {
+        return ContentLayoutConstraint(element: self, constraints: anchors.map { $0.constraint })
     }
 }
-public extension LayoutItem where Self: TextPresentedItem {
-    func baselineLayoutConstraint(for anchors: [RectBasedConstraint]) -> BaselineLayoutConstraint {
-        return BaselineLayoutConstraint(item: self, constraints: anchors)
+public extension LayoutElement where Self: TextPresentedElement {
+    /// Convenience getter for constraint by baseline position
+    ///
+    /// - Parameter anchors: Array of anchor constraints
+    /// - Returns: Related constraint element
+    func baselineLayoutConstraint(for anchors: [Baseline]) -> BaselineLayoutConstraint {
+        return BaselineLayoutConstraint(element: self, constraints: anchors)
     }
 }
 
-// MARK: AdjustableLayoutItem
+// MARK: AdjustableLayoutElement
 
-public protocol SelfSizedLayoutItem: class {
-    /// Asks the layout item to calculate and return the size that best fits the specified size
+/// Element that may adapt to proposed size
+public protocol AdaptiveLayoutElement: class {
+    /// Asks the layout element to calculate and return the size that best fits the specified size
     ///
     /// - Parameter size: The size for which the view should calculate its best-fitting size
     /// - Returns: A new size that fits the receiver’s content
     func sizeThatFits(_ size: CGSize) -> CGSize
 }
 
-/// Protocol for items that can calculate yourself fitted size
-public protocol AdjustableLayoutItem: LayoutItem {
-    /// Constraint, that defines content size for item
+/// Protocol for elements that can calculate yourself content size
+public protocol AdjustableLayoutElement: LayoutElement {
+    /// Constraint, that defines content size of element
     var contentConstraint: RectBasedConstraint { get }
 }
-extension AdjustableLayoutItem where Self: SelfSizedLayoutItem {
-    /// Constraint, that defines content size for item
+extension AdjustableLayoutElement where Self: AdaptiveLayoutElement {
+    /// Constraint, that defines content size of element
     public var contentConstraint: RectBasedConstraint { return _SizeThatFitsConstraint(item: self) }
 }
-extension AdjustableLayoutItem {
-    /// Convenience getter for adjust constraint item related to this entity
+extension AdjustableLayoutElement {
+    /// Convenience getter for adjust constraint related to this element
     ///
     /// - Parameter anchors: Array of anchor constraints
-    /// - Returns: Related adjust constraint item
-    public func adjustLayoutConstraint(for anchors: [LayoutAnchor.Size]) -> AdjustLayoutConstraint {
-        return AdjustLayoutConstraint(item: self, constraints: anchors)
+    /// - Returns: Related adjust constraint element
+    public func adjustLayoutConstraint(for anchors: [Size]) -> AdjustLayoutConstraint {
+        return AdjustLayoutConstraint(element: self, constraints: anchors)
     }
 }
 
 // MARK: LayoutAnchor
 
-// TODO: ! Add center, baseline and other behaviors
-// TODO: !! Hide types that not used directly
-// TODO: RectBasedConstraint should have possible be wrapped by transformations (min, max, ...) 
-
 /// Provides set of anchor constraints
-public struct LayoutAnchor {
-    /// Set of constraints related to base line of restrictive rect
-    public struct Baseline: RectBasedConstraint, Extended {
-        public typealias Conformed = RectBasedConstraint
-        private let base: RectBasedConstraint
-        private init(base: RectBasedConstraint) { self.base = base }
-        public /// Main function for constrain source space by other rect
-        ///
-        /// - Parameters:
-        ///   - sourceRect: Source space
-        ///   - rect: Rect for constrain
-        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-        public /// Common method for create entity of this type with base behavior.
-        ///
-        /// - Parameter base: Entity implements required behavior
-        /// - Returns: Initialized entity
-        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Baseline { return .init(base: base) }
+public enum LayoutAnchor {
+    case baseline(Baseline)
+    case center(Center)
+    case leading(Leading)
+    case trailing(Trailing)
+    case left(Left)
+    case right(Right)
+    case top(Top)
+    case bottom(Bottom)
+    case size(Size)
+    case insets(EdgeInsets)
+    case equal(CGRect)
+    case equally
+    case custom(RectBasedConstraint)
 
-        /// Returns alignment constraint by baseline
-        ///
-        /// - Parameter dependency: Anchor dependency for target rect
-        /// - Returns: Alignment constraint typed by Baseline
-        public static func align(of textPresenter: TextPresentedItem & LayoutItem) -> Baseline { return Baseline(base: Align(textPresenter: textPresenter)) }
-        public struct Align: RectBasedConstraint {
-            fileprivate unowned var textPresenter: TextPresentedItem & LayoutItem
-
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                sourceRect.origin.y = rect.maxY - textPresenter.baselinePosition
-            }
+    internal var constraint: RectBasedConstraint {
+        switch self {
+        case .baseline(let c): return c
+        case .center(let c): return c
+        case .leading(let c): return c
+        case .trailing(let c): return c
+        case .left(let c): return c
+        case .right(let c): return c
+        case .top(let c): return c
+        case .bottom(let c): return c
+        case .size(let c): return c
+        case .insets(let c): return Inset(c)
+        case .equal(let c): return Constantly(value: c)
+        case .equally: return Equal()
+        case .custom(let c): return c
         }
     }
+}
 
-    /// Set of constraints related to center of restrictive rect
-    public struct Center: RectBasedConstraint, Extended {
-        public typealias Conformed = RectBasedConstraint
-        private let base: RectBasedConstraint
-        private init(base: RectBasedConstraint) { self.base = base }
-        public /// Main function for constrain source space by other rect
-        ///
-        /// - Parameters:
-        ///   - sourceRect: Source space
-        ///   - rect: Rect for constrain
-        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-        public /// Common method for create entity of this type with base behavior.
-        ///
-        /// - Parameter base: Entity implements required behavior
-        /// - Returns: Initialized entity
-        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Center { return .init(base: base) }
-
-        /// Returns alignment constraint by center
-        ///
-        /// - Parameter dependency: Anchor dependency for target rect
-        /// - Returns: Alignment constraint typed by Center
-        public static func align(by dependency: AlignDependence) -> Center { return Center(base: dependency) }
-        public struct AlignDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                base.formConstrain(sourceRect: &sourceRect, by: rect)
-            }
-
-            public static var center: AlignDependence {
-                return AlignDependence(base: ConstraintsAggregator([LayoutWorkspace.Center.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.center),
-                                                                    LayoutWorkspace.Center.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.center)]))
-            }
-            public static var origin: AlignDependence {
-                return AlignDependence(base: ConstraintsAggregator([LayoutWorkspace.After.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.center),
-                                                                    LayoutWorkspace.After.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.center)]))
-            }
-            /// ...
-        }
-    }
-
-    /// Returns constraint, that applies UIEdgeInsets to source rect.
+/// Set of constraints related to baseline of restrictive rect
+public struct Baseline: RectBasedConstraint, Extended {
+    public typealias Conformed = RectBasedConstraint
+    private let base: RectBasedConstraint
+    private init(base: RectBasedConstraint) { self.base = base }
+    public /// Main function for constrain source space by other rect
     ///
-    /// - Parameter value: UIEdgeInsets value
-    /// - Returns: Inset constraint
-    public static func insets(_ value: EdgeInsets) -> RectBasedConstraint { return Inset(insets: value) }
-    private struct Inset: RectBasedConstraint {
-        let insets: EdgeInsets
-        /// Main function for constrain source space by other rect
-        ///
-        /// - Parameters:
-        ///   - sourceRect: Source space
-        ///   - rect: Rect for constrain
-        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-            sourceRect.apply(edgeInsets: insets)
-        }
-    }
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+    public /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: RectBasedConstraint) -> Baseline { return .init(base: base) }
 
-    /// Constraint, that makes source rect equally to passed rect
-    public static var equal: RectBasedConstraint { return Equal() }
-    private struct Equal: RectBasedConstraint {
-        /// Main function for constrain source space by other rect
-        ///
-        /// - Parameters:
-        ///   - sourceRect: Source space
-        ///   - rect: Rect for constrain
-        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-            sourceRect = rect
-        }
-    }
-
-    /// Constraint, that makes source rect equally to passed rect
-    public static var zero: RectBasedConstraint { return Equal() }
-    private struct Fixed: RectBasedConstraint {
-        /// Main function for constrain source space by other rect
-        ///
-        /// - Parameters:
-        ///   - sourceRect: Source space
-        ///   - rect: Rect for constrain
-        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-            sourceRect = .zero
-        }
-    }
-
-    public struct Leading: RectBasedConstraint, Extended {
-        public typealias Conformed = RectBasedConstraint
-        private let base: RectBasedConstraint
-        private init(base: RectBasedConstraint) { self.base = base }
+    /// Returns alignment constraint by baseline
+    ///
+    /// - Parameter dependency: Anchor dependency for target rect
+    /// - Returns: Alignment constraint typed by Baseline
+    public static func align(of textPresenter: TextPresentedElement & LayoutElement) -> Baseline { return Baseline(base: Align(textPresenter: textPresenter)) }
+    fileprivate struct Align: RectBasedConstraint {
+        fileprivate unowned var textPresenter: TextPresentedElement & LayoutElement
 
         public /// Main function for constrain source space by other rect
         ///
         /// - Parameters:
         ///   - sourceRect: Source space
         ///   - rect: Rect for constrain
-        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-        public /// Common method for create entity of this type with base behavior.
-        ///
-        /// - Parameter base: Entity implements required behavior
-        /// - Returns: Initialized entity
-        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Leading { return .init(base: base) }
-
-        /// Returns alignment constraint by leading
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Alignment constraint typed by Leading
-        public static func align(by dependency: Align.Dependence) -> Leading { return Leading(base: dependency) }
-        public struct Align {
-            public struct Dependence: RectBasedConstraint {
-                private let base: RectBasedConstraint
-
-                public /// Main function for constrain source space by other rect
-                ///
-                /// - Parameters:
-                ///   - sourceRect: Source space
-                ///   - rect: Rect for constrain
-                func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.AlignDependence.inner : Left.AlignDependence.inner) }
-                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.AlignDependence.outer : Left.AlignDependence.outer) }
-            }
-        }
-
-        /// Returns constraint, that limits source rect by leading of passed rect. If source rect intersects leading of passed rect, source rect will be cropped, else will not changed.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Limit constraint typed by Leading
-        public static func limit(on dependency: Limit.Dependence) -> Leading { return Leading(base: dependency) }
-        public struct Limit {
-            public struct Dependence: RectBasedConstraint {
-                private let base: RectBasedConstraint
-
-                public /// Main function for constrain source space by other rect
-                ///
-                /// - Parameters:
-                ///   - sourceRect: Source space
-                ///   - rect: Rect for constrain
-                func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.LimitDependence.inner : Left.LimitDependence.inner) }
-                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.LimitDependence.outer : Left.LimitDependence.outer) }
-            }
-        }
-
-        /// Returns constraint, that pulls source rect to leading of passed rect. If source rect intersects leading of passed rect, source rect will be cropped, else will pulled with changing size.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Pull constraint typed by Leading
-        public static func pull(from dependency: Pull.Dependence) -> Leading { return Leading(base: dependency) }
-        public struct Pull {
-            public struct Dependence: RectBasedConstraint {
-                private let base: RectBasedConstraint
-
-                public /// Main function for constrain source space by other rect
-                ///
-                /// - Parameters:
-                ///   - sourceRect: Source space
-                ///   - rect: Rect for constrain
-                func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.PullDependence.inner : Left.PullDependence.inner) }
-                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.PullDependence.outer : Left.PullDependence.outer) }
-            }
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            sourceRect.origin.y = rect.maxY - textPresenter.baselinePosition
         }
     }
+}
 
-    public struct Trailing: RectBasedConstraint, Extended {
-        public typealias Conformed = RectBasedConstraint
+/// Set of constraints related to center of restrictive rect
+public struct Center: RectBasedConstraint, Extended {
+    public typealias Conformed = RectBasedConstraint
+    private let base: RectBasedConstraint
+    private init(base: RectBasedConstraint) { self.base = base }
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+    public /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: RectBasedConstraint) -> Center { return .init(base: base) }
+
+    /// Returns alignment constraint by center
+    ///
+    /// - Parameter dependency: Anchor dependency for target rect
+    /// - Returns: Alignment constraint typed by Center
+    public static func align(by dependency: AlignDependence) -> Center { return Center(base: dependency) }
+    public struct AlignDependence: RectBasedConstraint {
         private let base: RectBasedConstraint
-        private init(base: RectBasedConstraint) { self.base = base }
-
-        public /// Main function for constrain source space by other rect
-        ///
-        /// - Parameters:
-        ///   - sourceRect: Source space
-        ///   - rect: Rect for constrain
-        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-        public /// Common method for create entity of this type with base behavior.
-        ///
-        /// - Parameter base: Entity implements required behavior
-        /// - Returns: Initialized entity
-        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Trailing { return .init(base: base) }
-
-        /// Returns alignment constraint by trailing
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Alignment constraint typed by Trailing
-        public static func align(by dependency: Align.Dependence) -> Trailing { return Trailing(base: dependency) }
-        public struct Align {
-            public struct Dependence: RectBasedConstraint {
-                private let base: RectBasedConstraint
-
-                public /// Main function for constrain source space by other rect
-                ///
-                /// - Parameters:
-                ///   - sourceRect: Source space
-                ///   - rect: Rect for constrain
-                func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.AlignDependence.inner : Right.AlignDependence.inner) }
-                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.AlignDependence.outer : Right.AlignDependence.outer) }
-            }
-        }
-
-        /// Returns constraint, that limits source rect by trailing of passed rect. If source rect intersects trailing of passed rect, source rect will be cropped, else will not changed.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Limit constraint typed by Trailing
-        public static func limit(on dependency: Limit.Dependence) -> Trailing { return Trailing(base: dependency) }
-        public struct Limit {
-            public struct Dependence: RectBasedConstraint {
-                private let base: RectBasedConstraint
-
-                public /// Main function for constrain source space by other rect
-                ///
-                /// - Parameters:
-                ///   - sourceRect: Source space
-                ///   - rect: Rect for constrain
-                func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.LimitDependence.inner : Right.LimitDependence.inner) }
-                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.LimitDependence.outer : Right.LimitDependence.outer) }
-            }
-        }
-
-        /// Returns constraint, that pulls source rect to trailing of passed rect. If source rect intersects trailing of passed rect, source rect will be cropped, else will pulled with changing size.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Pull constraint typed by Trailing
-        public static func pull(from dependency: Pull.Dependence) -> Trailing { return Trailing(base: dependency) }
-        public struct Pull {
-            public struct Dependence: RectBasedConstraint {
-                private let base: RectBasedConstraint
-
-                public /// Main function for constrain source space by other rect
-                ///
-                /// - Parameters:
-                ///   - sourceRect: Source space
-                ///   - rect: Rect for constrain
-                func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-                public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.PullDependence.inner : Right.PullDependence.inner) }
-                public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.PullDependence.outer : Right.PullDependence.outer) }
-            }
-        }
-    }
-
-    /// Set of size-based constraints
-    public struct Size: RectBasedConstraint, Extended {
-        public typealias Conformed = RectBasedConstraint
-        private let base: RectBasedConstraint
-        private init(base: RectBasedConstraint) { self.base = base }
-
-        public /// Common method for create entity of this type with base behavior.
-        ///
-        /// - Parameter base: Entity implements required behavior
-        /// - Returns: Initialized entity
-        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Size { return .init(base: base) }
-
-        public /// Main function for constrain source space by other rect
-        ///
-        /// - Parameters:
-        ///   - sourceRect: Source space
-        ///   - rect: Rect for constrain
-        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-        /// Constraint, that makes height of source rect equal to height passed rect.
-        ///
-        /// - Parameter multiplier: Multiplier for height value
-        /// - Returns: Height constraint typed by Size
-        public static func height(_ multiplier: CGFloat = 1) -> Size { return Size(base: Height(multiplier: multiplier)) }
-        private struct Height: RectBasedConstraint {
-            let multiplier: CGFloat
-
-            /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                sourceRect.size.height = rect.height * multiplier
-            }
-        }
-
-        /// Constraint, that makes width of source rect equal to width passed rect.
-        ///
-        /// - Parameter multiplier: Multiplier for width value
-        /// - Returns: Width constraint typed by Size
-        public static func width(_ multiplier: CGFloat = 1) -> Size { return Size(base: Width(multiplier: multiplier)) }
-        private struct Width: RectBasedConstraint {
-            let multiplier: CGFloat
-
-            /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                sourceRect.size.width = rect.width * multiplier
-            }
-        }
-    }
-
-    /// Set of constraints related to bottom of restrictive rect
-    public struct Bottom: RectBasedConstraint, Extended {
-        public typealias Conformed = RectBasedConstraint
-        private let base: RectBasedConstraint
-        private init(base: RectBasedConstraint) { self.base = base }
-
-        public /// Common method for create entity of this type with base behavior.
-        ///
-        /// - Parameter base: Entity implements required behavior
-        /// - Returns: Initialized entity
-        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Bottom { return .init(base: base) }
 
         public /// Main function for constrain source space by other rect
         ///
@@ -643,55 +374,78 @@ public struct LayoutAnchor {
             base.formConstrain(sourceRect: &sourceRect, by: rect)
         }
 
-        /// Returns alignment constraint by bottom
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Alignment constraint typed by Bottom
-        public static func align(by dependency: AlignDependence) -> Bottom { return Bottom(base: dependency) }
-        public struct AlignDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-            
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                base.formConstrain(sourceRect: &sourceRect, by: rect)
-            }
-            
-            public static var inner: AlignDependence { return AlignDependence(base: LayoutWorkspace.Before.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
-            public static var outer: AlignDependence { return AlignDependence(base: LayoutWorkspace.After.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+        public static var center: AlignDependence {
+            return AlignDependence(base: ConstraintsAggregator([LayoutWorkspace.Center.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.center),
+                                                                LayoutWorkspace.Center.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.center)]))
         }
-
-        // TODO: May be need use Limit as returned type to have strong type.
-        /// Returns constraint, that limits source rect by bottom of passed rect. If source rect intersects bottom of passed rect, source rect will be cropped, else will not changed.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Limit constraint typed by Bottom
-        public static func limit(on dependency: LimitDependence) -> Bottom { return Bottom(base: dependency) }
-        public struct LimitDependence: RectBasedConstraint {// TODO: May be need implement inner/outer behaviors inside Limit space.
-            private let base: RectBasedConstraint
-
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                base.formConstrain(sourceRect: &sourceRect, by: rect)
-            }
-
-            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
-            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+        public static var origin: AlignDependence {
+            return AlignDependence(base: ConstraintsAggregator([LayoutWorkspace.After.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.center),
+                                                                LayoutWorkspace.After.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.center)]))
         }
+        /// ...
+    }
+}
 
-        /// Returns constraint, that pulls source rect to bottom of passed rect. If source rect intersects bottom of passed rect, source rect will be cropped, else will pulled with changing size.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Pull constraint typed by Bottom
-        public static func pull(from dependency: PullDependence) -> Bottom { return Bottom(base: dependency) }
-        public struct PullDependence: RectBasedConstraint {
+/// Returns constraint, that applies UIEdgeInsets to source rect.
+///
+/// - Parameter value: UIEdgeInsets value
+/// - Returns: Inset constraint
+//    public static func insets(_ value: EdgeInsets) -> RectBasedConstraint { return Inset(insets: value) }
+public struct Inset: RectBasedConstraint {
+    let insets: EdgeInsets
+    public init(_ insets: EdgeInsets) {
+        self.insets = insets
+    }
+    /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+        sourceRect.apply(edgeInsets: insets)
+    }
+}
+
+/// Constraint, that makes source rect equally to passed rect
+//    public static var equal: RectBasedConstraint { return Equal() }
+public struct Equal: RectBasedConstraint {
+    public init() {}
+
+    /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+        sourceRect = rect
+    }
+}
+
+public struct Leading: RectBasedConstraint, Extended {
+    public typealias Conformed = RectBasedConstraint
+    private let base: RectBasedConstraint
+    private init(base: RectBasedConstraint) { self.base = base }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+    public /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: RectBasedConstraint) -> Leading { return .init(base: base) }
+
+    /// Returns alignment constraint by leading
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Alignment constraint typed by Leading
+    public static func align(by dependency: Align.Dependence) -> Leading { return Leading(base: dependency) }
+    public struct Align {
+        public struct Dependence: RectBasedConstraint {
             private let base: RectBasedConstraint
 
             public /// Main function for constrain source space by other rect
@@ -699,26 +453,305 @@ public struct LayoutAnchor {
             /// - Parameters:
             ///   - sourceRect: Source space
             ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                base.formConstrain(sourceRect: &sourceRect, by: rect)
-            }
+            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
-            public static var outer: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.AlignDependence.inner : Left.AlignDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.AlignDependence.outer : Left.AlignDependence.outer) }
         }
     }
 
-    /// Set of constraints related to right of restrictive rect
-    public struct Right: RectBasedConstraint, Extended {
-        public typealias Conformed = RectBasedConstraint
-        private let base: RectBasedConstraint
-        private init(base: RectBasedConstraint) { self.base = base }
+    /// Returns constraint, that limits source rect by leading of passed rect. If source rect intersects leading of passed rect, source rect will be cropped, else will not changed.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Limit constraint typed by Leading
+    public static func limit(on dependency: Limit.Dependence) -> Leading { return Leading(base: dependency) }
+    public struct Limit {
+        public struct Dependence: RectBasedConstraint {
+            private let base: RectBasedConstraint
 
-        public /// Common method for create entity of this type with base behavior.
+            public /// Main function for constrain source space by other rect
+            ///
+            /// - Parameters:
+            ///   - sourceRect: Source space
+            ///   - rect: Rect for constrain
+            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.LimitDependence.inner : Left.LimitDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.LimitDependence.outer : Left.LimitDependence.outer) }
+        }
+    }
+
+    /// Returns constraint, that pulls source rect to leading of passed rect. If source rect intersects leading of passed rect, source rect will be cropped, else will pulled with changing size.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Pull constraint typed by Leading
+    public static func pull(from dependency: Pull.Dependence) -> Leading { return Leading(base: dependency) }
+    public struct Pull {
+        public struct Dependence: RectBasedConstraint {
+            private let base: RectBasedConstraint
+
+            public /// Main function for constrain source space by other rect
+            ///
+            /// - Parameters:
+            ///   - sourceRect: Source space
+            ///   - rect: Rect for constrain
+            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.PullDependence.inner : Left.PullDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.PullDependence.outer : Left.PullDependence.outer) }
+        }
+    }
+}
+
+public struct Trailing: RectBasedConstraint, Extended {
+    public typealias Conformed = RectBasedConstraint
+    private let base: RectBasedConstraint
+    private init(base: RectBasedConstraint) { self.base = base }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+    public /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: RectBasedConstraint) -> Trailing { return .init(base: base) }
+
+    /// Returns alignment constraint by trailing
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Alignment constraint typed by Trailing
+    public static func align(by dependency: Align.Dependence) -> Trailing { return Trailing(base: dependency) }
+    public struct Align {
+        public struct Dependence: RectBasedConstraint {
+            private let base: RectBasedConstraint
+
+            public /// Main function for constrain source space by other rect
+            ///
+            /// - Parameters:
+            ///   - sourceRect: Source space
+            ///   - rect: Rect for constrain
+            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.AlignDependence.inner : Right.AlignDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.AlignDependence.outer : Right.AlignDependence.outer) }
+        }
+    }
+
+    /// Returns constraint, that limits source rect by trailing of passed rect. If source rect intersects trailing of passed rect, source rect will be cropped, else will not changed.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Limit constraint typed by Trailing
+    public static func limit(on dependency: Limit.Dependence) -> Trailing { return Trailing(base: dependency) }
+    public struct Limit {
+        public struct Dependence: RectBasedConstraint {
+            private let base: RectBasedConstraint
+
+            public /// Main function for constrain source space by other rect
+            ///
+            /// - Parameters:
+            ///   - sourceRect: Source space
+            ///   - rect: Rect for constrain
+            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.LimitDependence.inner : Right.LimitDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.LimitDependence.outer : Right.LimitDependence.outer) }
+        }
+    }
+
+    /// Returns constraint, that pulls source rect to trailing of passed rect. If source rect intersects trailing of passed rect, source rect will be cropped, else will pulled with changing size.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Pull constraint typed by Trailing
+    public static func pull(from dependency: Pull.Dependence) -> Trailing { return Trailing(base: dependency) }
+    public struct Pull {
+        public struct Dependence: RectBasedConstraint {
+            private let base: RectBasedConstraint
+
+            public /// Main function for constrain source space by other rect
+            ///
+            /// - Parameters:
+            ///   - sourceRect: Source space
+            ///   - rect: Rect for constrain
+            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.PullDependence.inner : Right.PullDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.PullDependence.outer : Right.PullDependence.outer) }
+        }
+    }
+}
+
+/// Set of size-based constraints
+public struct Size: RectBasedConstraint, Extended {
+    public typealias Conformed = RectBasedConstraint
+    private let base: RectBasedConstraint
+    private init(base: RectBasedConstraint) { self.base = base }
+
+    public /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: RectBasedConstraint) -> Size { return .init(base: base) }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+    /// Constraint, that makes height of source rect equal to height passed rect.
+    ///
+    /// - Parameter multiplier: Multiplier for height value
+    /// - Returns: Height constraint typed by Size
+    public static func height(_ multiplier: CGFloat = 1) -> Size { return Size(base: Height(multiplier: multiplier)) }
+    private struct Height: RectBasedConstraint {
+        let multiplier: CGFloat
+
+        /// Main function for constrain source space by other rect
         ///
-        /// - Parameter base: Entity implements required behavior
-        /// - Returns: Initialized entity
-        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Right { return .init(base: base) }
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            sourceRect.size.height = rect.height * multiplier
+        }
+    }
+
+    /// Constraint, that makes width of source rect equal to width passed rect.
+    ///
+    /// - Parameter multiplier: Multiplier for width value
+    /// - Returns: Width constraint typed by Size
+    public static func width(_ multiplier: CGFloat = 1) -> Size { return Size(base: Width(multiplier: multiplier)) }
+    private struct Width: RectBasedConstraint {
+        let multiplier: CGFloat
+
+        /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            sourceRect.size.width = rect.width * multiplier
+        }
+    }
+}
+
+/// Set of constraints related to bottom of restrictive rect
+public struct Bottom: RectBasedConstraint, Extended {
+    public typealias Conformed = RectBasedConstraint
+    private let base: RectBasedConstraint
+    private init(base: RectBasedConstraint) { self.base = base }
+
+    public /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: RectBasedConstraint) -> Bottom { return .init(base: base) }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+        base.formConstrain(sourceRect: &sourceRect, by: rect)
+    }
+
+    /// Returns alignment constraint by bottom
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Alignment constraint typed by Bottom
+    public static func align(by dependency: AlignDependence) -> Bottom { return Bottom(base: dependency) }
+    public struct AlignDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
+
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            base.formConstrain(sourceRect: &sourceRect, by: rect)
+        }
+
+        public static var inner: AlignDependence { return AlignDependence(base: LayoutWorkspace.Before.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+        public static var outer: AlignDependence { return AlignDependence(base: LayoutWorkspace.After.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+    }
+
+    /// Returns constraint, that limits source rect by bottom of passed rect. If source rect intersects bottom of passed rect, source rect will be cropped, else will not changed.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Limit constraint typed by Bottom
+    public static func limit(on dependency: LimitDependence) -> Bottom { return Bottom(base: dependency) }
+    public struct LimitDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
+
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            base.formConstrain(sourceRect: &sourceRect, by: rect)
+        }
+
+        public static var inner: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+        public static var outer: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+    }
+
+    /// Returns constraint, that pulls source rect to bottom of passed rect. If source rect intersects bottom of passed rect, source rect will be cropped, else will pulled with changing size.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Pull constraint typed by Bottom
+    public static func pull(from dependency: PullDependence) -> Bottom { return Bottom(base: dependency) }
+    public struct PullDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
+
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            base.formConstrain(sourceRect: &sourceRect, by: rect)
+        }
+
+        public static var inner: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+        public static var outer: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.trailing)) }
+    }
+}
+
+/// Set of constraints related to right of restrictive rect
+public struct Right: RectBasedConstraint, Extended {
+    public typealias Conformed = RectBasedConstraint
+    private let base: RectBasedConstraint
+    private init(base: RectBasedConstraint) { self.base = base }
+
+    public /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: RectBasedConstraint) -> Right { return .init(base: base) }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+    /// Returns alignment constraint by right
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Alignment constraint typed by Right
+    public static func align(by dependency: AlignDependence) -> Right { return Right(base: dependency) }
+    public struct AlignDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
 
         public /// Main function for constrain source space by other rect
         ///
@@ -727,69 +760,17 @@ public struct LayoutAnchor {
         ///   - rect: Rect for constrain
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-        /// Returns alignment constraint by right
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Alignment constraint typed by Right
-        public static func align(by dependency: AlignDependence) -> Right { return Right(base: dependency) }
-        public struct AlignDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-            public static var inner: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
-            public static var outer: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
-        }
-
-        /// Returns constraint, that limits source rect by right of passed rect. If source rect intersects right of passed rect, source rect will be cropped, else will not changed.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Limit constraint typed by Right
-        public static func limit(on dependency: LimitDependence) -> Right { return Right(base: dependency) }
-        public struct LimitDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
-            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
-        }
-
-        /// Returns constraint, that pulls source rect to right of passed rect. If source rect intersects right of passed rect, source rect will be cropped, else will pulled with changing size.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Pull constraint typed by Right
-        public static func pull(from dependency: PullDependence) -> Right { return Right(base: dependency) }
-        public struct PullDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-            public static var inner: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
-            public static var outer: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
-        }
+        public static var inner: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
+        public static var outer: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
     }
 
-    /// Set of constraints related to left of restrictive rect
-    public struct Left: RectBasedConstraint, Extended {
-        public typealias Conformed = RectBasedConstraint
+    /// Returns constraint, that limits source rect by right of passed rect. If source rect intersects right of passed rect, source rect will be cropped, else will not changed.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Limit constraint typed by Right
+    public static func limit(on dependency: LimitDependence) -> Right { return Right(base: dependency) }
+    public struct LimitDependence: RectBasedConstraint {
         private let base: RectBasedConstraint
-        private init(base: RectBasedConstraint) { self.base = base }
 
         public /// Main function for constrain source space by other rect
         ///
@@ -798,81 +779,17 @@ public struct LayoutAnchor {
         ///   - rect: Rect for constrain
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-        public /// Common method for create entity of this type with base behavior.
-        ///
-        /// - Parameter base: Entity implements required behavior
-        /// - Returns: Initialized entity
-        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Left { return .init(base: base) }
-
-        /// Returns alignment constraint by left
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Alignment constraint typed by Left
-        public static func align(by dependency: AlignDependence) -> Left { return Left(base: dependency) }
-        public struct AlignDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-            public static var inner: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
-            public static var outer: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
-        }
-
-        /// Returns constraint, that limits source rect by left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will not changed.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Limit constraint typed by Left
-        public static func limit(on dependency: LimitDependence) -> Left { return Left(base: dependency) }
-        public struct LimitDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
-            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
-        }
-        
-        /// Returns constraint, that pulls source rect to left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will pulled with changing size.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Pull constraint typed by Left
-        public static func pull(from dependency: PullDependence) -> Left { return Left(base: dependency) }
-        public struct PullDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-            public static var inner: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
-            public static var outer: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
-        }
+        public static var inner: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
+        public static var outer: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
     }
 
-    /// Set of constraints related to top of restrictive rect
-    public struct Top: RectBasedConstraint, Extended {
-        public typealias Conformed = RectBasedConstraint
+    /// Returns constraint, that pulls source rect to right of passed rect. If source rect intersects right of passed rect, source rect will be cropped, else will pulled with changing size.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Pull constraint typed by Right
+    public static func pull(from dependency: PullDependence) -> Right { return Right(base: dependency) }
+    public struct PullDependence: RectBasedConstraint {
         private let base: RectBasedConstraint
-        private init(base: RectBasedConstraint) { self.base = base }
-
-        public /// Common method for create entity of this type with base behavior.
-        ///
-        /// - Parameter base: Entity implements required behavior
-        /// - Returns: Initialized entity
-        static func build(_ base: RectBasedConstraint) -> LayoutAnchor.Top { return .init(base: base) }
 
         public /// Main function for constrain source space by other rect
         ///
@@ -881,66 +798,166 @@ public struct LayoutAnchor {
         ///   - rect: Rect for constrain
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-        /// Returns alignment constraint by top
+        public static var inner: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
+        public static var outer: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.trailing)) }
+    }
+}
+
+/// Set of constraints related to left of restrictive rect
+public struct Left: RectBasedConstraint, Extended {
+    public typealias Conformed = RectBasedConstraint
+    private let base: RectBasedConstraint
+    private init(base: RectBasedConstraint) { self.base = base }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+    public /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: RectBasedConstraint) -> Left { return .init(base: base) }
+
+    /// Returns alignment constraint by left
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Alignment constraint typed by Left
+    public static func align(by dependency: AlignDependence) -> Left { return Left(base: dependency) }
+    public struct AlignDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
+
+        public /// Main function for constrain source space by other rect
         ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Alignment constraint typed by Top
-        public static func align(by dependency: AlignDependence) -> Top { return Top(base: dependency) }
-        public struct AlignDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                base.formConstrain(sourceRect: &sourceRect, by: rect)
-            }
+        public static var inner: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
+        public static var outer: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
+    }
 
-            public static var inner: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
-            public static var outer: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+    /// Returns constraint, that limits source rect by left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will not changed.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Limit constraint typed by Left
+    public static func limit(on dependency: LimitDependence) -> Left { return Left(base: dependency) }
+    public struct LimitDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
+
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+        public static var inner: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
+        public static var outer: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
+    }
+
+    /// Returns constraint, that pulls source rect to left of passed rect. If source rect intersects left of passed rect, source rect will be cropped, else will pulled with changing size.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Pull constraint typed by Left
+    public static func pull(from dependency: PullDependence) -> Left { return Left(base: dependency) }
+    public struct PullDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
+
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+        public static var inner: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
+        public static var outer: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.horizontal, anchor: CGRectAxisAnchor.leading)) }
+    }
+}
+
+/// Set of constraints related to top of restrictive rect
+public struct Top: RectBasedConstraint, Extended {
+    public typealias Conformed = RectBasedConstraint
+    private let base: RectBasedConstraint
+    private init(base: RectBasedConstraint) { self.base = base }
+
+    public /// Common method for create entity of this type with base behavior.
+    ///
+    /// - Parameter base: Entity implements required behavior
+    /// - Returns: Initialized entity
+    static func build(_ base: RectBasedConstraint) -> Top { return .init(base: base) }
+
+    public /// Main function for constrain source space by other rect
+    ///
+    /// - Parameters:
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
+
+    /// Returns alignment constraint by top
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Alignment constraint typed by Top
+    public static func align(by dependency: AlignDependence) -> Top { return Top(base: dependency) }
+    public struct AlignDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
+
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            base.formConstrain(sourceRect: &sourceRect, by: rect)
         }
 
-        /// Returns constraint, that limits source rect by top of passed rect. If source rect intersects top of passed rect, source rect will be cropped, else will not changed.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Limit constraint typed by Top
-        public static func limit(on dependency: LimitDependence) -> Top { return Top(base: dependency) }
-        public struct LimitDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                base.formConstrain(sourceRect: &sourceRect, by: rect)
-            }
+        public static var inner: AlignDependence { return .init(base: LayoutWorkspace.After.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+        public static var outer: AlignDependence { return .init(base: LayoutWorkspace.Before.align(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+    }
 
-            public static var inner: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
-            public static var outer: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+    /// Returns constraint, that limits source rect by top of passed rect. If source rect intersects top of passed rect, source rect will be cropped, else will not changed.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Limit constraint typed by Top
+    public static func limit(on dependency: LimitDependence) -> Top { return Top(base: dependency) }
+    public struct LimitDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            base.formConstrain(sourceRect: &sourceRect, by: rect)
         }
 
-        /// Returns constraint, that pulls source rect to top of passed rect. If source rect intersects top of passed rect, source rect will be cropped, else will pulled with changing size.
-        ///
-        /// - Parameter dependency: Space dependency for target rect
-        /// - Returns: Pull constraint typed by Top
-        public static func pull(from dependency: PullDependence) -> Top { return Top(base: dependency) }
-        public struct PullDependence: RectBasedConstraint {
-            private let base: RectBasedConstraint
-            public /// Main function for constrain source space by other rect
-            ///
-            /// - Parameters:
-            ///   - sourceRect: Source space
-            ///   - rect: Rect for constrain
-            func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                base.formConstrain(sourceRect: &sourceRect, by: rect)
-            }
+        public static var inner: LimitDependence { return .init(base: LayoutWorkspace.After.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+        public static var outer: LimitDependence { return .init(base: LayoutWorkspace.Before.limit(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+    }
 
-            public static var inner: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
-            public static var outer: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+    /// Returns constraint, that pulls source rect to top of passed rect. If source rect intersects top of passed rect, source rect will be cropped, else will pulled with changing size.
+    ///
+    /// - Parameter dependency: Space dependency for target rect
+    /// - Returns: Pull constraint typed by Top
+    public static func pull(from dependency: PullDependence) -> Top { return Top(base: dependency) }
+    public struct PullDependence: RectBasedConstraint {
+        private let base: RectBasedConstraint
+        public /// Main function for constrain source space by other rect
+        ///
+        /// - Parameters:
+        ///   - sourceRect: Source space
+        ///   - rect: Rect for constrain
+        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
+            base.formConstrain(sourceRect: &sourceRect, by: rect)
         }
+
+        public static var inner: PullDependence { return .init(base: LayoutWorkspace.After.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
+        public static var outer: PullDependence { return .init(base: LayoutWorkspace.Before.pull(axis: CGRectAxis.vertical, anchor: CGRectAxisAnchor.leading)) }
     }
 }
 
@@ -1156,7 +1173,6 @@ public struct Layout: RectBasedLayout {
         }
     }
 
-    // TODO: ! Add ratio behavior
     /// Filling part of main layout
     public struct Filling: RectBasedLayout {
         let horizontal: Horizontal
@@ -1313,7 +1329,7 @@ public struct Layout: RectBasedLayout {
 }
 
 public struct Configuration {
-    let isRTLMode: Bool = false // TODO: RTL in UIKit and AppKit oriented on view.
+    let isRTLMode: Bool = false
 
     static private(set) var `default` = Configuration()
 
@@ -1338,8 +1354,8 @@ public extension Layout {
 
 extension LayoutAnchor {
     /// Layout behavior, that makes passed rect equally to  rect
-    public static func equal(_ value: CGRect) -> RectBasedConstraint { return Constantly(value: value) }
-    private struct Constantly: RectBasedConstraint {
+//    public static func equal(_ value: CGRect) -> RectBasedConstraint { return Constantly(value: value) }
+    internal struct Constantly: RectBasedConstraint {
         let value: CGRect
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
             sourceRect = value
@@ -1383,9 +1399,9 @@ extension Layout.Alignment {
     ///
     /// - Parameters:
     ///   - filling: Filling layout
-    ///   - item: Item for layout
+    ///   - element: Element for layout
     ///   - constraints: Required constraints
-    public func apply<Item: LayoutItem>(with filling: Layout.Filling, for item: Item, use constraints: [ConstrainRect]) {
+    public func apply<Item: LayoutElement>(with filling: Layout.Filling, for item: Item, use constraints: [ConstrainRect]) {
         filling.apply(for: item, use: constraints)
         apply(for: item, use: constraints)
     }
@@ -1396,9 +1412,9 @@ extension Layout.Filling {
     ///
     /// - Parameters:
     ///   - alignment: Alignment layout
-    ///   - item: Item for layout
+    ///   - element: Element for layout
     ///   - constraints: Required constraints
-    public func apply<Item: LayoutItem>(with alignment: Layout.Alignment, for item: Item, use constraints: [ConstrainRect]) {
+    public func apply<Item: LayoutElement>(with alignment: Layout.Alignment, for item: Item, use constraints: [ConstrainRect]) {
         apply(for: item, use: constraints)
         alignment.apply(for: item, use: constraints)
     }

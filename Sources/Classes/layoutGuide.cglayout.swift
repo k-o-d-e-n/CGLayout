@@ -14,38 +14,36 @@ import Cocoa
 import Foundation
 #endif
 
-// TODO: !!! LayoutGuide does not have link to super layout guide. For manage z-index subitems.
-
 // MARK: LayoutGuide and placeholders
 
-/// LayoutGuides will not show up in the view hierarchy, but may be used as layout item in
+/// LayoutGuides will not show up in the view hierarchy, but may be used as layout element in
 /// an `RectBasedConstraint` and represent a rectangle in the layout engine.
 /// Create a LayoutGuide with -init
 /// Add to a view with UIView.add(layoutGuide:)
-/// If you use subclass LayoutGuide, that manages `LayoutItem` items, than you should use 
-/// `layout(in: frame)` method for apply layout, otherwise items will be have wrong position.
-open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
-    public /// Internal layout space of super item
-    var superLayoutBounds: CGRect { return superItem!.layoutBounds }
-    public /// Entity that represents item in layout time
-    var inLayoutTime: InLayoutTimeItem { return self }
-    public /// Internal space for layout subitems
+/// If you use subclass LayoutGuide, that manages `LayoutElement` elements, than you should use
+/// `layout(in: frame)` method for apply layout, otherwise elements will be have wrong position.
+open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime {
+    public /// Internal layout space of super element
+    var superLayoutBounds: CGRect { return superElement!.layoutBounds }
+    public /// Entity that represents element in layout time
+    var inLayoutTime: ElementInLayoutTime { return self }
+    public /// Internal space for layout subelements
     var layoutBounds: CGRect { return CGRect(origin: CGPoint(x: frame.origin.x + bounds.origin.x, y: frame.origin.y + bounds.origin.y), size: bounds.size) }
 
-    /// Layout item where added this layout guide. For addition use `func add(layoutGuide:)`.
-    open internal(set) weak var ownerItem: Super? {
-        didSet { superItem = ownerItem; didAddToOwner() }
+    /// Layout element where added this layout guide. For addition use `func add(layoutGuide:)`.
+    open internal(set) weak var ownerElement: Super? {
+        didSet { superElement = ownerElement; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
-    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } } // TODO: if calculated frame does not changed subviews don`t update (UILabel)
+    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } }
     open /// Internal coordinate space of layout entity
     var bounds: CGRect { didSet { layout() } }
-    open /// Layout item that maintained this layout entity
-    weak var superItem: LayoutItem?
-    open /// Removes layout item from hierarchy
-    func removeFromSuperItem() { ownerItem = nil }
+    open /// Layout element that maintained this layout entity
+    weak var superElement: LayoutElement?
+    open /// Removes layout element from hierarchy
+    func removeFromSuperElement() { ownerElement = nil }
 
-    public init(frame: CGRect) {
+    public init(frame: CGRect = .zero) {
         self.frame = frame
         self.bounds = CGRect(origin: .zero, size: frame.size)
     }
@@ -55,7 +53,7 @@ open class LayoutGuide<Super: LayoutItem>: LayoutItem, InLayoutTimeItem {
         // subclass override
     }
 
-    /// Performs layout for subitems, which this layout guide manages, in layout space rect
+    /// Performs layout for subelements, which this layout guide manages, in layout space rect
     ///
     /// - Parameter rect: Space for layout
     open func layout(in rect: CGRect) {
@@ -86,16 +84,16 @@ public extension LayoutGuide where Super: UIView {
         layer.frame = frame
         return layer
     }
-    /// Generates layer and adds to `superItem` hierarchy
+    /// Generates layer and adds to `superElement` hierarchy
     ///
     /// - Parameter type: Type of layer
     /// - Returns: Added layer
     @discardableResult
     func add<L: CALayer>(_ type: L.Type) -> L? {
-        guard let superItem = ownerItem else { fatalError("You must add layout guide to container using `func add(layoutGuide:)` method") }
+        guard let superElement = ownerElement else { fatalError("You must add layout guide to container using `func add(layoutGuide:)` method") }
 
         let layer = build(type)
-        superItem.layer.addSublayer(layer)
+        superElement.layer.addSublayer(layer)
         return layer
     }
     /// Fabric method for generation view with any type
@@ -103,16 +101,16 @@ public extension LayoutGuide where Super: UIView {
     /// - Parameter type: Type of view
     /// - Returns: Generated view
     func build<V: UIView>(_ type: V.Type) -> V { return V(frame: frame) }
-    /// Generates view and adds to `superItem` hierarchy
+    /// Generates view and adds to `superElement` hierarchy
     ///
     /// - Parameter type: Type of view
     /// - Returns: Added view
     @discardableResult
     func add<V: UIView>(_ type: V.Type) -> V? {
-        guard let superItem = ownerItem else { fatalError("You must add layout guide to container using `func add(layoutGuide:)` method") }
+        guard let superElement = ownerElement else { fatalError("You must add layout guide to container using `func add(layoutGuide:)` method") }
 
         let view = build(type)
-        superItem.addSubview(view)
+        superElement.addSubview(view)
         return view
     }
 }
@@ -128,13 +126,13 @@ public extension LayoutGuide where Super: CALayer {
         layer.frame = frame
         return layer
     }
-    /// Generates layer and adds to `superItem` hierarchy
+    /// Generates layer and adds to `superElement` hierarchy
     ///
     /// - Parameter type: Type of layer
     /// - Returns: Added layer
     @discardableResult
     func add<L: CALayer>(_ type: L.Type) -> L? {
-        guard let superItem = ownerItem else { fatalError("You must add layout guide to container using `func add(layoutGuide:)` method") }
+        guard let superItem = ownerElement else { fatalError("You must add layout guide to container using `func add(layoutGuide:)` method") }
 
         let layer = build(type)
         superItem.addSublayer(layer)
@@ -142,31 +140,31 @@ public extension LayoutGuide where Super: CALayer {
     }
 }
 public extension CALayer {
-    /// Bind layout item to layout guide.
+    /// Bind layout element to layout guide.
     ///
     /// - Parameter layoutGuide: Layout guide for binding
     func add<T: CALayer>(layoutGuide: LayoutGuide<T>) {
-        unsafeBitCast(layoutGuide, to: LayoutGuide<CALayer>.self).ownerItem = self
+        unsafeBitCast(layoutGuide, to: LayoutGuide<CALayer>.self).ownerElement = self
     }
 }
 #endif
 #if os(iOS) || os(tvOS)
 public extension UIView {
-    /// Bind layout item to layout guide.
+    /// Bind layout element to layout guide.
     ///
     /// - Parameter layoutGuide: Layout guide for binding
     func add<T: UIView>(layoutGuide: LayoutGuide<T>) {
-        unsafeBitCast(layoutGuide, to: LayoutGuide<UIView>.self).ownerItem = self
+        unsafeBitCast(layoutGuide, to: LayoutGuide<UIView>.self).ownerElement = self
     }
 }
 #endif
 #if os(macOS)
     public extension NSView {
-        /// Bind layout item to layout guide.
+        /// Bind layout element to layout guide.
         ///
         /// - Parameter layoutGuide: Layout guide for binding
         func add<T: NSView>(layoutGuide: LayoutGuide<T>) {
-            unsafeBitCast(layoutGuide, to: LayoutGuide<NSView>.self).ownerItem = self
+            unsafeBitCast(layoutGuide, to: LayoutGuide<NSView>.self).ownerElement = self
         }
     }
 #endif
@@ -175,39 +173,37 @@ public extension LayoutGuide {
     ///
     /// - Parameter layoutGuide: Child layout guide.
     func add(layoutGuide: LayoutGuide<Super>) {
-        layoutGuide.ownerItem = self.ownerItem
+        layoutGuide.ownerElement = self.ownerElement
     }
 }
 
 // MARK: Placeholders
 
-// TODO: Add possible to make lazy configuration
-
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
-open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<Super> {
-    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.item.layoutBlock()
+open class LayoutPlaceholder<Item: LayoutElement, Super: LayoutElement>: LayoutGuide<Super> {
+    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.element.layoutBlock()
     fileprivate var _item: Item?
 
-    open var item: Item! {
-        loadItemIfNeeded()
-        return itemIfLoaded
+    open var element: Item! {
+        loadElementIfNeeded()
+        return elementIfLoaded
     }
-    open var isItemLoaded: Bool { return _item != nil }
-    open var itemIfLoaded: Item? { return _item }
+    open var isElementLoaded: Bool { return _item != nil }
+    open var elementIfLoaded: Item? { return _item }
 
-    open func loadItem() {
+    open func loadElement() {
         // subclass override
     }
 
-    open func itemDidLoad() {
+    open func elementDidLoad() {
         // subclass override
     }
 
-    open func loadItemIfNeeded() {
-        if !isItemLoaded {
-            loadItem()
-            itemDidLoad()
+    open func loadElementIfNeeded() {
+        if !isElementLoaded {
+            loadElement()
+            elementDidLoad()
         }
     }
 
@@ -216,26 +212,26 @@ open class LayoutPlaceholder<Item: LayoutItem, Super: LayoutItem>: LayoutGuide<S
     }
 
     override func layout() {
-        if isItemLoaded, ownerItem != nil {
+        if isElementLoaded, ownerElement != nil {
             layout(in: layoutBounds)
         }
     }
 
     open override func didAddToOwner() {
         super.didAddToOwner()
-        if ownerItem == nil { item.removeFromSuperItem() }
+        if ownerElement == nil { element.removeFromSuperElement() }
     }
 }
-//extension LayoutPlaceholder: AdjustableLayoutItem where Item: AdjustableLayoutItem {
-//    public var contentConstraint: RectBasedConstraint { return item.contentConstraint }
+//extension LayoutPlaceholder: AdjustableLayoutElement where Item: AdjustableLayoutElement {
+//    public var contentConstraint: RectBasedConstraint { return element.contentConstraint }
 //}
 
 #if os(macOS) || os(iOS) || os(tvOS)
 /// Base class for any layer placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
-    open override func loadItem() {
-        _item = add(Layer.self) // TODO: can be add to hierarchy on didSet `item`
+    open override func loadElement() {
+        _item = add(Layer.self)
     }
 }
 #endif
@@ -243,8 +239,8 @@ open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
 #if os(iOS) || os(tvOS)
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
-open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, AdjustableLayoutItem {
-    open var contentConstraint: RectBasedConstraint { return isItemLoaded ? _SizeThatFitsConstraint(item: item) : LayoutAnchor.equal(.zero) }
+open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, AdjustableLayoutElement {
+    open var contentConstraint: RectBasedConstraint { return isElementLoaded ? _SizeThatFitsConstraint(item: element) : LayoutAnchor.Constantly(value: .zero) }
     var load: (() -> View)?
     var didLoad: ((View) -> Void)?
 
@@ -262,22 +258,22 @@ open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, Adjus
         self.didLoad = didLoad
     }
 
-    open override func loadItem() {
+    open override func loadElement() {
         _item = load?() ?? add(View.self)
     }
 
-    open override func itemDidLoad() {
-        super.itemDidLoad()
-        if let owner = self.ownerItem {
-            owner.addSubview(item)
+    open override func elementDidLoad() {
+        super.elementDidLoad()
+        if let owner = self.ownerElement {
+            owner.addSubview(element)
         }
-        didLoad?(item)
+        didLoad?(element)
     }
 
     open override func didAddToOwner() {
         super.didAddToOwner()
-        if isItemLoaded, let owner = self.ownerItem {
-            owner.addSubview(item)
+        if isElementLoaded, let owner = self.ownerElement {
+            owner.addSubview(element)
         }
     }
 }
@@ -291,16 +287,16 @@ public extension UILayoutGuide {
     /// - Parameter type: Type of view
     /// - Returns: Generated view
     func build<V: UIView>(_ type: V.Type) -> V { return V() }
-    /// Generates view and adds to `superItem` hierarchy
+    /// Generates view and adds to `superElement` hierarchy
     ///
     /// - Parameter type: Type of view
     /// - Returns: Added view
     @discardableResult
     func add<V: UIView>(_ type: V.Type) -> V? {
-        guard let superItem = owningView else { fatalError("You must add layout guide to container using `func addLayoutGuide(_:)` method") }
+        guard let superElement = owningView else { fatalError("You must add layout guide to container using `func addLayoutGuide(_:)` method") }
 
         let view = build(type)
-        superItem.addSubview(view)
+        superElement.addSubview(view)
         return view
     }
 }

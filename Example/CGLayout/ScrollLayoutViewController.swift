@@ -12,7 +12,7 @@ import CGLayout
 class ScrollLayoutViewController: UIViewController {
     var scrollLayoutGuide: ScrollLayoutGuide<UIView>!
 
-    var subviews: [LayoutItem] = []
+    var subviews: [LayoutElement] = []
     var scheme: LayoutScheme!
 
     override func viewDidLoad() {
@@ -37,21 +37,21 @@ class ScrollLayoutViewController: UIViewController {
             redView.layoutBlock(with: Layout(x: .left(), y: .top(), width: .fixed(200), height: .fixed(150))),
             blueView.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(200), height: .fixed(200))),
             greenView.layoutBlock(with: Layout(x: .left(), y: .bottom(), width: .fixed(150), height: .fixed(200)),
-                                  constraints: [contentGuide.layoutConstraint(for: [LayoutAnchor.Left.align(by: .inner), LayoutAnchor.Bottom.align(by: .inner)])]),
+                                  constraints: [contentGuide.layoutConstraint(for: [LayoutAnchor.left(.align(by: .inner)), LayoutAnchor.bottom(.align(by: .inner))])]),
             contentLayer.layoutBlock()
         ])
         
         scrollLayoutGuide = ScrollLayoutGuide(layout: contentScheme)
         scrollLayoutGuide.contentSize = contentGuide.bounds.size
         scheme = LayoutScheme(blocks: [scrollLayoutGuide.layoutBlock(with: Layout(x: .left(), y: .top(), width: .scaled(1), height: .scaled(1)),
-                                                                     constraints: [(topLayoutGuide as! UIView).layoutConstraint(for: [LayoutAnchor.Bottom.limit(on: .outer)])]),
+                                                                     constraints: [(topLayoutGuide as! UIView).layoutConstraint(for: [LayoutAnchor.bottom(.limit(on: .outer))])]),
                                        contentScheme])
 
         view.add(layoutGuide: scrollLayoutGuide)
         view.add(layoutGuide: contentGuide)
-        view.addSublayoutItem(redView)
-        view.addSublayoutItem(blueView)
-        view.addSublayoutItem(greenView)
+        view.addChildElement(redView)
+        view.addChildElement(blueView)
+        view.addChildElement(greenView)
 
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
     }

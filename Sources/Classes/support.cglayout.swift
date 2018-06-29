@@ -15,26 +15,26 @@ import Foundation
 #endif
 
 #if os(iOS) || os(tvOS) || os(macOS)
-extension CALayer: LayoutItem {
-    public var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
+extension CALayer: LayoutElement {
+    public var inLayoutTime: ElementInLayoutTime { return _MainThreadItemInLayoutTime(item: self) }
     public var layoutBounds: CGRect { return bounds }
-    public var superItem: LayoutItem? { return superlayer }
-    public func removeFromSuperItem() { removeFromSuperlayer() }
+    public var superElement: LayoutElement? { return superlayer }
+    public func removeFromSuperElement() { removeFromSuperlayer() }
 }
 #endif
 
 #if os(iOS) || os(tvOS)
-extension UIView: SelfSizedLayoutItem {
-    public /// Entity that represents item in layout time
-    var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
-    @objc public /// Internal space for layout subitems
+extension UIView: AdaptiveLayoutElement {
+    public /// Entity that represents element in layout time
+    var inLayoutTime: ElementInLayoutTime { return _MainThreadItemInLayoutTime(item: self) }
+    @objc public /// Internal space for layout subelements
     var layoutBounds: CGRect { return bounds }
-    /// Layout item that maintained this layout entity
-    public var superItem: LayoutItem? { return superview }
-    /// Removes layout item from hierarchy
-    public func removeFromSuperItem() { removeFromSuperview() }
+    /// Layout element that maintained this layout entity
+    public var superElement: LayoutElement? { return superview }
+    /// Removes layout element from hierarchy
+    public func removeFromSuperElement() { removeFromSuperview() }
 }
-extension UIImageView: AdjustableLayoutItem {
+extension UIImageView: AdjustableLayoutElement {
     struct ContentConstraint: RectBasedConstraint {
         unowned var imageView: UIImageView
 
@@ -70,7 +70,7 @@ extension UIImageView: AdjustableLayoutItem {
         return ContentConstraint(imageView: self)
     }
 }
-extension UILabel: TextPresentedItem, AdjustableLayoutItem {
+extension UILabel: TextPresentedElement, AdjustableLayoutElement {
     struct ContentConstraint: RectBasedConstraint {
         unowned let label: UILabel
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
@@ -91,32 +91,33 @@ extension UILabel: TextPresentedItem, AdjustableLayoutItem {
         return textRect(forBounds: bounds, limitedToNumberOfLines: numberOfLines).origin.y + font.ascender
     }
 }
-extension UITextView: TextPresentedItem { // UITextView scrollable, because baseLine is not responsibpublic le
+extension UITextView: TextPresentedElement { // UITextView scrollable, because baseLine is not responsibpublic le
     public var baselinePosition: CGFloat {
         return UIEdgeInsetsInsetRect(CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height), textContainerInset).origin.y + (font ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)).ascender
     }
 }
 extension UIScrollView {
-    public /// Internal space for layout subitems
+    public /// Internal space for layout subelements
     override var layoutBounds: CGRect { return CGRect(origin: .zero, size: contentSize) }
 }
 #endif
 #if os(macOS)
-extension NSView: LayoutItem {
-    public /// Removes layout item from hierarchy
-    func removeFromSuperItem() { removeFromSuperview() }
-    public /// Entity that represents item in layout time
-    var inLayoutTime: InLayoutTimeItem { return _MainThreadItemInLayoutTime(item: self) }
-    public /// Layout item that maintains this layout entity
-    weak var superItem: LayoutItem? { return superview }
-    @objc public /// Internal space for layout subitems
+public typealias CGRect = NSRect
+extension NSView: LayoutElement {
+    public /// Removes layout element from hierarchy
+    func removeFromSuperElement() { removeFromSuperview() }
+    public /// Entity that represents element in layout time
+    var inLayoutTime: ElementInLayoutTime { return _MainThreadItemInLayoutTime(item: self) }
+    public /// Layout element that maintains this layout entity
+    weak var superElement: LayoutElement? { return superview }
+    @objc public /// Internal space for layout subelements
     var layoutBounds: CGRect { return bounds }
 }
 extension NSScrollView {
-    public /// Internal space for layout subitems
-    override var layoutBounds: CGRect { return documentView?.bounds ?? contentView.bounds } // TODO: Research NSScrollView
+    public /// Internal space for layout subelements
+    override var layoutBounds: CGRect { return documentView?.bounds ?? contentView.bounds }
 }
-extension NSControl: SelfSizedLayoutItem, AdjustableLayoutItem {
+extension NSControl: AdaptiveLayoutElement, AdjustableLayoutElement {
     /// Constraint, that defines content size for item
     public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) }
 }
