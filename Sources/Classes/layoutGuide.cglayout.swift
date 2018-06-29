@@ -181,16 +181,16 @@ public extension LayoutGuide {
 
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
-open class LayoutPlaceholder<Item: LayoutElement, Super: LayoutElement>: LayoutGuide<Super> {
-    open private(set) lazy var itemLayout: LayoutBlock<Item> = self.element.layoutBlock()
-    fileprivate var _item: Item?
+open class LayoutPlaceholder<Element: LayoutElement, Super: LayoutElement>: LayoutGuide<Super> {
+    open private(set) lazy var itemLayout: LayoutBlock<Element> = self.element.layoutBlock()
+    fileprivate var _element: Element?
 
-    open var element: Item! {
+    open var element: Element! {
         loadElementIfNeeded()
         return elementIfLoaded
     }
-    open var isElementLoaded: Bool { return _item != nil }
-    open var elementIfLoaded: Item? { return _item }
+    open var isElementLoaded: Bool { return _element != nil }
+    open var elementIfLoaded: Element? { return _element }
 
     open func loadElement() {
         // subclass override
@@ -231,7 +231,7 @@ open class LayoutPlaceholder<Item: LayoutElement, Super: LayoutElement>: LayoutG
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
 open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
     open override func loadElement() {
-        _item = add(Layer.self)
+        _element = add(Layer.self)
     }
 }
 #endif
@@ -259,7 +259,7 @@ open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, Adjus
     }
 
     open override func loadElement() {
-        _item = load?() ?? add(View.self)
+        _element = load?() ?? add(View.self)
     }
 
     open override func elementDidLoad() {

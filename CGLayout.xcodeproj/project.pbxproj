@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		CGLayout::CGLayoutPackageTests::ProductTarget /* CGLayoutPackageTests */ = {
+		"CGLayout::CGLayoutPackageTests::ProductTarget" /* CGLayoutPackageTests */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = OBJ_61 /* Build configuration list for PBXAggregateTarget "CGLayoutPackageTests" */;
 			buildPhases = (
@@ -39,7 +39,7 @@
 		OBJ_70 /* CGLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* CGLayoutTests.swift */; };
 		OBJ_71 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* Tests.swift */; };
 		OBJ_72 /* support_linux.tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* support_linux.tests.swift */; };
-		OBJ_74 /* CGLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CGLayout::CGLayout::Product /* CGLayout.framework */; };
+		OBJ_74 /* CGLayout.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "CGLayout::CGLayout::Product" /* CGLayout.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,8 +60,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		CGLayout::CGLayout::Product /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CGLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CGLayout::CGLayoutTests::Product /* CGLayoutTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = CGLayoutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		"CGLayout::CGLayout::Product" /* CGLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CGLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"CGLayout::CGLayoutTests::Product" /* CGLayoutTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = CGLayoutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* coordinate.cglayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coordinate.cglayout.swift; sourceTree = "<group>"; };
 		OBJ_11 /* core.cglayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = core.cglayout.swift; sourceTree = "<group>"; };
 		OBJ_12 /* deprecated.cglayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = deprecated.cglayout.swift; sourceTree = "<group>"; };
@@ -142,8 +142,8 @@
 		OBJ_31 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CGLayout::CGLayout::Product /* CGLayout.framework */,
-				CGLayout::CGLayoutTests::Product /* CGLayoutTests.xctest */,
+				"CGLayout::CGLayout::Product" /* CGLayout.framework */,
+				"CGLayout::CGLayoutTests::Product" /* CGLayoutTests.xctest */,
 			);
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -159,7 +159,6 @@
 				OBJ_30 /* Resources */,
 				OBJ_31 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -186,7 +185,7 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CGLayout::CGLayout /* CGLayout */ = {
+		"CGLayout::CGLayout" /* CGLayout */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_35 /* Build configuration list for PBXNativeTarget "CGLayout" */;
 			buildPhases = (
@@ -199,10 +198,10 @@
 			);
 			name = CGLayout;
 			productName = CGLayout;
-			productReference = CGLayout::CGLayout::Product /* CGLayout.framework */;
+			productReference = "CGLayout::CGLayout::Product" /* CGLayout.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		CGLayout::CGLayoutTests /* CGLayoutTests */ = {
+		"CGLayout::CGLayoutTests" /* CGLayoutTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_66 /* Build configuration list for PBXNativeTarget "CGLayoutTests" */;
 			buildPhases = (
@@ -216,10 +215,10 @@
 			);
 			name = CGLayoutTests;
 			productName = CGLayoutTests;
-			productReference = CGLayout::CGLayoutTests::Product /* CGLayoutTests.xctest */;
+			productReference = "CGLayout::CGLayoutTests::Product" /* CGLayoutTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		CGLayout::SwiftPMPackageDescription /* CGLayoutPackageDescription */ = {
+		"CGLayout::SwiftPMPackageDescription" /* CGLayoutPackageDescription */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = OBJ_55 /* Build configuration list for PBXNativeTarget "CGLayoutPackageDescription" */;
 			buildPhases = (
@@ -254,10 +253,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CGLayout::CGLayout /* CGLayout */,
-				CGLayout::SwiftPMPackageDescription /* CGLayoutPackageDescription */,
-				CGLayout::CGLayoutPackageTests::ProductTarget /* CGLayoutPackageTests */,
-				CGLayout::CGLayoutTests /* CGLayoutTests */,
+				"CGLayout::CGLayout" /* CGLayout */,
+				"CGLayout::SwiftPMPackageDescription" /* CGLayoutPackageDescription */,
+				"CGLayout::CGLayoutPackageTests::ProductTarget" /* CGLayoutPackageTests */,
+				"CGLayout::CGLayoutTests" /* CGLayoutTests */,
 			);
 		};
 /* End PBXProject section */
@@ -307,12 +306,12 @@
 /* Begin PBXTargetDependency section */
 		OBJ_64 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CGLayout::CGLayoutTests /* CGLayoutTests */;
+			target = "CGLayout::CGLayoutTests" /* CGLayoutTests */;
 			targetProxy = A43DA79D20E6CEB400EDFF46 /* PBXContainerItemProxy */;
 		};
 		OBJ_75 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CGLayout::CGLayout /* CGLayout */;
+			target = "CGLayout::CGLayout" /* CGLayout */;
 			targetProxy = A43DA79C20E6CEB300EDFF46 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */

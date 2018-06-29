@@ -6,11 +6,12 @@ import Cocoa
 import Foundation
 #endif
 
+#if os(Linux)
+
 @testable import CGLayout
 
 /// The container does not know which child is being added,
 /// but the child knows exactly where it is being added
-#if os(Linux)
 
 class ContainerEnterPoint {
     func add(to view: View) {

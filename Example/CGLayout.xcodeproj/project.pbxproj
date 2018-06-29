@@ -13,7 +13,6 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
-		A40485A71F978A1C00DB38E4 /* CONTRIBUTING.md in Sources */ = {isa = PBXBuildFile; fileRef = A40485A61F978A1C00DB38E4 /* CONTRIBUTING.md */; };
 		A4232A181F82D20C00016A8A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		A4232A191F82D21100016A8A /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A4232A1A1F82D21500016A8A /* SecondViewControllerAutolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43D53961F6FDEE300A92425 /* SecondViewControllerAutolayout.swift */; };
@@ -33,7 +32,6 @@
 		A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A4879D0D1F93A4B400BCBF0E /* ScrollLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4879D0C1F93A4B400BCBF0E /* ScrollLayoutViewController.swift */; };
 		A4B96E6E20D6D9CF003C7803 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B96E6C20D6D9CF003C7803 /* Tests.swift */; };
-		A4DE587E20E65178002B7678 /* support_linux.tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B96E6B20D6D9CF003C7803 /* support_linux.tests.swift */; };
 		A4DECF99206FFA76006933C4 /* CGLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DECF97206FFA76006933C4 /* CGLayoutTests.swift */; };
 		AA207DB93A95FD0B83A04761 /* Pods_CGLayout_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AF282E152D179C9353E356 /* Pods_CGLayout_Tests.framework */; };
 		B635776618CF077E9FE44524 /* Pods_CGLayout_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 229950F7B0B7736994BF5766 /* Pods_CGLayout_tvOS.framework */; };
@@ -798,7 +796,6 @@
 				A4579C351F59E86800893AB2 /* SecondViewController.swift in Sources */,
 				A43D53971F6FDEE300A92425 /* SecondViewControllerAutolayout.swift in Sources */,
 				A42E170E20B2FE1100E1985C /* LayoutViewController.swift in Sources */,
-				A40485A71F978A1C00DB38E4 /* CONTRIBUTING.md in Sources */,
 				A4879D0D1F93A4B400BCBF0E /* ScrollLayoutViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				A44646BC1F74132A009601DA /* TableViewController.swift in Sources */,
@@ -811,7 +808,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */,
-				A4DE587E20E65178002B7678 /* support_linux.tests.swift in Sources */,
 				A4B96E6E20D6D9CF003C7803 /* Tests.swift in Sources */,
 				A4DECF99206FFA76006933C4 /* CGLayoutTests.swift in Sources */,
 			);
@@ -941,7 +937,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -981,7 +978,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
