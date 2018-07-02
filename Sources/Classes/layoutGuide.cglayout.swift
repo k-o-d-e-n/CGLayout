@@ -71,6 +71,15 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
     internal func layout() {
         layout(in: layoutBounds)
     }
+
+    open var debugContentOfDescription: String {
+        return ""
+    }
+}
+extension LayoutGuide: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "\(self) {\n  - frame: \(frame)\n  - bounds: \(bounds)\n  - super: \(superElement)\n\(debugContentOfDescription)\n}"
+    }
 }
 
 #if os(iOS) || os(tvOS)
@@ -239,8 +248,7 @@ open class LayerPlaceholder<Layer: CALayer>: LayoutPlaceholder<Layer, CALayer> {
 #if os(iOS) || os(tvOS)
 /// Base class for any view placeholder that need dynamic position and/or size.
 /// Used UIViewController pattern for loading target view, therefore will be very simply use him.
-open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, AdjustableLayoutElement {
-    open var contentConstraint: RectBasedConstraint { return isElementLoaded ? _SizeThatFitsConstraint(item: element) : LayoutAnchor.Constantly(value: .zero) }
+open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
     var load: (() -> View)?
     var didLoad: ((View) -> Void)?
 
@@ -251,7 +259,7 @@ open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, Adjus
         self.didLoad = didLoad
     }
 
-    public convenience init(_ load: (() -> View)?,
+    public convenience init(_ load: (() -> View)? = nil,
                             _ didLoad: ((View) -> Void)?) {
         self.init(frame: .zero)
         self.load = load
@@ -276,6 +284,9 @@ open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView>, Adjus
             owner.addSubview(element)
         }
     }
+}
+extension ViewPlaceholder: AdjustLayoutConstraint where View: AdjustableLayoutElement {
+    open var contentConstraint: RectBasedConstraint { return isElementLoaded ? element.contentConstraint : LayoutAnchor.Constantly(value: .zero) }
 }
 
 // MARK: UILayoutGuide -> UIViewPlaceholder

@@ -315,10 +315,10 @@ open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent
         result.height += contentInsets.bottom
         return result
     }
-}
-extension StackLayoutGuide: CustomDebugStringConvertible, CustomStringConvertible {
-    public var debugDescription: String { return items.debugDescription }
-    public var description: String { return items.description }
+
+    override open var debugContentOfDescription: String {
+        return "  - items: \(items.debugDescription)"
+    }
 }
 
 #if os(iOS) || os(tvOS)
