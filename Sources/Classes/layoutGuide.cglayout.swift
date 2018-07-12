@@ -78,7 +78,7 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
 }
 extension LayoutGuide: CustomDebugStringConvertible {
     public var debugDescription: String {
-        return "\(self) {\n  - frame: \(frame)\n  - bounds: \(bounds)\n  - super: \(superElement)\n\(debugContentOfDescription)\n}"
+        return "\(self) {\n  - frame: \(frame)\n  - bounds: \(bounds)\n  - super: \(String(describing: superElement ?? nil))\n\(debugContentOfDescription)\n}"
     }
 }
 
@@ -285,7 +285,7 @@ open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
         }
     }
 }
-extension ViewPlaceholder: AdjustLayoutConstraint where View: AdjustableLayoutElement {
+extension ViewPlaceholder: AdjustableLayoutElement where View: AdjustableLayoutElement {
     open var contentConstraint: RectBasedConstraint { return isElementLoaded ? element.contentConstraint : LayoutAnchor.Constantly(value: .zero) }
 }
 
@@ -318,8 +318,21 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
     var didLoad: ((View) -> Void)?
     private weak var _view: View?
     open weak var view: View! {
-        loadViewIfNeeded()
-        return viewIfLoaded
+        set {
+            if _view !== newValue {
+                _view?.removeFromSuperview()
+                _view = newValue
+                if let v = newValue {
+                    owningView?.addSubview(v)
+                    _view?.translatesAutoresizingMaskIntoConstraints = false
+                    viewDidLoad()
+                }
+            }
+        }
+        get {
+            loadViewIfNeeded()
+            return viewIfLoaded
+        }
     }
     open var isViewLoaded: Bool { return _view != nil }
     open var viewIfLoaded: View? { return _view }
@@ -340,11 +353,9 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
 
     open func loadView() {
         if let l = load {
-            let v = l()
-            _view = v
-            owningView?.addSubview(v)
+            self.view = l()
         } else {
-            _view = add(View.self)
+            self.view = add(View.self)
         }
     }
 
@@ -355,8 +366,6 @@ open class UIViewPlaceholder<View: UIView>: UILayoutGuide {
     open func loadViewIfNeeded() {
         if !isViewLoaded {
             loadView()
-            viewIfLoaded?.translatesAutoresizingMaskIntoConstraints = false
-            viewDidLoad()
         }
     }
 }
