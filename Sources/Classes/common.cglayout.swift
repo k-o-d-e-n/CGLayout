@@ -110,7 +110,7 @@ extension CGRect {
 
 func EdgeInsetsInsetRect(_ rect: CGRect, _ edgeInsets: EdgeInsets) -> CGRect {
     #if os(iOS) || os(tvOS)
-        return UIEdgeInsetsInsetRect(rect, edgeInsets)
+        return rect.inset(by: edgeInsets)
     #else
         return CGRect(x: rect.origin.x + edgeInsets.left, y: rect.origin.y + edgeInsets.top,
                       width: rect.size.width - edgeInsets.horizontal, height: rect.size.height - edgeInsets.vertical)

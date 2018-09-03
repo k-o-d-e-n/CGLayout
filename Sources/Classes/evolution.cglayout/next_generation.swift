@@ -98,9 +98,9 @@ open class AutolayoutViewController: UIViewController {
     fileprivate func loadInternalLayout() -> LayoutScheme {
         let visible: (inout CGRect) -> Void = { [unowned self] rect in
             if #available(iOS 11.0, tvOS 11.0, *) {
-                rect = UIEdgeInsetsInsetRect(rect, self.view.safeAreaInsets)
+                rect = rect.inset(by: self.view.safeAreaInsets)
             } else {
-                rect = UIEdgeInsetsInsetRect(rect, self.viewContentInsets)
+                rect = rect.inset(by: self.viewContentInsets)
             }
         }
         return LayoutScheme(
@@ -144,7 +144,7 @@ open class AutolayoutViewController: UIViewController {
 
 open class ScrollLayoutViewController: AutolayoutViewController {
     private var isNeedCalculateContent: Bool = true
-    public var scrollView: UIScrollView! { return view as! UIScrollView }
+    public var scrollView: UIScrollView! { return view as? UIScrollView }
     var isScrolling: Bool { return scrollView.isDragging || scrollView.isDecelerating || scrollView.isZooming }
 
     open override func viewDidLayoutSubviews() {

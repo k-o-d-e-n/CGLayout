@@ -78,7 +78,7 @@ extension UILabel: TextPresentedElement, AdjustableLayoutElement {
                 sourceRect.size = attrTxt.boundingRect(with: rect.size, options: .usesLineFragmentOrigin, context: nil).size
             } else if let txt = syncGuard(mainThread: label.text) {
                 sourceRect.size = txt.boundingRect(with: rect.size, options: .usesLineFragmentOrigin,
-                                                   attributes: [NSAttributedStringKey.font: label.font], context: nil).size
+                                                   attributes: [NSAttributedString.Key.font: label.font], context: nil).size
             } else {
                 sourceRect.size = .zero
             }
