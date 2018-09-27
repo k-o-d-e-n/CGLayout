@@ -256,11 +256,11 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 /// Attention: before addition items to stack, need add stack layout guide to super layout element using `func add(layoutGuide:)` method.
 open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent>, AdjustableLayoutElement, AdaptiveLayoutElement {
     private var insetAnchor: RectBasedConstraint?
-    internal var items: [LayoutElement] = []
+    internal var items: [Enter<Parent>] = []
     /// StackLayoutScheme entity for configuring axis, distribution and other parameters.
-    open lazy var scheme: StackLayoutScheme = StackLayoutScheme { [unowned self] in self.items }
+    open lazy var scheme: StackLayoutScheme = StackLayoutScheme { [unowned self] in self.arrangedItems }
     /// The list of items arranged by the stack layout guide
-    open var arrangedItems: [LayoutElement] { return items }
+    open var arrangedItems: [LayoutElement] { return items.map { $0.child } }
     /// Insets for distribution space
     open var contentInsets: EdgeInsets = .zero {
         didSet { insetAnchor = Inset(contentInsets) }
@@ -269,22 +269,26 @@ open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent
     open override var ownerElement: Parent? {
         willSet {
             if newValue == nil {
-                items.forEach { $0.removeFromSuperElement() }
+                items.forEach { $0.child.removeFromSuperElement() }
             }
         }
         /// while stack layout guide cannot add subitems
-//        didSet {
-//            if let owner = ownerElement {
-//                items.forEach { element in owner.addSublayoutItem(element) }
-//            }
-//        }
+        didSet {
+            if let owner = ownerElement {
+                items.forEach(owner.addChild)
+            }
+        }
     }
 
-    internal func removeItem(_ item: LayoutElement) -> Bool {
-        guard let index = items.index(where: { $0 === item }) else { return false }
-        
-        items.remove(at: index)
-        return true
+    public convenience init(items: [Enter<Parent>] = []) {
+        self.init(frame: .zero)
+        self.items = items
+    }
+
+    internal func removeItem(_ item: LayoutElement) -> LayoutElement? {
+        guard let index = items.index(where: { $0.child === item }) else { return nil }
+
+        return items.remove(at: index).child
     }
 
     /// Performs layout for subitems, which this layout guide manages, in layout space rect
@@ -320,28 +324,67 @@ open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent
         return "  - items: \(items.debugDescription)"
     }
 }
-
+extension StackLayoutGuide {
+    /// Adds an element to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter point: Enter point.
+    public func addArrangedElement(using point: Enter<Parent>) {
+        insertArrangedElement(using: point, at: items.count)
+    }
+    /// Inserts an element to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - point: Enter point
+    ///   - index: Index in list.
+    public func insertArrangedElement(using point: Enter<Parent>, at index: Int) {
+        items.insert(point, at: index)
+        if let owner = ownerElement {
+            owner.addChild(using: point)
+        }
+    }
+    /// Removes element from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter element: Layout element for removing.
+    public func removeArrangedElement(_ element: LayoutElement) {
+        removeItem(element)?.removeFromSuperElement()
+    }
+}
 #if os(iOS) || os(tvOS)
+extension Enter where Container: UIView {
+    static func caLayer<C: CALayer>(_ child: C) -> Enter<Container> {
+        return Enter(child) { (child, container) in
+            container.layer.addSublayer(child)
+        }
+    }
+    static func uiView<C: UIView>(_ child: C) -> Enter<Container> {
+        return Enter(child) { (child, container) in
+            container.addSubview(child)
+        }
+    }
+    static func layoutGuide<LG, C: UIView>(_ child: LG) -> Enter<Container> where LG: LayoutGuide<C> {
+        return Enter(child) { (child, container) in
+            container.add(layoutGuide: child)
+        }
+    }
+    static func layoutGuide<LG, C: CALayer>(_ child: LG) -> Enter<Container> where LG: LayoutGuide<C> {
+        return Enter(child) { (child, container) in
+            container.layer.add(layoutGuide: child)
+        }
+    }
+}
+
 extension StackLayoutGuide where Parent: UIView {
     /// Adds a layout guide to the end of the `arrangedItems` list.
     ///
     /// - Parameter element: Layout guide for addition.
     public func addArrangedElement<T: UIView>(_ element: LayoutGuide<T>) { insertArrangedElement(element, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
+    /// Inserts an element to arrangedItems list at specific index.
     ///
     /// - Parameters:
     ///   - element: Layout guide for addition
     ///   - index: Index in list.
     public func insertArrangedElement<T: UIView>(_ element: LayoutGuide<T>, at index: Int) {
-        ownerElement?.addChildElement(unsafeBitCast(element, to: LayoutGuide<UIView>.self))
-        items.insert(element, at: index)
-    }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: Layout guide for removing.
-    public func removeArrangedElement<T: UIView>(_ element: LayoutGuide<T>) {
-        guard removeItem(element), ownerElement === element.superElement else { return }
-        element.removeFromSuperElement()
+        insertArrangedElement(using: .layoutGuide(element), at: index)
     }
     /// Adds a layout guide to the end of the `arrangedItems` list.
     ///
@@ -353,99 +396,71 @@ extension StackLayoutGuide where Parent: UIView {
     ///   - element: Layout guide for addition
     ///   - index: Index in list.
     public func insertArrangedElement<T: CALayer>(_ element: LayoutGuide<T>, at index: Int) {
-        ownerElement?.addChildElement(unsafeBitCast(element, to: LayoutGuide<CALayer>.self))
-        items.insert(element, at: index)
+        insertArrangedElement(using: .layoutGuide(element), at: index)
     }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: Layout guide for removing.
-    public func removeArrangedElement<T: CALayer>(_ element: LayoutGuide<T>) {
-        guard removeItem(element), ownerElement?.layer === element.superElement else { return }
-        element.removeFromSuperElement()
-    }
-    /// Adds a layout guide to the end of the `arrangedItems` list.
+    /// Adds an element to the end of the `arrangedItems` list.
     ///
     /// - Parameter element: View for addition.
     public func addArrangedElement(_ element: UIView) { insertArrangedElement(element, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
+    /// Inserts an element to arrangedItems list at specific index.
     ///
     /// - Parameters:
     ///   - element: View for addition
     ///   - index: Index in list.
     public func insertArrangedElement(_ element: UIView, at index: Int) {
-        ownerElement?.addChildElement(element)
-        items.insert(element, at: index)
+        insertArrangedElement(using: .uiView(element), at: index)
     }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: View for removing.
-    public func removeArrangedElement(_ element: UIView) {
-        guard removeItem(element), ownerElement === element.superElement else { return }
-        element.removeFromSuperElement()
-    }
-    /// Adds a layout guide to the end of the `arrangedItems` list.
+    /// Adds an element to the end of the `arrangedItems` list.
     ///
     /// - Parameter element: Layer for addition.
     public func addArrangedElement(_ element: CALayer) { insertArrangedElement(element, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
+    /// Inserts an element to arrangedItems list at specific index.
     ///
     /// - Parameters:
     ///   - element: Layer for addition
     ///   - index: Index in list.
     public func insertArrangedElement(_ element: CALayer, at index: Int) {
-        ownerElement?.addChildElement(element)
-        items.insert(element, at: index)
-    }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: Layer for removing.
-    public func removeArrangedElement(_ element: CALayer) {
-        guard removeItem(element), ownerElement?.layer === element.superElement else { return }
-        element.removeFromSuperElement()
+        insertArrangedElement(using: .caLayer(element), at: index)
     }
 }
 #endif
 #if os(macOS) || os(iOS) || os(tvOS)
+extension Enter where Container: CALayer {
+    static func caLayer<C: CALayer>(_ child: C) -> Enter<Container> {
+        return Enter(child) { (child, container) in
+            container.addSublayer(child)
+        }
+    }
+    static func layoutGuide<LG, C: CALayer>(_ child: LG) -> Enter<Container> where LG: LayoutGuide<C> {
+        return Enter(child) { (child, container) in
+            container.add(layoutGuide: child)
+        }
+    }
+}
 extension StackLayoutGuide where Parent: CALayer {
     /// Adds a layout guide to the end of the `arrangedItems` list.
     ///
     /// - Parameter element: Layout guide for addition.
-    public func addArrangedElement<T: CALayer>(_ item: LayoutGuide<T>) { insertArrangedElement(item, at: items.count) }
+    public func addArrangedElement<T: CALayer>(_ element: LayoutGuide<T>) { insertArrangedElement(element, at: items.count) }
     /// Inserts a element to arrangedItems list at specific index.
     ///
     /// - Parameters:
-    ///   - element: Layout guide for addition
+    ///   - element: Layout element.
     ///   - index: Index in list.
-    public func insertArrangedElement<T: CALayer>(_ item: LayoutGuide<T>, at index: Int) {
-        ownerElement?.addChildElement(unsafeBitCast(item, to: LayoutGuide<CALayer>.self))
-        items.insert(item, at: index)
+    public func insertArrangedElement<T: CALayer>(_ element: LayoutGuide<T>, at index: Int) {
+        insertArrangedElement(using: .layoutGuide(element), at: index)
     }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: Layout guide for removing.
-    public func removeArrangedElement(_ item: LayoutElement) {
-        guard removeItem(item), ownerElement === item.superElement else { return }
-        item.removeFromSuperElement()
-    }
-    /// Adds a layout guide to the end of the `arrangedItems` list.
+    /// Adds an element to the end of the `arrangedItems` list.
     ///
     /// - Parameter element: CALayer for addition.
     public func addArrangedElement(_ item: CALayer) { insertArrangedElement(item, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
+    /// Inserts an element to arrangedItems list at specific index.
     ///
     /// - Parameters:
-    ///   - element: Layer for addition
+    ///   - element: Layout element.
     ///   - index: Index in list.
-    public func insertArrangedElement(_ item: CALayer, at index: Int) {
-        ownerElement?.addChildElement(item)
-        items.insert(item, at: index)
-    }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: Layer for removing.
-    public func removeArrangedElement(_ item: CALayer) {
-        guard removeItem(item), ownerElement === item.superElement else { return }
-        item.removeFromSuperElement()
+    public func insertArrangedElement(_ element: CALayer, at index: Int) {
+        insertArrangedElement(using: .caLayer(element), at: index)
     }
 }
 #endif

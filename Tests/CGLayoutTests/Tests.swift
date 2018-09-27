@@ -874,6 +874,45 @@ extension Tests {
         XCTAssertNil(subview.superElement)
         XCTAssertNil(sublayer.superElement)
         XCTAssertNil(layoutGuide.ownerElement)
+        XCTAssertEqual(stackGuide.arrangedItems.count, 0)
+    }
+    func testStackLayoutGuideAddLayoutItemsUsingEnterPoint() {
+        let view = View()
+        let stackGuide = StackLayoutGuide<View>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        view.add(layoutGuide: stackGuide)
+
+        let subview = View(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedElement(using: .uiView(subview))
+        let sublayer = Layer(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedElement(using: .caLayer(sublayer))
+        let layoutGuide = LayoutGuide<Layer>(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArrangedElement(using: .layoutGuide(layoutGuide))
+
+        XCTAssertTrue(subview.superElement === view)
+        XCTAssertTrue(sublayer.superElement === view.layer)
+        XCTAssertTrue(layoutGuide.ownerElement === view.layer)
+        XCTAssertEqual(stackGuide.arrangedItems.count, 3)
+    }
+    func testStackLayoutGuideInitialize() {
+        let view = View(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        let subview = View(frame: .random(in: view.bounds))
+        let sublayer = Layer(frame: .random(in: view.bounds))
+        let layoutGuide = LayoutGuide<Layer>(frame: .random(in: view.bounds))
+
+        let stackGuide = StackLayoutGuide<View>(items: [.uiView(subview), .caLayer(sublayer), .layoutGuide(layoutGuide)])
+        stackGuide.frame = view.bounds
+
+        view.add(layoutGuide: stackGuide)
+        XCTAssertTrue(subview.superElement === view)
+        XCTAssertTrue(sublayer.superElement === view.layer)
+        XCTAssertTrue(layoutGuide.ownerElement === view.layer)
+
+        stackGuide.removeFromSuperElement()
+
+        XCTAssertNil(subview.superElement)
+        XCTAssertNil(sublayer.superElement)
+        XCTAssertNil(layoutGuide.ownerElement)
+        XCTAssertEqual(stackGuide.arrangedItems.count, 3)
     }
     func testRemoveStackLayoutFromSuperItem() {
         let view = View()
@@ -892,6 +931,7 @@ extension Tests {
         XCTAssertNil(subview.superElement)
         XCTAssertNil(sublayer.superElement)
         XCTAssertNil(layoutGuide.ownerElement)
+        XCTAssertEqual(stackGuide.arrangedItems.count, 0)
     }
     #endif
 }

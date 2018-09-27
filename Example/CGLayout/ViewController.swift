@@ -200,8 +200,10 @@ class ViewController: UIViewController {
 //        centeredView.anchors.center.horizontal.offset(rect: &centeredView.frame, by: subviews[7].anchors.center.horizontal.get(for: subviews[7].frame))
 //        centeredView.anchors.bottom.offset(rect: &centeredView.frame, by: subviews[7].anchors.bottom.get(for: subviews[7].frame))
         
-        // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space. 
-        navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.layoutConstraint(for: [.equally])]).layout()
+        // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space.
+        if let navigation = navigationController {
+            navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigation.navigationBar.layoutConstraint(for: [.equally])]).layout()
+        }
 
         let subviewLayout = subview.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(50), height: .fixed(1)),
                                                 constraints: [centeredView.layoutConstraint(for: [.equally])])
