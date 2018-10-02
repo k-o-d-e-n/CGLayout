@@ -226,6 +226,20 @@ extension LayoutElement {
     public func contentLayoutConstraint(for anchors: [LayoutAnchor]) -> ContentLayoutConstraint {
         return ContentLayoutConstraint(element: self, constraints: anchors.map { $0.constraint })
     }
+
+    #if DEBUG
+    public func layoutConstraint(for anchors: [LayoutAnchor], debug: @escaping ((before: CGRect, after: CGRect), CGRect) -> Void) -> LayoutConstraint {
+        return LayoutConstraint(element: self, constraints: anchors.map { anchor in
+            let constraint = anchor.constraint
+            return AnyRectBasedConstraint({ s, r in
+                var source: (before: CGRect, after: CGRect) = (s, .zero)
+                constraint.formConstrain(sourceRect: &s, by: r)
+                source.after = s
+                debug(source, r)
+            })
+        })
+    }
+    #endif
 }
 public extension LayoutElement where Self: TextPresentedElement {
     /// Convenience getter for constraint by baseline position
@@ -1484,7 +1498,7 @@ public extension Layout.Alignment.Horizontal {
 public struct AnyRectBasedConstraint: RectBasedConstraint {
     let action: (inout CGRect, CGRect) -> Void
 
-    init(_ action: @escaping (inout CGRect, CGRect) -> Void) {
+    public init(_ action: @escaping (inout CGRect, CGRect) -> Void) {
         self.action = action
     }
 
