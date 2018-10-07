@@ -148,6 +148,7 @@ open class ScrollLayoutViewController: AutolayoutViewController {
     var isScrolling: Bool { return scrollView.isDragging || scrollView.isDecelerating || scrollView.isZooming }
 
     open override func viewDidLayoutSubviews() {
+        // skips super call
         if isNeedCalculateContent || !isScrolling {
             internalLayout.layout()
             update(scheme: &layoutScheme)

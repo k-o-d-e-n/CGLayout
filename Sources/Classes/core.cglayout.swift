@@ -279,6 +279,20 @@ extension AdjustableLayoutElement {
     public func adjustLayoutConstraint(for anchors: [Size]) -> AdjustLayoutConstraint {
         return AdjustLayoutConstraint(element: self, constraints: anchors)
     }
+
+    #if DEBUG
+    public func adjustLayoutConstraint(for anchors: [Size],
+                                       debug: @escaping ((before: CGRect, after: CGRect), CGRect) -> Void) -> AdjustLayoutConstraint {
+        return AdjustLayoutConstraint(element: self, constraints: anchors.map({ (anchor) -> Size in
+            return Size.build(AnyRectBasedConstraint({ s, r in
+                var source: (before: CGRect, after: CGRect) = (s, .zero)
+                anchor.formConstrain(sourceRect: &s, by: r)
+                source.after = s
+                debug(source, r)
+            }))
+        }))
+    }
+    #endif
 }
 
 // MARK: LayoutAnchor
@@ -1480,6 +1494,9 @@ public extension Layout.Alignment.Vertical {
     static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Vertical {
         return build(AnyRectBasedLayout { $0.origin.y = use($1) })
     }
+    static func position(_ multiplier: CGFloat) -> Layout.Alignment.Vertical {
+        return build(AnyRectBasedLayout { $0.origin.y = $1.height * multiplier })
+    }
 }
 extension Layout.Alignment.Horizontal: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
     public init(floatLiteral value: Float) {
@@ -1492,6 +1509,9 @@ extension Layout.Alignment.Horizontal: ExpressibleByFloatLiteral, ExpressibleByI
 public extension Layout.Alignment.Horizontal {
     static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Horizontal {
         return build(AnyRectBasedLayout { $0.origin.x = use($1) })
+    }
+    static func position(_ multiplier: CGFloat) -> Layout.Alignment.Horizontal {
+        return build(AnyRectBasedLayout { $0.origin.x = $1.width * multiplier })
     }
 }
 

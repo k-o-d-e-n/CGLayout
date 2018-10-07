@@ -35,7 +35,13 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
         didSet { superElement = ownerElement; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
-    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } }
+    var frame: CGRect {
+        didSet {
+//            if oldValue != frame { bounds = contentRect(forFrame: frame) }
+            // TODO: Temporary calls always, because content does not layout on equal
+            bounds = contentRect(forFrame: frame)
+        }
+    }
     open /// Internal coordinate space of layout entity
     var bounds: CGRect { didSet { layout() } }
     open /// Layout element that maintained this layout entity
@@ -286,7 +292,9 @@ open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
     }
 }
 extension ViewPlaceholder: AdjustableLayoutElement where View: AdjustableLayoutElement {
-    open var contentConstraint: RectBasedConstraint { return isElementLoaded ? element.contentConstraint : LayoutAnchor.Constantly(value: .zero) }
+    open var contentConstraint: RectBasedConstraint {
+        return isElementLoaded ? element.contentConstraint : LayoutAnchor.Constantly(value: .zero)
+    }
 }
 
 // MARK: UILayoutGuide -> UIViewPlaceholder
