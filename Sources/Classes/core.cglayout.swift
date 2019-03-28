@@ -184,6 +184,11 @@ public protocol LayoutElement: class, RectBasedElement, LayoutCoordinateSpace {
     /// Removes layout element from hierarchy
     func removeFromSuperElement()
 }
+extension Equatable where Self: LayoutElement {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs === rhs
+    }
+}
 
 /// Defines requirements for thread confined wrapper of layout element
 public protocol ElementInLayoutTime: RectBasedElement {

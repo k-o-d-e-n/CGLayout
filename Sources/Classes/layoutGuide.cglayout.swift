@@ -84,7 +84,7 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
 }
 extension LayoutGuide: CustomDebugStringConvertible {
     public var debugDescription: String {
-        return "\(self) {\n  - frame: \(frame)\n  - bounds: \(bounds)\n  - super: \(String(describing: superElement ?? nil))\n\(debugContentOfDescription)\n}"
+        return "\(ObjectIdentifier(self)) {\n  - frame: \(frame)\n  - bounds: \(bounds)\n  - super: \(String(describing: superElement ?? nil))\n\(debugContentOfDescription)\n}"
     }
 }
 
