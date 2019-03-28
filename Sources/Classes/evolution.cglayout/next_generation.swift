@@ -17,7 +17,7 @@ import Foundation
 
 @available(macOS 10.12, iOS 10.0, *)
 public class LayoutManager<Item: LayoutElement>: NSObject {
-    var deinitialization: (() -> Void)?
+    var deinitialization: ((LayoutManager<Item>) -> Void)?
     weak var item: LayoutElement!
     var scheme: LayoutScheme!
     private var isNeedLayout: Bool = false
@@ -44,7 +44,7 @@ public class LayoutManager<Item: LayoutElement>: NSObject {
     }
 
     deinit {
-        deinitialization?()
+        deinitialization?(self)
     }
 }
 #endif
@@ -56,7 +56,7 @@ public extension LayoutManager where Item: UIView {
         self.init()
         self.item = view
         self.scheme = scheme
-        self.deinitialization = { view.removeObserver(self, forKeyPath: "layer.bounds") }
+        self.deinitialization = { lm in view.removeObserver(lm, forKeyPath: "layer.bounds") }
         view.addObserver(self, forKeyPath: "layer.bounds", options: [], context: nil)
         scheme.layout()
     }
@@ -140,14 +140,22 @@ open class AutolayoutViewController: UIViewController {
         return (max(0, topFrame.maxY - view.frame.origin.y),
                 max(0, bottomBarsTop.map { $0.y - view.frame.maxY } ?? 0))
     }
+
+    public func removeInactiveLayoutBlocks() {
+        layoutScheme.removeInactiveBlocks()
+    }
+    public func insertLayout(block: LayoutBlockProtocol) {
+        layoutScheme.insertLayout(block: block)
+    }
 }
 
 open class ScrollLayoutViewController: AutolayoutViewController {
     private var isNeedCalculateContent: Bool = true
-    public var scrollView: UIScrollView! { return view as? UIScrollView }
+    open var scrollView: UIScrollView { fatalError() }
     var isScrolling: Bool { return scrollView.isDragging || scrollView.isDecelerating || scrollView.isZooming }
 
     open override func viewDidLayoutSubviews() {
+        // skips super call
         if isNeedCalculateContent || !isScrolling {
             internalLayout.layout()
             update(scheme: &layoutScheme)

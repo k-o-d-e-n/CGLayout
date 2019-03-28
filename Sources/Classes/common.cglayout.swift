@@ -137,12 +137,12 @@ extension EdgeInsets {
 #if os(iOS) || os(tvOS)
 @available(iOS 9.0, *)
 extension UILayoutGuide: LayoutElement {
-    public var layoutBounds: CGRect { return bounds }
+    @objc open var layoutBounds: CGRect { return bounds }
     public var inLayoutTime: ElementInLayoutTime { return _MainThreadItemInLayoutTime(item: self) }
-    public var frame: CGRect { get { return layoutFrame } set {} }
-    public var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }
+    @objc open var frame: CGRect { get { return layoutFrame } set {} }
+    @objc open var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }
     public var superElement: LayoutElement? { return owningView }
-    public func removeFromSuperElement() { owningView.map { $0.removeLayoutGuide(self) } }
+    @objc open func removeFromSuperElement() { owningView.map { $0.removeLayoutGuide(self) } }
 }
 #endif
 

@@ -13,7 +13,7 @@ import CGLayout
 extension Size {
     static func stringSize(_ string: String?,
                            options: NSStringDrawingOptions = .usesLineFragmentOrigin,
-                           attributes: [NSAttributedStringKey: Any],
+                           attributes: [NSAttributedString.Key: Any],
                            context: NSStringDrawingContext? = nil) -> Size {
         return .build(StringLayoutAnchor(string: string, options: options, attributes: attributes, context: context))
     }

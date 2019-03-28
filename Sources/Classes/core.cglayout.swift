@@ -184,6 +184,11 @@ public protocol LayoutElement: class, RectBasedElement, LayoutCoordinateSpace {
     /// Removes layout element from hierarchy
     func removeFromSuperElement()
 }
+extension Equatable where Self: LayoutElement {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs === rhs
+    }
+}
 
 /// Defines requirements for thread confined wrapper of layout element
 public protocol ElementInLayoutTime: RectBasedElement {
@@ -226,6 +231,20 @@ extension LayoutElement {
     public func contentLayoutConstraint(for anchors: [LayoutAnchor]) -> ContentLayoutConstraint {
         return ContentLayoutConstraint(element: self, constraints: anchors.map { $0.constraint })
     }
+
+    #if DEBUG
+    public func layoutConstraint(for anchors: [LayoutAnchor], debug: @escaping ((before: CGRect, after: CGRect), CGRect) -> Void) -> LayoutConstraint {
+        return LayoutConstraint(element: self, constraints: anchors.map { anchor in
+            let constraint = anchor.constraint
+            return AnyRectBasedConstraint({ s, r in
+                var source: (before: CGRect, after: CGRect) = (s, .zero)
+                constraint.formConstrain(sourceRect: &s, by: r)
+                source.after = s
+                debug(source, r)
+            })
+        })
+    }
+    #endif
 }
 public extension LayoutElement where Self: TextPresentedElement {
     /// Convenience getter for constraint by baseline position
@@ -265,6 +284,20 @@ extension AdjustableLayoutElement {
     public func adjustLayoutConstraint(for anchors: [Size]) -> AdjustLayoutConstraint {
         return AdjustLayoutConstraint(element: self, constraints: anchors)
     }
+
+    #if DEBUG
+    public func adjustLayoutConstraint(for anchors: [Size],
+                                       debug: @escaping ((before: CGRect, after: CGRect), CGRect) -> Void) -> AdjustLayoutConstraint {
+        return AdjustLayoutConstraint(element: self, constraints: anchors.map({ (anchor) -> Size in
+            return Size.build(AnyRectBasedConstraint({ s, r in
+                var source: (before: CGRect, after: CGRect) = (s, .zero)
+                anchor.formConstrain(sourceRect: &s, by: r)
+                source.after = s
+                debug(source, r)
+            }))
+        }))
+    }
+    #endif
 }
 
 // MARK: LayoutAnchor
@@ -1466,6 +1499,9 @@ public extension Layout.Alignment.Vertical {
     static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Vertical {
         return build(AnyRectBasedLayout { $0.origin.y = use($1) })
     }
+    static func position(_ multiplier: CGFloat) -> Layout.Alignment.Vertical {
+        return build(AnyRectBasedLayout { $0.origin.y = $1.height * multiplier })
+    }
 }
 extension Layout.Alignment.Horizontal: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
     public init(floatLiteral value: Float) {
@@ -1479,12 +1515,15 @@ public extension Layout.Alignment.Horizontal {
     static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Horizontal {
         return build(AnyRectBasedLayout { $0.origin.x = use($1) })
     }
+    static func position(_ multiplier: CGFloat) -> Layout.Alignment.Horizontal {
+        return build(AnyRectBasedLayout { $0.origin.x = $1.width * multiplier })
+    }
 }
 
 public struct AnyRectBasedConstraint: RectBasedConstraint {
     let action: (inout CGRect, CGRect) -> Void
 
-    init(_ action: @escaping (inout CGRect, CGRect) -> Void) {
+    public init(_ action: @escaping (inout CGRect, CGRect) -> Void) {
         self.action = action
     }
 

@@ -74,11 +74,20 @@ extension UILabel: TextPresentedElement, AdjustableLayoutElement {
     struct ContentConstraint: RectBasedConstraint {
         unowned let label: UILabel
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-            if let attrTxt = syncGuard(mainThread: label.attributedText) {
-                sourceRect.size = attrTxt.boundingRect(with: rect.size, options: .usesLineFragmentOrigin, context: nil).size
-            } else if let txt = syncGuard(mainThread: label.text) {
-                sourceRect.size = txt.boundingRect(with: rect.size, options: .usesLineFragmentOrigin,
-                                                   attributes: [NSAttributedString.Key.font: label.font], context: nil).size
+            // TODO: numberOfLines
+            if let txt = syncGuard(mainThread: label.text) {
+                sourceRect.size = txt.boundingRect(
+                    with: rect.size,
+                    options: [.usesLineFragmentOrigin, .usesFontLeading],
+                    attributes: [.font: label.font],
+                    context: nil
+                ).size
+            } else if let attrTxt = syncGuard(mainThread: label.attributedText) {
+                sourceRect.size = attrTxt.boundingRect(
+                    with: rect.size,
+                    options: [.usesLineFragmentOrigin, .usesFontLeading],
+                    context: nil
+                ).size
             } else {
                 sourceRect.size = .zero
             }
