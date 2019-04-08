@@ -98,9 +98,9 @@ open class AutolayoutViewController: UIViewController {
     fileprivate func loadInternalLayout() -> LayoutScheme {
         let visible: (inout CGRect) -> Void = { [unowned self] rect in
             if #available(iOS 11.0, tvOS 11.0, *) {
-                rect = UIEdgeInsetsInsetRect(rect, self.view.safeAreaInsets)
+                rect = rect.inset(by: self.view.safeAreaInsets)
             } else {
-                rect = UIEdgeInsetsInsetRect(rect, self.viewContentInsets)
+                rect = rect.inset(by: self.viewContentInsets)
             }
         }
         return LayoutScheme(

@@ -12,7 +12,7 @@ import CGLayout
 class TextCell: UITableViewCell {
     weak var label: UILabel!
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let label = UILabel()
         label.lineBreakMode = .byWordWrapping
@@ -59,7 +59,7 @@ class TableViewController: UITableViewController {
         ReuseLayoutBlock(layout: Layout.equal,
                          targetConstraints: [Inset(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20))],
                          contentConstraints: [Inset(UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)),
-                                              $0.layoutConstraint(attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]),
+                                              $0.layoutConstraint(attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]),
                                               Inset(UIEdgeInsets(top: -10, left: 0, bottom: -10, right: 0))])
     }
 

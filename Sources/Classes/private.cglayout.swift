@@ -59,11 +59,17 @@ internal struct _MainThreadItemInLayoutTime<Item: LayoutElement>: ElementInLayou
     var superLayoutBounds: CGRect { return syncGuard(mainThread: { item.superElement!.layoutBounds }) }
     weak var superElement: LayoutElement? { return syncGuard(mainThread: { item.superElement }) }
     var frame: CGRect {
-        set { syncGuard { item.frame = newValue } }
+        set {
+            let item = self.item
+            syncGuard { item.frame = newValue }()
+        }
         get { return syncGuard { item.frame } }
     }
     var bounds: CGRect {
-        set { syncGuard { item.bounds = newValue } }
+        set {
+            let item = self.item
+            syncGuard { item.bounds = newValue }()
+        }
         get { return syncGuard { item.bounds } }
     }
 
