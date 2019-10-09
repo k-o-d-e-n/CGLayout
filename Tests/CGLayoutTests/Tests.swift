@@ -3,8 +3,10 @@ import XCTest
 
 #if os(iOS)
     typealias View = UIView
+    typealias Window = UIWindow
 #elseif os(macOS)
     typealias View = NSView
+    typealias Window = NSWindow
 #endif
 
 #if !os(Linux)
@@ -770,6 +772,32 @@ extension Tests {
 #endif
 }
 
+// Container
+
+#if os(iOS)
+extension Tests {
+    func testEnterPoint() {
+        let window = Window(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
+        let view = View(frame: .zero)
+
+        let point = EnterPoint<View, Window>(child: view)
+        point.add(to: window)
+
+        XCTAssertTrue(window.subviews.contains(where: { $0 === view }))
+        XCTAssertTrue(window.layer.sublayers?.contains(where: { $0 === view.layer }) == true)
+    }
+    func testChildren() {
+        let window = Window(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
+        let view = View(frame: .zero)
+
+        window.children.add(view)
+
+        XCTAssertTrue(window.subviews.contains(where: { $0 === view }))
+        XCTAssertTrue(window.layer.sublayers?.contains(where: { $0 === view.layer }) == true)
+    }
+}
+#endif
+
 // MARK: Stack scheme, layout guide
 
 extension Tests {
@@ -845,9 +873,12 @@ extension Tests {
         stackGuide.scheme.filling = .equal(30)
         stackGuide.scheme.spacing = .equal(5)
 
-        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
-        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
-        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
+//        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
+//        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
+//        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
+        stackGuide.views.add(View(frame: .random(in: stackGuide.bounds)))
+        stackGuide.views.add(View(frame: .random(in: stackGuide.bounds)))
+        stackGuide.views.add(View(frame: .random(in: stackGuide.bounds)))
 
         XCTAssertTrue(CGSize(width: 100, height: 200) == stackGuide.sizeThatFits(stackGuide.bounds.size))
     }

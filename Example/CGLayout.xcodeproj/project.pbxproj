@@ -31,6 +31,7 @@
 		A4579C351F59E86800893AB2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A4879D0D1F93A4B400BCBF0E /* ScrollLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4879D0C1F93A4B400BCBF0E /* ScrollLayoutViewController.swift */; };
+		A48D9D6F22898EED0000AC02 /* support_linux.tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B96E6B20D6D9CF003C7803 /* support_linux.tests.swift */; };
 		A4B96E6E20D6D9CF003C7803 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B96E6C20D6D9CF003C7803 /* Tests.swift */; };
 		A4DECF99206FFA76006933C4 /* CGLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DECF97206FFA76006933C4 /* CGLayoutTests.swift */; };
 		AA207DB93A95FD0B83A04761 /* Pods_CGLayout_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AF282E152D179C9353E356 /* Pods_CGLayout_Tests.framework */; };
@@ -467,6 +468,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -696,6 +698,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A47A6F271F5F2A3400673999 /* SecondViewController.swift in Sources */,
+				A48D9D6F22898EED0000AC02 /* support_linux.tests.swift in Sources */,
 				A4B96E6E20D6D9CF003C7803 /* Tests.swift in Sources */,
 				A4DECF99206FFA76006933C4 /* CGLayoutTests.swift in Sources */,
 			);
