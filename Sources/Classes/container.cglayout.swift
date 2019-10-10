@@ -99,7 +99,6 @@ extension NSView: LayoutElementsContainer {
 /// The container does not know which child is being added,
 /// but the child knows exactly where it is being added
 
-#if os(iOS)
 protocol EnterPointProtocol {
     associatedtype Container
     func add(to container: Container)
@@ -108,6 +107,8 @@ protocol EnterPointProtocol {
 struct EnterPoint<Child, Container> {
     let child: Child
 }
+
+#if os(iOS)
 extension EnterPoint: EnterPointProtocol where Child: UIView, Container: UIView {
     func add(to container: Container) {
         container.addSubview(child)
@@ -118,6 +119,7 @@ extension EnterPoint: EnterPointProtocol where Child: UIView, Container: UIView 
 //        container.add(layoutGuide: child)
 //    }
 //}
+
 extension StackLayoutGuide where Parent: UIView {
     var views: Views { return Views(stackLayoutGuide: self) }
     struct Views: ChildrenProtocol {
@@ -137,7 +139,7 @@ extension StackLayoutGuide where Parent: UIView {
         }
     }
 
-    var layoutGuides: Layers { return Layers(stackLayoutGuide: self) }
+    var layoutGuides: LayoutGuides { return LayoutGuides(stackLayoutGuide: self) }
     struct LayoutGuides: ChildrenProtocol {
         let stackLayoutGuide: StackLayoutGuide<Parent>
         func add(_ child: LayoutGuide<UIView>) {

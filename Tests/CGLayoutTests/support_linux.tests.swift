@@ -236,11 +236,7 @@ class View: Container, ElementInLayoutTime, LayoutElementsContainer {
         child.add(to: self)
     }
 
-    func addChild(from enterPoint: ContainerEnterPoint) {
-        enterPoint.add(to: self)
-    }
-
-    func addChild<P: EnterPoint>(from point: P) where P.Container == View {
+    func addChild<P: EnterPointProtocol>(from point: P) where P.Container == View {
         point.add(to: self)
     }
 
@@ -368,7 +364,7 @@ class Window: View {
     //     set {}
     //     get { return self }
     // }
-    override func addChild<P: EnterPoint>(from point: P) where P.Container == Window {
+    override func addChild<P: EnterPointProtocol>(from point: P) where P.Container == Window {
         point.add(to: self)
     }
 }

@@ -29,37 +29,37 @@ class CGLayoutTests: XCTestCase {
         XCTAssertTrue(view.layer.sublayers.contains(where: { $0 === subview.layer }))
     }
 
-    func testContainer2() {
-        let layer = Layer(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
-        let view = View(layer: layer)
-        let lg = LayoutGuide<View>(frame: .zero)
-        let subview = View(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
+    // func testContainer2() {
+    //     let layer = Layer(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
+    //     let view = View(layer: layer)
+    //     let lg = LayoutGuide<View>(frame: .zero)
+    //     let subview = View(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
 
-        view.addChild(from: lg)
-        // view.addChild(from: AnyEnter<LayoutGuide<View>, View>(child: lg))
-        view.addChild(from: AnyEnter<View, View>(child: subview))
-        // view.addChild(from: LayoutGuideEnterPoint(lg))
-        // view.addChild(from: ViewEnterPoint(subview))
-        // view.addChild(lg)
-        // view.addChild(subview)
-        // lg.add(to: view)
-        // subview.add(to: view)
+    //     view.addChild(from: lg)
+    //     // view.addChild(from: AnyEnter<LayoutGuide<View>, View>(child: lg))
+    //     view.addChild(from: AnyEnter<View, View>(child: subview))
+    //     // view.addChild(from: LayoutGuideEnterPoint(lg))
+    //     // view.addChild(from: ViewEnterPoint(subview))
+    //     // view.addChild(lg)
+    //     // view.addChild(subview)
+    //     // lg.add(to: view)
+    //     // subview.add(to: view)
 
-        XCTAssertTrue(lg.ownerElement! === view)
-        XCTAssertTrue(view.subviews.contains(where: { $0 === subview }))
-        XCTAssertTrue(view.layer.sublayers.contains(where: { $0 === subview.layer }))
-    }
+    //     XCTAssertTrue(lg.ownerElement! === view)
+    //     XCTAssertTrue(view.subviews.contains(where: { $0 === subview }))
+    //     XCTAssertTrue(view.layer.sublayers.contains(where: { $0 === subview.layer }))
+    // }
 
-    func testContainer3() {
-        let window = Window(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
-        let view = View(frame: .zero)
+    // func testContainer3() {
+    //     let window = Window(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
+    //     let view = View(frame: .zero)
 
-        window.addChild(from: AnyEnter<View, Window>(child: view))
-        // view.add(to: window)
+    //     window.addChild(from: AnyEnter<View, Window>(child: view))
+    //     // view.add(to: window)
 
-        XCTAssertTrue(window.subviews.contains(where: { $0 === view }))
-        XCTAssertTrue(window.layer.sublayers.contains(where: { $0 === view.layer }))
-    }
+    //     XCTAssertTrue(window.subviews.contains(where: { $0 === view }))
+    //     XCTAssertTrue(window.layer.sublayers.contains(where: { $0 === view.layer }))
+    // }
 
     func testTextPresented() {
         let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
@@ -184,8 +184,8 @@ class CGLayoutTests: XCTestCase {
     static var allTests = [
         ("testTopAlignment", testTopAlignment),
         ("testContainer", testContainer),
-        ("testContainer2", testContainer2),
-        ("testContainer3", testContainer3),
+        // ("testContainer2", testContainer2),
+        // ("testContainer3", testContainer3),
         ("testTextPresented", testTextPresented),
         ("testTextPresented2", testTextPresented2),
         ("testNewAnchors2", testNewAnchors2),
