@@ -76,10 +76,11 @@ extension UILabel: TextPresentedElement, AdjustableLayoutElement {
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
             // TODO: numberOfLines
             if let txt = syncGuard(mainThread: label.text) {
+                let font = syncGuard(mainThread: label.font) ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
                 sourceRect.size = txt.boundingRect(
                     with: rect.size,
                     options: [.usesLineFragmentOrigin, .usesFontLeading],
-                    attributes: [.font: label.font],
+                    attributes: [.font: font],
                     context: nil
                 ).size
             } else if let attrTxt = syncGuard(mainThread: label.attributedText) {
@@ -104,7 +105,18 @@ extension UIScrollView {
     public /// Internal space for layout subelements
     override var layoutBounds: CGRect { return CGRect(origin: .zero, size: contentSize) }
 }
+
+@available(iOS 9.0, *)
+extension UILayoutGuide: LayoutElement {
+    @objc open var layoutBounds: CGRect { return bounds }
+    public var inLayoutTime: ElementInLayoutTime { return _MainThreadItemInLayoutTime(item: self) }
+    @objc open var frame: CGRect { get { return layoutFrame } set {} }
+    @objc open var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }
+    public var superElement: LayoutElement? { return owningView }
+    @objc open func removeFromSuperElement() { owningView.map { $0.removeLayoutGuide(self) } }
+}
 #endif
+
 #if os(macOS)
 public typealias CGRect = NSRect
 extension NSView: LayoutElement {
@@ -124,5 +136,20 @@ extension NSScrollView {
 extension NSControl: AdaptiveLayoutElement, AdjustableLayoutElement {
     /// Constraint, that defines content size for item
     public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) }
+}
+#endif
+
+#if os(iOS) || os(tvOS)
+extension UIView: AnchoredLayoutElement {
+    public var layoutAnchors: LayoutAnchors<UIView> { return LayoutAnchors(self) }
+}
+extension UILayoutGuide: AnchoredLayoutElement {
+    public var layoutAnchors: LayoutAnchors<UILayoutGuide> { return LayoutAnchors(self) }
+}
+#endif
+
+#if os(iOS) || os(tvOS) || os(macOS)
+extension CALayer: AnchoredLayoutElement {
+    public var layoutAnchors: LayoutAnchors<CALayer> { return LayoutAnchors(self) }
 }
 #endif

@@ -74,7 +74,7 @@ public extension ScrollLayoutGuide {
     /// - Parameters:
     ///   - contentItem: Item that defines content
     ///   - direction: Scroll direction
-    public convenience init<Item: AdjustableLayoutElement>(contentItem: Item, direction: ScrollDirection) {
+    convenience init<Item: AdjustableLayoutElement>(contentItem: Item, direction: ScrollDirection) {
         self.init(layout: contentItem.layoutBlock(with: Layout.equal, constraints: [contentItem.adjustLayoutConstraint(for: direction.constraints)]))
     }
 }

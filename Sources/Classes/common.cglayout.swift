@@ -28,14 +28,16 @@ internal func debugLog(_ message: String, _ file: String = #file, _ line: Int = 
     }
 }
 
-internal func debugWarning(_ message: String) {
+internal func debugWarning(_ message: @autoclosure () -> String) {
     debugWarning(true, message)
 }
 
-internal func debugWarning(_ condition: @autoclosure () -> Bool, _ message: String) {
+internal func debugWarning(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String) {
     debugAction {
         if condition() {
-            debugPrint("CGLayout WARNING: \(message)")
+            if ProcessInfo.processInfo.arguments.contains("CGL_LOG_WARNINGS") {
+                debugPrint("CGLayout WARNING: \(message())")
+            }
             if ProcessInfo.processInfo.arguments.contains("CGL_THROW_ON_WARNING") { fatalError() }
         }
     }
@@ -133,18 +135,6 @@ extension EdgeInsets {
     public static var zero: EdgeInsets { return EdgeInsets(top: 0, left: 0, bottom: 0, right: 0) }
 #endif
 }
-
-#if os(iOS) || os(tvOS)
-@available(iOS 9.0, *)
-extension UILayoutGuide: LayoutElement {
-    @objc open var layoutBounds: CGRect { return bounds }
-    public var inLayoutTime: ElementInLayoutTime { return _MainThreadItemInLayoutTime(item: self) }
-    @objc open var frame: CGRect { get { return layoutFrame } set {} }
-    @objc open var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }
-    public var superElement: LayoutElement? { return owningView }
-    @objc open func removeFromSuperElement() { owningView.map { $0.removeLayoutGuide(self) } }
-}
-#endif
 
 #if os(macOS) || os(iOS) || os(tvOS)
 public extension CALayer {

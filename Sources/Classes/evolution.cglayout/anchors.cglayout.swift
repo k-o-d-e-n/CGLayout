@@ -1,17 +1,102 @@
 //
-//  CGLayoutPrivateEvolution.swift
+//  anchors.cglayout.swift
 //  CGLayout-iOS
 //
 //  Created by Denis Koryttsev on 02/06/2018.
 //
+//  API v.2
 
-#if os(iOS) || os(tvOS)
-import UIKit
-#elseif os(macOS)
-import Cocoa
-#elseif os(Linux)
 import Foundation
-#endif
+
+protocol Anchors: class {
+    associatedtype Item: AnchoredLayoutElement & LayoutElement
+    var left: SideAnchor<Item, LeftAnchor> { get set }
+    var right: SideAnchor<Item, RightAnchor> { get set }
+    var bottom: SideAnchor<Item, BottomAnchor> { get set }
+    var top: SideAnchor<Item, TopAnchor> { get set }
+    var centerX: SideAnchor<Item, CenterXAnchor> { get set }
+    var centerY: SideAnchor<Item, CenterYAnchor> { get set }
+    var width: DimensionAnchor<Item, WidthAnchor> { get set }
+    var height: DimensionAnchor<Item, HeightAnchor> { get set }
+}
+
+public protocol AnchoredLayoutElement: LayoutElement {
+    associatedtype Item: AnchoredLayoutElement /// = Self
+    var layoutAnchors: LayoutAnchors<Item> { get }
+}
+
+extension LayoutElement where Self: AnchoredLayoutElement {
+    public func block(with layout: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
+        return block(with: .equal, constrains: layout)
+    }
+    public func block(with layout: Layout, constrains: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
+        var anchors = unsafeBitCast(self.layoutAnchors, to: LayoutAnchors<Self>.self)
+        constrains(&anchors)
+        return LayoutBlock(element: self, layout: layout, constraints: anchors.constraints())
+    }
+}
+
+extension LayoutGuide: AnchoredLayoutElement {
+    public var layoutAnchors: LayoutAnchors<LayoutGuide<Super>> { return LayoutAnchors(self) }
+}
+
+public class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
+    weak var item: V!
+
+    public init(_ item: V) {
+        self.item = item
+    }
+
+    public lazy var left: SideAnchor<V, LeftAnchor> = .init(anchors: self, anchor: .init())
+    public lazy var right: SideAnchor<V, RightAnchor> = .init(anchors: self, anchor: .init())
+    public lazy var bottom: SideAnchor<V, BottomAnchor> = .init(anchors: self, anchor: .init())
+    public lazy var top: SideAnchor<V, TopAnchor> = .init(anchors: self, anchor: .init())
+    public lazy var centerX: SideAnchor<V, CenterXAnchor> = .init(anchors: self, anchor: .init(axis: .init()))
+    public lazy var centerY: SideAnchor<V, CenterYAnchor> = .init(anchors: self, anchor: .init(axis: .init()))
+    public lazy var width: DimensionAnchor<V, WidthAnchor> = .init(anchors: self, anchor: .width)
+    public lazy var height: DimensionAnchor<V, HeightAnchor> = .init(anchors: self, anchor: .height)
+
+    internal func constraints(builder constraint: (LayoutElement, [RectBasedConstraint]) -> LayoutConstraintProtocol = { LayoutConstraint(element: $0, constraints: $1) }) -> [LayoutConstraintProtocol] {
+        var layoutConstraints: [LayoutConstraintProtocol] = []
+
+        left.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        right.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        bottom.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        top.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        centerX.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        centerY.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+
+        _ = left.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = right.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = bottom.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = top.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = centerX.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = centerY.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+
+        width.anonymConstraint.map { layoutConstraints.append(AnonymConstraint(anchors: [$0])) }
+        height.anonymConstraint.map { layoutConstraints.append(AnonymConstraint(anchors: [$0])) }
+        width.associatedConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        height.associatedConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        width.contentConstraint.map { layoutConstraints.append($0) }
+        height.contentConstraint.map { layoutConstraints.append($0) }
+
+        left.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        right.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        bottom.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        top.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        centerX.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        centerY.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+
+        _ = left.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = right.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = bottom.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = top.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = centerX.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = centerY.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+
+        return layoutConstraints
+    }
+}
 
 public struct SideAnchor<Item: AnchoredLayoutElement, Anchor: RectAnchorPoint> {
     unowned var anchors: LayoutAnchors<Item>
@@ -47,105 +132,6 @@ public struct DimensionAnchor<Item: AnchoredLayoutElement, Anchor: AxisLayoutEnt
 
     var isDefined: Bool {
         return contentConstraint != nil || associatedConstraint != nil || anonymConstraint != nil
-    }
-}
-
-public protocol AnchoredLayoutElement: LayoutElement {
-	associatedtype Item: AnchoredLayoutElement
-	var layoutAnchors: LayoutAnchors<Item> { get }
-}
-
-extension LayoutElement where Self: AnchoredLayoutElement {
-    public func block(with layout: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
-        var anchors = unsafeBitCast(self.layoutAnchors, to: LayoutAnchors<Self>.self)
-        layout(&anchors)
-        return LayoutBlock(element: self, layout: Layout.equal, constraints: anchors.constraints())
-    }
-}
-
-#if os(iOS) || os(tvOS)
-extension UIView: AnchoredLayoutElement {
-    public var layoutAnchors: LayoutAnchors<UIView> { return LayoutAnchors(self) }
-}
-#endif
-
-#if os(iOS) || os(tvOS) || os(macOS)
-extension CALayer: AnchoredLayoutElement {
-    public var layoutAnchors: LayoutAnchors<CALayer> { return LayoutAnchors(self) }
-}
-#endif
-
-extension LayoutGuide: AnchoredLayoutElement {
-    public var layoutAnchors: LayoutAnchors<LayoutGuide<Super>> { return LayoutAnchors(self) }
-}
-
-protocol Anchors: class {
-    associatedtype Item: AnchoredLayoutElement & LayoutElement
-    var left: SideAnchor<Item, LeftAnchor> { get set }
-    var right: SideAnchor<Item, RightAnchor> { get set }
-    var bottom: SideAnchor<Item, BottomAnchor> { get set }
-    var top: SideAnchor<Item, TopAnchor> { get set }
-    var centerX: SideAnchor<Item, CenterXAnchor> { get set }
-    var centerY: SideAnchor<Item, CenterYAnchor> { get set }
-    var width: DimensionAnchor<Item, WidthAnchor> { get set }
-    var height: DimensionAnchor<Item, HeightAnchor> { get set }
-}
-
-public class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
-    weak var item: V!
-
-    public init(_ item: V) {
-        self.item = item
-    }
-
-    public lazy var left: SideAnchor<V, LeftAnchor> = .init(anchors: self, anchor: .init())
-    public lazy var right: SideAnchor<V, RightAnchor> = .init(anchors: self, anchor: .init())
-    public lazy var bottom: SideAnchor<V, BottomAnchor> = .init(anchors: self, anchor: .init())
-    public lazy var top: SideAnchor<V, TopAnchor> = .init(anchors: self, anchor: .init())
-    public lazy var centerX: SideAnchor<V, CenterXAnchor> = .init(anchors: self, anchor: .init(axis: .init()))
-    public lazy var centerY: SideAnchor<V, CenterYAnchor> = .init(anchors: self, anchor: .init(axis: .init()))
-    public lazy var width: DimensionAnchor<V, WidthAnchor> = .init(anchors: self, anchor: .width)
-    public lazy var height: DimensionAnchor<V, HeightAnchor> = .init(anchors: self, anchor: .height)
-
-    internal func constraints(builder constraint: (LayoutElement, [RectBasedConstraint]) -> LayoutConstraintProtocol = { LayoutConstraint(element: $0, constraints: $1) }) -> [LayoutConstraintProtocol] {
-        var layoutConstraints: [LayoutConstraintProtocol] = []
-
-        left.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        right.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        bottom.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        top.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        centerX.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        centerY.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-
-        _ = left.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = right.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = bottom.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = top.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = centerX.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = centerY.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        
-        width.anonymConstraint.map { layoutConstraints.append(AnonymConstraint(anchors: [$0])) }
-        height.anonymConstraint.map { layoutConstraints.append(AnonymConstraint(anchors: [$0])) }
-        width.associatedConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        height.associatedConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        width.contentConstraint.map { layoutConstraints.append($0) }
-        height.contentConstraint.map { layoutConstraints.append($0) }
-
-        left.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        right.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        bottom.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        top.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        centerX.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        centerY.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-
-        _ = left.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = right.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = bottom.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = top.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = centerX.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-        _ = centerY.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
-
-        return layoutConstraints
     }
 }
 

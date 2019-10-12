@@ -152,10 +152,12 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         didSet { alignment = alignment.by(axis: axis.transverse()) }
     }
 
-    private var distribution: StackDistribution = StackDistribution(spacing: .equally, 
-                                                                    alignment: .center(), 
-                                                                    direction: .fromLeading,
-                                                                    filling: .equally)
+    private var distribution: StackDistribution = StackDistribution(
+        spacing: .equally,
+        alignment: .center(),
+        direction: .fromLeading,
+        filling: .equally
+    )
     public var spacing: StackDistribution.Spacing {
         set { distribution.spacing = newValue }
         get { return distribution.spacing }

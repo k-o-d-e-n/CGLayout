@@ -6,13 +6,7 @@
 //  Copyright © 2017 K-o-D-e-N. All rights reserved.
 //
 
-#if os(iOS) || os(tvOS)
-import UIKit
-#elseif os(macOS)
-import Cocoa
-#elseif os(Linux)
 import Foundation
-#endif
 
 /// Defines method for wrapping entity with base behavior to this type.
 public protocol Extended {
@@ -46,7 +40,7 @@ public extension RectBasedLayout {
     ///   - rect: Rect for layout
     ///   - source: Available space for layout
     /// - Returns: Corrected rect
-    public func layout(rect: CGRect, in source: CGRect) -> CGRect {
+    func layout(rect: CGRect, in source: CGRect) -> CGRect {
         var rect = rect
         formLayout(rect: &rect, in: source)
         return rect
@@ -57,7 +51,7 @@ public extension RectBasedLayout {
     /// - Parameters:
     ///   - element: Element for layout
     ///   - constraints: Array of tuples with rect and constraint
-    public func apply(for item: LayoutElement, use constraints: [ConstrainRect] = []) {
+    func apply(for item: LayoutElement, use constraints: [ConstrainRect] = []) {
         item.frame = layout(rect: item.frame, in: item.superElement!.layoutBounds, use: constraints)
     }
     /// Used for layout `LayoutElement` entity in constrained source space using constraints. Must call only on main thread.
@@ -66,7 +60,7 @@ public extension RectBasedLayout {
     ///   - element: Element for layout
     ///   - source: Source space
     ///   - constraints: Array of tuples with rect and constraint
-    public func apply(for item: LayoutElement, in source: CGRect, use constraints: [ConstrainRect] = []) {
+    func apply(for item: LayoutElement, in source: CGRect, use constraints: [ConstrainRect] = []) {
         item.frame = layout(rect: item.frame, in: source, use: constraints)
     }
 
@@ -76,7 +70,7 @@ public extension RectBasedLayout {
     ///   - element: Element for layout
     ///   - constraints: Array of constraint elements
     /// - Returns: Array of tuples with rect and constraint
-    public func layout(rect: CGRect, in sourceRect: CGRect, use constraints: [ConstrainRect] = []) -> CGRect {
+    func layout(rect: CGRect, in sourceRect: CGRect, use constraints: [ConstrainRect] = []) -> CGRect {
         return layout(rect: rect, in: constraints.reduce(into: sourceRect) { (result, constrained) in
             result = result.constrainedBy(rect: constrained.rect, use: constrained.constraints)
         })
@@ -87,7 +81,7 @@ public extension RectBasedLayout {
     /// - Parameters:
     ///   - element: Element for layout
     ///   - constraints: Array of constraint elements
-    public func apply(for item: LayoutElement, use constraints: [LayoutConstraintProtocol]) {
+    func apply(for item: LayoutElement, use constraints: [LayoutConstraintProtocol]) {
         debugFatalError(item.superElement == nil, "Layout item is not in hierarchy")
         apply(for: item, in: item.superElement!.layoutBounds, use: constraints)
     }
@@ -97,7 +91,7 @@ public extension RectBasedLayout {
     ///   - element: Element for layout
     ///   - sourceRect: Source space
     ///   - constraints: Array of constraint elements
-    public func apply(for item: LayoutElement, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol]) {
+    func apply(for item: LayoutElement, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol]) {
         debugFatalError(item.superElement == nil, "Layout element is not in hierarchy")
         item.frame = layout(rect: item.frame, from: item.superElement!, in: sourceRect, use: constraints)
     }
@@ -110,7 +104,7 @@ public extension RectBasedLayout {
     ///   - sourceRect: Space for layout
     ///   - constraints: Array of constraint elements
     /// - Returns: Corrected frame of layout element
-    public func layout(rect: CGRect, from item: LayoutElement, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol] = []) -> CGRect {
+    func layout(rect: CGRect, from item: LayoutElement, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol] = []) -> CGRect {
         return layout(rect: rect, in: constraints.reduce(into: sourceRect) { $1.constrain(sourceRect: &$0, in: item) })
     }
 }
@@ -299,6 +293,8 @@ extension AdjustableLayoutElement {
     }
     #endif
 }
+
+// MARK: API v.1
 
 // MARK: LayoutAnchor
 
@@ -1373,10 +1369,10 @@ public struct Configuration {
 
 public extension Layout {
     /// Layout behavior, that makes passed rect equally to space rect
-    public static var equal: Layout { return Layout(x: .equal, y: .equal, width: .equal, height: .equal) }
+    static var equal: Layout { return Layout(x: .equal, y: .equal, width: .equal, height: .equal) }
 
     /// Layout behavior, that makes passed rect equally to  rect
-    public static func equal(_ value: CGRect) -> RectBasedLayout { return Constantly(value: value) }
+    static func equal(_ value: CGRect) -> RectBasedLayout { return Constantly(value: value) }
     private struct Constantly: RectBasedLayout {
         let value: CGRect
         func formLayout(rect: inout CGRect, in source: CGRect) {
@@ -1404,24 +1400,24 @@ public extension Layout {
     ///   - y: Vertical alignment behavior
     ///   - width: Width filling behavior
     ///   - height: Height filling behavior
-    public init(x: Alignment.Horizontal, y: Alignment.Vertical, width: Filling.Horizontal, height: Filling.Vertical) {
+    init(x: Alignment.Horizontal, y: Alignment.Vertical, width: Filling.Horizontal, height: Filling.Vertical) {
         self.init(alignment: Alignment(horizontal: x, vertical: y),
                   filling: Filling(horizontal: width, vertical: height))
     }
 
-    public func with(height: Filling.Vertical) -> Layout {
+    func with(height: Filling.Vertical) -> Layout {
         return Layout(x: alignment.horizontal, y: alignment.vertical,
                       width: filling.horizontal, height: height)
     }
-    public func with(width: Filling.Horizontal) -> Layout {
+    func with(width: Filling.Horizontal) -> Layout {
         return Layout(x: alignment.horizontal, y: alignment.vertical,
                       width: width, height: filling.vertical)
     }
-    public func with(y: Alignment.Vertical) -> Layout {
+    func with(y: Alignment.Vertical) -> Layout {
         return Layout(x: alignment.horizontal, y: y,
                       width: filling.horizontal, height: filling.vertical)
     }
-    public func with(x: Alignment.Horizontal) -> Layout {
+    func with(x: Alignment.Horizontal) -> Layout {
         return Layout(x: x, y: alignment.vertical,
                       width: filling.horizontal, height: filling.vertical)
     }

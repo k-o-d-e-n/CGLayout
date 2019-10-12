@@ -369,7 +369,7 @@ extension Tests {
         outer.formConstrain(sourceRect: &resultRect1, by: rect2)
         inner.formConstrain(sourceRect: &resultRect3, by: rect4)
 
-        XCTAssertTrue(resultRect1.minX == rect2.maxX, "\(resultRect1, rect1, rect2)")
+        XCTAssertTrue(resultRect1.minX == rect2.maxX, "\((resultRect1, rect1, rect2))")
         if isRightRect1AfterRightRect2 {
             XCTAssertTrue(resultRect1.width == rect1.maxX - rect2.maxX)
         }

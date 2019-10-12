@@ -189,7 +189,7 @@ extension ContentLayoutConstraint: LayoutConstraintProtocol {
     var isIndependent: Bool { return false }
 
     public /// `LayoutElement` object associated with this constraint
-    func layoutElement(is object: AnyObject) -> Bool { return item === object }
+    func layoutElement(is object: AnyObject) -> Bool { return item === object } // TODO: Can use ObjectIdentifier to avoid compare elements
 
     public /// Return rectangle for constrain source rect
     ///
