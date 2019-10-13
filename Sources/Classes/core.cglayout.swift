@@ -1163,6 +1163,10 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.origin.x = source.origin.x + offset
                 }
             }
+            /// Provides rect with left alignment with spacing that depends on position calculated using multiplier
+            ///
+            /// - Parameter multiplier: Multiplier value.
+            /// - Returns: Left aligment typed with 'Vertical'
             public static func left(multiplier: CGFloat) -> Horizontal { return Horizontal(base: LeftOffsetMultiplier(multiplier: multiplier)) }
             fileprivate struct LeftOffsetMultiplier: RectBasedLayout {
                 let multiplier: CGFloat
@@ -1181,6 +1185,10 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.origin.x = source.maxX - rect.width - offset
                 }
             }
+            /// Provides rect with right alignment with spacing that depends on position calculated using multiplier
+            ///
+            /// - Parameter multiplier: Multiplier value.
+            /// - Returns: Right aligment typed with 'Horizontal'
             public static func right(multiplier: CGFloat) -> Horizontal { return Horizontal(base: RightOffsetMultiplier(multiplier: multiplier)) }
             fileprivate struct RightOffsetMultiplier: RectBasedLayout {
                 let multiplier: CGFloat
@@ -1188,7 +1196,12 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.origin.x = source.maxX - rect.width - (source.width * multiplier)
                 }
             }
+            /// See description: `left(between space: ClosedRange<CGFloat>)`
             public static func left(between space: Range<CGFloat>) -> Horizontal { return Horizontal(base: LeftSpace(space: space.lowerBound...space.upperBound+1)) }
+            /// Provides rect with left alignment and space between defined range depending on available space.
+            ///
+            /// - Parameter space: Range valid space values
+            /// - Returns: Between behavior typed with 'Vertical'
             public static func left(between space: ClosedRange<CGFloat>) -> Horizontal { return Horizontal(base: LeftSpace(space: space)) }
             fileprivate struct LeftSpace: RectBasedLayout {
                 let space: ClosedRange<CGFloat>
@@ -1196,7 +1209,12 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.origin.x = source.minX + max(space.lowerBound, min(space.upperBound, source.width - rect.width))
                 }
             }
+            /// See description: `right(between space: ClosedRange<CGFloat>)`
             public static func right(between space: Range<CGFloat>) -> Horizontal { return Horizontal(base: RightSpace(space: space.lowerBound...space.upperBound+1)) }
+            /// Provides rect with right alignment and space between defined range depending on available space.
+            ///
+            /// - Parameter space: Range valid space values
+            /// - Returns: Between behavior typed with 'Horizontal'
             public static func right(between space: ClosedRange<CGFloat>) -> Horizontal { return Horizontal(base: RightSpace(space: space)) }
             fileprivate struct RightSpace: RectBasedLayout {
                 let space: ClosedRange<CGFloat>
@@ -1256,6 +1274,10 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.origin.y = source.origin.y + offset
                 }
             }
+            /// Provides rect with top alignment with spacing that depends on position calculated using multiplier
+            ///
+            /// - Parameter multiplier: Multiplier value.
+            /// - Returns: Top aligment typed with 'Vertical'
             public static func top(multiplier: CGFloat) -> Vertical { return Vertical(base: TopOffsetMultiplier(multiplier: multiplier)) }
             fileprivate struct TopOffsetMultiplier: RectBasedLayout {
                 let multiplier: CGFloat
@@ -1274,6 +1296,10 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.origin.y = source.maxY - rect.height - offset
                 }
             }
+            /// Provides rect with bottom alignment with spacing that depends on position calculated using multiplier
+            ///
+            /// - Parameter multiplier: Multiplier value.
+            /// - Returns: Bottom aligment typed with 'Vertical'
             public static func bottom(multiplier: CGFloat) -> Vertical { return Vertical(base: BottomOffsetMultiplier(multiplier: multiplier)) }
             fileprivate struct BottomOffsetMultiplier: RectBasedLayout {
                 let multiplier: CGFloat
@@ -1282,7 +1308,12 @@ public struct Layout: RectBasedLayout, Extensible {
                 }
             }
 
+            /// See description: `top(between space: ClosedRange<CGFloat>)`
             public static func top(between space: Range<CGFloat>) -> Vertical { return Vertical(base: TopSpace(space: space.lowerBound...space.upperBound+1)) }
+            /// Provides rect with bottom alignment and space between defined range depending on available space.
+            ///
+            /// - Parameter space: Range valid space values
+            /// - Returns: Between behavior typed with 'Vertical'
             public static func top(between space: ClosedRange<CGFloat>) -> Vertical { return Vertical(base: TopSpace(space: space)) }
             fileprivate struct TopSpace: RectBasedLayout {
                 let space: ClosedRange<CGFloat>
@@ -1301,7 +1332,12 @@ public struct Layout: RectBasedLayout, Extensible {
                 }
             }
 
+            /// See description: `bottom(between space: ClosedRange<CGFloat>)`
             public static func bottom(between space: Range<CGFloat>) -> Vertical { return Vertical(base: BottomSpace(space: space.lowerBound...space.upperBound+1)) }
+            /// Provides rect with bottom alignment and space between defined range depending on available space.
+            ///
+            /// - Parameter space: Range valid space values
+            /// - Returns: Between behavior typed with 'Vertical'
             public static func bottom(between space: ClosedRange<CGFloat>) -> Vertical { return Vertical(base: BottomSpace(space: space)) }
             fileprivate struct BottomSpace: RectBasedLayout {
                 let space: ClosedRange<CGFloat>
@@ -1365,6 +1401,10 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.size.width = source.width
                 }
             }
+            /// Provides rect with width less or equal defined size depending on available space.
+            ///
+            /// - Parameter size: Width limiter value.
+            /// - Returns: UpTo behavior typed with 'Horizontal'
             public static func upTo(_ size: CGFloat) -> Horizontal { return Horizontal(base: UpTo(size: size)) }
             fileprivate struct UpTo: RectBasedLayout {
                 let size: CGFloat
@@ -1372,6 +1412,10 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.size.width = min(size, source.width)
                 }
             }
+            /// Provides rect with width value more or equal defined size depending on available space.
+            ///
+            /// - Parameter size: Width limiter value
+            /// - Returns: From behavior typed with 'Horizontal'
             public static func from(_ size: CGFloat) -> Horizontal { return Horizontal(base: From(size: size)) }
             fileprivate struct From: RectBasedLayout {
                 let size: CGFloat
@@ -1416,7 +1460,12 @@ public struct Layout: RectBasedLayout, Extensible {
                 }
             }
 
+            /// See description: `between(_ space: ClosedRange<CGFloat>)`
             public static func between(_ space: Range<CGFloat>) -> Horizontal { return Horizontal(base: Between(space: space.lowerBound...space.upperBound+1)) }
+            /// Provides rect with width value between defined range depending on available space.
+            ///
+            /// - Parameter space: Range valid width values
+            /// - Returns: Between behavior typed with 'Horizontal'
             public static func between(_ space: ClosedRange<CGFloat>) -> Horizontal { return Horizontal(base: Between(space: space)) }
             fileprivate struct Between: RectBasedLayout {
                 let space: ClosedRange<CGFloat>
@@ -1450,6 +1499,10 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.size.height = source.height
                 }
             }
+            /// Provides rect with height less or equal defined size depending on available space.
+            ///
+            /// - Parameter size: Height limiter value.
+            /// - Returns: UpTo behavior typed with 'Vertical'
             public static func upTo(_ size: CGFloat) -> Vertical { return Vertical(base: UpTo(size: size)) }
             fileprivate struct UpTo: RectBasedLayout {
                 let size: CGFloat
@@ -1457,6 +1510,10 @@ public struct Layout: RectBasedLayout, Extensible {
                     rect.size.height = min(size, source.height)
                 }
             }
+            /// Provides rect with height value more or equal defined size depending on available space.
+            ///
+            /// - Parameter size: Height limiter value
+            /// - Returns: From behavior typed with 'Vertical'
             public static func from(_ size: CGFloat) -> Vertical { return Vertical(base: From(size: size)) }
             fileprivate struct From: RectBasedLayout {
                 let size: CGFloat
@@ -1501,7 +1558,12 @@ public struct Layout: RectBasedLayout, Extensible {
                 }
             }
 
+            /// See description: `between(_ space: ClosedRange<CGFloat>)`
             public static func between(_ space: Range<CGFloat>) -> Vertical { return Vertical(base: Between(space: space.lowerBound...space.upperBound+1)) }
+            /// Provides rect with height value between defined range depending on available space.
+            ///
+            /// - Parameter space: Range valid height values
+            /// - Returns: Between behavior typed with 'Vertical'
             public static func between(_ space: ClosedRange<CGFloat>) -> Vertical { return Vertical(base: Between(space: space)) }
             fileprivate struct Between: RectBasedLayout {
                 let space: ClosedRange<CGFloat>

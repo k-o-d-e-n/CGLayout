@@ -24,13 +24,20 @@ let subviewsScheme = LayoutScheme(blocks: [
 // ... layout blocks
 ])
 ```
-To define block for "view" element use `LayoutBlock` entity, or just use convenience getter method `func layoutBlock(with:constraints:)`.
+To define block for "view" element use `LayoutBlock` entity, or just use convenience getter methods  `func layoutBlock(with:constraints:)`.
 ```swift
 titleLabel.layoutBlock(
     with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(120)),
     constraints: [
         logoImageView.layoutConstraint(for: [.bottom(.limit(on: .inner))])
     ]
+)
+/// or using anchors
+titleLabel.layoutBlock(
+    with: Layout(x: .center(), y: .top(5), width: .scaled(1), height: .fixed(120)),
+    constraints: { anchors in
+        anchors.top.equal(to: logoImageView.layoutAnchors.bottom)
+    }
 )
 ```
 For understanding how need to built layout block, let's see layout process in `LayoutBlock`. 
@@ -76,7 +83,7 @@ In common case, adjust constraints should be apply after any other constraints (
 weatherLabel.layoutBlock(
     with: Layout(x: .left(10), y: .top(), width: .scaled(1), height: .scaled(1)),
     constraints: [
-        weatherImageView.layoutConstraint(for: [topLimit, rightLimit, heightEqual]),
+        weatherImageView.layoutConstraint(for: [.top(.limit(.inner)), .right(.limit(.outer)), .height()]),
         weatherLabel.adjustLayoutConstraint(for: [.width()])
     ]
 )
