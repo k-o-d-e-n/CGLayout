@@ -136,7 +136,7 @@ class TableViewController: UITableViewController {
                 ]
             ),
             bottomView3.layoutBlock( // green
-                with: Layout(x: .center(), y: .top(between: 0...10), width: .fixed(50), height: .between(10...50)),
+                with: Layout(x: .center(), y: .top(between: 0...10), width: .fixed(50), height: .between(30...70)),
                 constraints: [
                     bottomView2.layoutConstraint(for: [.bottom(.align(by: .outer))]),
                     view.layoutConstraint(for: [.bottom(.limit(on: .inner))])
