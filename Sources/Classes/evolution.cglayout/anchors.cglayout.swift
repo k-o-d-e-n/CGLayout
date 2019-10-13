@@ -26,16 +26,15 @@ public protocol AnchoredLayoutElement: LayoutElement {
 }
 
 extension LayoutElement where Self: AnchoredLayoutElement {
-    public func block(with layout: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
-        return block(with: .equal, constrains: layout)
+    public func layoutBlock(with layout: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
+        return layoutBlock(with: .equal, constraints: layout)
     }
-    public func block(with layout: Layout, constrains: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
+    public func layoutBlock(with layout: Layout, constraints: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
         var anchors = unsafeBitCast(self.layoutAnchors, to: LayoutAnchors<Self>.self)
-        constrains(&anchors)
+        constraints(&anchors)
         return LayoutBlock(element: self, layout: layout, constraints: anchors.constraints())
     }
 }
-
 extension LayoutGuide: AnchoredLayoutElement {
     public var layoutAnchors: LayoutAnchors<LayoutGuide<Super>> { return LayoutAnchors(self) }
 }
@@ -141,11 +140,11 @@ public extension SideAnchor {
             debugAction {
                 // print(pullConstraint != nil, limitConstraints.count > 1, alignConstraint != nil)
                 if pullConstraint != nil {
-                    print("We already have pull constraint, that makes align")
+                    debugWarning("We already have pull constraint, that makes align")
                 } else if limitConstraints.count > 1 {
-                    print("We already have limit constraints. If you need align just remove limit constraints")
+                    debugWarning("We already have limit constraints. If you need align just remove limit constraints")
                 } else if alignConstraint != nil {
-                    print("We already have align constraint. It will be replaced")
+                    debugWarning("We already have align constraint. It will be replaced")
                 }
             }
 
@@ -158,13 +157,13 @@ public extension SideAnchor {
                         	  (anchors.height.isDefined && anchor.axis.isVertical)
                 // print(pullConstraint != nil, alignConstraint != nil, hasSize)
                 if alignConstraint != nil {
-                    print("We already have align constraint. If you need pull just remove align constraint")
+                    debugWarning("We already have align constraint. If you need pull just remove align constraint")
                 } else if limitConstraints.count > 1 {
                     // printWarning("We already have limit constraints. If you need pull just remove limit constraints")
                 } else if pullConstraint != nil {
-                    print("We already have pull constraint. It will be replaced")
+                    debugWarning("We already have pull constraint. It will be replaced")
                 } else if hasSize {
-                    print("We already define size anchor in this axis. We can get unexpected result")
+                    debugWarning("We already define size anchor in this axis. We can get unexpected result")
                 }
             }
             pullConstraint = (a2.item, anchor.pull(to: a2.anchor))
@@ -173,7 +172,7 @@ public extension SideAnchor {
         debugAction {
             // print(alignConstraint != nil)
             if alignConstraint != nil {
-                print("We already have align constraint. Limit constraints can broken align behavior")
+                debugWarning("We already have align constraint. Limit constraints can broken align behavior")
             }
         }
     }
@@ -181,9 +180,9 @@ public extension SideAnchor {
         debugAction {
             // print(alignConstraint != nil)
             if pullConstraint != nil {
-                print("We already have pull constraint. We can get unexpected result")
+                debugWarning("We already have pull constraint. We can get unexpected result")
             } else if limitConstraints.count > 1 {
-                print("We already have limit constraints. We can get unexpected result")
+                debugWarning("We already have limit constraints. We can get unexpected result")
             }
         }
     }
@@ -299,13 +298,13 @@ public extension DimensionAnchor {
                         ((anchors.bottom.pullConstraint != nil || anchors.top.pullConstraint != nil) && anchor.axis.isVertical)
             // print(contentConstraint != nil, anonymConstraint != nil, associatedConstraint != nil, hasPull)
             if contentConstraint != nil {
-                print("We already have content constraint. It will be replaced")
+                debugWarning("We already have content constraint. It will be replaced")
             } else if anonymConstraint != nil {
-                print("We already have value for anchor. We can get unexpected result")
+                debugWarning("We already have value for anchor. We can get unexpected result")
             } else if associatedConstraint != nil {
-                print("We already have associated constraint. We can get unexpected result")
+                debugWarning("We already have associated constraint. We can get unexpected result")
             } else if hasPull {
-                print("We already have pull constraint in the same axis. We can get unexpected result")
+                debugWarning("We already have pull constraint in the same axis. We can get unexpected result")
             }
         }
     }
@@ -315,13 +314,13 @@ public extension DimensionAnchor {
                         ((anchors.bottom.pullConstraint != nil || anchors.top.pullConstraint != nil) && anchor.axis.isVertical)
             // print(contentConstraint != nil, anonymConstraint != nil, associatedConstraint != nil, hasPull)
             if contentConstraint != nil {
-                print("We already have content constraint. We can get unexpected result")
+                debugWarning("We already have content constraint. We can get unexpected result")
             } else if anonymConstraint != nil {
-                print("We already have value for anchor. It will be replaced")
+                debugWarning("We already have value for anchor. It will be replaced")
             } else if associatedConstraint != nil {
-                print("We already have associated constraint. We can get unexpected result")
+                debugWarning("We already have associated constraint. We can get unexpected result")
             } else if hasPull {
-                print("We already have pull constraint in the same axis. We can get unexpected result")
+                debugWarning("We already have pull constraint in the same axis. We can get unexpected result")
             }
         }
     }
@@ -331,13 +330,13 @@ public extension DimensionAnchor {
                         ((anchors.bottom.pullConstraint != nil || anchors.top.pullConstraint != nil) && anchor.axis.isVertical)
             // print(contentConstraint != nil, anonymConstraint != nil, associatedConstraint != nil, hasPull)
             if contentConstraint != nil {
-                print("We already have content constraint. We can get unexpected result")
+                debugWarning("We already have content constraint. We can get unexpected result")
             } else if anonymConstraint != nil {
-                print("We already have value for anchor. We can get unexpected result")
+                debugWarning("We already have value for anchor. We can get unexpected result")
             } else if associatedConstraint != nil {
-                print("We already have associated constraint. It will be replaced")
+                debugWarning("We already have associated constraint. It will be replaced")
             } else if hasPull {
-                print("We already have pull constraint in the same axis. We can get unexpected result")
+                debugWarning("We already have pull constraint in the same axis. We can get unexpected result")
             }
         }
     }

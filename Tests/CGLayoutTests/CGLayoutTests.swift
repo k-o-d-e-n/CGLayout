@@ -98,7 +98,7 @@ class CGLayoutTests: XCTestCase {
         let targetView = View(frame: .zero)
         window.addSubview(sourceView)
         sourceView.addSubview(targetView)
-        let layout = targetView.block { (anchors) in
+        let layout = targetView.layoutBlock { (anchors) in
             anchors.width.equal(to: 200)
             anchors.height.equal(to: 40)
             anchors.centerX.align(by: sourceView.layoutAnchors.centerX)
@@ -121,7 +121,7 @@ class CGLayoutTests: XCTestCase {
         let targetView = View(frame: .zero) 
         window.addSubview(sourceView)
         sourceView.addSubview(targetView)
-        let layout = targetView.block { (anchors) in
+        let layout = targetView.layoutBlock { (anchors) in
             // anchors.centerY.align(by: sourceView.layoutAnchors.centerY) // 4
             anchors.height.scaled(by: sourceView.layoutAnchors.height, scale: 0.5) // 3
             anchors.left.pull(to: sourceView.layoutAnchors.centerX) // 1
@@ -155,7 +155,7 @@ class CGLayoutTests: XCTestCase {
         window.addSubview(sourceView)
         sourceView.addSubview(targetView)
 
-        let layout = targetView.block { (anchors) in
+        let layout = targetView.layoutBlock { (anchors) in
             // anchors.centerY.align(by: sourceView.layoutAnchors.centerY) // 4
             anchors.height.equalIntrinsicSize() // 3
             anchors.left.pull(to: sourceView.layoutAnchors.centerX) // 1

@@ -40,7 +40,7 @@ class ProfileViewController: UIViewController {
         headerRightGroupGuide.contentInsets.right = 16
         layoutGuides.append(headerRightGroupGuide)
         headerView.add(layoutGuide: headerRightGroupGuide)
-        let headerRightGroup = headerRightGroupGuide.block { (anchors) in
+        let headerRightGroup = headerRightGroupGuide.layoutBlock { (anchors) in
             anchors.top.align(by: headerView.layoutAnchors.top)
             anchors.right.align(by: headerView.layoutAnchors.right)
             anchors.centerY.align(by: headerView.layoutAnchors.centerY)
@@ -55,8 +55,12 @@ class ProfileViewController: UIViewController {
         headerRightGroupGuide.addArrangedElement(hrb3Button)
 
         let header = LayoutScheme(blocks: [
-            headerView.block { (anchors) in
-                anchors.top.align(by: view.safeAreaLayoutGuide.layoutAnchors.top)
+            headerView.layoutBlock { (anchors) in
+                if #available(iOS 11.0, *) {
+                    anchors.top.align(by: view.safeAreaLayoutGuide.layoutAnchors.top)
+                } else {
+                    anchors.top.align(by: navigationController!.navigationBar.layoutAnchors.bottom)
+                }
                 anchors.height.equal(to: 64)
                 anchors.width.equal(to: view.layoutAnchors.width)
             },
@@ -64,18 +68,18 @@ class ProfileViewController: UIViewController {
         ])
 
         let avatarView = buildView(UIImageView.self, bg: .gray)
-        let avatar = avatarView.block(with: Layout.equal.with(y: .top(20))) { (anchors) in
+        let avatar = avatarView.layoutBlock(with: Layout.equal.with(y: .top(20))) { (anchors) in
             anchors.height.equal(to: 100)
             anchors.width.equal(to: 100)
-            anchors.top.align(by: headerView.layoutAnchors.bottom) // cannot add space
+            anchors.top.align(by: headerView.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
         }
 
         let nameLabel = buildView(UILabel.self, bg: .gray)
         nameLabel.font = UIFont.boldSystemFont(ofSize: 30)
         nameLabel.text = "РЕШЕТЕЕВ НИКИТА"
-        let name = nameLabel.block(with: Layout.equal.with(y: .top(10))) { (anchors) in
-            anchors.top.align(by: avatarView.layoutAnchors.bottom) // cannot add space
+        let name = nameLabel.layoutBlock(with: Layout.equal.with(y: .top(10))) { (anchors) in
+            anchors.top.align(by: avatarView.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
             anchors.height.equalIntrinsicSize()
@@ -84,7 +88,7 @@ class ProfileViewController: UIViewController {
         let socialLabel = buildView(UILabel.self, bg: .lightGray)
         socialLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 16, weight: .light)
         socialLabel.text = "@Nikita_resh"
-        let social = socialLabel.block(with: Layout.equal.with(y: .top(8))) { (anchors) in
+        let social = socialLabel.layoutBlock(with: Layout.equal.with(y: .top(8))) { (anchors) in
             anchors.top.align(by: nameLabel.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
@@ -96,7 +100,7 @@ class ProfileViewController: UIViewController {
         buttonsGroupGuide.scheme.spacing = .equal(10)
         buttonsGroupGuide.scheme.filling = .equal(130)
         addLayoutGuide(buttonsGroupGuide)
-        let btnsGroup = buttonsGroupGuide.block(with: Layout.equal.with(y: .top(20))) { (anchors) in
+        let btnsGroup = buttonsGroupGuide.layoutBlock(with: Layout.equal.with(y: .top(20))) { (anchors) in
             anchors.top.align(by: socialLabel.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
@@ -116,7 +120,7 @@ class ProfileViewController: UIViewController {
         socialGroupGuide.scheme.spacing = .equal(10)
         socialGroupGuide.scheme.filling = .equal(40)
         addLayoutGuide(socialGroupGuide)
-        let socialGroup = socialGroupGuide.block(with: Layout.equal.with(y: .top(15))) { (anchors) in
+        let socialGroup = socialGroupGuide.layoutBlock(with: Layout.equal.with(y: .top(15))) { (anchors) in
             anchors.top.align(by: buttonsGroupGuide.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
@@ -132,8 +136,8 @@ class ProfileViewController: UIViewController {
         let title1Label = buildView(UILabel.self, bg: .gray)
         title1Label.font = UIFont.preferredFont(forTextStyle: .title3)
         title1Label.text = "Обо мне"
-        let title1 = title1Label.block(with: Layout.equal.with(y: .top(20))) { (anchors) in
-            anchors.top.align(by: socialGroupGuide.layoutAnchors.bottom) // cannot add space
+        let title1 = title1Label.layoutBlock(with: Layout.equal.with(y: .top(20))) { (anchors) in
+            anchors.top.align(by: socialGroupGuide.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
             anchors.height.equalIntrinsicSize()
@@ -143,11 +147,14 @@ class ProfileViewController: UIViewController {
         bodyLabel.numberOfLines = 0
         bodyLabel.font = UIFont.preferredFont(forTextStyle: .body)
         bodyLabel.text = "Бенефисы Самошникова на «Открытие Арене» и Алиева на «Арене Химки», четыре гола в меньшинстве «Текстильщика», Харитонов в роли Дзюбы, Черышев — в западне. 17 тур в ФНЛ получился ярким!"
-        let body = bodyLabel.block(with: Layout.equal.with(y: .top(15))) { (anchors) in
+        let body = bodyLabel.layoutBlock(with: Layout.equal.with(y: .top(15))) { (anchors) in
             anchors.top.align(by: title1Label.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
-            anchors.left.limit(by: view.safeAreaLayoutGuide.layoutAnchors.left)
-            anchors.right.limit(by: view.safeAreaLayoutGuide.layoutAnchors.right)
+            if #available(iOS 11.0, *) {
+                anchors.left.limit(by: view.safeAreaLayoutGuide.layoutAnchors.left)
+                anchors.right.limit(by: view.safeAreaLayoutGuide.layoutAnchors.right)
+            } else {
+            }
             anchors.width.equalIntrinsicSize()
             anchors.height.equalIntrinsicSize()
         }

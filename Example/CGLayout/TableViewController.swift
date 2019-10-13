@@ -109,6 +109,12 @@ class TableViewController: UITableViewController {
     }
 
     private func buildScheme() -> LayoutScheme {
+        let topLayoutGuideConstraint: LayoutConstraint
+        if #available(iOS 11.0, *) {
+            topLayoutGuideConstraint = view.safeAreaLayoutGuide.layoutConstraint(for: [.top(.pull(from: .inner))])
+        } else {
+            topLayoutGuideConstraint = navigationController!.navigationBar.layoutConstraint(for: [.bottom(.pull(from: .outer))])
+        }
         return LayoutScheme(blocks: [
             top1View.layoutBlock( // pull to refresh
                 with: Layout(
@@ -117,7 +123,7 @@ class TableViewController: UITableViewController {
                     height: .scaled(0.8) + .if(between: 0...50, modifier: { $0 * 0.5 })
                 ),
                 constraints: [
-                    view.safeAreaLayoutGuide.layoutConstraint(for: [.top(.pull(from: .inner))]),
+                    topLayoutGuideConstraint,
                     tableView.contentLayoutConstraint(for: [.top(.pull(from: .outer))])
                 ]
             ),

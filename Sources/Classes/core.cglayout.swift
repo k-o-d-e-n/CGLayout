@@ -1530,6 +1530,13 @@ public extension Layout {
             rect = value
         }
     }
+
+    /// This layout do nothing.
+    /// Use this if you create compound layout and you need begin with old frame
+    static var nothing: Layout { return Layout.build(Nothing()) }
+    private struct Nothing: RectBasedLayout {
+        func formLayout(rect: inout CGRect, in source: CGRect) {}
+    }
 }
 
 public extension Layout {
@@ -1569,22 +1576,12 @@ extension Layout.Filling.Vertical: ExpressibleByFloatLiteral, ExpressibleByInteg
         self.base = Fixed(value: CGFloat(value))
     }
 }
-public extension Layout.Filling.Vertical {
-    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Filling.Vertical {
-        return build(AnyRectBasedLayout { $0.size.height = use($1) })
-    }
-}
 extension Layout.Filling.Horizontal: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
     public init(floatLiteral value: Float) {
         self.base = Fixed(value: CGFloat(value))
     }
     public init(integerLiteral value: Int) {
         self.base = Fixed(value: CGFloat(value))
-    }
-}
-public extension Layout.Filling.Horizontal {
-    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Filling.Horizontal {
-        return build(AnyRectBasedLayout { $0.size.width = use($1) })
     }
 }
 extension Layout.Alignment.Vertical: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
@@ -1595,22 +1592,12 @@ extension Layout.Alignment.Vertical: ExpressibleByFloatLiteral, ExpressibleByInt
         self.base = Top(offset: CGFloat(value))
     }
 }
-public extension Layout.Alignment.Vertical {
-    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Vertical {
-        return build(AnyRectBasedLayout { $0.origin.y = use($1) })
-    }
-}
 extension Layout.Alignment.Horizontal: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
     public init(floatLiteral value: Float) {
         self.base = Left(offset: CGFloat(value))
     }
     public init(integerLiteral value: Int) {
         self.base = Left(offset: CGFloat(value))
-    }
-}
-public extension Layout.Alignment.Horizontal {
-    static func calculated(_ use: @escaping (CGRect) -> CGFloat) -> Layout.Alignment.Horizontal {
-        return build(AnyRectBasedLayout { $0.origin.x = use($1) })
     }
 }
 
@@ -1674,3 +1661,33 @@ public extension RectBasedConstraint where Self: Extensible, Self.Conformed == R
     }
 }
 #endif
+
+extension Layout {
+    /// beta
+    static func from<PointAnchor: RectAnchorPoint, SizeAnchor: SizeRectAnchor>(
+        _ anchor: PointAnchor, size: SizeAnchor, operator op: @escaping (CGFloat, CGFloat) -> CGFloat, space: PartialRangeFrom<CGFloat>
+    ) -> Layout where PointAnchor.Metric == CGFloat, SizeAnchor.Metric == CGFloat {
+        return .build(AnyRectBasedLayout({ (rect, source) in
+            anchor.move(in: &rect, to: op(anchor.get(for: source), max(space.lowerBound, size.get(for: source) - size.get(for: rect))))
+        }))
+    }
+
+    public static func left(_ space: PartialRangeFrom<CGFloat>) -> Layout {
+        return Layout.from(LeftAnchor(), size: WidthAnchor.width, operator: +, space: space)
+    }
+    public static func right(_ space: PartialRangeFrom<CGFloat>) -> Layout {
+        return Layout.from(RightAnchor(), size: WidthAnchor.width, operator: -, space: space)
+    }
+    public static func bottom(_ space: PartialRangeFrom<CGFloat>) -> Layout {
+        return Layout.from(BottomAnchor(), size: HeightAnchor.height, operator: -, space: space)
+    }
+    public static func top(_ space: PartialRangeFrom<CGFloat>) -> Layout {
+        return Layout.from(TopAnchor(), size: HeightAnchor.height, operator: +, space: space)
+    }
+}
+
+public extension Layout {
+    static func +(lhs: Layout, rhs: Layout) -> Layout {
+        return Layout(layouts: lhs.layouts + rhs.layouts)
+    }
+}

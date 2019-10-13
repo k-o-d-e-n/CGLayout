@@ -103,6 +103,12 @@ public class SecondViewController: UIViewController {
     }
 
     func buildScheme() -> LayoutScheme {
+        let topLayoutGuideConstraint: LayoutConstraint
+        if #available(iOS 11.0, *) {
+            topLayoutGuideConstraint = view.safeAreaLayoutGuide.layoutConstraint(for: [.top(.limit(on: .inner))])
+        } else {
+            topLayoutGuideConstraint = navigationController!.navigationBar.layoutConstraint(for: [.bottom(.limit(on: .outer))])
+        }
         return LayoutScheme(blocks: [
             distanceLabel.layoutBlock(with: Layout(x: .center(), y: .bottom(50), width: .fixed(70), height: .fixed(30))),
             separator1Layer.layoutBlock(
@@ -137,7 +143,7 @@ public class SecondViewController: UIViewController {
             ),
             logoImageView.layoutBlock(
                 with: Layout(x: .center(), y: .top(80), width: .fixed(70), height: .fixed(70)),
-                constraints: [view.safeAreaLayoutGuide.layoutConstraint(for: [.top(.limit(on: .inner))])]
+                constraints: [topLayoutGuideConstraint]
             ),
             /// example including other scheme to top level scheme
             LayoutScheme(blocks: [
