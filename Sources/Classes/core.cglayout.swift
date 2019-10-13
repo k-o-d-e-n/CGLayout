@@ -9,7 +9,7 @@
 import Foundation
 
 /// Defines method for wrapping entity with base behavior to this type.
-public protocol Extended {
+public protocol Extensible {
     associatedtype Conformed
     /// Common method for create entity of this type with base behavior.
     ///
@@ -17,6 +17,9 @@ public protocol Extended {
     /// - Returns: Initialized entity
     static func build(_ base: Conformed) -> Self
 }
+
+@available(*, deprecated, renamed: "Extensible")
+typealias Extended = Extensible
 
 // MARK: RectBasedLayout
 
@@ -334,7 +337,7 @@ public enum LayoutAnchor {
 }
 
 /// Set of constraints related to baseline of restrictive rect
-public struct Baseline: RectBasedConstraint, Extended {
+public struct Baseline: RectBasedConstraint, Extensible {
     public typealias Conformed = RectBasedConstraint
     private let base: RectBasedConstraint
     private init(base: RectBasedConstraint) { self.base = base }
@@ -370,7 +373,7 @@ public struct Baseline: RectBasedConstraint, Extended {
 }
 
 /// Set of constraints related to center of restrictive rect
-public struct Center: RectBasedConstraint, Extended {
+public struct Center: RectBasedConstraint, Extensible {
     public typealias Conformed = RectBasedConstraint
     private let base: RectBasedConstraint
     private init(base: RectBasedConstraint) { self.base = base }
@@ -450,7 +453,7 @@ public struct Equal: RectBasedConstraint {
     }
 }
 
-public struct Leading: RectBasedConstraint, Extended {
+public struct Leading: RectBasedConstraint, Extensible {
     public typealias Conformed = RectBasedConstraint
     private let base: RectBasedConstraint
     private init(base: RectBasedConstraint) { self.base = base }
@@ -532,7 +535,7 @@ public struct Leading: RectBasedConstraint, Extended {
     }
 }
 
-public struct Trailing: RectBasedConstraint, Extended {
+public struct Trailing: RectBasedConstraint, Extensible {
     public typealias Conformed = RectBasedConstraint
     private let base: RectBasedConstraint
     private init(base: RectBasedConstraint) { self.base = base }
@@ -615,7 +618,7 @@ public struct Trailing: RectBasedConstraint, Extended {
 }
 
 /// Set of size-based constraints
-public struct Size: RectBasedConstraint, Extended {
+public struct Size: RectBasedConstraint, Extensible {
     public typealias Conformed = RectBasedConstraint
     private let base: RectBasedConstraint
     private init(base: RectBasedConstraint) { self.base = base }
@@ -671,7 +674,7 @@ public struct Size: RectBasedConstraint, Extended {
 }
 
 /// Set of constraints related to bottom of restrictive rect
-public struct Bottom: RectBasedConstraint, Extended {
+public struct Bottom: RectBasedConstraint, Extensible {
     public typealias Conformed = RectBasedConstraint
     private let base: RectBasedConstraint
     private init(base: RectBasedConstraint) { self.base = base }
@@ -756,7 +759,7 @@ public struct Bottom: RectBasedConstraint, Extended {
 }
 
 /// Set of constraints related to right of restrictive rect
-public struct Right: RectBasedConstraint, Extended {
+public struct Right: RectBasedConstraint, Extensible {
     public typealias Conformed = RectBasedConstraint
     private let base: RectBasedConstraint
     private init(base: RectBasedConstraint) { self.base = base }
@@ -833,7 +836,7 @@ public struct Right: RectBasedConstraint, Extended {
 }
 
 /// Set of constraints related to left of restrictive rect
-public struct Left: RectBasedConstraint, Extended {
+public struct Left: RectBasedConstraint, Extensible {
     public typealias Conformed = RectBasedConstraint
     private let base: RectBasedConstraint
     private init(base: RectBasedConstraint) { self.base = base }
@@ -910,7 +913,7 @@ public struct Left: RectBasedConstraint, Extended {
 }
 
 /// Set of constraints related to top of restrictive rect
-public struct Top: RectBasedConstraint, Extended {
+public struct Top: RectBasedConstraint, Extensible {
     public typealias Conformed = RectBasedConstraint
     private let base: RectBasedConstraint
     private init(base: RectBasedConstraint) { self.base = base }
@@ -1077,7 +1080,7 @@ public struct Layout: RectBasedLayout {
             func by(axis: RectAxis) -> AxisCenter { return AxisCenter(offset: offset, axis: axis) }
         }
 
-        public struct Horizontal: RectBasedLayout, Extended {
+        public struct Horizontal: RectBasedLayout, Extensible {
             public typealias Conformed = RectBasedLayout
             fileprivate let base: RectBasedLayout
             private init(base: RectBasedLayout) { self.base = base }
@@ -1136,11 +1139,27 @@ public struct Layout: RectBasedLayout {
                     rect.origin.x = source.maxX - rect.width - offset
                 }
             }
+            public static func left(between space: Range<CGFloat>) -> Horizontal { return Horizontal(base: LeftSpace(space: space.lowerBound...space.upperBound+1)) }
+            public static func left(between space: ClosedRange<CGFloat>) -> Horizontal { return Horizontal(base: LeftSpace(space: space)) }
+            fileprivate struct LeftSpace: RectBasedLayout {
+                let space: ClosedRange<CGFloat>
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.origin.x = source.minX + max(space.lowerBound, min(space.upperBound, source.width - rect.width))
+                }
+            }
+            public static func right(between space: Range<CGFloat>) -> Horizontal { return Horizontal(base: RightSpace(space: space.lowerBound...space.upperBound+1)) }
+            public static func right(between space: ClosedRange<CGFloat>) -> Horizontal { return Horizontal(base: RightSpace(space: space)) }
+            fileprivate struct RightSpace: RectBasedLayout {
+                let space: ClosedRange<CGFloat>
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.origin.x = source.maxX - rect.width - max(space.lowerBound, min(space.upperBound, source.width - rect.width))
+                }
+            }
 
             public static func trailing(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Configuration.default.isRTLMode ? Left(offset: offset) : Right(offset: offset)) }
             public static func leading(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Configuration.default.isRTLMode ? Right(offset: offset) : Left(offset: offset)) }
         }
-        public struct Vertical: RectBasedLayout, Extended {
+        public struct Vertical: RectBasedLayout, Extensible {
             public typealias Conformed = RectBasedLayout
             fileprivate let base: RectBasedLayout
             private init(base: RectBasedLayout) { self.base = base }
@@ -1199,6 +1218,24 @@ public struct Layout: RectBasedLayout {
                     rect.origin.y = source.maxY - rect.height - offset
                 }
             }
+
+            public static func top(between space: Range<CGFloat>) -> Vertical { return Vertical(base: TopSpace(space: space.lowerBound...space.upperBound+1)) }
+            public static func top(between space: ClosedRange<CGFloat>) -> Vertical { return Vertical(base: TopSpace(space: space)) }
+            fileprivate struct TopSpace: RectBasedLayout {
+                let space: ClosedRange<CGFloat>
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.origin.y = source.minY + max(space.lowerBound, min(space.upperBound, source.height - rect.height))
+                }
+            }
+
+            public static func bottom(between space: Range<CGFloat>) -> Vertical { return Vertical(base: BottomSpace(space: space.lowerBound...space.upperBound+1)) }
+            public static func bottom(between space: ClosedRange<CGFloat>) -> Vertical { return Vertical(base: BottomSpace(space: space)) }
+            fileprivate struct BottomSpace: RectBasedLayout {
+                let space: ClosedRange<CGFloat>
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.origin.y = source.maxY - rect.height - max(space.lowerBound, min(space.upperBound, source.height - rect.height))
+                }
+            }
         }
     }
 
@@ -1230,7 +1267,7 @@ public struct Layout: RectBasedLayout {
 
         public static var equal: Filling { return Filling(horizontal: .equal, vertical: .equal) }
 
-        public struct Horizontal: RectBasedLayout, Extended {
+        public struct Horizontal: RectBasedLayout, Extensible {
             public typealias Conformed = RectBasedLayout
             fileprivate let base: RectBasedLayout
             fileprivate init(base: RectBasedLayout) { self.base = base }
@@ -1291,8 +1328,17 @@ public struct Layout: RectBasedLayout {
                     rect.size.width = max(0, source.width - insets)
                 }
             }
+
+            public static func between(_ space: Range<CGFloat>) -> Horizontal { return Horizontal(base: Between(space: space.lowerBound...space.upperBound+1)) }
+            public static func between(_ space: ClosedRange<CGFloat>) -> Horizontal { return Horizontal(base: Between(space: space)) }
+            fileprivate struct Between: RectBasedLayout {
+                let space: ClosedRange<CGFloat>
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.size.width = max(space.lowerBound, min(space.upperBound, source.width))
+                }
+            }
         }
-        public struct Vertical: RectBasedLayout, Extended {
+        public struct Vertical: RectBasedLayout, Extensible {
             public typealias Conformed = RectBasedLayout
             fileprivate let base: RectBasedLayout
             fileprivate init(base: RectBasedLayout) { self.base = base }
@@ -1351,6 +1397,15 @@ public struct Layout: RectBasedLayout {
                 let insets: CGFloat
                 func formLayout(rect: inout CGRect, in source: CGRect) {
                     rect.size.height = max(0, source.height - insets)
+                }
+            }
+
+            public static func between(_ space: Range<CGFloat>) -> Vertical { return Vertical(base: Between(space: space.lowerBound...space.upperBound+1)) }
+            public static func between(_ space: ClosedRange<CGFloat>) -> Vertical { return Vertical(base: Between(space: space)) }
+            fileprivate struct Between: RectBasedLayout {
+                let space: ClosedRange<CGFloat>
+                func formLayout(rect: inout CGRect, in source: CGRect) {
+                    rect.size.height = max(space.lowerBound, min(space.upperBound, source.height))
                 }
             }
         }
@@ -1527,3 +1582,60 @@ public struct AnyRectBasedConstraint: RectBasedConstraint {
         action(&sourceRect, rect)
     }
 }
+
+public extension Layout.Alignment.Horizontal {
+    static func +(lhs: Layout.Alignment.Horizontal, rhs: Layout.Alignment.Horizontal) -> Layout.Alignment.Horizontal {
+        return Layout.Alignment.Horizontal.build(AnyRectBasedLayout({ (rect, source) in
+            lhs.formLayout(rect: &rect, in: source)
+            rhs.formLayout(rect: &rect, in: source)
+        }))
+    }
+}
+public extension Layout.Alignment.Vertical {
+    static func +(lhs: Layout.Alignment.Vertical, rhs: Layout.Alignment.Vertical) -> Layout.Alignment.Vertical {
+        return Layout.Alignment.Vertical.build(AnyRectBasedLayout({ (rect, source) in
+            lhs.formLayout(rect: &rect, in: source)
+            rhs.formLayout(rect: &rect, in: source)
+        }))
+    }
+}
+public extension Layout.Filling.Horizontal {
+    static func +(lhs: Layout.Filling.Horizontal, rhs: Layout.Filling.Horizontal) -> Layout.Filling.Horizontal {
+        return Layout.Filling.Horizontal.build(AnyRectBasedLayout({ (rect, source) in
+            lhs.formLayout(rect: &rect, in: source)
+            rhs.formLayout(rect: &rect, in: source)
+        }))
+    }
+}
+public extension Layout.Filling.Vertical {
+    static func +(lhs: Layout.Filling.Vertical, rhs: Layout.Filling.Vertical) -> Layout.Filling.Vertical {
+        return Layout.Filling.Vertical.build(AnyRectBasedLayout({ (rect, source) in
+            lhs.formLayout(rect: &rect, in: source)
+            rhs.formLayout(rect: &rect, in: source)
+        }))
+    }
+}
+
+#if DEBUG
+public extension Layout {
+//    func debug(before: @escaping (CGRect, CGRect) -> Void, after: @escaping (CGRect) -> Void) -> Layout {
+//        return Layout(
+//            x: .build(Debug(base: , before: <#T##(CGRect, CGRect) -> Void#>, after: <#T##(CGRect) -> Void#>)),
+//            y: <#T##Layout.Alignment.Vertical#>,
+//            width: <#T##Layout.Filling.Horizontal#>,
+//            height: <#T##Layout.Filling.Vertical#>
+//        )
+//    }
+
+    struct Debug: RectBasedLayout {
+        let base: RectBasedLayout
+        let before: (CGRect, CGRect) -> Void
+        let after: (CGRect) -> Void
+        public func formLayout(rect: inout CGRect, in source: CGRect) {
+            before(rect, source)
+            base.formLayout(rect: &rect, in: source)
+            after(rect)
+        }
+    }
+}
+#endif

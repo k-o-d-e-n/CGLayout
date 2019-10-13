@@ -106,6 +106,23 @@ extension Tests {
         XCTAssertTrue(view1.frame.minY + 10 == view2.frame.minY)
     }
 
+    func testTopAlignmentWithSpace() {
+        var frame1 = CGRect(x: 0, y: 0, width: 0, height: 20)
+        let alignment = Layout.Alignment.Vertical.top(between: 0...10)
+
+        let frame2 = CGRect(x: 20, y: 20, width: 0, height: .random(in: 40..<100))
+        alignment.formLayout(rect: &frame1, in: frame2)
+        XCTAssertEqual(frame1.minY, frame2.minY + 10)
+
+        let frame3 = CGRect(x: 20, y: 10, width: 0, height: .random(in: 20..<30))
+        alignment.formLayout(rect: &frame1, in: frame3)
+        XCTAssertEqual(frame1.minY, frame3.minY + frame3.height - frame1.height)
+
+        let frame4 = CGRect(x: 20, y: 0, width: 0, height: .random(in: 0..<20))
+        alignment.formLayout(rect: &frame1, in: frame4)
+        XCTAssertEqual(frame1.minY, frame4.minY)
+    }
+
     func testBottomAlignment() {
         let view1 = View(frame: CGRect.random(in: bounds))
         let view2 = View(frame: CGRect.random(in: bounds))
@@ -124,6 +141,23 @@ extension Tests {
         alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.maxY + 10 == view2.frame.maxY)
+    }
+
+    func testBottomAlignmentWithSpace() {
+        var frame1 = CGRect(x: 0, y: 0, width: 0, height: 20)
+        let alignment = Layout.Alignment.Vertical.bottom(between: 0...10)
+
+        let frame2 = CGRect(x: 20, y: 150, width: 0, height: .random(in: 40..<100))
+        alignment.formLayout(rect: &frame1, in: frame2)
+        XCTAssertEqual(frame1.maxY, frame2.maxY - 10)
+
+        let frame3 = CGRect(x: 20, y: 2, width: 0, height: .random(in: 20..<30))
+        alignment.formLayout(rect: &frame1, in: frame3)
+        XCTAssertEqual(frame1.maxY, frame3.maxY - (frame3.height - frame1.height))
+
+        let frame4 = CGRect(x: 20, y: 0, width: 0, height: .random(in: 0..<20))
+        alignment.formLayout(rect: &frame1, in: frame4)
+        XCTAssertEqual(frame1.maxY, frame4.maxY)
     }
 
     func testLeftAlignment() {
@@ -146,6 +180,23 @@ extension Tests {
         XCTAssertTrue(view1.frame.minX + 10 == view2.frame.minX)
     }
 
+    func testLeftAlignmentWithSpace() {
+        var frame1 = CGRect(x: 0, y: 0, width: 20, height: 0)
+        let alignment = Layout.Alignment.Horizontal.left(between: 0...10)
+
+        let frame2 = CGRect(x: 20, y: 0, width: .random(in: 40..<100), height: 0)
+        alignment.formLayout(rect: &frame1, in: frame2)
+        XCTAssertEqual(frame1.minX, frame2.minX + 10)
+
+        let frame3 = CGRect(x: 20, y: 0, width: .random(in: 20..<30), height: 0)
+        alignment.formLayout(rect: &frame1, in: frame3)
+        XCTAssertEqual(frame1.minX, frame3.minX + frame3.width - frame1.width)
+
+        let frame4 = CGRect(x: 20, y: 0, width: .random(in: 0..<20), height: 0)
+        alignment.formLayout(rect: &frame1, in: frame4)
+        XCTAssertEqual(frame1.minX, frame4.minX)
+    }
+
     func testRightAlignment() {
         let view1 = View(frame: CGRect.random(in: bounds))
         let view2 = View(frame: CGRect.random(in: bounds))
@@ -164,6 +215,23 @@ extension Tests {
         alignment.formLayout(rect: &view1.frame, in: view2.frame)
 
         XCTAssertTrue(view1.frame.maxX + 10 == view2.frame.maxX)
+    }
+
+    func testRightAlignmentWithSpace() {
+        var frame1 = CGRect(x: 0, y: 0, width: 20, height: 0)
+        let alignment = Layout.Alignment.Horizontal.right(between: 0...10)
+
+        let frame2 = CGRect(x: 20, y: 0, width: .random(in: 40..<100), height: 0)
+        alignment.formLayout(rect: &frame1, in: frame2)
+        XCTAssertEqual(frame1.maxX, frame2.maxX - 10)
+
+        let frame3 = CGRect(x: 20, y: 0, width: .random(in: 20..<30), height: 0)
+        alignment.formLayout(rect: &frame1, in: frame3)
+        XCTAssertEqual(frame1.maxX, frame3.maxX - (frame3.width - frame1.width))
+
+        let frame4 = CGRect(x: 20, y: 0, width: .random(in: 0..<20), height: 0)
+        alignment.formLayout(rect: &frame1, in: frame4)
+        XCTAssertEqual(frame1.maxX, frame4.maxX)
     }
 }
 
@@ -216,6 +284,33 @@ extension Tests {
 
         XCTAssertTrue(resultRect1.height == max(0, rect2.height - box.vertical))
         XCTAssertTrue(resultRect2.width == max(0, rect1.width - box.horizontal))
+    }
+
+    func testFillingBetween() {
+        var rect = CGRect.zero
+        let vertical = Layout.Filling.Vertical.between(10...20)
+        let horizontal = Layout.Filling.Horizontal.between(10...40)
+
+        let height1 = CGRect(x: 20, y: 0, width: 0, height: .random(in: 40..<100))
+        let width1 = CGRect(x: 20, y: 0, width: .random(in: 40..<100), height: 0)
+        vertical.formLayout(rect: &rect, in: height1)
+        XCTAssertEqual(rect.height, 20)
+        horizontal.formLayout(rect: &rect, in: width1)
+        XCTAssertEqual(rect.width, 40)
+
+        let height2 = CGRect(x: 20, y: 0, width: 0, height: .random(in: 10..<20))
+        let width2 = CGRect(x: 20, y: 0, width: .random(in: 20..<30), height: 0)
+        vertical.formLayout(rect: &rect, in: height2)
+        XCTAssertEqual(rect.height, height2.height)
+        horizontal.formLayout(rect: &rect, in: width2)
+        XCTAssertEqual(rect.width, width2.width)
+
+        let height3 = CGRect(x: 20, y: 0, width: 0, height: .random(in: 0..<10))
+        let width3 = CGRect(x: 20, y: 0, width: .random(in: 0..<10), height: 0)
+        vertical.formLayout(rect: &rect, in: height3)
+        XCTAssertEqual(rect.height, 10)
+        horizontal.formLayout(rect: &rect, in: width3)
+        XCTAssertEqual(rect.width, 10)
     }
 }
 
