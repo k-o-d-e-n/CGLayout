@@ -56,7 +56,7 @@ class ProfileViewController: UIViewController {
 
         let header = LayoutScheme(blocks: [
             headerView.layoutBlock { (anchors) in
-                if #available(iOS 11.0, *) {
+                if #available(iOS 11.0, tvOS 11.0, *) {
                     anchors.top.align(by: view.safeAreaLayoutGuide.layoutAnchors.top)
                 } else {
                     anchors.top.align(by: navigationController!.navigationBar.layoutAnchors.bottom)
@@ -150,7 +150,7 @@ class ProfileViewController: UIViewController {
         let body = bodyLabel.layoutBlock(with: Layout.equal.with(y: .top(15))) { (anchors) in
             anchors.top.align(by: title1Label.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
-            if #available(iOS 11.0, *) {
+            if #available(iOS 11.0, tvOS 11.0, *) {
                 anchors.left.limit(by: view.safeAreaLayoutGuide.layoutAnchors.left)
                 anchors.right.limit(by: view.safeAreaLayoutGuide.layoutAnchors.right)
             } else {

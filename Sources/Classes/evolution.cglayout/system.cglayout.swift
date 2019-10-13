@@ -43,7 +43,7 @@ public class LayoutManager<Item: LayoutElement>: NSObject {
 }
 #endif
 
-#if os(iOS) || os(tvOS)
+#if os(iOS)
 @available(iOS 10.0, *)
 public extension LayoutManager where Item: UIView {
     convenience init(view: UIView, scheme: LayoutScheme) {

@@ -13,6 +13,7 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		A401518E2353C328008D6E76 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F295932352407600E46788 /* ProfileViewController.swift */; };
 		A4232A181F82D20C00016A8A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		A4232A191F82D21100016A8A /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
 		A4232A1A1F82D21500016A8A /* SecondViewControllerAutolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43D53961F6FDEE300A92425 /* SecondViewControllerAutolayout.swift */; };
@@ -727,6 +728,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A401518E2353C328008D6E76 /* ProfileViewController.swift in Sources */,
 				A4232A191F82D21100016A8A /* SecondViewController.swift in Sources */,
 				A4232A1B1F82D21A00016A8A /* TableViewController.swift in Sources */,
 				A4232A1A1F82D21500016A8A /* SecondViewControllerAutolayout.swift in Sources */,

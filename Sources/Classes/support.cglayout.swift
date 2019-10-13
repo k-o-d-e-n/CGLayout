@@ -76,7 +76,11 @@ extension UILabel: TextPresentedElement, AdjustableLayoutElement {
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
             // TODO: numberOfLines
             if let txt = syncGuard(mainThread: label.text) {
+                #if os(iOS)
                 let font = syncGuard(mainThread: label.font) ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
+                #else
+                let font = syncGuard(mainThread: label.font) ?? UIFont.systemFont(ofSize: 14)
+                #endif
                 sourceRect.size = txt.boundingRect(
                     with: rect.size,
                     options: [.usesLineFragmentOrigin, .usesFontLeading],

@@ -110,7 +110,7 @@ class TableViewController: UITableViewController {
 
     private func buildScheme() -> LayoutScheme {
         let topLayoutGuideConstraint: LayoutConstraint
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, tvOS 11.0, *) {
             topLayoutGuideConstraint = view.safeAreaLayoutGuide.layoutConstraint(for: [.top(.pull(from: .inner))])
         } else {
             topLayoutGuideConstraint = navigationController!.navigationBar.layoutConstraint(for: [.bottom(.pull(from: .outer))])
