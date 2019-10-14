@@ -1,7 +1,8 @@
 import XCTest
-@testable import CGLayoutTests
 
-XCTMain([
-    testCase(CGLayoutTests.allTests),
-    testCase(Tests.allTests)
-])
+import CGLayoutTests
+
+var tests = [XCTestCaseEntry]()
+tests += CGLayoutTests.__allTests()
+
+XCTMain(tests)
