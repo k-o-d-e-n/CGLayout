@@ -26,8 +26,8 @@ public protocol AnchoredLayoutElement: LayoutElement {
 }
 
 extension LayoutElement where Self: AnchoredLayoutElement {
-    public func layoutBlock(with layout: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
-        return layoutBlock(with: .equal, constraints: layout)
+    public func layoutBlock(constraints: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
+        return layoutBlock(with: .equal, constraints: constraints)
     }
     public func layoutBlock(with layout: Layout, constraints: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
         var anchors = unsafeBitCast(self.layoutAnchors, to: LayoutAnchors<Self>.self)
@@ -39,7 +39,7 @@ extension LayoutGuide: AnchoredLayoutElement {
     public var layoutAnchors: LayoutAnchors<LayoutGuide<Super>> { return LayoutAnchors(self) }
 }
 
-public class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
+public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
     weak var item: V!
 
     public init(_ item: V) {

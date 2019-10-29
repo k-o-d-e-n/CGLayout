@@ -4,6 +4,7 @@ import XCTest
 #if os(iOS)
     typealias View = UIView
     typealias Window = UIWindow
+    typealias Label = UILabel
 #elseif os(macOS)
     typealias View = NSView
     typealias Window = NSWindow
@@ -1101,6 +1102,40 @@ extension Tests {
     }
     #endif
 }
+
+// MARK: Baseline
+
+#if os(iOS)
+extension Tests {
+    func testTextPresented() {
+        let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
+        let view = View(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
+        let label = Label(frame: CGRect(x: 0, y: 100, width: 200, height: 50))
+        window.addSubview(view)
+        window.addSubview(label)
+
+        let viewLayout = view.layoutBlock(constraints: [label.baselineLayoutConstraint(for: [.bottom(.align(by: .inner))])])
+
+        viewLayout.layout()
+
+        XCTAssertEqual(view.frame.maxY, label.baselineElement.frame.maxY)
+    }
+
+    func testTextPresented2() {
+        let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
+        let label1 = Label(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
+        let label2 = Label(frame: CGRect(x: 0, y: 100, width: 200, height: 50))
+        window.addSubview(label1)
+        window.addSubview(label2)
+
+        let label1Layout = label1.baselineElement.layoutBlock(constraints: [label2.baselineLayoutConstraint(for: [.top(.align(by: .inner))])])
+
+        label1Layout.layout()
+
+        XCTAssertEqual(label1.baselineElement.frame.maxY, label2.baselineElement.frame.maxY)
+    }
+}
+#endif
 
 // MARK: Measures
 

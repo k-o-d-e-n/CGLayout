@@ -212,17 +212,16 @@ extension Equatable where Self: LayoutElement {
 /// Defines requirements for thread confined wrapper of layout element
 public protocol ElementInLayoutTime: RectBasedElement {
     /// Layout element that maintains this layout entity
-    var superElement: LayoutElement? { get }
-    /// Internal layout space of super element
-    var superLayoutBounds: CGRect { get }
+    var superElement: LayoutElement? { get } // TODO: replace with coordinate space
     /// Internal space for layout subelements
     var layoutBounds: CGRect { get }
 }
 
 /// Protocol for text elements. Provides their specific parameters.
 public protocol TextPresentedElement {
+    associatedtype BaselineElement: LayoutElement
     /// Defines y-position from origin in internal coordinate space
-    var baselinePosition: CGFloat { get }
+    var baselineElement: BaselineElement { get }
 }
 
 extension LayoutElement {
@@ -239,8 +238,11 @@ extension LayoutElement {
     ///   - layout: Main layout for this entity
     ///   - constraints: Array of related constraint elements
     /// - Returns: Related layout block
-    public func layoutBlock(with layout: Layout = Layout.equal, constraints: [LayoutConstraintProtocol] = []) -> LayoutBlock<Self> {
+    public func layoutBlock(with layout: Layout = Layout.equal, constraints: [LayoutConstraintProtocol]) -> LayoutBlock<Self> {
         return LayoutBlock(element: self, layout: layout, constraints: constraints)
+    }
+    public func layoutBlock(with layout: Layout = Layout.equal) -> LayoutBlock<Self> {
+        return layoutBlock(with: layout, constraints: [])
     }
 
     /// Convenience getter for constraint that uses internal bounds to constrain, defined in 'layoutBounds' property
@@ -270,8 +272,8 @@ public extension LayoutElement where Self: TextPresentedElement {
     ///
     /// - Parameter anchors: Array of anchor constraints
     /// - Returns: Related constraint element
-    func baselineLayoutConstraint(for anchors: [LayoutAnchor]) -> BaselineLayoutConstraint {
-        return BaselineLayoutConstraint(element: self, constraints: anchors.map { $0.constraint })
+    func baselineLayoutConstraint(for anchors: [LayoutAnchor]) -> LayoutConstraint {
+        return LayoutConstraint(element: baselineElement, constraints: anchors.map { $0.constraint })
     }
 }
 
@@ -325,7 +327,6 @@ extension AdjustableLayoutElement {
 
 /// Provides set of anchor constraints
 public enum LayoutAnchor {
-    case baseline(Baseline)
     case center(Center)
     case leading(Leading)
     case trailing(Trailing)
@@ -341,7 +342,6 @@ public enum LayoutAnchor {
 
     internal var constraint: RectBasedConstraint {
         switch self {
-        case .baseline(let c): return c
         case .center(let c): return c
         case .leading(let c): return c
         case .trailing(let c): return c
@@ -363,42 +363,6 @@ extension LayoutAnchor {
         let value: CGRect
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
             sourceRect = value
-        }
-    }
-}
-
-/// Set of constraints related to baseline of restrictive rect
-public struct Baseline: RectBasedConstraint, Extensible {
-    public typealias Conformed = RectBasedConstraint
-    private let base: RectBasedConstraint
-    private init(base: RectBasedConstraint) { self.base = base }
-    public /// Main function for constrain source space by other rect
-    ///
-    /// - Parameters:
-    ///   - sourceRect: Source space
-    ///   - rect: Rect for constrain
-    func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-    public /// Common method for create entity of this type with base behavior.
-    ///
-    /// - Parameter base: Entity implements required behavior
-    /// - Returns: Initialized entity
-    static func build(_ base: RectBasedConstraint) -> Baseline { return .init(base: base) }
-
-    /// Returns alignment constraint by baseline
-    ///
-    /// - Parameter dependency: Anchor dependency for target rect
-    /// - Returns: Alignment constraint typed by Baseline
-    public static func align(of textPresenter: TextPresentedElement & LayoutElement) -> Baseline { return Baseline(base: Align(textPresenter: textPresenter)) }
-    fileprivate struct Align: RectBasedConstraint {
-        fileprivate unowned var textPresenter: TextPresentedElement & LayoutElement
-
-        public /// Main function for constrain source space by other rect
-        ///
-        /// - Parameters:
-        ///   - sourceRect: Source space
-        ///   - rect: Rect for constrain
-        func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-            sourceRect.origin.y = rect.maxY - textPresenter.baselinePosition
         }
     }
 }

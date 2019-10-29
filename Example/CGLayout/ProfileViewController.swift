@@ -85,15 +85,28 @@ class ProfileViewController: UIViewController {
             anchors.height.equalIntrinsicSize()
         }
 
-        let socialLabel = buildView(UILabel.self, bg: .lightGray)
-        socialLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 16, weight: .light)
-        socialLabel.text = "@Nikita_resh"
-        let social = socialLabel.layoutBlock(with: Layout.equal.with(y: .top(8))) { (anchors) in
+        let socialLabelPrefix = buildView(UILabel.self, bg: .lightGray)
+        socialLabelPrefix.font = UIFont.monospacedDigitSystemFont(ofSize: 20, weight: .bold)
+        socialLabelPrefix.text = "@"
+        let socialPrefix = socialLabelPrefix.layoutBlock(with: Layout.equal.with(y: .top(8))) { (anchors) in
             anchors.top.align(by: nameLabel.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
             anchors.height.equalIntrinsicSize()
         }
+
+        let socialLabel = buildView(UILabel.self, bg: .lightGray)
+        socialLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 16, weight: .light)
+        socialLabel.text = "Nikita_resh"
+        // TODO: Baseline is unavailable in anchors
+        let socialSize = socialLabel.layoutBlock(constraints: { (anchors) in
+            anchors.width.equalIntrinsicSize()
+            anchors.height.equalIntrinsicSize()
+        })
+        let socialPosition = socialLabel.baselineElement.layoutBlock(constraints: { (anchors) in
+            anchors.top.align(by: socialLabelPrefix.baselineElement.layoutAnchors.bottom)
+            anchors.left.align(by: socialLabelPrefix.layoutAnchors.right)
+        })
 
         let buttonsGroupGuide = StackLayoutGuide<UIView>() // cannot calcute size based on elements
         buttonsGroupGuide.scheme.direction = .fromCenter
@@ -101,7 +114,7 @@ class ProfileViewController: UIViewController {
         buttonsGroupGuide.scheme.filling = .equal(130)
         addLayoutGuide(buttonsGroupGuide)
         let btnsGroup = buttonsGroupGuide.layoutBlock(with: Layout.equal.with(y: .top(20))) { (anchors) in
-            anchors.top.align(by: socialLabel.layoutAnchors.bottom)
+            anchors.top.align(by: socialLabelPrefix.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
             anchors.height.equal(to: 40)
@@ -160,7 +173,7 @@ class ProfileViewController: UIViewController {
         }
 
         scheme = LayoutScheme(blocks: [
-            header, avatar, name, social, btnsGroup, socialGroup, title1, body
+            header, avatar, name, socialPrefix, socialSize, socialPosition, btnsGroup, socialGroup, title1, body
         ])
     }
 

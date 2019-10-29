@@ -29,69 +29,6 @@ class CGLayoutTests: XCTestCase {
         XCTAssertTrue(view.layer.sublayers.contains(where: { $0 === subview.layer }))
     }
 
-    // func testContainer2() {
-    //     let layer = Layer(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
-    //     let view = View(layer: layer)
-    //     let lg = LayoutGuide<View>(frame: .zero)
-    //     let subview = View(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
-
-    //     view.addChild(from: lg)
-    //     // view.addChild(from: AnyEnter<LayoutGuide<View>, View>(child: lg))
-    //     view.addChild(from: AnyEnter<View, View>(child: subview))
-    //     // view.addChild(from: LayoutGuideEnterPoint(lg))
-    //     // view.addChild(from: ViewEnterPoint(subview))
-    //     // view.addChild(lg)
-    //     // view.addChild(subview)
-    //     // lg.add(to: view)
-    //     // subview.add(to: view)
-
-    //     XCTAssertTrue(lg.ownerElement! === view)
-    //     XCTAssertTrue(view.subviews.contains(where: { $0 === subview }))
-    //     XCTAssertTrue(view.layer.sublayers.contains(where: { $0 === subview.layer }))
-    // }
-
-    // func testContainer3() {
-    //     let window = Window(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
-    //     let view = View(frame: .zero)
-
-    //     window.addChild(from: AnyEnter<View, Window>(child: view))
-    //     // view.add(to: window)
-
-    //     XCTAssertTrue(window.subviews.contains(where: { $0 === view }))
-    //     XCTAssertTrue(window.layer.sublayers.contains(where: { $0 === view.layer }))
-    // }
-
-    func testTextPresented() {
-        let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
-        let view = View(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
-        let label = Label(frame: CGRect(x: 0, y: 100, width: 200, height: 50))
-        window.addSubview(view)
-        window.addSubview(label)
-
-        let viewLayout = view.layoutBlock(constraints: [label.baselineLayoutConstraint(for: [.bottom(.align(by: .inner))])])
-
-        viewLayout.layout()
-
-        // print(view.frame)
-        XCTAssertTrue(view.frame.maxY == 100 + label.baselinePosition)
-    }
-
-    func testTextPresented2() {
-        let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
-        let label1 = Label(frame: CGRect(x: 0, y: 0, width: 200, height: 50))
-        let label2 = Label(frame: CGRect(x: 0, y: 100, width: 200, height: 50))
-        label1.baselinePosition = 35.0
-        window.addSubview(label1)
-        window.addSubview(label2)
-
-        let label1Layout = label1.layoutBlock(constraints: [label2.baselineLayoutConstraint(for: [.baseline(.align(of: label1))])])
-
-        label1Layout.layout()
-
-        // print(label1.frame)
-        XCTAssertTrue(label1.frame.minY == 100 + label2.baselinePosition - label1.baselinePosition)
-    }
-
     func testNewAnchors2() {
         let window = Window(frame: CGRect(x: 0, y: 0, width: 500, height: 500))
         let sourceView = View(frame: CGRect(x: 100, y: 100, width: 300, height: 300))
@@ -184,10 +121,6 @@ class CGLayoutTests: XCTestCase {
     static var allTests = [
         ("testTopAlignment", testTopAlignment),
         ("testContainer", testContainer),
-        // ("testContainer2", testContainer2),
-        // ("testContainer3", testContainer3),
-        ("testTextPresented", testTextPresented),
-        ("testTextPresented2", testTextPresented2),
         ("testNewAnchors2", testNewAnchors2),
         ("testNewAnchors3", testNewAnchors3),
         ("testNewAnchors4", testNewAnchors4)

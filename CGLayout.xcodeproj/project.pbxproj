@@ -5,10 +5,10 @@
    objects = {
       "CGLayout::CGLayout" = {
          isa = "PBXNativeTarget";
-         buildConfigurationList = "OBJ_39";
+         buildConfigurationList = "OBJ_43";
          buildPhases = (
-            "OBJ_42",
-            "OBJ_57"
+            "OBJ_46",
+            "OBJ_64"
          );
          dependencies = (
          );
@@ -24,24 +24,24 @@
       };
       "CGLayout::CGLayoutPackageTests::ProductTarget" = {
          isa = "PBXAggregateTarget";
-         buildConfigurationList = "OBJ_65";
+         buildConfigurationList = "OBJ_72";
          buildPhases = (
          );
          dependencies = (
-            "OBJ_68"
+            "OBJ_75"
          );
          name = "CGLayoutPackageTests";
          productName = "CGLayoutPackageTests";
       };
       "CGLayout::CGLayoutTests" = {
          isa = "PBXNativeTarget";
-         buildConfigurationList = "OBJ_70";
+         buildConfigurationList = "OBJ_77";
          buildPhases = (
-            "OBJ_73",
-            "OBJ_77"
+            "OBJ_80",
+            "OBJ_85"
          );
          dependencies = (
-            "OBJ_79"
+            "OBJ_87"
          );
          name = "CGLayoutTests";
          productName = "CGLayoutTests";
@@ -55,9 +55,9 @@
       };
       "CGLayout::SwiftPMPackageDescription" = {
          isa = "PBXNativeTarget";
-         buildConfigurationList = "OBJ_59";
+         buildConfigurationList = "OBJ_66";
          buildPhases = (
-            "OBJ_62"
+            "OBJ_69"
          );
          dependencies = (
          );
@@ -79,7 +79,7 @@
             "en"
          );
          mainGroup = "OBJ_5";
-         productRefGroup = "OBJ_28";
+         productRefGroup = "OBJ_32";
          projectDirPath = ".";
          targets = (
             "CGLayout::CGLayout",
@@ -107,7 +107,9 @@
          isa = "PBXGroup";
          children = (
             "OBJ_14",
-            "OBJ_15"
+            "OBJ_15",
+            "OBJ_16",
+            "OBJ_17"
          );
          name = "evolution.cglayout";
          path = "evolution.cglayout";
@@ -115,32 +117,32 @@
       };
       "OBJ_14" = {
          isa = "PBXFileReference";
-         path = "anchors.swift";
+         path = "anchors.cglayout.swift";
          sourceTree = "<group>";
       };
       "OBJ_15" = {
          isa = "PBXFileReference";
-         path = "next_generation.swift";
+         path = "backend.anchors.cglayout.swift";
          sourceTree = "<group>";
       };
       "OBJ_16" = {
          isa = "PBXFileReference";
-         path = "layoutBlock.cglayout.swift";
+         path = "system.cglayout.swift";
          sourceTree = "<group>";
       };
       "OBJ_17" = {
          isa = "PBXFileReference";
-         path = "layoutConstraint.cglayout.swift";
+         path = "workspace.cglayout.swift";
          sourceTree = "<group>";
       };
       "OBJ_18" = {
          isa = "PBXFileReference";
-         path = "layoutGuide.cglayout.swift";
+         path = "layoutBlock.cglayout.swift";
          sourceTree = "<group>";
       };
       "OBJ_19" = {
          isa = "PBXFileReference";
-         path = "private.cglayout.swift";
+         path = "layoutConstraint.cglayout.swift";
          sourceTree = "<group>";
       };
       "OBJ_2" = {
@@ -154,63 +156,64 @@
       };
       "OBJ_20" = {
          isa = "PBXFileReference";
-         path = "scroll.layoutGuide.cglayout.swift";
+         path = "layoutGuide.cglayout.swift";
          sourceTree = "<group>";
       };
       "OBJ_21" = {
          isa = "PBXFileReference";
-         path = "stack.layoutGuide.cglayout.swift";
+         path = "private.cglayout.swift";
          sourceTree = "<group>";
       };
       "OBJ_22" = {
          isa = "PBXFileReference";
-         path = "support.cglayout.swift";
+         path = "rtl.cglayout.swift";
          sourceTree = "<group>";
       };
       "OBJ_23" = {
+         isa = "PBXFileReference";
+         path = "scroll.layoutGuide.cglayout.swift";
+         sourceTree = "<group>";
+      };
+      "OBJ_24" = {
+         isa = "PBXFileReference";
+         path = "stack.layoutGuide.cglayout.swift";
+         sourceTree = "<group>";
+      };
+      "OBJ_25" = {
+         isa = "PBXFileReference";
+         path = "support.cglayout.swift";
+         sourceTree = "<group>";
+      };
+      "OBJ_26" = {
          isa = "PBXGroup";
          children = (
-            "OBJ_24"
+            "OBJ_27"
          );
          name = "Tests";
          path = "";
          sourceTree = "SOURCE_ROOT";
       };
-      "OBJ_24" = {
+      "OBJ_27" = {
          isa = "PBXGroup";
          children = (
-            "OBJ_25",
-            "OBJ_26",
-            "OBJ_27"
+            "OBJ_28",
+            "OBJ_29",
+            "OBJ_30",
+            "OBJ_31"
          );
          name = "CGLayoutTests";
          path = "Tests/CGLayoutTests";
          sourceTree = "SOURCE_ROOT";
       };
-      "OBJ_25" = {
+      "OBJ_28" = {
          isa = "PBXFileReference";
          path = "CGLayoutTests.swift";
          sourceTree = "<group>";
       };
-      "OBJ_26" = {
+      "OBJ_29" = {
          isa = "PBXFileReference";
          path = "Tests.swift";
          sourceTree = "<group>";
-      };
-      "OBJ_27" = {
-         isa = "PBXFileReference";
-         path = "support_linux.tests.swift";
-         sourceTree = "<group>";
-      };
-      "OBJ_28" = {
-         isa = "PBXGroup";
-         children = (
-            "CGLayout::CGLayoutTests::Product",
-            "CGLayout::CGLayout::Product"
-         );
-         name = "Products";
-         path = "";
-         sourceTree = "BUILT_PRODUCTS_DIR";
       };
       "OBJ_3" = {
          isa = "XCBuildConfiguration";
@@ -254,49 +257,50 @@
          };
          name = "Debug";
       };
+      "OBJ_30" = {
+         isa = "PBXFileReference";
+         path = "XCTestManifests.swift";
+         sourceTree = "<group>";
+      };
       "OBJ_31" = {
+         isa = "PBXFileReference";
+         path = "support_linux.tests.swift";
+         sourceTree = "<group>";
+      };
+      "OBJ_32" = {
+         isa = "PBXGroup";
+         children = (
+            "CGLayout::CGLayout::Product",
+            "CGLayout::CGLayoutTests::Product"
+         );
+         name = "Products";
+         path = "";
+         sourceTree = "BUILT_PRODUCTS_DIR";
+      };
+      "OBJ_35" = {
          isa = "PBXFileReference";
          path = "Example";
          sourceTree = "SOURCE_ROOT";
       };
-      "OBJ_32" = {
+      "OBJ_36" = {
          isa = "PBXFileReference";
          path = "Resources";
          sourceTree = "SOURCE_ROOT";
       };
-      "OBJ_33" = {
+      "OBJ_37" = {
          isa = "PBXFileReference";
          path = "docs";
          sourceTree = "SOURCE_ROOT";
       };
-      "OBJ_34" = {
+      "OBJ_38" = {
          isa = "PBXFileReference";
          path = "CGLayout.podspec";
          sourceTree = "<group>";
       };
-      "OBJ_35" = {
+      "OBJ_39" = {
          isa = "PBXFileReference";
          path = "LICENSE";
          sourceTree = "<group>";
-      };
-      "OBJ_36" = {
-         isa = "PBXFileReference";
-         path = "README.md";
-         sourceTree = "<group>";
-      };
-      "OBJ_37" = {
-         isa = "PBXFileReference";
-         path = "CONTRIBUTING.md";
-         sourceTree = "<group>";
-      };
-      "OBJ_39" = {
-         isa = "XCConfigurationList";
-         buildConfigurations = (
-            "OBJ_40",
-            "OBJ_41"
-         );
-         defaultConfigurationIsVisible = "0";
-         defaultConfigurationName = "Release";
       };
       "OBJ_4" = {
          isa = "XCBuildConfiguration";
@@ -337,6 +341,25 @@
          name = "Release";
       };
       "OBJ_40" = {
+         isa = "PBXFileReference";
+         path = "README.md";
+         sourceTree = "<group>";
+      };
+      "OBJ_41" = {
+         isa = "PBXFileReference";
+         path = "CONTRIBUTING.md";
+         sourceTree = "<group>";
+      };
+      "OBJ_43" = {
+         isa = "XCConfigurationList";
+         buildConfigurations = (
+            "OBJ_44",
+            "OBJ_45"
+         );
+         defaultConfigurationIsVisible = "0";
+         defaultConfigurationName = "Release";
+      };
+      "OBJ_44" = {
          isa = "XCBuildConfiguration";
          buildSettings = {
             ENABLE_TESTABILITY = "YES";
@@ -373,7 +396,7 @@
          };
          name = "Debug";
       };
-      "OBJ_41" = {
+      "OBJ_45" = {
          isa = "XCBuildConfiguration";
          buildSettings = {
             ENABLE_TESTABILITY = "YES";
@@ -410,13 +433,9 @@
          };
          name = "Release";
       };
-      "OBJ_42" = {
+      "OBJ_46" = {
          isa = "PBXSourcesBuildPhase";
          files = (
-            "OBJ_43",
-            "OBJ_44",
-            "OBJ_45",
-            "OBJ_46",
             "OBJ_47",
             "OBJ_48",
             "OBJ_49",
@@ -426,96 +445,85 @@
             "OBJ_53",
             "OBJ_54",
             "OBJ_55",
-            "OBJ_56"
+            "OBJ_56",
+            "OBJ_57",
+            "OBJ_58",
+            "OBJ_59",
+            "OBJ_60",
+            "OBJ_61",
+            "OBJ_62",
+            "OBJ_63"
          );
-      };
-      "OBJ_43" = {
-         isa = "PBXBuildFile";
-         fileRef = "OBJ_8";
-      };
-      "OBJ_44" = {
-         isa = "PBXBuildFile";
-         fileRef = "OBJ_9";
-      };
-      "OBJ_45" = {
-         isa = "PBXBuildFile";
-         fileRef = "OBJ_10";
-      };
-      "OBJ_46" = {
-         isa = "PBXBuildFile";
-         fileRef = "OBJ_11";
       };
       "OBJ_47" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_12";
+         fileRef = "OBJ_8";
       };
       "OBJ_48" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_14";
+         fileRef = "OBJ_9";
       };
       "OBJ_49" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_15";
+         fileRef = "OBJ_10";
       };
       "OBJ_5" = {
          isa = "PBXGroup";
          children = (
             "OBJ_6",
             "OBJ_7",
-            "OBJ_23",
-            "OBJ_28",
-            "OBJ_31",
+            "OBJ_26",
             "OBJ_32",
-            "OBJ_33",
-            "OBJ_34",
             "OBJ_35",
             "OBJ_36",
-            "OBJ_37"
+            "OBJ_37",
+            "OBJ_38",
+            "OBJ_39",
+            "OBJ_40",
+            "OBJ_41"
          );
          path = "";
          sourceTree = "<group>";
       };
       "OBJ_50" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_16";
+         fileRef = "OBJ_11";
       };
       "OBJ_51" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_17";
+         fileRef = "OBJ_12";
       };
       "OBJ_52" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_18";
+         fileRef = "OBJ_14";
       };
       "OBJ_53" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_19";
+         fileRef = "OBJ_15";
       };
       "OBJ_54" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_20";
+         fileRef = "OBJ_16";
       };
       "OBJ_55" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_21";
+         fileRef = "OBJ_17";
       };
       "OBJ_56" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_22";
+         fileRef = "OBJ_18";
       };
       "OBJ_57" = {
-         isa = "PBXFrameworksBuildPhase";
-         files = (
-         );
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_19";
+      };
+      "OBJ_58" = {
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_20";
       };
       "OBJ_59" = {
-         isa = "XCConfigurationList";
-         buildConfigurations = (
-            "OBJ_60",
-            "OBJ_61"
-         );
-         defaultConfigurationIsVisible = "0";
-         defaultConfigurationName = "Release";
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_21";
       };
       "OBJ_6" = {
          isa = "PBXFileReference";
@@ -524,79 +532,80 @@
          sourceTree = "<group>";
       };
       "OBJ_60" = {
-         isa = "XCBuildConfiguration";
-         buildSettings = {
-            LD = "/usr/bin/true";
-            OTHER_SWIFT_FLAGS = (
-               "-swift-version",
-               "4.2",
-               "-I",
-               "$(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2",
-               "-target",
-               "x86_64-apple-macosx10.10",
-               "-sdk",
-               "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk",
-               "-package-description-version",
-               "4.2"
-            );
-            SWIFT_VERSION = "4.2";
-         };
-         name = "Debug";
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_22";
       };
       "OBJ_61" = {
-         isa = "XCBuildConfiguration";
-         buildSettings = {
-            LD = "/usr/bin/true";
-            OTHER_SWIFT_FLAGS = (
-               "-swift-version",
-               "4.2",
-               "-I",
-               "$(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2",
-               "-target",
-               "x86_64-apple-macosx10.10",
-               "-sdk",
-               "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk",
-               "-package-description-version",
-               "4.2"
-            );
-            SWIFT_VERSION = "4.2";
-         };
-         name = "Release";
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_23";
       };
       "OBJ_62" = {
-         isa = "PBXSourcesBuildPhase";
-         files = (
-            "OBJ_63"
-         );
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_24";
       };
       "OBJ_63" = {
          isa = "PBXBuildFile";
-         fileRef = "OBJ_6";
+         fileRef = "OBJ_25";
       };
-      "OBJ_65" = {
+      "OBJ_64" = {
+         isa = "PBXFrameworksBuildPhase";
+         files = (
+         );
+      };
+      "OBJ_66" = {
          isa = "XCConfigurationList";
          buildConfigurations = (
-            "OBJ_66",
-            "OBJ_67"
+            "OBJ_67",
+            "OBJ_68"
          );
          defaultConfigurationIsVisible = "0";
          defaultConfigurationName = "Release";
       };
-      "OBJ_66" = {
-         isa = "XCBuildConfiguration";
-         buildSettings = {
-         };
-         name = "Debug";
-      };
       "OBJ_67" = {
          isa = "XCBuildConfiguration";
          buildSettings = {
+            LD = "/usr/bin/true";
+            OTHER_SWIFT_FLAGS = (
+               "-swift-version",
+               "4.2",
+               "-I",
+               "$(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2",
+               "-target",
+               "x86_64-apple-macosx10.10",
+               "-sdk",
+               "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk",
+               "-package-description-version",
+               "4.2"
+            );
+            SWIFT_VERSION = "4.2";
+         };
+         name = "Debug";
+      };
+      "OBJ_68" = {
+         isa = "XCBuildConfiguration";
+         buildSettings = {
+            LD = "/usr/bin/true";
+            OTHER_SWIFT_FLAGS = (
+               "-swift-version",
+               "4.2",
+               "-I",
+               "$(TOOLCHAIN_DIR)/usr/lib/swift/pm/4_2",
+               "-target",
+               "x86_64-apple-macosx10.10",
+               "-sdk",
+               "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk",
+               "-package-description-version",
+               "4.2"
+            );
+            SWIFT_VERSION = "4.2";
          };
          name = "Release";
       };
-      "OBJ_68" = {
-         isa = "PBXTargetDependency";
-         target = "CGLayout::CGLayoutTests";
+      "OBJ_69" = {
+         isa = "PBXSourcesBuildPhase";
+         files = (
+            "OBJ_70"
+         );
       };
       "OBJ_7" = {
          isa = "PBXGroup";
@@ -607,28 +616,58 @@
             "OBJ_11",
             "OBJ_12",
             "OBJ_13",
-            "OBJ_16",
-            "OBJ_17",
             "OBJ_18",
             "OBJ_19",
             "OBJ_20",
             "OBJ_21",
-            "OBJ_22"
+            "OBJ_22",
+            "OBJ_23",
+            "OBJ_24",
+            "OBJ_25"
          );
          name = "Sources";
          path = "Sources/Classes";
          sourceTree = "SOURCE_ROOT";
       };
       "OBJ_70" = {
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_6";
+      };
+      "OBJ_72" = {
          isa = "XCConfigurationList";
          buildConfigurations = (
-            "OBJ_71",
-            "OBJ_72"
+            "OBJ_73",
+            "OBJ_74"
          );
          defaultConfigurationIsVisible = "0";
          defaultConfigurationName = "Release";
       };
-      "OBJ_71" = {
+      "OBJ_73" = {
+         isa = "XCBuildConfiguration";
+         buildSettings = {
+         };
+         name = "Debug";
+      };
+      "OBJ_74" = {
+         isa = "XCBuildConfiguration";
+         buildSettings = {
+         };
+         name = "Release";
+      };
+      "OBJ_75" = {
+         isa = "PBXTargetDependency";
+         target = "CGLayout::CGLayoutTests";
+      };
+      "OBJ_77" = {
+         isa = "XCConfigurationList";
+         buildConfigurations = (
+            "OBJ_78",
+            "OBJ_79"
+         );
+         defaultConfigurationIsVisible = "0";
+         defaultConfigurationName = "Release";
+      };
+      "OBJ_78" = {
          isa = "XCBuildConfiguration";
          buildSettings = {
             CLANG_ENABLE_MODULES = "YES";
@@ -663,7 +702,7 @@
          };
          name = "Debug";
       };
-      "OBJ_72" = {
+      "OBJ_79" = {
          isa = "XCBuildConfiguration";
          buildSettings = {
             CLANG_ENABLE_MODULES = "YES";
@@ -698,44 +737,49 @@
          };
          name = "Release";
       };
-      "OBJ_73" = {
-         isa = "PBXSourcesBuildPhase";
-         files = (
-            "OBJ_74",
-            "OBJ_75",
-            "OBJ_76"
-         );
-      };
-      "OBJ_74" = {
-         isa = "PBXBuildFile";
-         fileRef = "OBJ_25";
-      };
-      "OBJ_75" = {
-         isa = "PBXBuildFile";
-         fileRef = "OBJ_26";
-      };
-      "OBJ_76" = {
-         isa = "PBXBuildFile";
-         fileRef = "OBJ_27";
-      };
-      "OBJ_77" = {
-         isa = "PBXFrameworksBuildPhase";
-         files = (
-            "OBJ_78"
-         );
-      };
-      "OBJ_78" = {
-         isa = "PBXBuildFile";
-         fileRef = "CGLayout::CGLayout::Product";
-      };
-      "OBJ_79" = {
-         isa = "PBXTargetDependency";
-         target = "CGLayout::CGLayout";
-      };
       "OBJ_8" = {
          isa = "PBXFileReference";
          path = "common.cglayout.swift";
          sourceTree = "<group>";
+      };
+      "OBJ_80" = {
+         isa = "PBXSourcesBuildPhase";
+         files = (
+            "OBJ_81",
+            "OBJ_82",
+            "OBJ_83",
+            "OBJ_84"
+         );
+      };
+      "OBJ_81" = {
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_28";
+      };
+      "OBJ_82" = {
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_29";
+      };
+      "OBJ_83" = {
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_30";
+      };
+      "OBJ_84" = {
+         isa = "PBXBuildFile";
+         fileRef = "OBJ_31";
+      };
+      "OBJ_85" = {
+         isa = "PBXFrameworksBuildPhase";
+         files = (
+            "OBJ_86"
+         );
+      };
+      "OBJ_86" = {
+         isa = "PBXBuildFile";
+         fileRef = "CGLayout::CGLayout::Product";
+      };
+      "OBJ_87" = {
+         isa = "PBXTargetDependency";
+         target = "CGLayout::CGLayout";
       };
       "OBJ_9" = {
          isa = "PBXFileReference";
