@@ -112,7 +112,7 @@ extension UILabel: TextPresentedElement, AdjustableLayoutElement {
         return baseline
     }
 
-    public class Baseline: AnchoredLayoutElement, ElementInLayoutTime {
+    public final class Baseline: AnchoredLayoutElement, ElementInLayoutTime {
         unowned let label: UILabel
         public var frame: CGRect {
             set(newValue) {
@@ -150,7 +150,6 @@ extension UILabel: TextPresentedElement, AdjustableLayoutElement {
         public var superElement: LayoutElement? { return label.superview }
         public var layoutBounds: CGRect { return bounds }
         public var inLayoutTime: ElementInLayoutTime { return self }
-        public var layoutAnchors: LayoutAnchors<Baseline> { return LayoutAnchors(self) }
 
         public func removeFromSuperElement() {}
 
@@ -198,16 +197,10 @@ extension NSControl: AdaptiveLayoutElement, AdjustableLayoutElement {
 #endif
 
 #if os(iOS) || os(tvOS)
-extension UIView: AnchoredLayoutElement {
-    public var layoutAnchors: LayoutAnchors<UIView> { return LayoutAnchors(self) }
-}
-extension UILayoutGuide: AnchoredLayoutElement {
-    public var layoutAnchors: LayoutAnchors<UILayoutGuide> { return LayoutAnchors(self) }
-}
+extension UIView: AnchoredLayoutElement {}
+extension UILayoutGuide: AnchoredLayoutElement {}
 #endif
 
 #if os(iOS) || os(tvOS) || os(macOS)
-extension CALayer: AnchoredLayoutElement {
-    public var layoutAnchors: LayoutAnchors<CALayer> { return LayoutAnchors(self) }
-}
+extension CALayer: AnchoredLayoutElement {}
 #endif

@@ -8,42 +8,41 @@
 
 import Foundation
 
+// not uses
 protocol Anchors: class {
-    associatedtype Item: AnchoredLayoutElement & LayoutElement
-    var left: SideAnchor<Item, LeftAnchor> { get set }
-    var right: SideAnchor<Item, RightAnchor> { get set }
-    var bottom: SideAnchor<Item, BottomAnchor> { get set }
-    var top: SideAnchor<Item, TopAnchor> { get set }
-    var centerX: SideAnchor<Item, CenterXAnchor> { get set }
-    var centerY: SideAnchor<Item, CenterYAnchor> { get set }
-    var width: DimensionAnchor<Item, WidthAnchor> { get set }
-    var height: DimensionAnchor<Item, HeightAnchor> { get set }
+    associatedtype Element: AnchoredLayoutElement & LayoutElement
+    var left: SideAnchor<Element, LeftAnchor> { get set }
+    var right: SideAnchor<Element, RightAnchor> { get set }
+    var bottom: SideAnchor<Element, BottomAnchor> { get set }
+    var top: SideAnchor<Element, TopAnchor> { get set }
+    var centerX: SideAnchor<Element, CenterXAnchor> { get set }
+    var centerY: SideAnchor<Element, CenterYAnchor> { get set }
+    var width: DimensionAnchor<Element, WidthAnchor> { get set }
+    var height: DimensionAnchor<Element, HeightAnchor> { get set }
 }
 
-public protocol AnchoredLayoutElement: LayoutElement {
-    associatedtype Item: AnchoredLayoutElement /// = Self
-    var layoutAnchors: LayoutAnchors<Item> { get }
+public protocol AnchoredLayoutElement: LayoutElement {}
+extension AnchoredLayoutElement {
+    public var layoutAnchors: LayoutAnchors<Self> { return LayoutAnchors(self) }
 }
 
 extension LayoutElement where Self: AnchoredLayoutElement {
-    public func layoutBlock(constraints: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
+    public func layoutBlock(constraints: (LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
         return layoutBlock(with: .equal, constraints: constraints)
     }
-    public func layoutBlock(with layout: Layout, constraints: (inout LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
-        var anchors = unsafeBitCast(self.layoutAnchors, to: LayoutAnchors<Self>.self)
-        constraints(&anchors)
+    public func layoutBlock(with layout: Layout, constraints: (LayoutAnchors<Self>) -> Void) -> LayoutBlock<Self> {
+        let anchors = self.layoutAnchors
+        constraints(anchors)
         return LayoutBlock(element: self, layout: layout, constraints: anchors.constraints())
     }
 }
-extension LayoutGuide: AnchoredLayoutElement {
-    public var layoutAnchors: LayoutAnchors<LayoutGuide<Super>> { return LayoutAnchors(self) }
-}
+extension LayoutGuide: AnchoredLayoutElement {}
 
 public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
-    weak var item: V!
+    weak var element: V!
 
-    public init(_ item: V) {
-        self.item = item
+    public init(_ element: V) {
+        self.element = element
     }
 
     public lazy var left: SideAnchor<V, LeftAnchor> = .init(anchors: self, anchor: .init())
@@ -98,13 +97,13 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
 }
 
 public struct SideAnchor<Item: AnchoredLayoutElement, Anchor: RectAnchorPoint> {
-    unowned var anchors: LayoutAnchors<Item>
-    unowned var item: Item
+    unowned let anchors: LayoutAnchors<Item>
+    unowned let item: Item
     let anchor: Anchor
 
     init(anchors: LayoutAnchors<Item>, anchor: Anchor) {
         self.anchors = anchors
-        self.item = anchors.item
+        self.item = anchors.element
         self.anchor = anchor
     }
 
@@ -112,16 +111,29 @@ public struct SideAnchor<Item: AnchoredLayoutElement, Anchor: RectAnchorPoint> {
     var limitConstraints: [(LayoutElement, AnyRectBasedConstraint)] = []
     var alignConstraint: (LayoutElement, AnyRectBasedConstraint)? = nil
     var alignLimitConstraints: [(LayoutElement, AnyRectBasedConstraint)] = []
+
+    mutating func setAlign(_ constraint: (LayoutElement, AnyRectBasedConstraint)) {
+        alignConstraint = constraint
+    }
+    mutating func setPull(_ constraint: (LayoutElement, AnyRectBasedConstraint)) {
+        pullConstraint = constraint
+    }
+    mutating func addLimit(_ constraint: (LayoutElement, AnyRectBasedConstraint)) {
+        limitConstraints.append(constraint)
+    }
+    mutating func addAlignLimit(_ constraint: (LayoutElement, AnyRectBasedConstraint)) {
+        alignLimitConstraints.append(constraint)
+    }
 }
 
 public struct DimensionAnchor<Item: AnchoredLayoutElement, Anchor: AxisLayoutEntity & SizeRectAnchor> {
-    unowned var anchors: LayoutAnchors<Item>
-    unowned var item: Item
+    unowned let anchors: LayoutAnchors<Item>
+    unowned let item: Item
     let anchor: Anchor
 
     init(anchors: LayoutAnchors<Item>, anchor: Anchor) {
         self.anchors = anchors
-        self.item = anchors.item
+        self.item = anchors.element
         self.anchor = anchor
     }
 
@@ -137,36 +149,41 @@ public struct DimensionAnchor<Item: AnchoredLayoutElement, Anchor: AxisLayoutEnt
 public extension SideAnchor {
     mutating func align<A: AnchoredLayoutElement, A2: RectAnchorPoint>(by a2: SideAnchor<A, A2>)
         where Anchor.Metric == A2.Metric, Anchor.Axis == A2.Axis {
-            debugAction {
-                // print(pullConstraint != nil, limitConstraints.count > 1, alignConstraint != nil)
-                if pullConstraint != nil {
-                    debugWarning("We already have pull constraint, that makes align")
-                } else if limitConstraints.count > 1 {
-                    debugWarning("We already have limit constraints. If you need align just remove limit constraints")
-                } else if alignConstraint != nil {
-                    debugWarning("We already have align constraint. It will be replaced")
-                }
-            }
-
-            alignConstraint = (a2.item, anchor.align(by: a2.anchor))
+            checkConflictsOnAddAlign()
+            setAlign((a2.item, anchor.align(by: a2.anchor)))
     }
     mutating func pull<A: AnchoredLayoutElement, A2: RectAnchorPoint>(to a2: SideAnchor<A, A2>)
         where Anchor.Metric == A2.Metric, Anchor.Axis == A2.Axis {
-            debugAction {
-                let hasSize = (anchors.width.isDefined && anchor.axis.isHorizontal) ||
-                        	  (anchors.height.isDefined && anchor.axis.isVertical)
-                // print(pullConstraint != nil, alignConstraint != nil, hasSize)
-                if alignConstraint != nil {
-                    debugWarning("We already have align constraint. If you need pull just remove align constraint")
-                } else if limitConstraints.count > 1 {
-                    // printWarning("We already have limit constraints. If you need pull just remove limit constraints")
-                } else if pullConstraint != nil {
-                    debugWarning("We already have pull constraint. It will be replaced")
-                } else if hasSize {
-                    debugWarning("We already define size anchor in this axis. We can get unexpected result")
-                }
+            checkConflictsOnAddPull()
+            setPull((a2.item, anchor.pull(to: a2.anchor)))
+    }
+    fileprivate func checkConflictsOnAddAlign() {
+        debugAction {
+            // print(pullConstraint != nil, limitConstraints.count > 1, alignConstraint != nil)
+            if pullConstraint != nil {
+                debugWarning("We already have pull constraint, that makes align")
+            } else if limitConstraints.count > 1 {
+                debugWarning("We already have limit constraints. If you need align just remove limit constraints")
+            } else if alignConstraint != nil {
+                debugWarning("We already have align constraint. It will be replaced")
             }
-            pullConstraint = (a2.item, anchor.pull(to: a2.anchor))
+        }
+    }
+    fileprivate func checkConflictsOnAddPull() {
+        debugAction {
+            let hasSize = (anchors.width.isDefined && anchor.axis.isHorizontal) ||
+                (anchors.height.isDefined && anchor.axis.isVertical)
+            // print(pullConstraint != nil, alignConstraint != nil, hasSize)
+            if alignConstraint != nil {
+                debugWarning("We already have align constraint. If you need pull just remove align constraint")
+            } else if limitConstraints.count > 1 {
+                // printWarning("We already have limit constraints. If you need pull just remove limit constraints")
+            } else if pullConstraint != nil {
+                debugWarning("We already have pull constraint. It will be replaced")
+            } else if hasSize {
+                debugWarning("We already define size anchor in this axis. We can get unexpected result")
+            }
+        }
     }
     fileprivate func checkConflictsOnAddLimit() {
         debugAction {
@@ -190,105 +207,105 @@ public extension SideAnchor {
 public extension SideAnchor where Anchor == LeftAnchor {
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, LeftAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: max)))
     }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, RightAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: max)))
     }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, CenterXAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: max)))
     }
     mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, LeftAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
     }
     mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, RightAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
     }
     mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, CenterXAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
     }
 }
 public extension SideAnchor where Anchor == RightAnchor {
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, LeftAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: min)))
     }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, RightAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: min)))
     }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, CenterXAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: min)))
     }
     mutating func nearerThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, LeftAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
     }
     mutating func nearerThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, RightAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
     }
     mutating func nearerThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, CenterXAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
     }
 }
 public extension SideAnchor where Anchor == TopAnchor {
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, TopAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: max)))
     }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, BottomAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: max)))
     }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, CenterYAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: max)))
     }
     mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, TopAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
     }
     mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, BottomAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
     }
     mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, CenterYAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
     }
 }
 public extension SideAnchor where Anchor == BottomAnchor {
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, TopAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: min)))
     }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, BottomAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: min)))
     }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, CenterYAnchor>) {
         checkConflictsOnAddLimit()
-        limitConstraints.append((a2.item, anchor.limit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: min)))
     }
     mutating func nearerThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, TopAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
     }
     mutating func nearerThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, BottomAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
     }
     mutating func nearerThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, CenterYAnchor>) {
         checkConflictsOnAddAlignLimit()
-        limitConstraints.append((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
     }
 }
 public extension DimensionAnchor {
@@ -383,12 +400,12 @@ public extension DimensionAnchor where Anchor: AxisLayoutEntity {
 public extension DimensionAnchor where Item: AdjustableLayoutElement, Anchor == WidthAnchor {
     mutating func equalIntrinsicSize(_ multiplier: CGFloat = 1) {
         checkConflictsOnAddContentConstraint()
-        contentConstraint = anchors.item.adjustLayoutConstraint(for: [.width(multiplier)])
+        contentConstraint = anchors.element.adjustLayoutConstraint(for: [.width(multiplier)])
     }
 }
 public extension DimensionAnchor where Item: AdjustableLayoutElement, Anchor == HeightAnchor {
     mutating func equalIntrinsicSize(_ multiplier: CGFloat = 1) {
         checkConflictsOnAddContentConstraint()
-        contentConstraint = anchors.item.adjustLayoutConstraint(for: [.height(multiplier)])
+        contentConstraint = anchors.element.adjustLayoutConstraint(for: [.height(multiplier)])
     }
 }
