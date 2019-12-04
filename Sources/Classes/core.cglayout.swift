@@ -301,22 +301,23 @@ extension AdjustableLayoutElement {
     /// Convenience getter for adjust constraint related to this element
     ///
     /// - Parameter anchors: Array of anchor constraints
+    /// - Parameter alignment: Aligns adjusted rect in space rect
     /// - Returns: Related adjust constraint element
-    public func adjustLayoutConstraint(for anchors: [Size]) -> AdjustLayoutConstraint {
-        return AdjustLayoutConstraint(element: self, constraints: anchors)
+    public func adjustLayoutConstraint(for anchors: [Size], alignment: Layout.Alignment = .equal) -> AdjustLayoutConstraint {
+        return AdjustLayoutConstraint(element: self, anchors: anchors, alignment: alignment)
     }
 
     #if DEBUG
-    public func adjustLayoutConstraint(for anchors: [Size],
+    public func adjustLayoutConstraint(for anchors: [Size], alignment: Layout.Alignment = .equal,
                                        debug: @escaping ((before: CGRect, after: CGRect), CGRect) -> Void) -> AdjustLayoutConstraint {
-        return AdjustLayoutConstraint(element: self, constraints: anchors.map({ (anchor) -> Size in
+        return AdjustLayoutConstraint(element: self, anchors: anchors.map({ (anchor) -> Size in
             return Size.build(AnyRectBasedConstraint({ s, r in
                 var source: (before: CGRect, after: CGRect) = (s, .zero)
                 anchor.formConstrain(sourceRect: &s, by: r)
                 source.after = s
                 debug(source, r)
             }))
-        }))
+        }), alignment: alignment)
     }
     #endif
 }
@@ -1046,7 +1047,9 @@ public struct Layout: RectBasedLayout, Extensible {
             horizontal.formLayout(rect: &rect, in: source)
         }
 
+        /// left-top alignment
         public static var equal: Alignment { return Alignment(horizontal: .equal, vertical: .equal) }
+        public static var center: Alignment { return Alignment(horizontal: .center(), vertical: .center()) }
 
         internal static func trailing(by axis: RectAxis, offset: CGFloat = 0) -> RectAxisLayout { return AxisTrailing(offset: offset, axis: axis) }
         struct AxisTrailing: RectAxisLayout {
@@ -1541,6 +1544,7 @@ public struct Layout: RectBasedLayout, Extensible {
 
 public extension Layout {
     /// Layout behavior, that makes passed rect equally to space rect
+    /// - Warning: Don't use this layout in combination with other, this can lead to unexpected behavior.
     static var equal: Layout { return Layout.build(Equal()) }
     private struct Equal: RectBasedLayout {
         func formLayout(rect: inout CGRect, in source: CGRect) {
@@ -1559,6 +1563,8 @@ public extension Layout {
 
     /// This layout do nothing.
     /// Use this if you create compound layout and you need begin with old frame
+    /// - Warning: Be careful if you use it in layout block.
+    /// Any parameters that won't overrided for this, will have no effect for constraints.
     static var nothing: Layout { return Layout.build(Nothing()) }
     private struct Nothing: RectBasedLayout {
         func formLayout(rect: inout CGRect, in source: CGRect) {}
@@ -1573,7 +1579,7 @@ public extension Layout {
     ///   - y: Vertical alignment behavior
     ///   - width: Width filling behavior
     ///   - height: Height filling behavior
-    init(x: Alignment.Horizontal, y: Alignment.Vertical, width: Filling.Horizontal, height: Filling.Vertical) {
+    init(x: Alignment.Horizontal = .equal, y: Alignment.Vertical = .equal, width: Filling.Horizontal = .equal, height: Filling.Vertical = .equal) {
         self.init(layouts: [
             width, height,
             x, y

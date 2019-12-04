@@ -94,13 +94,16 @@ public struct StackDistribution: RectBasedDistribution {
     var filling: Filling
     
     public func distribute(rects: [CGRect], in sourceRect: CGRect, along axis: RectAxis) -> [CGRect] {
+        guard rects.count > 0 else { return rects }
         let fill: CGFloat = {
             let count = CGFloat(rects.count)
-            switch self.filling {
-            case .equal(let val):
+            switch (self.filling, self.spacing) {
+            case (.equal(let val), _):
                 return val
-            case .equally:
-                return axis.get(sizeAt: sourceRect) / count 
+            case (.equally, .equal(let space)):
+                return (axis.get(sizeAt: sourceRect) - (count - 1) * space) / count
+            case (.equally, .equally):
+                return axis.get(sizeAt: sourceRect) / count
             }
         }()
 

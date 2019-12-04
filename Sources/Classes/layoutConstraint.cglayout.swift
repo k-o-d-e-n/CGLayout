@@ -115,12 +115,14 @@ extension LayoutConstraint: LayoutConstraintProtocol {
 
 /// Related constraint for adjust size of source space. Contains size constraints and layout element for calculate size.
 public struct AdjustLayoutConstraint {
-    let constraints: [Size]
+    let anchors: [Size]
+    let alignment: Layout.Alignment
     private(set) weak var item: AdjustableLayoutElement?
 
-    public init(element: AdjustableLayoutElement, constraints: [Size]) {
+    public init(element: AdjustableLayoutElement, anchors: [Size], alignment: Layout.Alignment) {
         self.item = element
-        self.constraints = constraints
+        self.anchors = anchors
+        self.alignment = alignment
     }
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
@@ -152,7 +154,9 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
     func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
         guard let item = item else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
 
-        sourceRect = sourceRect.constrainedBy(rect: item.contentConstraint.constrained(sourceRect: rect, by: rect), use: constraints)
+        let adjustedRect = item.contentConstraint.constrained(sourceRect: rect, by: rect)
+        sourceRect = sourceRect.constrainedBy(rect: adjustedRect, use: anchors)
+        alignment.formLayout(rect: &sourceRect, in: rect)
     }
 
     public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
