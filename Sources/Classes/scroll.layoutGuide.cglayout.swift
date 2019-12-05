@@ -142,6 +142,39 @@ struct ScrollAnimationDecelerationComponent {
     var returnFrom: CGFloat
     var bounced: Bool
     var bouncing: Bool
+
+    mutating func bounce(t: TimeInterval, to: CGFloat) -> Bool {
+        if bounced && returnTime != 0 {
+            let returnBounceTime: TimeInterval = min(1, ((t - returnTime) / returnAnimationDuration))
+            self.position = QuadraticEaseOut(t: CGFloat(returnBounceTime), start: returnFrom, end: to)
+            return returnBounceTime == 1
+        }
+        else if abs(to - position) > 0 {
+            let F: CGFloat = Spring(velocity: velocity, position: position, restPosition: to, tightness: springTightness, dampening: springDampening)
+            self.velocity += F * CGFloat(physicsTimeStep)
+            self.position += -velocity * CGFloat(physicsTimeStep)
+            self.bounced = true
+            if abs(velocity) < minimumBounceVelocityBeforeReturning {
+                self.returnFrom = position
+                self.returnTime = t
+            }
+            return false
+        }
+        else {
+            return true
+        }
+    }
+
+    mutating func animateBounce(_ offset: inout CGFloat, begin beginTime: TimeInterval, to targetOffset: CGFloat) {
+        let currentTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+        bouncing = true
+        decelerateTime = beginTime
+        while bouncing && currentTime >= decelerateTime {
+            bouncing = !bounce(t: decelerateTime, to: targetOffset)// BounceComponent(t: beginTime, c: &y, to: confinedOffset.y)
+            decelerateTime += physicsTimeStep
+            offset = position//min(max(-scrollGuide.bounds.height, y.position), scrollGuide.layoutBounds.maxY - scrollGuide.bounds.height)
+        }
+    }
 }
 
 private let minimumBounceVelocityBeforeReturning: CGFloat = 100
@@ -234,23 +267,27 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
     public init(scrollGuide sg: ScrollLayoutGuide<Item>, velocity v: CGPoint, bounces: Bool) {
         self.scrollGuide = sg
 
-        self.needBouncing = bounces
+        self.needBouncing = true//bounces
         self.startVelocity = v
         self.lastMomentumTime = beginTime
-        self.x = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
-                                                 position: scrollGuide.contentOffset.x,
-                                                 velocity: startVelocity.x,
-                                                 returnTime: 0,
-                                                 returnFrom: 0,
-                                                 bounced: false,
-                                                 bouncing: false)
-        self.y = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
-                                                 position: scrollGuide.contentOffset.y,
-                                                 velocity: startVelocity.y,
-                                                 returnTime: 0,
-                                                 returnFrom: 0,
-                                                 bounced: false,
-                                                 bouncing: false)
+        self.x = ScrollAnimationDecelerationComponent(
+            decelerateTime: beginTime,
+            position: scrollGuide.contentOffset.x,
+            velocity: startVelocity.x,
+            returnTime: 0,
+            returnFrom: 0,
+            bounced: false,
+            bouncing: false
+        )
+        self.y = ScrollAnimationDecelerationComponent(
+            decelerateTime: beginTime,
+            position: scrollGuide.contentOffset.y,
+            velocity: startVelocity.y,
+            returnTime: 0,
+            returnFrom: 0,
+            bounced: false,
+            bouncing: false
+        )
         if x.velocity == 0 {
             x.bounced = true
             x.returnTime = beginTime
@@ -268,9 +305,9 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
         y.bouncing = true
         while y.bouncing && currentTime >= beginTime {
             let confinedOffset = scrollGuide._confinedContentOffset(CGPoint(x: x.position, y: y.position))
-            y.bouncing = !BounceComponent(t: beginTime, c: &y, to: confinedOffset.y)
+            y.bouncing = !y.bounce(t: beginTime, to: confinedOffset.y)// BounceComponent(t: beginTime, c: &y, to: confinedOffset.y)
             beginTime += physicsTimeStep
-            scrollGuide.contentOffset.y = y.position//min(max(-scrollGuide.bounds.height, y.position), scrollGuide.layoutBounds.maxY - scrollGuide.bounds.height)
+            scrollGuide.contentOffset.y = min(max(-scrollGuide.bounds.height, y.position), scrollGuide.layoutBounds.maxY - scrollGuide.bounds.height)
         }
     }
 
@@ -279,7 +316,7 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
         x.bouncing = true
         while x.bouncing && currentTime >= beginTime {
             let confinedOffset = scrollGuide._confinedContentOffset(CGPoint(x: x.position, y: y.position))
-            x.bouncing = !BounceComponent(t: beginTime, c: &x, to: confinedOffset.x)
+            x.bouncing = !x.bounce(t: beginTime, to: confinedOffset.x)// BounceComponent(t: beginTime, c: &x, to: confinedOffset.x)
             beginTime += physicsTimeStep
             scrollGuide.contentOffset.x = min(max(-scrollGuide.bounds.width/2, x.position), scrollGuide.layoutBounds.maxX - scrollGuide.bounds.width/2)
         }
@@ -299,24 +336,24 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
 
         var offset = guide.contentOffset
         if needBouncing {
-            if !x.bouncing {
-                offset.x += -x.velocity * timeInterval
-            }
-            if !y.bouncing {
-                offset.y += -y.velocity * timeInterval
-            }
-
-            guide.contentOffset = offset
-            if (offset.x < 0 || offset.x > scrollGuide.contentSize.width - scrollGuide.frame.width) {
+            let confinedOffset = guide._confinedContentOffset(guide.contentOffset)
+            if (offset.x < 0 || offset.x > guide.contentSize.width - guide.frame.width) {
                 x.position = offset.x
-                animateX()
+                x.animateBounce(&guide.contentOffset.x, begin: beginTime, to: confinedOffset.x)// animateX()
                 stopIfNeeded()
+            } else if !x.bounced {
+                offset.x += -x.velocity * timeInterval
+                guide.contentOffset.x = offset.x
             }
-            if (offset.y < 0 || offset.y > scrollGuide.contentSize.height - scrollGuide.frame.height) {
+            if (offset.y < 0 || offset.y > guide.contentSize.height - guide.frame.height) {
                 y.position = offset.y
-                animateY()
+                y.animateBounce(&guide.contentOffset.y, begin: beginTime, to: confinedOffset.y)// animateY()
                 stopIfNeeded()
+            } else if !y.bounced {
+                offset.y += -y.velocity * timeInterval
+                guide.contentOffset.y = offset.y
             }
+            beginTime = y.decelerateTime
         } else {
             offset.x += -x.velocity * timeInterval
             offset.y += -y.velocity * timeInterval

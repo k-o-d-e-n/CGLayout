@@ -66,7 +66,8 @@ class ScrollLayoutViewController: UIViewController {
     @objc func panGesture(_ recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: recognizer.view)
         let velocity = recognizer.velocity(in: recognizer.view)
-        var targetPosition = CGPoint(x: start.x - translation.x, y: start.y - translation.y)
+        let friction = scrollLayoutGuide.translationFriction()
+        var targetPosition = CGPoint(x: start.x - translation.x * friction.x, y: start.y - translation.y * friction.y)
         var nextTargetPosition = targetPosition
 
         var animated = false
@@ -100,4 +101,17 @@ private func rubberBandDistance(_ offset: CGFloat, _ dimension: CGFloat) -> CGFl
     let result: CGFloat = (constant * abs(offset) * dimension) / (dimension + constant * abs(offset))
     // The algorithm expects a positive offset, so we have to negate the result if the offset was negative.
     return offset < 0.0 ? -result : result
+}
+
+extension ScrollLayoutGuide {
+    func translationFriction() -> CGPoint {
+        var friction = CGPoint(x: 1, y: 1)
+        if contentOffset.x < 0 {
+            friction.x -= (abs(contentOffset.x) / frame.width) * 2
+        }
+        if contentOffset.y < 0 {
+            friction.y -= (abs(contentOffset.y) / frame.height) * 2
+        }
+        return friction
+    }
 }
