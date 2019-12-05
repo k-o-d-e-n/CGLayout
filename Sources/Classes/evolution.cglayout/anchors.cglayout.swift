@@ -53,6 +53,7 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
     public lazy var centerY: SideAnchor<V, CenterYAnchor> = .init(anchors: self, anchor: .init(axis: .init()))
     public lazy var width: DimensionAnchor<V, WidthAnchor> = .init(anchors: self, anchor: .width)
     public lazy var height: DimensionAnchor<V, HeightAnchor> = .init(anchors: self, anchor: .height)
+    var _baseline: SideConstraintsContainer?
 
     internal func constraints(builder constraint: (LayoutElement, [RectBasedConstraint]) -> LayoutConstraintProtocol = { LayoutConstraint(element: $0, constraints: $1) }) -> [LayoutConstraintProtocol] {
         var layoutConstraints: [LayoutConstraintProtocol] = []
@@ -63,6 +64,7 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
         top.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         centerX.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         centerY.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _baseline?.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
 
         _ = left.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = right.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
@@ -70,6 +72,7 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
         _ = top.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = centerX.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = centerY.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _baseline?.limitConstraints.forEach { layoutConstraints.append(constraint($0.0, [$0.1])) }
 
         width.anonymConstraint.map { layoutConstraints.append(AnonymConstraint(anchors: [$0])) }
         height.anonymConstraint.map { layoutConstraints.append(AnonymConstraint(anchors: [$0])) }
@@ -84,6 +87,7 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
         top.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         centerX.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         centerY.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _baseline?.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
 
         _ = left.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = right.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
@@ -91,12 +95,33 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
         _ = top.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = centerX.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = centerY.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _baseline?.alignLimitConstraints.forEach { layoutConstraints.append(constraint($0.0, [$0.1])) }
 
         return layoutConstraints
     }
 }
+public extension LayoutAnchors where V: TextPresentedElement, V.BaselineElement: AnchoredLayoutElement {
+    var baseline: SideAnchor<V.BaselineElement, TopAnchor> {
+        set { _baseline = newValue }
+        get {
+            guard case let baseline as SideAnchor<V.BaselineElement, TopAnchor> = _baseline else {
+                let baselineAnchor = element.baselineElement.layoutAnchors.top
+                _baseline = baselineAnchor
+                return baselineAnchor
+            }
+            return baseline
+        }
+    }
+}
 
-public struct SideAnchor<Item: AnchoredLayoutElement, Anchor: RectAnchorPoint> {
+protocol SideConstraintsContainer {
+    var pullConstraint: (LayoutElement, AnyRectBasedConstraint)? { get }
+    var limitConstraints: [(LayoutElement, AnyRectBasedConstraint)] { get }
+    var alignConstraint: (LayoutElement, AnyRectBasedConstraint)? { get }
+    var alignLimitConstraints: [(LayoutElement, AnyRectBasedConstraint)] { get }
+}
+
+public struct SideAnchor<Item: AnchoredLayoutElement, Anchor: RectAnchorPoint>: SideConstraintsContainer {
     unowned let anchors: LayoutAnchors<Item>
     unowned let item: Item
     let anchor: Anchor
@@ -398,14 +423,14 @@ public extension DimensionAnchor where Anchor: AxisLayoutEntity {
     }
 }
 public extension DimensionAnchor where Item: AdjustableLayoutElement, Anchor == WidthAnchor {
-    mutating func equalIntrinsicSize(_ multiplier: CGFloat = 1) {
+    mutating func equalIntrinsicSize(_ multiplier: CGFloat = 1, alignment: Layout.Alignment = .equal) {
         checkConflictsOnAddContentConstraint()
-        contentConstraint = anchors.element.adjustLayoutConstraint(for: [.width(multiplier)])
+        contentConstraint = anchors.element.adjustLayoutConstraint(for: [.width(multiplier)], alignment: alignment)
     }
 }
 public extension DimensionAnchor where Item: AdjustableLayoutElement, Anchor == HeightAnchor {
-    mutating func equalIntrinsicSize(_ multiplier: CGFloat = 1) {
+    mutating func equalIntrinsicSize(_ multiplier: CGFloat = 1, alignment: Layout.Alignment = .equal) {
         checkConflictsOnAddContentConstraint()
-        contentConstraint = anchors.element.adjustLayoutConstraint(for: [.height(multiplier)])
+        contentConstraint = anchors.element.adjustLayoutConstraint(for: [.height(multiplier)], alignment: alignment)
     }
 }

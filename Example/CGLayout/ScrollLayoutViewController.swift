@@ -82,7 +82,7 @@ class ScrollLayoutViewController: UIViewController {
         }
 
         if animated {
-            let animation = ScrollAnimationDeceleration(scrollGuide: scrollLayoutGuide, velocity: velocity)
+            let animation = ScrollAnimationDeceleration(scrollGuide: scrollLayoutGuide, velocity: velocity, bounces: false)
             if #available(iOS 10.0, *) {
                 timer = Timer(timeInterval: 1/60, repeats: true, block: animation.step)
                 RunLoop.current.add(timer!, forMode: .default)

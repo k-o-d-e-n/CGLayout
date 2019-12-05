@@ -68,7 +68,7 @@ class ProfileViewController: UIViewController {
         ])
 
         let avatarView = buildView(UIImageView.self, bg: .gray)
-        let avatar = avatarView.layoutBlock(with: Layout.equal.with(y: .top(20))) { (anchors) in
+        let avatar = avatarView.layoutBlock(with: Layout(y: .top(20))) { (anchors) in
             anchors.height.equal(to: 100)
             anchors.width.equal(to: 100)
             anchors.top.align(by: headerView.layoutAnchors.bottom)
@@ -78,7 +78,7 @@ class ProfileViewController: UIViewController {
         let nameLabel = buildView(UILabel.self, bg: .gray)
         nameLabel.font = UIFont.boldSystemFont(ofSize: 30)
         nameLabel.text = "РЕШЕТЕЕВ НИКИТА"
-        let name = nameLabel.layoutBlock(with: Layout.equal.with(y: .top(10))) { (anchors) in
+        let name = nameLabel.layoutBlock(with: Layout(y: .top(10))) { (anchors) in
             anchors.top.align(by: avatarView.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
@@ -88,7 +88,7 @@ class ProfileViewController: UIViewController {
         let socialLabelPrefix = buildView(UILabel.self, bg: .lightGray)
         socialLabelPrefix.font = UIFont.monospacedDigitSystemFont(ofSize: 20, weight: .bold)
         socialLabelPrefix.text = "@"
-        let socialPrefix = socialLabelPrefix.layoutBlock(with: Layout.equal.with(y: .top(8))) { (anchors) in
+        let socialPrefix = socialLabelPrefix.layoutBlock(with: Layout(y: .top(8))) { (anchors) in
             anchors.top.align(by: nameLabel.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
@@ -99,21 +99,32 @@ class ProfileViewController: UIViewController {
         socialLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 16, weight: .light)
         socialLabel.text = "Nikita_resh"
         // TODO: Baseline is unavailable in anchors
-        let socialSize = socialLabel.layoutBlock(constraints: { (anchors) in
+        /*
+        let social = socialLabel.layoutBlock(constraints: { (anchors) in
+            anchors.left.align(by: socialLabelPrefix.layoutAnchors.right)
+//            anchors.baseline.align(by: socialLabelPrefix.layoutAnchors.baseline) // baseline does not working because block deals with label frame. need two blocks
             anchors.width.equalIntrinsicSize()
             anchors.height.equalIntrinsicSize()
         })
         let socialPosition = socialLabel.baselineElement.layoutBlock(constraints: { (anchors) in
             anchors.top.align(by: socialLabelPrefix.baselineElement.layoutAnchors.bottom)
-            anchors.left.align(by: socialLabelPrefix.layoutAnchors.right)
+//            anchors.left.align(by: socialLabelPrefix.layoutAnchors.right)
         })
+         */
+        let social = socialLabel.layoutBlock(constraints: [
+            socialLabelPrefix.layoutConstraint(for: [.right(.limit(on: .outer))]),
+            socialLabel.adjustLayoutConstraint(for: [.width(), .height()]),
+        ])
+        let socialPosition = socialLabel.baselineElement.layoutBlock(with: Layout.nothing.with(y: .bottom()), constraints: [
+            socialLabelPrefix.baselineLayoutConstraint(for: [.bottom(.align(by: .inner))])
+        ])
 
         let buttonsGroupGuide = StackLayoutGuide<UIView>() // cannot calcute size based on elements
         buttonsGroupGuide.scheme.direction = .fromCenter
         buttonsGroupGuide.scheme.spacing = .equal(10)
         buttonsGroupGuide.scheme.filling = .equal(130)
         addLayoutGuide(buttonsGroupGuide)
-        let btnsGroup = buttonsGroupGuide.layoutBlock(with: Layout.equal.with(y: .top(20))) { (anchors) in
+        let btnsGroup = buttonsGroupGuide.layoutBlock(with: Layout(y: .top(20))) { (anchors) in
             anchors.top.align(by: socialLabelPrefix.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
@@ -133,7 +144,7 @@ class ProfileViewController: UIViewController {
         socialGroupGuide.scheme.spacing = .equal(10)
         socialGroupGuide.scheme.filling = .equal(40)
         addLayoutGuide(socialGroupGuide)
-        let socialGroup = socialGroupGuide.layoutBlock(with: Layout.equal.with(y: .top(15))) { (anchors) in
+        let socialGroup = socialGroupGuide.layoutBlock(with: Layout(y: .top(15))) { (anchors) in
             anchors.top.align(by: buttonsGroupGuide.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
@@ -149,7 +160,7 @@ class ProfileViewController: UIViewController {
         let title1Label = buildView(UILabel.self, bg: .gray)
         title1Label.font = UIFont.preferredFont(forTextStyle: .title3)
         title1Label.text = "Обо мне"
-        let title1 = title1Label.layoutBlock(with: Layout.equal.with(y: .top(20))) { (anchors) in
+        let title1 = title1Label.layoutBlock(with: Layout(y: .top(20))) { (anchors) in
             anchors.top.align(by: socialGroupGuide.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             anchors.width.equalIntrinsicSize()
@@ -160,7 +171,7 @@ class ProfileViewController: UIViewController {
         bodyLabel.numberOfLines = 0
         bodyLabel.font = UIFont.preferredFont(forTextStyle: .body)
         bodyLabel.text = "Бенефисы Самошникова на «Открытие Арене» и Алиева на «Арене Химки», четыре гола в меньшинстве «Текстильщика», Харитонов в роли Дзюбы, Черышев — в западне. 17 тур в ФНЛ получился ярким!"
-        let body = bodyLabel.layoutBlock(with: Layout.equal.with(y: .top(15))) { (anchors) in
+        let body = bodyLabel.layoutBlock(with: Layout(y: .top(15))) { (anchors) in
             anchors.top.align(by: title1Label.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             if #available(iOS 11.0, tvOS 11.0, *) {
@@ -173,7 +184,7 @@ class ProfileViewController: UIViewController {
         }
 
         scheme = LayoutScheme(blocks: [
-            header, avatar, name, socialPrefix, socialSize, socialPosition, btnsGroup, socialGroup, title1, body
+            header, avatar, name, socialPrefix, social, socialPosition, btnsGroup, socialGroup, title1, body
         ])
     }
 

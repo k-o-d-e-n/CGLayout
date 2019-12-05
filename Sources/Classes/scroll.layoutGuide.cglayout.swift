@@ -226,20 +226,25 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
     private var lastMomentumTime: TimeInterval
     private(set) weak var scrollGuide: ScrollLayoutGuide<Item>!
     var beginTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+    let needBouncing: Bool
 
-    public init(scrollGuide sg: ScrollLayoutGuide<Item>, velocity v: CGPoint) {
+    let timeInterval: CGFloat = 1/60
+    let startVelocity: CGPoint
+
+    public init(scrollGuide sg: ScrollLayoutGuide<Item>, velocity v: CGPoint, bounces: Bool) {
         self.scrollGuide = sg
 
-        startVelocity = v
-        lastMomentumTime = beginTime
-        x = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
+        self.needBouncing = bounces
+        self.startVelocity = v
+        self.lastMomentumTime = beginTime
+        self.x = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
                                                  position: scrollGuide.contentOffset.x,
                                                  velocity: startVelocity.x,
                                                  returnTime: 0,
                                                  returnFrom: 0,
                                                  bounced: false,
                                                  bouncing: false)
-        y = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
+        self.y = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
                                                  position: scrollGuide.contentOffset.y,
                                                  velocity: startVelocity.y,
                                                  returnTime: 0,
@@ -279,10 +284,6 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
             scrollGuide.contentOffset.x = min(max(-scrollGuide.bounds.width/2, x.position), scrollGuide.layoutBounds.maxX - scrollGuide.bounds.width/2)
         }
     }
-
-    let timeInterval: CGFloat = 1/60
-    let startVelocity: CGPoint
-    var needBouncing = true
 
     public func step(_ timer: Timer) {
         func stopIfNeeded() {

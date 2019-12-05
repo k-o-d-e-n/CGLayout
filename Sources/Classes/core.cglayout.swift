@@ -18,9 +18,6 @@ public protocol Extensible {
     static func build(_ base: Conformed) -> Self
 }
 
-@available(*, deprecated, renamed: "Extensible")
-typealias Extended = Extensible
-
 // MARK: RectBasedLayout
 
 public protocol RectBasedLayout {
