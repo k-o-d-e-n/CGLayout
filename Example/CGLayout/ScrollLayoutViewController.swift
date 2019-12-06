@@ -79,8 +79,7 @@ class ScrollLayoutViewController: UIViewController {
         let translation = recognizer.translation(in: recognizer.view)
         let velocity = recognizer.velocity(in: recognizer.view)
         let friction = scrollLayoutGuide.translationFriction()
-        var targetPosition = CGPoint(x: start.x - translation.x * friction.x, y: start.y - translation.y * friction.y)
-//        var nextTargetPosition = targetPosition
+        var targetPosition = scrollLayoutGuide.contentOffset
 
         var animated = false
         switch recognizer.state {
@@ -89,6 +88,20 @@ class ScrollLayoutViewController: UIViewController {
             timer = nil
             start = scrollLayoutGuide.contentOffset
             targetPosition = start
+        case .changed:
+            let newBoundsOriginX: CGFloat = start.x - translation.x
+            let minBoundsOriginX: CGFloat = 0.0
+            let maxBoundsOriginX: CGFloat = scrollLayoutGuide.contentSize.width - scrollLayoutGuide.bounds.size.width
+            let constrainedBoundsOriginX: CGFloat = max(minBoundsOriginX, min(newBoundsOriginX, maxBoundsOriginX))
+            let rubberBandedX: CGFloat = rubberBandDistance(newBoundsOriginX - constrainedBoundsOriginX, scrollLayoutGuide.bounds.width)
+            targetPosition.x = constrainedBoundsOriginX + rubberBandedX
+            let newBoundsOriginY: CGFloat = start.y - translation.y
+            let minBoundsOriginY: CGFloat = 0.0
+            let maxBoundsOriginY: CGFloat = scrollLayoutGuide.contentSize.height - scrollLayoutGuide.bounds.size.height
+            let constrainedBoundsOriginY: CGFloat = max(minBoundsOriginY, min(newBoundsOriginY, maxBoundsOriginY))
+            let rubberBandedY: CGFloat = rubberBandDistance(newBoundsOriginY - constrainedBoundsOriginY, scrollLayoutGuide.bounds.height)
+            targetPosition.y = constrainedBoundsOriginY + rubberBandedY
+//            targetPosition = CGPoint(x: start.x - translation.x * friction.x, y: start.y - translation.y * friction.y)
         case .ended:
             animated = true
         default: break
