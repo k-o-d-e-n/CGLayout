@@ -2,29 +2,20 @@
 # * http://www.objc.io/issue-6/travis-ci.html
 # * https://github.com/supermarin/xcpretty#usage
 
-os: 
- - linux
+os:
+# - linux
  - macos
 
 ## macos
-osx_image: xcode9.3
-# language: objective-c
+osx_image: xcode11.1
+language: swift
 
 ## linux
-language: generic
-sudo: required
-dist: trusty
-
-# cache: cocoapods
-# podfile: Example/Podfile
-# before_install:
-# - gem install cocoapods # Since Travis is not always on latest version
-# - pod repo update
-# - pod install --project-directory=Example
+# language: generic
+# sudo: required
+# dist: trusty
 
 install:
   - eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
 script:
   - swift test
-# - set -o pipefail && xcodebuild test -enableCodeCoverage YES -workspace Example/CGLayout.xcworkspace -scheme CGLayout-Example -sdk iphonesimulator11.3 -destination 'platform=iOS Simulator,name=iPhone 7 Plus' ONLY_ACTIVE_ARCH=NO | xcpretty
-# - pod lib lint
