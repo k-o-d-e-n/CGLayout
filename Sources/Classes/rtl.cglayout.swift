@@ -8,11 +8,11 @@
 import Foundation
 
 public struct Configuration {
-    let isRTLMode: Bool = false
+    public var isRTLMode: Bool = false
 
-    static private(set) var `default` = Configuration()
+    public static var `default` = Configuration()
 
-    static func setDefault(configuration: Configuration) {
-        Configuration.default = configuration
-    }
+//    public static func setDefault(configuration: Configuration) {
+//        Configuration.default = configuration
+//    }
 }
