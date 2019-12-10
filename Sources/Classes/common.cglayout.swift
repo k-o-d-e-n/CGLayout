@@ -29,7 +29,7 @@ internal func debugLog(_ message: String, _ file: String = #file, _ line: Int = 
 }
 
 internal func debugWarning(_ message: @autoclosure () -> String) {
-    debugWarning(true, message)
+    debugWarning(true, message())
 }
 
 internal func debugWarning(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String) {

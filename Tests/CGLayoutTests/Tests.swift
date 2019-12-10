@@ -1001,7 +1001,8 @@ extension Tests {
         }
         let count = 2
         let pointer = UnsafeMutablePointer<CGRect>.allocate(capacity: count)
-        pointer.initialize(from: [.zero, .zero])
+        let rects: [CGRect] = [.zero, .zero]
+        pointer.initialize(from: rects, count: count)
         self.measure {
             distribute(rectsBy: pointer, count: count, in: CGRect(x: 0, y: 0, width: 200, height: 200))
         }

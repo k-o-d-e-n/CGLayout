@@ -76,7 +76,7 @@ extension UILabel: TextPresentedElement, AdjustableLayoutElement {
         func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
             // TODO: numberOfLines
             if let txt = syncGuard(mainThread: label.text) {
-                #if os(iOS)
+                #if os(iOS) && !os(tvOS)
                 let font = syncGuard(mainThread: label.font) ?? UIFont.systemFont(ofSize: UIFont.systemFontSize)
                 #else
                 let font = syncGuard(mainThread: label.font) ?? UIFont.systemFont(ofSize: 14)
@@ -194,6 +194,7 @@ extension NSControl: AdaptiveLayoutElement, AdjustableLayoutElement {
     /// Constraint, that defines content size for item
     public var contentConstraint: RectBasedConstraint { return _MainThreadSizeThatFitsConstraint(item: self) }
 }
+extension NSView: AnchoredLayoutElement {}
 #endif
 
 #if os(iOS) || os(tvOS)
