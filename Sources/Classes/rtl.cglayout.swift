@@ -7,12 +7,8 @@
 
 import Foundation
 
-public struct Configuration {
+public struct CGLConfiguration {
     public var isRTLMode: Bool = false
 
-    public static var `default` = Configuration()
-
-//    public static func setDefault(configuration: Configuration) {
-//        Configuration.default = configuration
-//    }
+    public static var `default` = CGLConfiguration()
 }

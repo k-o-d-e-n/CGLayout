@@ -30,7 +30,7 @@
 		A43D53971F6FDEE300A92425 /* SecondViewControllerAutolayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43D53961F6FDEE300A92425 /* SecondViewControllerAutolayout.swift */; };
 		A44646BC1F74132A009601DA /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44646BB1F74132A009601DA /* TableViewController.swift */; };
 		A4579C351F59E86800893AB2 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4579C341F59E86800893AB2 /* SecondViewController.swift */; };
-		A4879D0D1F93A4B400BCBF0E /* ScrollLayoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4879D0C1F93A4B400BCBF0E /* ScrollLayoutViewController.swift */; };
+		A4879D0D1F93A4B400BCBF0E /* ScrollLayoutGuideController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4879D0C1F93A4B400BCBF0E /* ScrollLayoutGuideController.swift */; };
 		A48D9D6F22898EED0000AC02 /* support_linux.tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B96E6B20D6D9CF003C7803 /* support_linux.tests.swift */; };
 		A4B96E6E20D6D9CF003C7803 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B96E6C20D6D9CF003C7803 /* Tests.swift */; };
 		A4DECF99206FFA76006933C4 /* CGLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DECF97206FFA76006933C4 /* CGLayoutTests.swift */; };
@@ -96,7 +96,7 @@
 		A43D53961F6FDEE300A92425 /* SecondViewControllerAutolayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewControllerAutolayout.swift; sourceTree = "<group>"; };
 		A44646BB1F74132A009601DA /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		A4579C341F59E86800893AB2 /* SecondViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
-		A4879D0C1F93A4B400BCBF0E /* ScrollLayoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollLayoutViewController.swift; sourceTree = "<group>"; };
+		A4879D0C1F93A4B400BCBF0E /* ScrollLayoutGuideController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollLayoutGuideController.swift; sourceTree = "<group>"; };
 		A49326FF23A013EE00AE6647 /* CGLayout_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CGLayout_Example.entitlements; sourceTree = "<group>"; };
 		A4B96E6B20D6D9CF003C7803 /* support_linux.tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = support_linux.tests.swift; path = ../../Tests/CGLayoutTests/support_linux.tests.swift; sourceTree = "<group>"; };
 		A4B96E6C20D6D9CF003C7803 /* Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Tests.swift; path = ../../Tests/CGLayoutTests/Tests.swift; sourceTree = "<group>"; };
@@ -224,7 +224,7 @@
 				A4579C341F59E86800893AB2 /* SecondViewController.swift */,
 				A43D53961F6FDEE300A92425 /* SecondViewControllerAutolayout.swift */,
 				A44646BB1F74132A009601DA /* TableViewController.swift */,
-				A4879D0C1F93A4B400BCBF0E /* ScrollLayoutViewController.swift */,
+				A4879D0C1F93A4B400BCBF0E /* ScrollLayoutGuideController.swift */,
 				A42E170D20B2FE1100E1985C /* LayoutViewController.swift */,
 				A4F295932352407600E46788 /* ProfileViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -683,7 +683,7 @@
 				A4579C351F59E86800893AB2 /* SecondViewController.swift in Sources */,
 				A43D53971F6FDEE300A92425 /* SecondViewControllerAutolayout.swift in Sources */,
 				A42E170E20B2FE1100E1985C /* LayoutViewController.swift in Sources */,
-				A4879D0D1F93A4B400BCBF0E /* ScrollLayoutViewController.swift in Sources */,
+				A4879D0D1F93A4B400BCBF0E /* ScrollLayoutGuideController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				A44646BC1F74132A009601DA /* TableViewController.swift in Sources */,
 				A4F295942352407600E46788 /* ProfileViewController.swift in Sources */,

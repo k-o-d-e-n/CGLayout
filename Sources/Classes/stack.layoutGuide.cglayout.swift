@@ -125,14 +125,15 @@ public struct StackDistribution: RectBasedDistribution {
         }()
 
         let alignedRects = filledRects.map { alignment.layout(rect: $0, in: sourceRect) }
-        switch direction {
-        case .fromLeading:
-            return distributeFromLeading(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
-        case .fromTrailing:
-            return distributeFromTrailing(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
-        case .fromCenter:
+        guard direction != .fromCenter else {
             let leftDistributedRects = distributeFromLeading(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
             return alignByCenter(rects: leftDistributedRects, in: sourceRect, along: axis)
+        }
+        let rtl = CGLConfiguration.default.isRTLMode && axis.isHorizontal
+        if (direction == .fromLeading && !rtl) || (direction == .fromTrailing && rtl) {
+            return distributeFromLeading(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
+        } else {
+            return distributeFromTrailing(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
         }
     }
 }

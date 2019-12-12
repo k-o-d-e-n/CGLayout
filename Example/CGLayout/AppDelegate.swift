@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         let isRTL = true
-        Configuration.default.isRTLMode = isRTL
+        CGLConfiguration.default.isRTLMode = isRTL
         UIView.appearance().semanticContentAttribute = isRTL ? .forceRightToLeft : .forceLeftToRight
         return true
     }
