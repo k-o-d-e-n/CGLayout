@@ -1,6 +1,5 @@
 # CGLayout
 
-[![CI Status](http://img.shields.io/travis/k-o-d-e-n/CGLayout.svg?style=flat)](https://travis-ci.org/k-o-d-e-n/CGLayout)
 [![Version](https://img.shields.io/cocoapods/v/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
 [![License](https://img.shields.io/cocoapods/l/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
 [![Platform](https://img.shields.io/cocoapods/p/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
@@ -9,7 +8,7 @@
     <img src="Resources/logo.png">
 </p>
 
-Powerful autolayout framework, that can manage UIView(NSView), CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. 
+Powerful autolayout framework, that can manage UIView(NSView), CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints.   
 Fast, asynchronous, declarative, cacheable, extensible. Supported iOS, macOS, tvOS, Linux.
 
 <p align="center">
@@ -61,22 +60,22 @@ LayoutBlock(
 <img src="Resources/layout1.png">
 <img src="Resources/layout2.png">
 </p>
-You have to carefully approach the creation of blocks, because anchors and based on them constraints not have priority and is applying sequentially.
+You have to carefully approach the creation of blocks, because anchors and based on them constraints not have priority and is applying sequentially.  
 Constraints should operate actual frames, therefore next layout block must have constraints with "views", that will not change frame.
 
-Layout anchors are limiters, that is oriented on frame properties (such as sides, size, position).
-Any side-based anchors have three base implementations: alignment, limitation(cropping), pulling. Each this implementation have dependency on working space: inner and outer.
-Size-based anchors are represented by two implementations: size, insets.
+Layout anchors are limiters, that is oriented on frame properties (such as sides, size, position).  
+Any side-based anchors have three base implementations: alignment, limitation(cropping), pulling. Each this implementation have dependency on working space: inner and outer.  
+Size-based anchors are represented by two implementations: size, insets.  
 All layout anchors you can find in `enum LayoutAnchor`.
 
-To create associated layout constraints use `protocol LayoutConstraintProtocol`.
+To create associated layout constraints use `protocol LayoutConstraintProtocol`.  
 Framework provides such default implementations:
 - `LayoutConstraint`: simple associated constraint that uses `var frame` of passed element to constrain source rect. Use him to build dependency on external workspace.
 - `AdjustLayoutConstraint`: associated constraint to adjust size of source space. Only elements conform to `protocol AdjustableLayoutElement`  can use it.
 - `ContentLayoutConstraint`: associated constraint that uses internal bounds to constrain, defined in 'layoutBounds' property of `protocol LayoutElement`. Use it if you need to create dependency on internal workspace. For example, element inside `UIScrollView`.
 - `BaselineLayoutConstraint`: associated constraint that depended on base line. Only elements conform to `protocol TextPresentedElement` can use it.
 - `AnonymConstraint`: constraint to restrict source space independently from external environment.
-- `MutableLayoutConstraint`: Layout constraint that creates possibility to change active state
+- `MutableLayoutConstraint`: Layout constraint that creates possibility to change active state.  
 You can find all this constraints through convenience functions in related elements. Use him to build layout blocks.
 
 In common case, adjust constraints should be apply after any other constraints (but not always). 
@@ -135,13 +134,13 @@ func sizeThatFits(_ size: CGSize) -> CGSize {
 
 ### LayoutGuide
 
-Framework provides `LayoutGuide` as analogue `UILayoutGuide`. It has possible to generate views and add them to hierarchy.
-`LayoutGuide` can use as invisible limiter and also as layout container.
-Default layout containers:
-`StackLayoutGuide` - simple implementation of stack.
-`ScrollLayoutGuide` - has similar interface with `UIScrollView`. By use him we can enable scrolling absolutely everywhere.
-`LayoutPlaceholder` - single element container that can load view lazily. Has default implementations for `CALayer` - `LayerPlaceholder` and `UIView` - `ViewPlaceholder`.
-`UIViewPlaceholder` - single element container based on `UILayoutGuide`.
+Framework provides `LayoutGuide` as analogue `UILayoutGuide`. It has possible to generate views and add them to hierarchy.  
+`LayoutGuide` can used as invisible limiter and also as layout container.  
+Default layout containers:  
+- `StackLayoutGuide` - simple implementation of stack.  
+- `ScrollLayoutGuide` - has similar interface with `UIScrollView`. By use him we can enable scrolling absolutely everywhere.  
+- `LayoutPlaceholder` - single element container that can load view lazily. Has default implementations for `CALayer` - `LayerPlaceholder` and `UIView` - `ViewPlaceholder`.  
+- `UIViewPlaceholder` - single element container based on `UILayoutGuide`.  
 
 `UILayouGuide` also adopts `LayoutElement` protocol. Therefore you can safely build constraints based on `UIView.safeAreaLayoutGuide` and others.
 
