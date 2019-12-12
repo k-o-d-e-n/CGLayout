@@ -38,7 +38,7 @@ internal struct ConstraintsAggregator: RectBasedConstraint {
 /// Represents frame of block where was received. Contains snapshots for child blocks.
 internal struct LayoutSnapshot: LayoutSnapshotProtocol {
     let childSnapshots: [LayoutSnapshotProtocol]
-    let snapshotFrame: CGRect
+    let frame: CGRect
 }
 
 internal struct _SizeThatFitsConstraint: RectBasedConstraint {

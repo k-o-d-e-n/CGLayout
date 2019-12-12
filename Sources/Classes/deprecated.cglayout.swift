@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+extension LayoutSnapshotProtocol {
+    @available(*, deprecated, renamed: "frame")
+    public var snapshotFrame: CGRect { return frame }
+}

@@ -787,11 +787,11 @@ extension Tests {
 
         let snapshot = scheme.snapshot(for: bounds)
 
-        XCTAssertFalse(snapshot.childSnapshots.map { $0.snapshotFrame } == subviews.map { $0.frame })
+        XCTAssertFalse(snapshot.childSnapshots.map { $0.frame } == subviews.map { $0.frame })
 
         scheme.layout()
 
-        XCTAssertTrue(snapshot.childSnapshots.map { $0.snapshotFrame } == subviews.map { $0.frame })
+        XCTAssertTrue(snapshot.childSnapshots.map { $0.frame } == subviews.map { $0.frame })
     }
 
     func testApplyingSnapshotEqualLayoutDirectly() {
@@ -839,7 +839,7 @@ extension Tests {
 
         let snapshot = scheme.currentSnapshot
 
-        XCTAssertTrue(snapshot.childSnapshots.map { $0.snapshotFrame } == subviews.map { $0.frame })
+        XCTAssertTrue(snapshot.childSnapshots.map { $0.frame } == subviews.map { $0.frame })
     }
 }
 
@@ -1040,7 +1040,7 @@ extension Tests {
 
         stack.layout(in: bounds)
 
-        XCTAssertTrue(Int(stack.currentSnapshot.snapshotFrame.width) == views.count * 20)
+        XCTAssertTrue(Int(stack.currentSnapshot.frame.width) == views.count * 20)
     }
     #if os(iOS)
     func testStackLayoutGuideSizeThatFits() {

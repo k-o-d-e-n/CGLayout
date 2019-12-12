@@ -9,7 +9,8 @@
     <img src="Resources/logo.png">
 </p>
 
-Powerful autolayout framework, that can manage UIView(NSView), CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. Fast, asynchronous, declarative, cacheable, extensible. Supported iOS, macOS, tvOS, Linux.
+Powerful autolayout framework, that can manage UIView(NSView), CALayer and not rendered views. Has cross-hierarchy coordinate space. Implementation performed on rect-based constraints. 
+Fast, asynchronous, declarative, cacheable, extensible. Supported iOS, macOS, tvOS, Linux.
 
 <p align="center">
     <img src="Resources/benchmark_result.png">
@@ -78,7 +79,7 @@ Framework provides such default implementations:
 - `MutableLayoutConstraint`: Layout constraint that creates possibility to change active state
 You can find all this constraints through convenience functions in related elements. Use him to build layout blocks.
 
-In common case, adjust constraints should be apply after any other constraints (but not always).
+In common case, adjust constraints should be apply after any other constraints (but not always). 
 ```swift
 weatherLabel.layoutBlock(
     with: Layout(x: .left(10), y: .top(), width: .scaled(1), height: .scaled(1)),
@@ -94,6 +95,8 @@ AnonymConstraint(anchors: [
     Inset(UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 15))
 ])
 ```
+
+For implementing custom layout entities and save strong typed code, use `static func build(_ base: Conformed) -> Self` method.
 
 Each layout-block has methods for layout, take snapshot and applying snapshot.
 Consequently you may use layout-blocks for direct layout, background layout and cached layout:
@@ -120,19 +123,35 @@ if UIDevice.current.orientation.isPortrait, let snapshot = portraitSnapshot {
 }
 ```
 
-For implementing custom layout entities and save strong typed code, use `static func build(_ base: Conformed) -> Self` method.
+### Typical implementation `sizeThatFits(_:)` method
 
-Framework provides `LayoutGuide` as analogue UILayoutGuide. It has possible to generate views and add them to hierarchy.
-To create layout element placeholders use `LayoutPlaceholder` class or him element specific subclasses (`LayerPlaceholder`, `ViewPlaceholder`).
-Also you can use placeholder based on `UILayoutGuide`: `UIViewPlaceholder`, to apply in Autolayout environment.
+```swift
+func sizeThatFits(_ size: CGSize) -> CGSize {
+    let sourceRect = CGRect(origin: .zero, size: size)
+    let snapshot = scheme.snapshot(for: sourceRect)
+    return snapshot.frame
+}
+```
 
-All examples of code you can see in `Example` folder.
+### LayoutGuide
+
+Framework provides `LayoutGuide` as analogue `UILayoutGuide`. It has possible to generate views and add them to hierarchy.
+`LayoutGuide` can use as invisible limiter and also as layout container.
+Default layout containers:
+`StackLayoutGuide` - simple implementation of stack.
+`ScrollLayoutGuide` - has similar interface with `UIScrollView`. By use him we can enable scrolling absolutely everywhere.
+`LayoutPlaceholder` - single element container that can load view lazily. Has default implementations for `CALayer` - `LayerPlaceholder` and `UIView` - `ViewPlaceholder`.
+`UIViewPlaceholder` - single element container based on `UILayoutGuide`.
+
+`UILayouGuide` also adopts `LayoutElement` protocol. Therefore you can safely build constraints based on `UIView.safeAreaLayoutGuide` and others.
+
+### RTL
+To enable Righ-to-Left mode use global configuration:
+```swift
+Configuration.default.isRTLMode = true
+```
 
 For more details, see documentation and example project.
-
-## Contributing
-
-I will be happy your feedback, advices and pull requests. For more information read [here](https://github.com/k-o-d-e-n/CGLayout/blob/master/CONTRIBUTING.md) 
 
 ## Code documentation
 
@@ -140,11 +159,15 @@ See [here](https://k-o-d-e-n.github.io/CGLayout/)
 
 ## Example
 
+### macOS, iOS, tvOS
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
+
+### Linux
+To run the example project, clone the repo, and run `swift run` from the `linux_example` directory first.
 
 ## Requirements
 
-Xcode 8.3+
+Swift 5
 
 ## Installation
 
@@ -155,9 +178,15 @@ it, simply add the following line to your Podfile:
 pod "CGLayout"
 ```
 
+## Contributing
+
+I will be happy your feedback, advices and pull requests. For more information read [here](https://github.com/k-o-d-e-n/CGLayout/blob/master/CONTRIBUTING.md) 
+
 ## Author
 
-k-o-d-e-n, koden.u8800@gmail.com
+Denis Koryttsev
+Email: koden.u8800@gmail.com
+Twitter: https://twitter.com/K_o_D_e_N
 
 ## License
 
