@@ -148,7 +148,7 @@ Default layout containers:
 ### RTL
 To enable Righ-to-Left mode use global configuration:
 ```swift
-Configuration.default.isRTLMode = true
+CGLConfiguration.default.isRTLMode = true
 ```
 
 For more details, see documentation and example project.
