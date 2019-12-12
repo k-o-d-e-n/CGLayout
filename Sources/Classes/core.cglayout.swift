@@ -175,6 +175,11 @@ public struct AnyRectBasedConstraint: RectBasedConstraint {
         action(&sourceRect, rect)
     }
 }
+extension AnyRectBasedConstraint: Extensible {
+    public static func build(_ base: RectBasedConstraint) -> AnyRectBasedConstraint {
+        return AnyRectBasedConstraint(base.formConstrain(sourceRect:by:))
+    }
+}
 
 // MARK: LayoutElement
 
@@ -478,8 +483,8 @@ public struct Leading: RectBasedConstraint, Extensible {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.AlignDependence.inner : Left.AlignDependence.inner) }
-            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.AlignDependence.outer : Left.AlignDependence.outer) }
+            public static var inner: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Right.AlignDependence.inner : Left.AlignDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Right.AlignDependence.outer : Left.AlignDependence.outer) }
         }
     }
 
@@ -499,8 +504,8 @@ public struct Leading: RectBasedConstraint, Extensible {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.LimitDependence.inner : Left.LimitDependence.inner) }
-            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.LimitDependence.outer : Left.LimitDependence.outer) }
+            public static var inner: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Right.LimitDependence.inner : Left.LimitDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Right.LimitDependence.outer : Left.LimitDependence.outer) }
         }
     }
 
@@ -520,8 +525,8 @@ public struct Leading: RectBasedConstraint, Extensible {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.PullDependence.inner : Left.PullDependence.inner) }
-            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Right.PullDependence.outer : Left.PullDependence.outer) }
+            public static var inner: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Right.PullDependence.inner : Left.PullDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Right.PullDependence.outer : Left.PullDependence.outer) }
         }
     }
 }
@@ -560,8 +565,8 @@ public struct Trailing: RectBasedConstraint, Extensible {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.AlignDependence.inner : Right.AlignDependence.inner) }
-            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.AlignDependence.outer : Right.AlignDependence.outer) }
+            public static var inner: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Left.AlignDependence.inner : Right.AlignDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Left.AlignDependence.outer : Right.AlignDependence.outer) }
         }
     }
 
@@ -581,8 +586,8 @@ public struct Trailing: RectBasedConstraint, Extensible {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.LimitDependence.inner : Right.LimitDependence.inner) }
-            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.LimitDependence.outer : Right.LimitDependence.outer) }
+            public static var inner: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Left.LimitDependence.inner : Right.LimitDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Left.LimitDependence.outer : Right.LimitDependence.outer) }
         }
     }
 
@@ -602,8 +607,8 @@ public struct Trailing: RectBasedConstraint, Extensible {
             ///   - rect: Rect for constrain
             func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
 
-            public static var inner: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.PullDependence.inner : Right.PullDependence.inner) }
-            public static var outer: Dependence { return Dependence(base: Configuration.default.isRTLMode ? Left.PullDependence.outer : Right.PullDependence.outer) }
+            public static var inner: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Left.PullDependence.inner : Right.PullDependence.inner) }
+            public static var outer: Dependence { return Dependence(base: CGLConfiguration.default.isRTLMode ? Left.PullDependence.outer : Right.PullDependence.outer) }
         }
     }
 }
@@ -1187,8 +1192,8 @@ public struct Layout: RectBasedLayout, Extensible {
                 }
             }
 
-            public static func trailing(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Configuration.default.isRTLMode ? Left(offset: offset) : Right(offset: offset)) }
-            public static func leading(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: Configuration.default.isRTLMode ? Right(offset: offset) : Left(offset: offset)) }
+            public static func trailing(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: CGLConfiguration.default.isRTLMode ? Left(offset: offset) : Right(offset: offset)) }
+            public static func leading(_ offset: CGFloat = 0) -> Horizontal { return Horizontal(base: CGLConfiguration.default.isRTLMode ? Right(offset: offset) : Left(offset: offset)) }
         }
         public struct Vertical: RectBasedLayout, Extensible {
             public typealias Conformed = RectBasedLayout

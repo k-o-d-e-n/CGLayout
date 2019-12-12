@@ -121,34 +121,33 @@ public class SecondViewController: UIViewController {
                 constraints: [bottomLayoutGuideConstraint]
             ),
             separator1Layer.layoutBlock(
-                with: Layout(x: .right(25), y: .top(), width: .fixed(1), height: .scaled(1)),
-                constraints: [distanceLabel.layoutConstraint(for: [.left(.limit(on: .outer)), .top(.limit(on: .inner)), .size(.height())])]
+                with: Layout(x: .trailing(25), y: .top(), width: .fixed(1), height: .scaled(1)),
+                constraints: [distanceLabel.layoutConstraint(for: [.leading(.limit(on: .outer)), .top(.limit(on: .inner)), .size(.height())])]
             ),
             separator2Layer.layoutBlock(
-                with: Layout(x: .left(25), y: .bottom(), width: .fixed(1), height: .scaled(1)),
-                constraints: [distanceLabel.layoutConstraint(for: [.size(.height()), .right(.limit(on: .outer)), .bottom(.align(by: .inner))])]
+                with: Layout(x: .leading(25), y: .bottom(), width: .fixed(1), height: .scaled(1)),
+                constraints: [distanceLabel.layoutConstraint(for: [.size(.height()), .trailing(.limit(on: .outer)), .bottom(.align(by: .inner))])]
             ),
             weatherImageView.layoutBlock(
-                with: Layout(x: .left(20), y: .top(), width: .fixed(30), height: .fixed(30)),
-                constraints: [separator2Layer.layoutConstraint(for: [.right(.limit(on: .outer)), .top(.limit(on: .inner))])]
+                with: Layout(x: .leading(20), y: .top(), width: .fixed(30), height: .fixed(30)),
+                constraints: [separator2Layer.layoutConstraint(for: [.trailing(.limit(on: .outer)), .top(.limit(on: .inner))])]
             ),
             weatherLabel.layoutBlock(
-                with: Layout(x: .left(10), y: .top(), width: .scaled(1), height: .scaled(1)),
                 constraints: [
-                    weatherImageView.layoutConstraint(for: [.top(.limit(on: .inner)), .right(.limit(on: .outer)), .size(.height())]),
-                    weatherLabel.adjustLayoutConstraint(for: [.width()])
+                    weatherImageView.layoutConstraint(for: [.top(.limit(on: .inner)), .trailing(.limit(on: .outer)), .size(.height())]),
+                    weatherLabel.adjustLayoutConstraint(for: [.width()], alignment: .init(horizontal: .leading(10), vertical: .top()))
                 ]
             ),
             rainLabel.layoutBlock(
-                with: Layout(x: .right(20), y: .top(), width: .scaled(1), height: .fixed(30)),
+                with: Layout(x: .trailing(20), y: .top(), width: .scaled(1), height: .fixed(30)),
                 constraints: [
                     rainLabel.adjustLayoutConstraint(for: [.width()]),
-                    separator1Layer.layoutConstraint(for: [.top(.limit(on: .inner)), .left(.align(by: .outer))])
+                    separator1Layer.layoutConstraint(for: [.top(.limit(on: .inner)), .leading(.align(by: .outer))])
                 ]
             ),
             rainImageView.layoutBlock(
-                with: Layout(x: .right(10), y: .top(), width: .fixed(30), height: .fixed(30)),
-                constraints: [rainLabel.layoutConstraint(for: [.left(.limit(on: .outer)), .top(.limit(on: .inner))])]
+                with: Layout(x: .trailing(10), y: .top(), width: .fixed(30), height: .fixed(30)),
+                constraints: [rainLabel.layoutConstraint(for: [.leading(.limit(on: .outer)), .top(.limit(on: .inner))])]
             ),
             logoImageView.layoutBlock(
                 with: Layout(x: .center(), y: .top(80), width: .fixed(70), height: .fixed(70)),

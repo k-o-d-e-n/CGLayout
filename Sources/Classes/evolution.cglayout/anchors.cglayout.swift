@@ -13,6 +13,8 @@ protocol Anchors: class {
     associatedtype Element: AnchoredLayoutElement & LayoutElement
     var left: SideAnchor<Element, LeftAnchor> { get set }
     var right: SideAnchor<Element, RightAnchor> { get set }
+    var leading: SideAnchor<Element, RTLAnchor> { get set }
+    var trailing: SideAnchor<Element, RTLAnchor> { get set }
     var bottom: SideAnchor<Element, BottomAnchor> { get set }
     var top: SideAnchor<Element, TopAnchor> { get set }
     var centerX: SideAnchor<Element, CenterXAnchor> { get set }
@@ -47,6 +49,8 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
 
     public lazy var left: SideAnchor<V, LeftAnchor> = .init(anchors: self, anchor: .init())
     public lazy var right: SideAnchor<V, RightAnchor> = .init(anchors: self, anchor: .init())
+    public lazy var leading: SideAnchor<V, RTLAnchor> = .init(anchors: self, anchor: .init(trailing: false, rtlMode: CGLConfiguration.default.isRTLMode))
+    public lazy var trailing: SideAnchor<V, RTLAnchor> = .init(anchors: self, anchor: .init(trailing: true, rtlMode: CGLConfiguration.default.isRTLMode))
     public lazy var bottom: SideAnchor<V, BottomAnchor> = .init(anchors: self, anchor: .init())
     public lazy var top: SideAnchor<V, TopAnchor> = .init(anchors: self, anchor: .init())
     public lazy var centerX: SideAnchor<V, CenterXAnchor> = .init(anchors: self, anchor: .init(axis: .init()))
@@ -60,6 +64,8 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
 
         left.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         right.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        leading.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        trailing.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         bottom.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         top.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         centerX.pullConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
@@ -68,6 +74,8 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
 
         _ = left.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = right.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = leading.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = trailing.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = bottom.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = top.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = centerX.limitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
@@ -83,6 +91,8 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
 
         left.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         right.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        leading.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        trailing.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         bottom.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         top.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         centerX.alignConstraint.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
@@ -91,6 +101,8 @@ public final class LayoutAnchors<V: AnchoredLayoutElement>: Anchors {
 
         _ = left.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = right.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = leading.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
+        _ = trailing.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = bottom.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = top.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
         _ = centerX.alignLimitConstraints.map { layoutConstraints.append(constraint($0.0, [$0.1])) }
@@ -229,7 +241,52 @@ public extension SideAnchor {
         }
     }
 }
+public extension SideAnchor where Anchor == RTLAnchor {
+    private var _limitFunc: (Anchor.Metric, Anchor.Metric) -> Anchor.Metric {
+        if CGLConfiguration.default.isRTLMode {
+            return anchor.isTrailing ? min : max
+        } else {
+            return anchor.isTrailing ? max : min
+        }
+    }
+    mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, RTLAnchor>) {
+        checkConflictsOnAddLimit()
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: _limitFunc)))
+    }
+    mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, LeftAnchor>) {
+        checkConflictsOnAddLimit()
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: _limitFunc)))
+    }
+    mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, RightAnchor>) {
+        checkConflictsOnAddLimit()
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: _limitFunc)))
+    }
+    mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, CenterXAnchor>) {
+        checkConflictsOnAddLimit()
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: _limitFunc)))
+    }
+    mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, RTLAnchor>) {
+        checkConflictsOnAddAlignLimit()
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: _limitFunc)))
+    }
+    mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, LeftAnchor>) {
+        checkConflictsOnAddAlignLimit()
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: _limitFunc)))
+    }
+    mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, RightAnchor>) {
+        checkConflictsOnAddAlignLimit()
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: _limitFunc)))
+    }
+    mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, CenterXAnchor>) {
+        checkConflictsOnAddAlignLimit()
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: _limitFunc)))
+    }
+}
 public extension SideAnchor where Anchor == LeftAnchor {
+    mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, RTLAnchor>) {
+        checkConflictsOnAddLimit()
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: max)))
+    }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, LeftAnchor>) {
         checkConflictsOnAddLimit()
         addLimit((a2.item, anchor.limit(to: a2.anchor, compare: max)))
@@ -241,6 +298,10 @@ public extension SideAnchor where Anchor == LeftAnchor {
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, CenterXAnchor>) {
         checkConflictsOnAddLimit()
         addLimit((a2.item, anchor.limit(to: a2.anchor, compare: max)))
+    }
+    mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, RTLAnchor>) {
+        checkConflictsOnAddAlignLimit()
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: max)))
     }
     mutating func fartherThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, LeftAnchor>) {
         checkConflictsOnAddAlignLimit()
@@ -256,6 +317,10 @@ public extension SideAnchor where Anchor == LeftAnchor {
     }
 }
 public extension SideAnchor where Anchor == RightAnchor {
+    mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, RTLAnchor>) {
+        checkConflictsOnAddLimit()
+        addLimit((a2.item, anchor.limit(to: a2.anchor, compare: min)))
+    }
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, LeftAnchor>) {
         checkConflictsOnAddLimit()
         addLimit((a2.item, anchor.limit(to: a2.anchor, compare: min)))
@@ -267,6 +332,10 @@ public extension SideAnchor where Anchor == RightAnchor {
     mutating func limit<A: AnchoredLayoutElement>(by a2: SideAnchor<A, CenterXAnchor>) {
         checkConflictsOnAddLimit()
         addLimit((a2.item, anchor.limit(to: a2.anchor, compare: min)))
+    }
+    mutating func nearerThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, RTLAnchor>) {
+        checkConflictsOnAddAlignLimit()
+        addLimit((a2.item, anchor.alignLimit(to: a2.anchor, compare: min)))
     }
     mutating func nearerThanOrEqual<A: AnchoredLayoutElement>(to a2: SideAnchor<A, LeftAnchor>) {
         checkConflictsOnAddAlignLimit()

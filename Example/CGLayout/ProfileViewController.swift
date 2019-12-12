@@ -33,20 +33,20 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
 
         let headerView = buildView(UIView.self, bg: .white)
-        let headerRightGroupGuide = StackLayoutGuide<UIView>() // cannot calcute size based on elements
+        let headerRightGroupGuide = StackLayoutGuide<UIView>()
         headerRightGroupGuide.scheme.direction = .fromTrailing
         headerRightGroupGuide.scheme.spacing = .equal(10)
         headerRightGroupGuide.scheme.filling = .equal(40)
-        headerRightGroupGuide.contentInsets.right = 16
+        headerRightGroupGuide.contentInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         layoutGuides.append(headerRightGroupGuide)
         headerView.add(layoutGuide: headerRightGroupGuide)
-        let headerRightGroup = headerRightGroupGuide.layoutBlock { (anchors) in
-            anchors.top.align(by: headerView.layoutAnchors.top)
-            anchors.right.align(by: headerView.layoutAnchors.right)
-            anchors.centerY.align(by: headerView.layoutAnchors.centerY)
-            anchors.width.equalIntrinsicSize()
-            anchors.height.equal(to: 40)
-        }
+        let headerRightGroup = headerRightGroupGuide.layoutBlock(
+            constraints: { (anchors) in
+                anchors.centerY.align(by: headerView.layoutAnchors.centerY)
+                anchors.width.equalIntrinsicSize()
+                anchors.height.equal(to: 40)
+            }
+        )
         let hrb1Button = buildView(UIButton.self, bg: .black)
         headerRightGroupGuide.addArrangedElement(hrb1Button)
         let hrb2Button = buildView(UIButton.self, bg: .lightGray)
@@ -77,7 +77,7 @@ class ProfileViewController: UIViewController {
 
         let nameLabel = buildView(UILabel.self, bg: .gray)
         nameLabel.font = UIFont.boldSystemFont(ofSize: 30)
-        nameLabel.text = "РЕШЕТЕЕВ НИКИТА"
+        nameLabel.text = "A SUPER MAN"
         let name = nameLabel.layoutBlock(with: Layout(y: .top(10))) { (anchors) in
             anchors.top.align(by: avatarView.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
@@ -97,27 +97,23 @@ class ProfileViewController: UIViewController {
 
         let socialLabel = buildView(UILabel.self, bg: .lightGray)
         socialLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 16, weight: .light)
-        socialLabel.text = "Nikita_resh"
-        // TODO: Baseline is unavailable in anchors
-        /*
-        let social = socialLabel.layoutBlock(constraints: { (anchors) in
-            anchors.left.align(by: socialLabelPrefix.layoutAnchors.right)
-//            anchors.baseline.align(by: socialLabelPrefix.layoutAnchors.baseline) // baseline does not working because block deals with label frame. need two blocks
-            anchors.width.equalIntrinsicSize()
-            anchors.height.equalIntrinsicSize()
-        })
-        let socialPosition = socialLabel.baselineElement.layoutBlock(constraints: { (anchors) in
-            anchors.top.align(by: socialLabelPrefix.baselineElement.layoutAnchors.bottom)
-//            anchors.left.align(by: socialLabelPrefix.layoutAnchors.right)
-        })
-         */
-        let social = socialLabel.layoutBlock(constraints: [
-            socialLabelPrefix.layoutConstraint(for: [.right(.limit(on: .outer))]),
-            socialLabel.adjustLayoutConstraint(for: [.width(), .height()]),
-        ])
-        let socialPosition = socialLabel.baselineElement.layoutBlock(with: Layout.nothing.with(y: .bottom()), constraints: [
-            socialLabelPrefix.baselineLayoutConstraint(for: [.bottom(.align(by: .inner))])
-        ])
+        socialLabel.text = "super_man"
+        
+        let social = socialLabel.layoutBlock(
+            constraints: { (anchors) in
+                anchors.leading.pull(to: socialLabelPrefix.layoutAnchors.trailing)
+                // TODO: Baseline is unavailable in anchors
+    //            anchors.baseline.align(by: socialLabelPrefix.layoutAnchors.baseline) // baseline does not working because block deals with label frame. need two blocks
+                anchors.height.equalIntrinsicSize()
+                anchors.width.equalIntrinsicSize(alignment: Layout.Alignment(horizontal: .leading(), vertical: .top()))
+            }
+        )
+        let socialPosition = socialLabel.baselineElement.layoutBlock(
+            with: Layout.nothing.with(y: .bottom()),
+            constraints: { (anchors) in
+                anchors.bottom.align(by: socialLabelPrefix.baselineElement.layoutAnchors.bottom)
+            }
+        )
 
         let buttonsGroupGuide = StackLayoutGuide<UIView>() // cannot calcute size based on elements
         buttonsGroupGuide.scheme.direction = .fromCenter
@@ -132,11 +128,11 @@ class ProfileViewController: UIViewController {
         }
         let btn1Button = buildView(UIButton.self, bg: .black)
         btn1Button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .caption1)
-        btn1Button.setTitle("СМЕНИТЬ АВАТАР", for: .normal)
+        btn1Button.setTitle("CHANGE", for: .normal)
         buttonsGroupGuide.addArrangedElement(btn1Button)
         let btn2Button = buildView(UIButton.self, bg: .lightGray)
         btn2Button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .caption1)
-        btn2Button.setTitle("УДАЛИТЬ", for: .normal)
+        btn2Button.setTitle("DELETE", for: .normal)
         buttonsGroupGuide.addArrangedElement(btn2Button)
 
         let socialGroupGuide = StackLayoutGuide<UIView>() // cannot calcute size based on elements
@@ -159,7 +155,7 @@ class ProfileViewController: UIViewController {
 
         let title1Label = buildView(UILabel.self, bg: .gray)
         title1Label.font = UIFont.preferredFont(forTextStyle: .title3)
-        title1Label.text = "Обо мне"
+        title1Label.text = "About me"
         let title1 = title1Label.layoutBlock(with: Layout(y: .top(20))) { (anchors) in
             anchors.top.align(by: socialGroupGuide.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
@@ -170,13 +166,13 @@ class ProfileViewController: UIViewController {
         let bodyLabel = buildView(UILabel.self, bg: .lightGray)
         bodyLabel.numberOfLines = 0
         bodyLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        bodyLabel.text = "Бенефисы Самошникова на «Открытие Арене» и Алиева на «Арене Химки», четыре гола в меньшинстве «Текстильщика», Харитонов в роли Дзюбы, Черышев — в западне. 17 тур в ФНЛ получился ярким!"
+        bodyLabel.text = "The purpose of lorem ipsum is to create a natural looking block of text (sentence, paragraph, page, etc.) that doesn't distract from the layout. A practice not without controversy, laying out pages with meaningless filler text can be very useful when the focus is meant to be on design, not content"
         let body = bodyLabel.layoutBlock(with: Layout(y: .top(15))) { (anchors) in
             anchors.top.align(by: title1Label.layoutAnchors.bottom)
             anchors.centerX.align(by: view.layoutAnchors.centerX)
             if #available(iOS 11.0, tvOS 11.0, *) {
-                anchors.left.limit(by: view.safeAreaLayoutGuide.layoutAnchors.left)
-                anchors.right.limit(by: view.safeAreaLayoutGuide.layoutAnchors.right)
+                anchors.leading.limit(by: view.safeAreaLayoutGuide.layoutAnchors.leading)
+                anchors.trailing.limit(by: view.safeAreaLayoutGuide.layoutAnchors.trailing)
             } else {
             }
             anchors.width.equalIntrinsicSize()
