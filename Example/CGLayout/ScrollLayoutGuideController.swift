@@ -38,7 +38,7 @@ extension UIViewController {
     }
 }
 
-class ScrollLayoutViewController: UIViewController {
+class ScrollLayoutGuideController: UIViewController {
     var scrollLayoutGuide: ScrollLayoutGuide<UIView>!
 
     var subviews: [UIView] = []

@@ -137,6 +137,26 @@ public struct LeftAnchor: RectAnchorPoint {
     public func move(in rect: inout CGRect, to value: CGFloat) { axis.move(minOf: &rect, to: value) }
     public func get(for rect: CGRect) -> CGFloat { return axis.get(minOf: rect) }
 }
+public struct RTLAnchor: RectAnchorPoint {
+    let base: AnyAxisAnchorPoint<CGRectAxis.Horizontal>
+    let isTrailing: Bool
+
+    init(trailing: Bool, rtlMode: Bool) {
+        self.isTrailing = trailing
+        self.base = (trailing && rtlMode) || (!trailing && !rtlMode) ? AnyAxisAnchorPoint(LeftAnchor()) : AnyAxisAnchorPoint(RightAnchor())
+    }
+
+    public var axis: CGRectAxis.Horizontal { return base.axis }
+    public func offset(rect: inout CGRect, by value: CGFloat) {
+        base.offset(rect: &rect, by: value)
+    }
+    public func move(in rect: inout CGRect, to value: CGFloat) {
+        base.move(in: &rect, to: value)
+    }
+    public func get(for rect: CGRect) -> CGFloat {
+        return base.get(for: rect)
+    }
+}
 public typealias HorizontalAnchor = AnyAxisAnchorPoint<CGRectAxis.Horizontal>
 public typealias VerticalAnchor = AnyAxisAnchorPoint<CGRectAxis.Vertical>
 public struct AnyAxisAnchorPoint<Axis: RectAxis>: RectAnchorPoint {

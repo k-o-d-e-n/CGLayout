@@ -22,104 +22,213 @@ class ColoredView: NSView {
     }
 }
 
+extension ViewController {
+    func buildView<V: ColoredView>(_ type: V.Type, bg: NSColor) -> V {
+        let v = V.init()
+        v.backgroundColor = bg
+        scrollView.documentView?.addSubview(v)
+        return v
+    }
+    func buildView<V: NSView>(_ type: V.Type, bg: NSColor) -> V {
+        let v = V.init()
+//        v.backgroundColor = bg
+        scrollView.documentView?.addSubview(v)
+        return v
+    }
+}
+
+extension ViewController {
+    func addLayoutGuide(_ lg: LayoutGuide<NSView>) {
+        scrollView.documentView?.add(layoutGuide: lg)
+        layoutGuides.append(lg)
+    }
+}
+
+final class FlippedView: NSView {
+    override var isFlipped: Bool { return true }
+}
+
 class ViewController: NSViewController {
     var scrollView: NSScrollView { return view as! NSScrollView }
-    var subviews: [ColoredView] = []
-    let pulledView = ColoredView()
-    let centeredView = ColoredView()
-    let navigationBarBackView = ColoredView()
-    let subview = ColoredView()
+    var layoutGuides: [LayoutGuide<NSView>] = []
 
-    lazy var stackScheme: StackLayoutScheme = { [unowned self] in
-        var stack = StackLayoutScheme(items: { Array(self.subviews[0..<7]) })
-        stack.axis = CGRectAxis.vertical
-        stack.spacing = .equal(10)
-        //        stack.distribution = .fromBottom(spacing: 10)
-        stack.direction = .fromTrailing
-        stack.alignment = .leading(215)
-        //        stack.filling = .custom(Layout.Filling(horizontal: .boxed(235), vertical: .fixed(50)))
-        stack.filling = .equal(50)
+    lazy var scheme: LayoutScheme = self.buildScheme()
 
-        return stack
-    }()
-    lazy var latestItemLayout = Layout(x: 15, y: 10, width: 30, height: .boxed(20))
-    lazy var pulledLayout = Layout(x: .left(15), y: .top(10),
-                                   width: .boxed(25), height: .boxed(20))
-    lazy var bottomConstraint = Bottom.limit(on: .inner)
-    lazy var rightConstraint = Right.limit(on: .outer)
-
-//    lazy var labelPlaceholder: LabelPlaceholder = LabelPlaceholder(font: .systemFont(ofSize: 24), textColor: .red)
+    override func loadView() {
+        let view = NSScrollView()
+        view.documentView = FlippedView()
+        self.view = view
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.wantsLayer = true
-
-        subviews = (0..<10).map { i -> ColoredView in
-            let view = ColoredView()
-            view.backgroundColor = NSColor(white: (1 - (1 / max(0.5,CGFloat(i)))), alpha: 1 / max(0.5,CGFloat(i)))
-            return view
-        }
-        scrollView.documentView = NSView(frame: CGRect(origin: .zero, size: CGSize(width: 800, height: 800)))
-        subviews.first?.backgroundColor = .red
-        subviews.forEach(scrollView.documentView!.addSubview)
-        scrollView.documentView!.addSubview(pulledView)
-        pulledView.backgroundColor = .red
-        scrollView.documentView!.addSubview(centeredView)
-        centeredView.backgroundColor = .yellow
-        scrollView.documentView!.addSubview(navigationBarBackView)
-        navigationBarBackView.backgroundColor = .black
-        subview.backgroundColor = .red
-        pulledView.addSubview(subview)
-
-//        view.add(layoutGuide: labelPlaceholder)
     }
 
     override func viewDidLayout() {
         super.viewDidLayout()
-
-        let constrainedRect = CGRect(origin: .zero, size: CGSize(width: 200, height: 0))
-        stackScheme.layout()
-        
-        var preview = subviews[6]
-        let lastPreview = subviews[6]
-        subviews[7..<10].forEach { subview in
-            let constraints: [ConstrainRect] = [(lastPreview.frame, [bottomConstraint]), (constrainedRect, [rightConstraint])]
-            let constraint: [ConstrainRect] = preview === lastPreview ? [] : [(preview.frame, [rightConstraint])]
-            latestItemLayout.apply(for: subview, use: constraints + constraint)
-            preview = subview
+        if let rect = view.window?.frame {
+            scrollView.frame = NSRect(origin: .zero, size: rect.insetBy(dx: 0, dy: 10).size)
         }
-
-        
-        let topConstraint: Top = true ? .pull(from: .outer) : .limit(on: .outer)
-
-//        labelPlaceholder.layoutBlock(with: Layout(x: .right(), y: .top(), width: .scaled(0.6), height: .fixed(100)), constraints: [(topLayoutGuide as! UIView).layoutConstraint(for: [LayoutAnchor.Bottom.align(by: .outer)])]).layout()
-
-        pulledLayout.apply(for: pulledView, use: [(subviews[1].frame, [Left.limit(on: .outer)]), (subviews.first!.frame, [topConstraint])])
-
-        let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(20), height: .fixed(30)),
-                                                          constraints: [subviews[7].layoutConstraint(for: [.equally])])
-
-        // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space.
-//        navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigationController!.navigationBar.layoutConstraint(for: [LayoutAnchor.equal])]).layout()
-
-        let subviewLayout = subview.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(50), height: .fixed(1)),
-                                                constraints: [centeredView.layoutConstraint(for: [.equally])])
-        let subviewScheme = LayoutScheme(blocks: [centeredViewLayout, subviewLayout])
-        let snapshotSubview = subviewScheme.snapshot(for: view.bounds, constrainRects: [(subviews[7], subviews[7].frame)])
-        subviewScheme.apply(snapshot: snapshotSubview)
+        let snap = scheme.snapshot(for: view.frame)
+        scrollView.documentView?.frame.size = snap.frame.size
+        scheme.apply(snapshot: snap)
     }
 
     override func viewWillTransition(to newSize: NSSize) {
         super.viewWillTransition(to: newSize)
-//        labelPlaceholder.view.text = "Placeholder label"
+        scheme.layout()
     }
 
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
+    func buildScheme() -> LayoutScheme {
+        let headerView = buildView(ColoredView.self, bg: .white)
+        let headerRightGroupGuide = StackLayoutGuide<NSView>() // cannot calcute size based on elements
+        headerRightGroupGuide.scheme.direction = .fromTrailing
+        headerRightGroupGuide.scheme.spacing = .equal(10)
+        headerRightGroupGuide.scheme.filling = .equal(40)
+        headerRightGroupGuide.contentInsets.right = 16
+        layoutGuides.append(headerRightGroupGuide)
+        headerView.add(layoutGuide: headerRightGroupGuide)
+        let headerRightGroup = headerRightGroupGuide.layoutBlock { (anchors) in
+            anchors.top.align(by: headerView.layoutAnchors.top)
+            anchors.right.align(by: headerView.layoutAnchors.right)
+            anchors.centerY.align(by: headerView.layoutAnchors.centerY)
+            anchors.width.equalIntrinsicSize()
+            anchors.height.equal(to: 40)
         }
+        let hrb1Button = buildView(ColoredView.self, bg: .black)
+        headerRightGroupGuide.addArrangedElement(hrb1Button)
+        let hrb2Button = buildView(ColoredView.self, bg: .lightGray)
+        headerRightGroupGuide.addArrangedElement(hrb2Button)
+        let hrb3Button = buildView(ColoredView.self, bg: .lightGray)
+        headerRightGroupGuide.addArrangedElement(hrb3Button)
+
+        let header = LayoutScheme(blocks: [
+            headerView.layoutBlock { (anchors) in
+                anchors.top.align(by: view.layoutAnchors.top)
+                anchors.height.equal(to: 64)
+                anchors.width.equal(to: view.layoutAnchors.width)
+            },
+            headerRightGroup
+        ])
+
+        let avatarView = buildView(ColoredView.self, bg: .black)
+        let avatar = avatarView.layoutBlock(with: Layout(y: .top(20))) { (anchors) in
+            anchors.height.equal(to: 100)
+            anchors.width.equal(to: 100)
+            anchors.top.align(by: headerView.layoutAnchors.bottom)
+            anchors.centerX.align(by: view.layoutAnchors.centerX)
+        }
+
+        let nameLabel = buildView(NSTextField.self, bg: .gray)
+        nameLabel.font = NSFont.boldSystemFont(ofSize: 30)
+        nameLabel.stringValue = "РЕШЕТЕЕВ НИКИТА"
+        let name = nameLabel.layoutBlock(with: Layout(y: .top(10))) { (anchors) in
+            anchors.top.align(by: avatarView.layoutAnchors.bottom)
+            anchors.centerX.align(by: view.layoutAnchors.centerX)
+            anchors.width.equalIntrinsicSize()
+            anchors.height.equalIntrinsicSize()
+        }
+
+        let socialLabelPrefix = buildView(NSTextField.self, bg: .lightGray)
+        socialLabelPrefix.font = NSFont.monospacedDigitSystemFont(ofSize: 20, weight: .bold)
+        socialLabelPrefix.stringValue = "@"
+        let socialPrefix = socialLabelPrefix.layoutBlock(with: Layout(y: .top(8))) { (anchors) in
+            anchors.top.align(by: nameLabel.layoutAnchors.bottom)
+            anchors.centerX.align(by: view.layoutAnchors.centerX)
+            anchors.width.equalIntrinsicSize()
+            anchors.height.equalIntrinsicSize()
+        }
+
+        let socialLabel = buildView(NSTextField.self, bg: .lightGray)
+        socialLabel.font = NSFont.monospacedDigitSystemFont(ofSize: 16, weight: .light)
+        socialLabel.stringValue = "Nikita_resh"
+        // TODO: Baseline is unavailable in anchors
+        /*
+        let social = socialLabel.layoutBlock(constraints: { (anchors) in
+            anchors.left.align(by: socialLabelPrefix.layoutAnchors.right)
+//            anchors.baseline.align(by: socialLabelPrefix.layoutAnchors.baseline) // baseline does not working because block deals with label frame. need two blocks
+            anchors.width.equalIntrinsicSize()
+            anchors.height.equalIntrinsicSize()
+        })
+        let socialPosition = socialLabel.baselineElement.layoutBlock(constraints: { (anchors) in
+            anchors.top.align(by: socialLabelPrefix.baselineElement.layoutAnchors.bottom)
+//            anchors.left.align(by: socialLabelPrefix.layoutAnchors.right)
+        })
+         */
+        let social = socialLabel.layoutBlock(constraints: [
+            socialLabelPrefix.layoutConstraint(for: [.right(.limit(on: .outer))]),
+            socialLabel.adjustLayoutConstraint(for: [.width(), .height()]),
+        ])
+        let socialPosition = socialLabel/*.baselineElement*/.layoutBlock(with: Layout.nothing.with(y: .bottom()), constraints: [
+//            socialLabelPrefix.baselineLayoutConstraint(for: [.bottom(.align(by: .inner))])
+            socialLabelPrefix.layoutConstraint(for: [.bottom(.align(by: .inner))])
+        ])
+
+        let buttonsGroupGuide = StackLayoutGuide<NSView>() // cannot calcute size based on elements
+        buttonsGroupGuide.scheme.direction = .fromCenter
+        buttonsGroupGuide.scheme.spacing = .equal(10)
+        buttonsGroupGuide.scheme.filling = .equal(130)
+        addLayoutGuide(buttonsGroupGuide)
+        let btnsGroup = buttonsGroupGuide.layoutBlock(with: Layout(y: .top(20))) { (anchors) in
+            anchors.top.align(by: socialLabelPrefix.layoutAnchors.bottom)
+            anchors.centerX.align(by: view.layoutAnchors.centerX)
+            anchors.width.equalIntrinsicSize()
+            anchors.height.equal(to: 40)
+        }
+        let btn1Button = buildView(ColoredView.self, bg: .black)
+//        btn1Button.titleLabel?.font = NSFont.preferredFont(forTextStyle: .caption1)
+//        btn1Button.setTitle("СМЕНИТЬ АВАТАР", for: .normal)
+        buttonsGroupGuide.addArrangedElement(btn1Button)
+        let btn2Button = buildView(ColoredView.self, bg: .lightGray)
+//        btn2Button.titleLabel?.font = NSFont.preferredFont(forTextStyle: .caption1)
+//        btn2Button.setTitle("УДАЛИТЬ", for: .normal)
+        buttonsGroupGuide.addArrangedElement(btn2Button)
+
+        let socialGroupGuide = StackLayoutGuide<NSView>() // cannot calcute size based on elements
+        socialGroupGuide.scheme.direction = .fromCenter
+        socialGroupGuide.scheme.spacing = .equal(10)
+        socialGroupGuide.scheme.filling = .equal(40)
+        addLayoutGuide(socialGroupGuide)
+        let socialGroup = socialGroupGuide.layoutBlock(with: Layout(y: .top(15))) { (anchors) in
+            anchors.top.align(by: buttonsGroupGuide.layoutAnchors.bottom)
+            anchors.centerX.align(by: view.layoutAnchors.centerX)
+            anchors.width.equalIntrinsicSize()
+            anchors.height.equal(to: 40)
+        }
+        let scl1Button = buildView(ColoredView.self, bg: .black)
+        socialGroupGuide.addArrangedElement(scl1Button)
+        let scl2Button = buildView(ColoredView.self, bg: .lightGray)
+        socialGroupGuide.addArrangedElement(scl2Button)
+        let scl3Button = buildView(ColoredView.self, bg: .lightGray)
+        socialGroupGuide.addArrangedElement(scl3Button)
+
+        let title1Label = buildView(NSTextField.self, bg: .gray)
+//        title1Label.font = NSFont.preferredFont(forTextStyle: .title3)
+        title1Label.stringValue = "Обо мне"
+        let title1 = title1Label.layoutBlock(with: Layout(y: .top(20))) { (anchors) in
+            anchors.top.align(by: socialGroupGuide.layoutAnchors.bottom)
+            anchors.centerX.align(by: view.layoutAnchors.centerX)
+            anchors.width.equalIntrinsicSize()
+            anchors.height.equalIntrinsicSize()
+        }
+
+        let bodyLabel = buildView(NSTextField.self, bg: .lightGray)
+//        bodyLabel.numberOfLines = 0
+//        bodyLabel.font = NSFont.preferredFont(forTextStyle: .body)
+        bodyLabel.stringValue = "Бенефисы Самошникова на «Открытие Арене» и Алиева на «Арене Химки», четыре гола в меньшинстве «Текстильщика», Харитонов в роли Дзюбы, Черышев — в западне. 17 тур в ФНЛ получился ярким!"
+        let body = bodyLabel.layoutBlock(with: Layout(y: .top(15))) { (anchors) in
+            anchors.top.align(by: title1Label.layoutAnchors.bottom)
+            anchors.centerX.align(by: view.layoutAnchors.centerX)
+            anchors.left.limit(by: view.layoutAnchors.left)
+            anchors.right.limit(by: view.layoutAnchors.right)
+            anchors.width.equalIntrinsicSize()
+            anchors.height.equalIntrinsicSize()
+        }
+
+        return LayoutScheme(blocks: [
+            header, avatar, name, socialPrefix, social, socialPosition, btnsGroup, socialGroup, title1, body
+        ])
     }
-
-
 }
 

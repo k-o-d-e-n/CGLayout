@@ -14,7 +14,7 @@
     <a title="Structures  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">CGLayout Docs</a> (57% documented)</p>
+        <p><a href="index.html">CGLayout Docs</a> (58% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -83,6 +83,9 @@
                 <a href="Extensions/EdgeInsets.html">EdgeInsets</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions/Equatable.html">Equatable</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions/LayoutCoordinateSpace.html">LayoutCoordinateSpace</a>
               </li>
               <li class="nav-group-task">
@@ -110,6 +113,12 @@
                 <a href="Extensions/UILabel.html">UILabel</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions/UILabel/Baseline.html">– Baseline</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/UILayoutGuide">UILayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions/UIScrollView.html">UIScrollView</a>
               </li>
               <li class="nav-group-task">
@@ -130,7 +139,7 @@
                 <a href="Protocols/ElementInLayoutTime.html">ElementInLayoutTime</a>
               </li>
               <li class="nav-group-task">
-                <a href="Protocols/Extended.html">Extended</a>
+                <a href="Protocols/Extensible.html">Extensible</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a>
@@ -178,12 +187,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/AnyRectBasedLayout.html">AnyRectBasedLayout</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/Baseline.html">Baseline</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/BaselineLayoutConstraint.html">BaselineLayoutConstraint</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/Bottom.html">Bottom</a>
@@ -348,19 +351,21 @@
           <section class="section task-group-section">
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/LayoutAnchor"></a>
-                <a name="//apple_ref/swift/Section/LayoutAnchor" class="dashAnchor"></a>
-                <a href="#/LayoutAnchor">
-                  <h3 class="section-name">LayoutAnchor</h3>
-                </a>
+                <a name="/RectBasedLayout"></a>
+                <a name="//apple_ref/swift/Section/RectBasedLayout" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/RectBasedLayout"></a>
+                  <h3 class="section-name"><p>RectBasedLayout</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout8BaselineV"></a>
-                    <a name="//apple_ref/swift/Struct/Baseline" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout8BaselineV">Baseline</a>
+                    <a name="/s:8CGLayout18AnyRectBasedLayoutV"></a>
+                    <a name="//apple_ref/swift/Struct/AnyRectBasedLayout" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout18AnyRectBasedLayoutV">AnyRectBasedLayout</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -368,21 +373,75 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Set of constraints related to baseline of restrictive rect</p>
+                        <p>Closure based implementation RectBasedLayout</p>
 
-                        <a href="Structs/Baseline.html" class="slightly-smaller">See more</a>
+                        <a href="Structs/AnyRectBasedLayout.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Baseline</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AnyRectBasedLayout</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/RectBasedConstraint"></a>
+                <a name="//apple_ref/swift/Section/RectBasedConstraint" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/RectBasedConstraint"></a>
+                  <h3 class="section-name"><p>RectBasedConstraint</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout22AnyRectBasedConstraintV"></a>
+                    <a name="//apple_ref/swift/Struct/AnyRectBasedConstraint" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout22AnyRectBasedConstraintV">AnyRectBasedConstraint</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Closure based implementation of RectBasedConstraint</p>
+
+                        <a href="Structs/AnyRectBasedConstraint.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AnyRectBasedConstraint</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/LayoutAnchor"></a>
+                <a name="//apple_ref/swift/Section/LayoutAnchor" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/LayoutAnchor"></a>
+                  <h3 class="section-name"><p>LayoutAnchor</p>
+</h3>
+                </div>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -404,7 +463,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Center</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Center</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                         </div>
                       </div>
@@ -424,7 +483,10 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <pre class="highlight swift"><code>    <span class="o">...</span>
+</code></pre>
+
+<p>Returns constraint, that applies UIEdgeInsets to source rect.</p>
 
                         <a href="Structs/Inset.html" class="slightly-smaller">See more</a>
                       </div>
@@ -435,6 +497,29 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Inset</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>value</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>UIEdgeInsets value</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Inset constraint</p>
                       </div>
                     </section>
                   </div>
@@ -452,7 +537,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Constraint, that makes source rect equally to passed rect</p>
 
                         <a href="Structs/Equal.html" class="slightly-smaller">See more</a>
                       </div>
@@ -488,7 +573,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Leading</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Leading</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                         </div>
                       </div>
@@ -516,7 +601,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Trailing</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Trailing</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                         </div>
                       </div>
@@ -544,7 +629,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Size</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Size</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                         </div>
                       </div>
@@ -572,7 +657,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Bottom</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Bottom</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                         </div>
                       </div>
@@ -600,7 +685,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Right</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Right</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                         </div>
                       </div>
@@ -628,7 +713,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Left</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Left</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                         </div>
                       </div>
@@ -656,7 +741,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Top</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extended.html">Extended</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Top</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                         </div>
                       </div>
@@ -669,9 +754,11 @@
               <div class="task-name-container">
                 <a name="/Layout"></a>
                 <a name="//apple_ref/swift/Section/Layout" class="dashAnchor"></a>
-                <a href="#/Layout">
-                  <h3 class="section-name">Layout</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Layout"></a>
+                  <h3 class="section-name"><p>Layout</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -695,90 +782,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Layout</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:8CGLayout13ConfigurationV"></a>
-                    <a name="//apple_ref/swift/Struct/Configuration" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout13ConfigurationV">Configuration</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Configuration</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:8CGLayout18AnyRectBasedLayoutV"></a>
-                    <a name="//apple_ref/swift/Struct/AnyRectBasedLayout" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout18AnyRectBasedLayoutV">AnyRectBasedLayout</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Structs/AnyRectBasedLayout.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AnyRectBasedLayout</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:8CGLayout22AnyRectBasedConstraintV"></a>
-                    <a name="//apple_ref/swift/Struct/AnyRectBasedConstraint" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout22AnyRectBasedConstraintV">AnyRectBasedConstraint</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Structs/AnyRectBasedConstraint.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AnyRectBasedConstraint</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Layout</span> <span class="p">:</span> <span class="kt"><a href="Protocols/RectBasedLayout.html">RectBasedLayout</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                         </div>
                       </div>
@@ -791,9 +795,11 @@
               <div class="task-name-container">
                 <a name="/LayoutBlock"></a>
                 <a name="//apple_ref/swift/Section/LayoutBlock" class="dashAnchor"></a>
-                <a href="#/LayoutBlock">
-                  <h3 class="section-name">LayoutBlock</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/LayoutBlock"></a>
+                  <h3 class="section-name"><p>LayoutBlock</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -833,9 +839,11 @@ LayoutScheme can contain other layout schemes.</p>
               <div class="task-name-container">
                 <a name="/LayoutConstraint"></a>
                 <a name="//apple_ref/swift/Section/LayoutConstraint" class="dashAnchor"></a>
-                <a href="#/LayoutConstraint">
-                  <h3 class="section-name">LayoutConstraint</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/LayoutConstraint"></a>
+                  <h3 class="section-name"><p>LayoutConstraint</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -860,6 +868,7 @@ LayoutScheme can contain other layout schemes.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LayoutConstraint</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">LayoutConstraint</span><span class="p">:</span> <span class="kt"><a href="Protocols/LayoutConstraintProtocol.html">LayoutConstraintProtocol</a></span></code></pre>
 
                         </div>
                       </div>
@@ -888,6 +897,7 @@ LayoutScheme can contain other layout schemes.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AdjustLayoutConstraint</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">AdjustLayoutConstraint</span><span class="p">:</span> <span class="kt"><a href="Protocols/LayoutConstraintProtocol.html">LayoutConstraintProtocol</a></span></code></pre>
 
                         </div>
                       </div>
@@ -916,34 +926,7 @@ LayoutScheme can contain other layout schemes.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ContentLayoutConstraint</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:8CGLayout24BaselineLayoutConstraintV"></a>
-                    <a name="//apple_ref/swift/Struct/BaselineLayoutConstraint" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout24BaselineLayoutConstraintV">BaselineLayoutConstraint</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Related constraint for base line.</p>
-
-                        <a href="Structs/BaselineLayoutConstraint.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">BaselineLayoutConstraint</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">ContentLayoutConstraint</span><span class="p">:</span> <span class="kt"><a href="Protocols/LayoutConstraintProtocol.html">LayoutConstraintProtocol</a></span></code></pre>
 
                         </div>
                       </div>
@@ -956,9 +939,11 @@ LayoutScheme can contain other layout schemes.</p>
               <div class="task-name-container">
                 <a name="/Additional%20constraints"></a>
                 <a name="//apple_ref/swift/Section/Additional constraints" class="dashAnchor"></a>
-                <a href="#/Additional%20constraints">
-                  <h3 class="section-name">Additional constraints</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Additional%20constraints"></a>
+                  <h3 class="section-name"><p>Additional constraints</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -974,7 +959,7 @@ LayoutScheme can contain other layout schemes.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Layout constraint for independent changing source space. Use him with anchors that not describes rect side (for example <code><a href="Enums/LayoutAnchor.html#/s:8CGLayout12LayoutAnchorO6insetsACSC12NSEdgeInsetsVcACmF">LayoutAnchor.insets</a></code> or <code>LayoutAnchor.Size</code>).</p>
+                        <p>Layout constraint for independent changing source space. Use him with anchors that not describes rect side (for example <code>LayoutAnchor.insets</code> or <code>LayoutAnchor.Size</code>).</p>
 
                         <a href="Structs/AnonymConstraint.html" class="slightly-smaller">See more</a>
                       </div>
@@ -1017,15 +1002,44 @@ LayoutScheme can contain other layout schemes.</p>
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout13ConfigurationV"></a>
+                    <a name="//apple_ref/swift/Struct/Configuration" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout13ConfigurationV">Configuration</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Configuration</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
               <div class="task-name-container">
                 <a name="/ScrollLayoutGuide"></a>
                 <a name="//apple_ref/swift/Section/ScrollLayoutGuide" class="dashAnchor"></a>
-                <a href="#/ScrollLayoutGuide">
-                  <h3 class="section-name">ScrollLayoutGuide</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/ScrollLayoutGuide"></a>
+                  <h3 class="section-name"><p>ScrollLayoutGuide</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -1056,10 +1070,6 @@ LayoutScheme can contain other layout schemes.</p>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -1121,8 +1131,8 @@ LayoutScheme can contain other layout schemes.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2018-06-29)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2019-12-10)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

@@ -66,6 +66,10 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
         // subclass override
     }
 
+    open func add(to owner: Super) {
+        self.ownerElement = owner
+    }
+
     /// Defines rect for `bounds` property. Calls on change `frame`.
     ///
     /// - Parameter frame: New frame value.
