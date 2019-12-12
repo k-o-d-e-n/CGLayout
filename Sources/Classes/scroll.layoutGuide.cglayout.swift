@@ -68,6 +68,29 @@ open class ScrollLayoutGuide<Super: LayoutElement>: LayoutGuide<Super> {
     }
 }
 public extension ScrollLayoutGuide {
+    func decelerate(start: CGPoint, translation: CGPoint?, velocity: CGPoint) -> ScrollAnimationDeceleration<Super>? {
+        guard let translation = translation else {
+            return ScrollAnimationDeceleration(scrollGuide: self, velocity: velocity, bounces: true)
+        }
+        var targetPosition = contentOffset
+        let newBoundsOriginX: CGFloat = start.x - translation.x
+        let minBoundsOriginX: CGFloat = 0.0
+        let maxBoundsOriginX: CGFloat = contentSize.width - bounds.size.width
+        let constrainedBoundsOriginX: CGFloat = max(minBoundsOriginX, min(newBoundsOriginX, maxBoundsOriginX))
+        let rubberBandedX: CGFloat = rubberBandDistance(newBoundsOriginX - constrainedBoundsOriginX, bounds.width)
+        targetPosition.x = constrainedBoundsOriginX + rubberBandedX
+        let newBoundsOriginY: CGFloat = start.y - translation.y
+        let minBoundsOriginY: CGFloat = 0.0
+        let maxBoundsOriginY: CGFloat = contentSize.height - bounds.size.height
+        let constrainedBoundsOriginY: CGFloat = max(minBoundsOriginY, min(newBoundsOriginY, maxBoundsOriginY))
+        let rubberBandedY: CGFloat = rubberBandDistance(newBoundsOriginY - constrainedBoundsOriginY, bounds.height)
+        targetPosition.y = constrainedBoundsOriginY + rubberBandedY
+        self.contentOffset = targetPosition
+
+        return nil
+    }
+}
+public extension ScrollLayoutGuide {
     /// Convinience initializer for adjustable layout elements.
     /// Initializes layout guide with layout block constrained to calculated size of element.
     ///
@@ -102,6 +125,14 @@ public struct ScrollDirection: OptionSet {
     public static var horizontal: ScrollDirection = ScrollDirection(constraints: [.width()], rawValue: 1)
     public static var vertical: ScrollDirection = ScrollDirection(constraints: [.height()], rawValue: 2)
     public static var both: ScrollDirection = ScrollDirection(constraints: [.height(), .width()], rawValue: 0)
+}
+
+
+private func rubberBandDistance(_ offset: CGFloat, _ dimension: CGFloat) -> CGFloat {
+    let constant: CGFloat = 0.55
+    let result: CGFloat = (constant * abs(offset) * dimension) / (dimension + constant * abs(offset))
+    // The algorithm expects a positive offset, so we have to negate the result if the offset was negative.
+    return offset < 0.0 ? -result : result
 }
 
 func LinearInterpolation(t: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
@@ -241,15 +272,15 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
     private var lastMomentumTime: TimeInterval
     private(set) weak var scrollGuide: ScrollLayoutGuide<Item>!
     var beginTime: TimeInterval = Date.timeIntervalSinceReferenceDate
-    let needBouncing: Bool
 
     let timeInterval: CGFloat = 1/60
     let startVelocity: CGPoint
 
+    public var bounces: Bool
     public init(scrollGuide sg: ScrollLayoutGuide<Item>, velocity v: CGPoint, bounces: Bool) {
         self.scrollGuide = sg
 
-        self.needBouncing = true//bounces
+        self.bounces = bounces
         self.startVelocity = v
         self.lastMomentumTime = beginTime
         self.x = ScrollAnimationDecelerationComponent(
@@ -282,27 +313,23 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
         }
     }
 
-    public func step(_ timer: Timer) {
-        func stopIfNeeded() {
-            if abs(x.velocity) <= 0.001 && abs(y.velocity) <= 0.001 {
-                timer.invalidate()
-            }
+    /// Returns true if animation completed
+    public func step() -> Bool {
+        func stopIfNeeded() -> Bool {
+            return abs(x.velocity) <= 0.001 && abs(y.velocity) <= 0.001
         }
-
-        guard let guide = scrollGuide/*, (abs(x.velocity) >= 0.001 && abs(y.velocity) >= 0.001)*/ else {
-            timer.invalidate()
-            return
+        guard let guide = scrollGuide else {
+            return true
         }
 
         let offset = guide.contentOffset
         x.position = offset.x
         y.position = offset.y
-        if needBouncing {
+        if bounces {
             let confinedOffset = guide._confinedContentOffset(guide.contentOffset)
             if (x.position < 0 || x.position > guide.contentSize.width - guide.frame.width) {
                 x.position = offset.x
                 x.animateBounce(&guide.contentOffset.x, begin: beginTime, to: confinedOffset.x)
-                stopIfNeeded()
             } else if !x.bounced {
                 x.position += -x.velocity * timeInterval
                 guide.contentOffset.x = x.position
@@ -310,7 +337,6 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
             if (y.position < 0 || y.position > guide.contentSize.height - guide.frame.height) {
                 y.position = offset.y
                 y.animateBounce(&guide.contentOffset.y, begin: beginTime, to: confinedOffset.y)
-                stopIfNeeded()
             } else if !y.bounced {
                 y.position += -y.velocity * timeInterval
                 guide.contentOffset.y = y.position
@@ -331,5 +357,6 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
         if !y.bouncing {
             y.velocity = startVelocity.y * drag
         }
+        return stopIfNeeded()
     }
 }

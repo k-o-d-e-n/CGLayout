@@ -76,47 +76,33 @@ class ScrollLayoutGuideController: UIViewController {
     var start: CGPoint = .zero
     var timer: Timer? = nil
     @objc func panGesture(_ recognizer: UIPanGestureRecognizer) {
-        let translation = recognizer.translation(in: recognizer.view)
-        let velocity = recognizer.velocity(in: recognizer.view)
-        let friction = scrollLayoutGuide.translationFriction()
-        var targetPosition = scrollLayoutGuide.contentOffset
+        let velocity = recognizer
+                        .velocity(in: recognizer.view)
+                        .clamped(max: 1500)
 
-        var animated = false
         switch recognizer.state {
         case .began:
             timer?.invalidate()
             timer = nil
             start = scrollLayoutGuide.contentOffset
-            targetPosition = start
         case .changed:
-            let newBoundsOriginX: CGFloat = start.x - translation.x
-            let minBoundsOriginX: CGFloat = 0.0
-            let maxBoundsOriginX: CGFloat = scrollLayoutGuide.contentSize.width - scrollLayoutGuide.bounds.size.width
-            let constrainedBoundsOriginX: CGFloat = max(minBoundsOriginX, min(newBoundsOriginX, maxBoundsOriginX))
-            let rubberBandedX: CGFloat = rubberBandDistance(newBoundsOriginX - constrainedBoundsOriginX, scrollLayoutGuide.bounds.width)
-            targetPosition.x = constrainedBoundsOriginX + rubberBandedX
-            let newBoundsOriginY: CGFloat = start.y - translation.y
-            let minBoundsOriginY: CGFloat = 0.0
-            let maxBoundsOriginY: CGFloat = scrollLayoutGuide.contentSize.height - scrollLayoutGuide.bounds.size.height
-            let constrainedBoundsOriginY: CGFloat = max(minBoundsOriginY, min(newBoundsOriginY, maxBoundsOriginY))
-            let rubberBandedY: CGFloat = rubberBandDistance(newBoundsOriginY - constrainedBoundsOriginY, scrollLayoutGuide.bounds.height)
-            targetPosition.y = constrainedBoundsOriginY + rubberBandedY
-//            targetPosition = CGPoint(x: start.x - translation.x * friction.x, y: start.y - translation.y * friction.y)
+            let translation = recognizer.translation(in: recognizer.view)
+            _ = scrollLayoutGuide.decelerate(start: start, translation: translation, velocity: velocity)
         case .ended:
-            animated = true
-        default: break
-        }
-
-        if animated {
-            let animation = ScrollAnimationDeceleration(scrollGuide: scrollLayoutGuide, velocity: velocity, bounces: false)
-            if #available(iOS 10.0, *) {
-                timer = Timer(timeInterval: 1/60, repeats: true, block: animation.step)
-                RunLoop.current.add(timer!, forMode: .default)
-            } else {
-                // Fallback on earlier versions
+            if let animation = scrollLayoutGuide.decelerate(start: start, translation: nil, velocity: velocity) {
+                if #available(iOS 10.0, *) {
+                    timer?.invalidate()
+                    timer = Timer(timeInterval: 1/60, repeats: true, block: { timer in
+                        if animation.step() {
+                            timer.invalidate()
+                        }
+                    })
+                    RunLoop.current.add(timer!, forMode: .default)
+                } else {
+                    // Fallback on earlier versions
+                }
             }
-        } else {
-            scrollLayoutGuide.contentOffset = targetPosition
+        default: break
         }
     }
 
@@ -126,23 +112,12 @@ class ScrollLayoutGuideController: UIViewController {
     }
 }
 
-private func rubberBandDistance(_ offset: CGFloat, _ dimension: CGFloat) -> CGFloat {
-    let constant: CGFloat = 0.55
-    let result: CGFloat = (constant * abs(offset) * dimension) / (dimension + constant * abs(offset))
-    // The algorithm expects a positive offset, so we have to negate the result if the offset was negative.
-    return offset < 0.0 ? -result : result
-}
-
-extension ScrollLayoutGuide {
-    func translationFriction() -> CGPoint {
-        var friction = CGPoint(x: 1, y: 1)
-//        if contentOffset.x < 0 {
-//            friction.x -= (abs(contentOffset.x) / frame.width) * 2
-//        }
-//        if contentOffset.y < 0 {
-//            friction.y -= (abs(contentOffset.y) / frame.height) * 2
-//        }
-        return friction
+extension CGPoint {
+    func clamped(max: CGFloat) -> CGPoint {
+        return CGPoint(x: clamp(x, min: -max, max: max), y: clamp(y, min: -max, max: max))
+    }
+    private func clamp(_ v: CGFloat, min: CGFloat, max: CGFloat) -> CGFloat {
+        return (v < min) ? min : (v > max) ? max : v
     }
 }
 
@@ -160,10 +135,6 @@ final class UIScrollViewController: UIViewController {
 
         let content = loadContentScheme(subviews: &subviews)
         scheme = LayoutScheme(blocks: [
-//            view.layoutBlock(
-//                with: Layout(x: .left(), y: .top(), width: .scaled(1), height: .scaled(1)),
-//                constraints: [(topLayoutGuide as! UIView).layoutConstraint(for: [LayoutAnchor.bottom(.limit(on: .outer))])]
-//            ),
             content.scheme
         ])
         (view as! UIScrollView).contentSize = content.guide.bounds.size
