@@ -109,8 +109,17 @@ public class SecondViewController: UIViewController {
         } else {
             topLayoutGuideConstraint = navigationController!.navigationBar.layoutConstraint(for: [.bottom(.limit(on: .outer))])
         }
+        let bottomLayoutGuideConstraint: LayoutConstraint
+        if #available(iOS 11.0, tvOS 11.0, *) {
+            bottomLayoutGuideConstraint = view.safeAreaLayoutGuide.layoutConstraint(for: [.bottom(.limit(on: .inner))])
+        } else {
+            bottomLayoutGuideConstraint = view.layoutConstraint(for: [.bottom(.limit(on: .inner))])
+        }
         return LayoutScheme(blocks: [
-            distanceLabel.layoutBlock(with: Layout(x: .center(), y: .bottom(50), width: .fixed(70), height: .fixed(30))),
+            distanceLabel.layoutBlock(
+                with: Layout(x: .center(), y: .bottom(50), width: .fixed(70), height: .fixed(30)),
+                constraints: [bottomLayoutGuideConstraint]
+            ),
             separator1Layer.layoutBlock(
                 with: Layout(x: .trailing(25), y: .top(), width: .fixed(1), height: .scaled(1)),
                 constraints: [distanceLabel.layoutConstraint(for: [.leading(.limit(on: .outer)), .top(.limit(on: .inner)), .size(.height())])]

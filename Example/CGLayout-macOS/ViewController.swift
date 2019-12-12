@@ -71,7 +71,7 @@ class ViewController: NSViewController {
             scrollView.frame = NSRect(origin: .zero, size: rect.insetBy(dx: 0, dy: 10).size)
         }
         let snap = scheme.snapshot(for: view.frame)
-        scrollView.documentView?.frame.size = snap.snapshotFrame.size
+        scrollView.documentView?.frame.size = snap.frame.size
         scheme.apply(snapshot: snap)
     }
 

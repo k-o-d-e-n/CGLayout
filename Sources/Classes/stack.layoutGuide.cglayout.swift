@@ -188,7 +188,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             let blockFrame = block.frame
             snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
             return blockFrame
-        }, snapshotFrame: snapshotFrame ?? .zero)
+        }, frame: snapshotFrame ?? .zero)
     }
     public var currentRect: CGRect {
         let items = self.items()
@@ -221,7 +221,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     func apply(snapshot: LayoutSnapshotProtocol) {
         var iterator = items().makeIterator()
         for child in snapshot.childSnapshots {
-            iterator.next()?.frame = child.snapshotFrame
+            iterator.next()?.frame = child.frame
         }
     }
 
@@ -253,7 +253,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             completedRects.insert((iterator.next()!, current), at: 0)
             snapRect = snapRect?.union(current) ?? current
         }
-        return LayoutSnapshot(childSnapshots: frames, snapshotFrame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
+        return LayoutSnapshot(childSnapshots: frames, frame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
     }
 }
 
@@ -316,7 +316,7 @@ open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent
     /// - Returns: A new size that fits the receiver’s content
     func sizeThatFits(_ size: CGSize) -> CGSize {
         let sourceRect = CGRect(origin: .zero, size: size)
-        var result = scheme.snapshot(for: insetAnchor?.constrained(sourceRect: sourceRect, by: .zero) ?? sourceRect).snapshotFrame.distanceFromOrigin
+        var result = scheme.snapshot(for: insetAnchor?.constrained(sourceRect: sourceRect, by: .zero) ?? sourceRect).frame.distanceFromOrigin
         result.width += contentInsets.right
         result.height += contentInsets.bottom
         return result

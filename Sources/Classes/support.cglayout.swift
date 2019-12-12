@@ -59,7 +59,8 @@ extension UIImageView: AdjustableLayoutElement {
                         sourceRect.size.width = rect.width
                         sourceRect.size.height = (imageSize.height / imageSize.width) * rect.width
                     }
-                default: break
+                default:
+                    sourceRect.size = image.size
                 }
             } else {
                 sourceRect.size = .zero

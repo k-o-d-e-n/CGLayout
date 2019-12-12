@@ -17,15 +17,15 @@ import Foundation
 // MARK: LayoutBlock
 
 /// Defines frame of layout block, and child blocks
-public protocol LayoutSnapshotProtocol {
+public protocol LayoutSnapshotProtocol { // TODO: Equatable
     /// Frame of layout block represented as snapshot
-    var snapshotFrame: CGRect { get }
+    var frame: CGRect { get }
     /// Snapshots of child layout blocks
     var childSnapshots: [LayoutSnapshotProtocol] { get }
 }
 extension CGRect: LayoutSnapshotProtocol {
     /// Returns self value
-    public var snapshotFrame: CGRect { return self }
+    public var frame: CGRect { return self }
     /// Returns empty array
     public var childSnapshots: [LayoutSnapshotProtocol] { return [] }
 }
@@ -183,7 +183,7 @@ public final class LayoutBlock<Item: LayoutElement>: LayoutBlockProtocol {
     func apply(snapshot: LayoutSnapshotProtocol) {
         assert(isActive, LayoutBlock.message(forNotActive: self))
 
-        item?.frame = snapshot.snapshotFrame
+        item?.frame = snapshot.frame
     }
 }
 
@@ -205,10 +205,10 @@ public struct LayoutScheme: LayoutBlockProtocol {
     var currentSnapshot: LayoutSnapshotProtocol {
         var snapshotFrame: CGRect!
         return LayoutSnapshot(childSnapshots: blocks.map { block in
-            let blockFrame = block.currentSnapshot.snapshotFrame
+            let blockFrame = block.currentSnapshot.frame
             snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
             return blockFrame
-        }, snapshotFrame: snapshotFrame)
+        }, frame: snapshotFrame)
     }
 
     public init(blocks: [LayoutBlockProtocol]) {
@@ -264,9 +264,9 @@ public struct LayoutScheme: LayoutBlockProtocol {
         var snapshotFrame: CGRect?
         return LayoutSnapshot(childSnapshots: blocks.map { block in
             let blockSnapshot = block.snapshot(for: sourceRect, completedRects: &completedRects)
-            snapshotFrame = snapshotFrame?.union(blockSnapshot.snapshotFrame) ?? blockSnapshot.snapshotFrame
+            snapshotFrame = snapshotFrame?.union(blockSnapshot.frame) ?? blockSnapshot.frame
             return blockSnapshot
-        }, snapshotFrame: snapshotFrame ?? .zero)
+        }, frame: snapshotFrame ?? .zero)
     }
 
     public mutating func insertLayout(block: LayoutBlockProtocol, to position: Int? = nil) {
