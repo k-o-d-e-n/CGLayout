@@ -71,14 +71,26 @@ class Application {
     }
 
     var lastWheelEventTimestamp: UInt32 = 0
+    var timer: Timer?
     func mouseWheel(_ event: SDL_MouseWheelEvent) {
-        guard lastWheelEventTimestamp < event.timestamp else { return }
+        guard lastWheelEventTimestamp < event.timestamp, let c = container else { return }
         lastWheelEventTimestamp = event.timestamp
 
         let x: CGFloat = CGFloat(event.x)
-        let y: CGFloat = CGFloat(event.y)
-        container?.contentOffset.x += x
-        container?.contentOffset.y += y
+        let y: CGFloat = CGFloat(event.y) * (event.direction == SDL_MOUSEWHEEL_FLIPPED.rawValue ? -1 : 1)
+        c.contentOffset.x += x
+        c.contentOffset.y += y
+        if let animation = c.decelerate(start: c.contentOffset, translation: nil, velocity: CGPoint(x: CGFloat(-event.x * 150), y: CGFloat(event.y * 200))) {
+            if #available(macOS 10.12, *) {
+                timer?.invalidate()
+                timer = Timer(timeInterval: 1/60, repeats: true, block: { timer in
+                    if animation.step() {
+                        timer.invalidate()
+                    }
+                })
+                RunLoop.current.add(timer!, forMode: .default)
+            }
+        }
     }
 }
 extension Application {

@@ -123,7 +123,7 @@ if UIDevice.current.orientation.isPortrait, let snapshot = portraitSnapshot {
 }
 ```
 
-### Typical implementation `sizeThatFits(_:)` method
+Typical implementation `sizeThatFits(_:)` method
 
 ```swift
 func sizeThatFits(_ size: CGSize) -> CGSize {
