@@ -2,18 +2,36 @@
     "version": "0.2.0",
     "configurations": [
         {
-            // "type": "",
+            "type": "lldb",
             "request": "launch",
             "name": "Test",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "swift-test"
         },
         {
-            // "type": "",
+            "type": "lldb",
             "request": "launch",
             "name": "Build",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "swift-build"
+        },
+        // Running executables
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Run your Executable",
+            "program": "${workspaceFolder}/.build/debug/your-executable",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "swift-build"
+        },
+        // Running unit tests
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug tests on Linux",
+            "program": "./.build/x86_64-unknown-linux/debug/CGLayoutPackageTests.xctest",
+            "preLaunchTask": "swift-build-tests"
         }
     ]
 }
