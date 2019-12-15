@@ -11,9 +11,16 @@
             }
         },
         {
+            "label": "swift-build-tests",
+            "type": "shell",
+            "command": "swift build --build-tests",
+            "group": "build"
+        },
+        {
             "label": "swift-test",
             "type": "shell",
-            "command": "swift test"
+            "command": "swift test",
+            "group": "test"
         }
     ]
 }
