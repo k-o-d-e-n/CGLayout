@@ -18,13 +18,12 @@ import Foundation
 
 /// Provides rect for constrain source space. Used for related constraints.
 public protocol LayoutConstraintProtocol: RectBasedConstraint {
-    var objectIdentifier: ObjectIdentifier? { get }
+    /// Element identifier
+    var elementIdentifier: ObjectIdentifier? { get }
     /// Flag, defines that constraint may be used for layout
     var isActive: Bool { get }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { get }
-    /// `LayoutElement` object associated with this constraint
-    func layoutElement(is object: AnyObject) -> Bool
     /// Return rectangle for constrain source rect
     ///
     /// - Parameter currentSpace: Source rect in current state
@@ -70,17 +69,12 @@ public struct LayoutConstraint {
     }
 }
 extension LayoutConstraint: LayoutConstraintProtocol {
-    public var objectIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
+    public var elementIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
     /// Flag, defines that constraint may be used for layout
     public var isActive: Bool { return inLayoutTimeItem?.superElement != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return false }
-
-    public /// `LayoutElement` object associated with this constraint
-    func layoutElement(is object: AnyObject) -> Bool {
-        return item === object
-    }
 
     public /// Return rectangle for constrain source rect
     ///
@@ -128,17 +122,12 @@ public struct AdjustLayoutConstraint {
     }
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
-    public var objectIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
+    public var elementIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
     public /// Flag, defines that constraint may be used for layout
     var isActive: Bool { return item?.inLayoutTime.superElement != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return true }
-
-    public /// `LayoutElement` object associated with this constraint
-    func layoutElement(is object: AnyObject) -> Bool {
-        return item === object
-    }
 
     public /// Return rectangle for constrain source rect
     ///
@@ -189,15 +178,12 @@ public struct ContentLayoutConstraint {
     }
 }
 extension ContentLayoutConstraint: LayoutConstraintProtocol {
-    public var objectIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
+    public var elementIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
     /// Flag, defines that constraint may be used for layout
     public var isActive: Bool { return inLayoutTimeItem?.superElement != nil }
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return false }
-
-    public /// `LayoutElement` object associated with this constraint
-    func layoutElement(is object: AnyObject) -> Bool { return item === object } // TODO: Can use ObjectIdentifier to avoid compare elements
 
     public /// Return rectangle for constrain source rect
     ///
@@ -275,13 +261,11 @@ public class MutableLayoutConstraint: LayoutConstraintProtocol {
     /// - Returns: Rect for constrain
     func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect { return base.constrainRect(for: currentSpace, in: coordinateSpace) }
 
-    public /// `LayoutElement` object associated with this constraint
-    func layoutElement(is object: AnyObject) -> Bool { return base.layoutElement(is: object) }
-
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return base.isIndependent }
 
-    public var objectIdentifier: ObjectIdentifier? { return base.objectIdentifier }
+    public
+    var elementIdentifier: ObjectIdentifier? { return base.elementIdentifier }
 }
 
 // MARK: Additional constraints
@@ -296,16 +280,11 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
         self.constrainRect = constrainRect
     }
 
-    public var objectIdentifier: ObjectIdentifier? { return nil }
+    public var elementIdentifier: ObjectIdentifier? { return nil }
     public /// Flag, defines that constraint may be used for layout
     var isActive: Bool { return true }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     public var isIndependent: Bool { return true }
-
-    /// `LayoutElement` object associated with this constraint
-    public func layoutElement(is object: AnyObject) -> Bool {
-        return false
-    }
 
     /// Return rectangle for constrain source rect
     ///

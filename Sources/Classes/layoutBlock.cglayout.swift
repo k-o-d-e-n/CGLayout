@@ -60,7 +60,6 @@ public protocol LayoutBlockProtocol {
     ///   - sourceRect: Source space for layout. For not top level blocks rect should define the available bounds of block
     ///   - completedRects: `LayoutElement` items with corrected frame
     /// - Returns: Snapshot that contains frames layout items
-    func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol
     func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier: CGRect]) -> LayoutSnapshotProtocol
 
     /// Applying frames from snapshot to `LayoutElement` items in this block. 
@@ -78,7 +77,7 @@ public extension LayoutBlockProtocol {
     ///   - sourceRect: Source space for layout.
     ///   - constrainRects: `LayoutElement` items, that not included to block, but use for constraining.
     /// - Returns: Snapshot that contains frames layout items
-    func snapshot(for sourceRect: CGRect, constrainRects: [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
+    func snapshot(for sourceRect: CGRect, constrainRects: [ObjectIdentifier: CGRect]) -> LayoutSnapshotProtocol {
         var completedRects = constrainRects
         return snapshot(for: sourceRect, completedRects: &completedRects)
     }
@@ -160,27 +159,11 @@ public final class LayoutBlock<Item: LayoutElement>: LayoutBlockProtocol {
     ///   - sourceRect: Source space for layout. For not top level blocks rect should be define available bounds of block
     ///   - completedRects: `LayoutElement` elements with corrected frame
     /// - Returns: Frame of this block
-    func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
+    func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier : CGRect]) -> LayoutSnapshotProtocol {
         guard let item = item, let inLayout = self.item?.inLayoutTime, let superItem = inLayout.superElement else { fatalError(LayoutBlock.message(forNotActive: self)) }
 
         let source = constraints.lazy.filter { $0.isActive }.reduce(sourceRect) { (result, constraint) -> CGRect in
-            let rect = constraint.isIndependent ? nil : completedRects.first { constraint.layoutElement(is: $0.0) }?.1
-
-            debugWarning(!constraint.isIndependent && rect == nil, "Constraint operates with not actual frame of element: \(constraint)")
-
-            let constrainRect = rect.map { constraint.convert(rectIfNeeded: $0, to: superItem) } /// converts rect to current coordinate space if needed
-                ?? constraint.constrainRect(for: result, in: superItem)
-            return result.constrainedBy(rect: constrainRect, use: constraint)
-        }
-        let frame = itemLayout.layout(rect: inLayout.frame, in: source)
-        completedRects.insert((item, frame), at: 0)
-        return frame
-    }
-    public func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier : CGRect]) -> LayoutSnapshotProtocol {
-        guard let item = item, let inLayout = self.item?.inLayoutTime, let superItem = inLayout.superElement else { fatalError(LayoutBlock.message(forNotActive: self)) }
-
-        let source = constraints.lazy.filter { $0.isActive }.reduce(sourceRect) { (result, constraint) -> CGRect in
-            let rect = constraint.isIndependent ? nil : constraint.objectIdentifier.flatMap { completedRects[$0] }
+            let rect = constraint.isIndependent ? nil : constraint.elementIdentifier.flatMap { completedRects[$0] }
 
             debugWarning(!constraint.isIndependent && rect == nil, "Constraint operates with not actual frame of element: \(constraint)")
 
@@ -266,7 +249,7 @@ public struct LayoutScheme: LayoutBlockProtocol {
     /// - Parameter sourceRect: Source space for layout
     /// - Returns: Snapshot contained frames layout elements
     func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
-        var completedFrames: [ObjectIdentifier: CGRect] = [:]//[(AnyObject, CGRect)] = []
+        var completedFrames: [ObjectIdentifier: CGRect] = [:]
         return snapshot(for: sourceRect, completedRects: &completedFrames)
     }
 
@@ -277,15 +260,7 @@ public struct LayoutScheme: LayoutBlockProtocol {
     ///   - sourceRect: Source space for layout. For not top level blocks rect should be define available bounds of block
     ///   - completedRects: `LayoutElement` elements with corrected frame
     /// - Returns: Frame of this block
-    func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
-        var snapshotFrame: CGRect?
-        return LayoutSnapshot(childSnapshots: blocks.map { block in
-            let blockSnapshot = block.snapshot(for: sourceRect, completedRects: &completedRects)
-            snapshotFrame = snapshotFrame?.union(blockSnapshot.frame) ?? blockSnapshot.frame
-            return blockSnapshot
-        }, frame: snapshotFrame ?? .zero)
-    }
-    public func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier : CGRect]) -> LayoutSnapshotProtocol {
+    func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier : CGRect]) -> LayoutSnapshotProtocol {
         var snapshotFrame: CGRect?
         return LayoutSnapshot(childSnapshots: blocks.map { block in
             let blockSnapshot = block.snapshot(for: sourceRect, completedRects: &completedRects)
