@@ -152,7 +152,7 @@ class TextField: View, TextInput {
             try renderer.setDrawColor(red: 0x00, green: 0x00, blue: 0x00, alpha: 0xFF)
             try renderer.fill(
                 rect: SDL_Rect(
-                    x: Int32(c.frame.minX + frame.minX + (text.count * 10)), y: Int32(c.frame.minY + frame.minY),
+                    x: Int32(c.frame.minX + frame.minX + CGFloat(text.count * 10)), y: Int32(c.frame.minY + frame.minY),
                     w: Int32(1), h: Int32(bounds.height)
                 )
             )
