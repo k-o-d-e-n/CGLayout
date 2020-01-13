@@ -287,7 +287,7 @@ open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent
     }
 
     internal func removeItem(_ item: LayoutElement) -> Bool {
-        guard let index = items.index(where: { $0 === item }) else { return false }
+        guard let index = items.firstIndex(where: { $0 === item }) else { return false }
         
         items.remove(at: index)
         return true

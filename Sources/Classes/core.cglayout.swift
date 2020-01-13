@@ -1587,19 +1587,6 @@ public extension Layout {
             x, y
         ])
     }
-
-    func with(height: Filling.Vertical) -> Layout {
-        return Layout(layouts: [height] + layouts)
-    }
-    func with(width: Filling.Horizontal) -> Layout {
-        return Layout(layouts: [width] + layouts)
-    }
-    func with(y: Alignment.Vertical) -> Layout {
-        return Layout(layouts: layouts + [y])
-    }
-    func with(x: Alignment.Horizontal) -> Layout {
-        return Layout(layouts: layouts + [x])
-    }
 }
 
 extension Layout.Filling.Vertical: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
@@ -1717,6 +1704,18 @@ extension Layout {
     }
     public static func top(_ space: PartialRangeFrom<CGFloat>) -> Layout {
         return Layout.from(TopAnchor(), size: HeightAnchor.height, operator: +, space: space)
+    }
+    public static func height(_ filling: Filling.Vertical) -> Layout {
+        return Layout(layouts: [filling])
+    }
+    public static func width(_ filling: Filling.Horizontal) -> Layout {
+        return Layout(layouts: [filling])
+    }
+    public static func vertical(_ alignment: Alignment.Vertical) -> Layout {
+        return Layout(layouts: [alignment])
+    }
+    public static func horizontal(_ alignment: Alignment.Horizontal) -> Layout {
+        return Layout(layouts: [alignment])
     }
 }
 

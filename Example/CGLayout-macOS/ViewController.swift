@@ -160,7 +160,7 @@ class ViewController: NSViewController {
             socialLabelPrefix.layoutConstraint(for: [.right(.limit(on: .outer))]),
             socialLabel.adjustLayoutConstraint(for: [.width(), .height()]),
         ])
-        let socialPosition = socialLabel/*.baselineElement*/.layoutBlock(with: Layout.nothing.with(y: .bottom()), constraints: [
+        let socialPosition = socialLabel/*.baselineElement*/.layoutBlock(with: .vertical(.bottom()), constraints: [
 //            socialLabelPrefix.baselineLayoutConstraint(for: [.bottom(.align(by: .inner))])
             socialLabelPrefix.layoutConstraint(for: [.bottom(.align(by: .inner))])
         ])

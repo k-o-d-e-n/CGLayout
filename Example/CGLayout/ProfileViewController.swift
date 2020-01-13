@@ -109,7 +109,7 @@ class ProfileViewController: UIViewController {
             }
         )
         let socialPosition = socialLabel.baselineElement.layoutBlock(
-            with: Layout.nothing.with(y: .bottom()),
+            with: .vertical(.bottom()),
             constraints: { (anchors) in
                 anchors.bottom.align(by: socialLabelPrefix.baselineElement.layoutAnchors.bottom)
             }
