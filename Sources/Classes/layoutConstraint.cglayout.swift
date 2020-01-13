@@ -18,6 +18,7 @@ import Foundation
 
 /// Provides rect for constrain source space. Used for related constraints.
 public protocol LayoutConstraintProtocol: RectBasedConstraint {
+    var objectIdentifier: ObjectIdentifier? { get }
     /// Flag, defines that constraint may be used for layout
     var isActive: Bool { get }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.
@@ -69,6 +70,7 @@ public struct LayoutConstraint {
     }
 }
 extension LayoutConstraint: LayoutConstraintProtocol {
+    public var objectIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
     /// Flag, defines that constraint may be used for layout
     public var isActive: Bool { return inLayoutTimeItem?.superElement != nil }
 
@@ -126,6 +128,7 @@ public struct AdjustLayoutConstraint {
     }
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
+    public var objectIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
     public /// Flag, defines that constraint may be used for layout
     var isActive: Bool { return item?.inLayoutTime.superElement != nil }
 
@@ -186,6 +189,7 @@ public struct ContentLayoutConstraint {
     }
 }
 extension ContentLayoutConstraint: LayoutConstraintProtocol {
+    public var objectIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
     /// Flag, defines that constraint may be used for layout
     public var isActive: Bool { return inLayoutTimeItem?.superElement != nil }
 
@@ -276,6 +280,8 @@ public class MutableLayoutConstraint: LayoutConstraintProtocol {
 
     public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
     var isIndependent: Bool { return base.isIndependent }
+
+    public var objectIdentifier: ObjectIdentifier? { return base.objectIdentifier }
 }
 
 // MARK: Additional constraints
@@ -290,6 +296,7 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
         self.constrainRect = constrainRect
     }
 
+    public var objectIdentifier: ObjectIdentifier? { return nil }
     public /// Flag, defines that constraint may be used for layout
     var isActive: Bool { return true }
     /// Flag that constraint not required other calculations. It`s true for size-based constraints.

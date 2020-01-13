@@ -255,6 +255,20 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         }
         return LayoutSnapshot(childSnapshots: frames, frame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
     }
+    public func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier : CGRect]) -> LayoutSnapshotProtocol {
+        let subItems = items()
+        let frames = distribution.distribute(
+            rects: subItems.map { $0.inLayoutTime.frame }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
+            in: sourceRect,
+            along: axis
+        )
+        var iterator = subItems.makeIterator()
+        let snapshotFrame = frames.reduce(into: frames.first) { snapRect, current in
+            completedRects[ObjectIdentifier(iterator.next()!)] = current
+            snapRect = snapRect?.union(current) ?? current
+        }
+        return LayoutSnapshot(childSnapshots: frames, frame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
+    }
 }
 
 /// StackLayoutGuide layout guide for arranging items in ordered list. It's analogue UIStackView.
