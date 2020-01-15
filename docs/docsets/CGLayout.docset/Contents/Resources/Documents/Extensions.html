@@ -14,7 +14,7 @@
     <a title="Extensions  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">CGLayout Docs</a> (57% documented)</p>
+        <p><a href="index.html">CGLayout Docs</a> (58% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -83,6 +83,9 @@
                 <a href="Extensions/EdgeInsets.html">EdgeInsets</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions/Equatable.html">Equatable</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions/LayoutCoordinateSpace.html">LayoutCoordinateSpace</a>
               </li>
               <li class="nav-group-task">
@@ -110,6 +113,12 @@
                 <a href="Extensions/UILabel.html">UILabel</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions/UILabel/Baseline.html">– Baseline</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/UILayoutGuide">UILayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions/UIScrollView.html">UIScrollView</a>
               </li>
               <li class="nav-group-task">
@@ -130,7 +139,7 @@
                 <a href="Protocols/ElementInLayoutTime.html">ElementInLayoutTime</a>
               </li>
               <li class="nav-group-task">
-                <a href="Protocols/Extended.html">Extended</a>
+                <a href="Protocols/Extensible.html">Extensible</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a>
@@ -178,12 +187,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/AnyRectBasedLayout.html">AnyRectBasedLayout</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/Baseline.html">Baseline</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/BaselineLayoutConstraint.html">BaselineLayoutConstraint</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/Bottom.html">Bottom</a>
@@ -351,34 +354,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout6CGRecta"></a>
-                    <a name="//apple_ref/swift/Extension/CGRect" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout6CGRecta">CGRect</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Extensions/CGRect.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">CGRect</span> <span class="o">=</span> <span class="kt">NSRect</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:8CGLayout10EdgeInsetsa"></a>
                     <a name="//apple_ref/swift/Extension/EdgeInsets" class="dashAnchor"></a>
                     <a class="token" href="#/s:8CGLayout10EdgeInsetsa">EdgeInsets</a>
@@ -397,7 +372,36 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt"><a href="Typealiases.html#/EdgeInsets">EdgeInsets</a></span> <span class="o">=</span> <span class="kt">NSEdgeInsets</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="Typealiases.html#/EdgeInsets">EdgeInsets</a></span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout6CGRecta"></a>
+                    <a name="//apple_ref/swift/Extension/CGRect" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout6CGRecta">CGRect</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Extensions/CGRect.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">:</span> <span class="kt"><a href="Protocols/LayoutSnapshotProtocol.html">LayoutSnapshotProtocol</a></span></code></pre>
 
                         </div>
                       </div>
@@ -424,17 +428,16 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">CALayer</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSSecureCoding</span><span class="p">,</span> <span class="kt">CAMediaTiming</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">CALayer</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">CALayer</span><span class="p">:</span> <span class="kt"><a href="Protocols/LayoutElementsContainer.html">LayoutElementsContainer</a></span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">CALayer</span><span class="p">:</span> <span class="kt"><a href="Protocols/LayoutElement.html">LayoutElement</a></span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">CALayer</span><span class="p">:</span> <span class="kt">AnchoredLayoutElement</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -470,6 +473,13 @@
                         
                         <a href="Extensions/UIView.html" class="slightly-smaller">See more</a>
                       </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          
+                        </div>
+                      </div>
                     </section>
                   </div>
                 </li>
@@ -493,7 +503,9 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">NSView</span> <span class="p">:</span> <span class="kt">NSResponder</span><span class="p">,</span> <span class="kt">NSAnimatablePropertyContainer</span><span class="p">,</span> <span class="kt">NSUserInterfaceItemIdentification</span><span class="p">,</span> <span class="kt">NSDraggingDestination</span><span class="p">,</span> <span class="kt">NSAppearanceCustomization</span><span class="p">,</span> <span class="kt">NSAccessibilityElementProtocol</span><span class="p">,</span> <span class="kt">NSAccessibility</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">NSView</span><span class="p">:</span> <span class="kt"><a href="Protocols/LayoutElementsContainer.html">LayoutElementsContainer</a></span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">NSView</span><span class="p">:</span> <span class="kt"><a href="Protocols/LayoutElement.html">LayoutElement</a></span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">NSView</span><span class="p">:</span> <span class="kt">AnchoredLayoutElement</span></code></pre>
 
                         </div>
                       </div>
@@ -506,9 +518,11 @@
               <div class="task-name-container">
                 <a name="/LayoutCoordinateSpace"></a>
                 <a name="//apple_ref/swift/Section/LayoutCoordinateSpace" class="dashAnchor"></a>
-                <a href="#/LayoutCoordinateSpace">
-                  <h3 class="section-name">LayoutCoordinateSpace</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/LayoutCoordinateSpace"></a>
+                  <h3 class="section-name"><p>LayoutCoordinateSpace</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -536,9 +550,11 @@
               <div class="task-name-container">
                 <a name="/LayoutGuide%20conversions"></a>
                 <a name="//apple_ref/swift/Section/LayoutGuide conversions" class="dashAnchor"></a>
-                <a href="#/LayoutGuide%20conversions">
-                  <h3 class="section-name">LayoutGuide conversions</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/LayoutGuide%20conversions"></a>
+                  <h3 class="section-name"><p>LayoutGuide conversions</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -564,11 +580,53 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/LayoutElement"></a>
+                <a name="//apple_ref/swift/Section/LayoutElement" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/LayoutElement"></a>
+                  <h3 class="section-name"><p>LayoutElement</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:SQ"></a>
+                    <a name="//apple_ref/swift/Extension/Equatable" class="dashAnchor"></a>
+                    <a class="token" href="#/s:SQ">Equatable</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                        <a href="Extensions/Equatable.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Equatable</span> <span class="k">where</span> <span class="k">Self</span><span class="p">:</span> <span class="kt"><a href="Protocols/LayoutElement.html">LayoutElement</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/Additional%20constraints"></a>
                 <a name="//apple_ref/swift/Section/Additional constraints" class="dashAnchor"></a>
-                <a href="#/Additional%20constraints">
-                  <h3 class="section-name">Additional constraints</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Additional%20constraints"></a>
+                  <h3 class="section-name"><p>Additional constraints</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -591,17 +649,13 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -621,10 +675,6 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -702,7 +752,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">NSScrollView</span> <span class="p">:</span> <span class="kt">NSView</span><span class="p">,</span> <span class="kt">NSTextFinderBarContainer</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">NSScrollView</span></code></pre>
 
                         </div>
                       </div>
@@ -729,9 +779,27 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">NSControl</span> <span class="p">:</span> <span class="kt">NSView</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">NSControl</span><span class="p">:</span> <span class="kt"><a href="Protocols/AdaptiveLayoutElement.html">AdaptiveLayoutElement</a></span><span class="p">,</span> <span class="kt"><a href="Protocols/AdjustableLayoutElement.html">AdjustableLayoutElement</a></span></code></pre>
 
                         </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/"></a>
+                    <a name="//apple_ref/swift/Extension/UILayoutGuide" class="dashAnchor"></a>
+                    <a class="token" href="#/">UILayoutGuide</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
                       </div>
                     </section>
                   </div>
@@ -741,8 +809,8 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2018-06-29)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2019-12-10)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

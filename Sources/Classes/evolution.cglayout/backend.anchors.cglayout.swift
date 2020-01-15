@@ -5,171 +5,7 @@
 //  Created by Denis Koryttsev on 07/10/2017.
 //
 
-#if os(iOS) || os(tvOS)
-import UIKit
-#elseif os(macOS)
-import Cocoa
-#elseif os(Linux)
 import Foundation
-#endif
-
-#if os(macOS) || os(iOS) || os(tvOS)
-
-@available(macOS 10.12, iOS 10.0, *)
-public class LayoutManager<Item: LayoutElement>: NSObject {
-    var deinitialization: (() -> Void)?
-    weak var item: LayoutElement!
-    var scheme: LayoutScheme!
-    private var isNeedLayout: Bool = false
-
-    public func setNeedsLayout() {
-        if !isNeedLayout {
-            isNeedLayout = true
-            scheduleLayout()
-        }
-    }
-
-    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        guard change != nil, item != nil else {
-            return
-        }
-        scheduleLayout()
-    }
-
-    private func scheduleLayout() {
-        RunLoop.current.perform {
-            self.scheme.layout()
-            self.isNeedLayout = false
-        }
-    }
-
-    deinit {
-        deinitialization?()
-    }
-}
-#endif
-
-#if os(iOS) || os(tvOS)
-@available(iOS 10.0, *)
-public extension LayoutManager where Item: UIView {
-    convenience init(view: UIView, scheme: LayoutScheme) {
-        self.init()
-        self.item = view
-        self.scheme = scheme
-        self.deinitialization = { view.removeObserver(self, forKeyPath: "layer.bounds") }
-        view.addObserver(self, forKeyPath: "layer.bounds", options: [], context: nil)
-        scheme.layout()
-    }
-}
-
-/// Base class with layout skeleton implementation.
-open class AutolayoutViewController: UIViewController {
-    fileprivate lazy var internalLayout: LayoutScheme = self.loadInternalLayout()
-    public lazy internal(set) var layoutScheme: LayoutScheme = self.loadLayout()
-    public lazy var freeAreaLayoutGuide = LayoutGuide<UIView>()
-
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        view.add(layoutGuide: freeAreaLayoutGuide)
-    }
-
-    override open func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        internalLayout.layout()
-        update(scheme: &layoutScheme)
-        layout()
-    }
-
-    open func layout() {
-        layoutScheme.layout()
-    }
-
-    open func update(scheme: inout LayoutScheme) {
-        /// subclass override
-        /// use for update dynamic elements
-    }
-
-    open func loadLayout() -> LayoutScheme {
-        /// subclass override
-        /// layout = LayoutScheme(blocks: [LayoutBlockProtocol])
-        fatalError("You should override loading layout method")
-    }
-
-    fileprivate func loadInternalLayout() -> LayoutScheme {
-        let visible: (inout CGRect) -> Void = { [unowned self] rect in
-            if #available(iOS 11.0, tvOS 11.0, *) {
-                rect = UIEdgeInsetsInsetRect(rect, self.view.safeAreaInsets)
-            } else {
-                rect = UIEdgeInsetsInsetRect(rect, self.viewContentInsets)
-            }
-        }
-        return LayoutScheme(
-            blocks: [freeAreaLayoutGuide.layoutBlock(constraints: [AnonymConstraint(transform: visible)])]
-        )
-    }
-
-    @available(iOS 9.0, *)
-    private var viewContentInsets: UIEdgeInsets {
-        let bars = heightBars
-        return UIEdgeInsets(top: bars.top,
-                            left: 0,
-                            bottom: bars.bottom,
-                            right: 0)
-    }
-
-    @available(iOS 9.0, *)
-    private var heightBars: (top: CGFloat, bottom: CGFloat) {
-        guard let window = UIApplication.shared.delegate.flatMap({ $0.window }).flatMap({ $0 }), let superview = viewIfLoaded?.superview else {
-            return (UIApplication.shared.statusBarFrame.height + (navigationController.map { $0.isNavigationBarHidden ? 0 : $0.navigationBar.frame.height } ?? 0),
-                    tabBarController.map { $0.tabBar.isHidden ? 0 : $0.tabBar.frame.height } ?? 0)
-        }
-
-        var topFrame = window.convert(UIApplication.shared.statusBarFrame, to: superview)
-        topFrame = topFrame.union(navigationController.map { contr -> CGRect in
-            contr.isNavigationBarHidden ?
-                .zero :
-                superview.convert(contr.navigationBar.frame, from: contr.navigationBar.superview)
-            } ?? .zero)
-
-        let bottomBarsTop = tabBarController.map { contr -> CGPoint in
-            contr.tabBar.isHidden ?
-                .zero :
-                superview.convert(contr.tabBar.frame.origin, from: contr.tabBar.superview)
-        }
-
-        return (max(0, topFrame.maxY - view.frame.origin.y),
-                max(0, bottomBarsTop.map { $0.y - view.frame.maxY } ?? 0))
-    }
-}
-
-open class ScrollLayoutViewController: AutolayoutViewController {
-    private var isNeedCalculateContent: Bool = true
-    public var scrollView: UIScrollView! { return view as! UIScrollView }
-    var isScrolling: Bool { return scrollView.isDragging || scrollView.isDecelerating || scrollView.isZooming }
-
-    open override func viewDidLayoutSubviews() {
-        if isNeedCalculateContent || !isScrolling {
-            internalLayout.layout()
-            update(scheme: &layoutScheme)
-            layout()
-            isNeedCalculateContent = false
-        }
-    }
-
-    open override func layout() {
-        super.layout()
-        let contentRect = layoutScheme.currentRect
-        scrollView.contentSize = CGSize(width: contentRect.maxX, height: contentRect.maxY)
-    }
-
-    public func setNeedsUpdateContentSize() {
-        isNeedCalculateContent = true
-        view.setNeedsLayout()
-    }
-}
-#endif
-
-// MARK: Layout
 
 public protocol AxisLayoutEntity {
     associatedtype Axis: RectAxis
@@ -300,6 +136,26 @@ public struct LeftAnchor: RectAnchorPoint {
     public func offset(rect: inout CGRect, by value: CGFloat) { axis.offset(minOf: &rect, to: value) }
     public func move(in rect: inout CGRect, to value: CGFloat) { axis.move(minOf: &rect, to: value) }
     public func get(for rect: CGRect) -> CGFloat { return axis.get(minOf: rect) }
+}
+public struct RTLAnchor: RectAnchorPoint {
+    let base: AnyAxisAnchorPoint<CGRectAxis.Horizontal>
+    let isTrailing: Bool
+
+    init(trailing: Bool, rtlMode: Bool) {
+        self.isTrailing = trailing
+        self.base = (trailing && rtlMode) || (!trailing && !rtlMode) ? AnyAxisAnchorPoint(LeftAnchor()) : AnyAxisAnchorPoint(RightAnchor())
+    }
+
+    public var axis: CGRectAxis.Horizontal { return base.axis }
+    public func offset(rect: inout CGRect, by value: CGFloat) {
+        base.offset(rect: &rect, by: value)
+    }
+    public func move(in rect: inout CGRect, to value: CGFloat) {
+        base.move(in: &rect, to: value)
+    }
+    public func get(for rect: CGRect) -> CGFloat {
+        return base.get(for: rect)
+    }
 }
 public typealias HorizontalAnchor = AnyAxisAnchorPoint<CGRectAxis.Horizontal>
 public typealias VerticalAnchor = AnyAxisAnchorPoint<CGRectAxis.Vertical>
@@ -456,115 +312,13 @@ public struct CGRectAxis: RectAxis {
     }
 }
 
-public struct LayoutWorkspace {
-    public struct Before {
-        public static func align(axis: RectAxis, anchor: RectAxisAnchor) -> RectBasedConstraint { return Align(axis: axis, anchor: anchor) }
-        internal struct Align: RectBasedConstraint {
-            let axis: RectAxis
-            let anchor: RectAxisAnchor
+// MARK: Don't used
 
-            public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                axis.set(origin: anchor.get(for: rect, in: axis) - axis.get(sizeAt: sourceRect), for: &sourceRect)
-            }
-        }
-        public static func limit(axis: RectAxis, anchor: RectAxisAnchor) -> RectBasedConstraint { return Limit(axis: axis, anchor: anchor) }
-        internal struct Limit: RectBasedConstraint {
-            let axis: RectAxis
-            let anchor: RectAxisAnchor
-
-            public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                let anchorPosition = anchor.get(for: rect, in: axis)
-                axis.set(size: max(0, min(axis.get(sizeAt: sourceRect), anchorPosition - axis.get(minOf: sourceRect))),
-                         for: &sourceRect)
-                axis.set(origin: min(anchorPosition, axis.get(minOf: sourceRect)), for: &sourceRect)
-            }
-        }
-        public static func pull(axis: RectAxis, anchor: RectAxisAnchor) -> RectBasedConstraint { return Pull(axis: axis, anchor: anchor) }
-        internal struct Pull: RectBasedConstraint {
-            let axis: RectAxis
-            let anchor: RectAxisAnchor
-
-            public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                let anchorPosition = anchor.get(for: rect, in: axis)
-                axis.set(size: max(0, anchorPosition - axis.get(minOf: sourceRect)),
-                         for: &sourceRect)
-                axis.set(origin: anchorPosition - axis.get(sizeAt: sourceRect), for: &sourceRect)
-            }
-        }
-    }
-    public struct After {
-        public static func align(axis: RectAxis, anchor: RectAxisAnchor) -> RectBasedConstraint { return Align(axis: axis, anchor: anchor) }
-        internal struct Align: RectBasedConstraint {
-            let axis: RectAxis
-            let anchor: RectAxisAnchor
-
-            public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                axis.set(origin: anchor.get(for: rect, in: axis), for: &sourceRect)
-            }
-        }
-        public static func limit(axis: RectAxis, anchor: RectAxisAnchor) -> RectBasedConstraint { return Limit(axis: axis, anchor: anchor) }
-        internal struct Limit: RectBasedConstraint {
-            let axis: RectAxis
-            let anchor: RectAxisAnchor
-
-            public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                let anchorPosition = anchor.get(for: rect, in: axis)
-                axis.set(size: max(0, min(axis.get(sizeAt: sourceRect), axis.get(maxOf: sourceRect) - anchorPosition)),
-                         for: &sourceRect)
-                axis.set(origin: max(anchorPosition, axis.get(minOf: sourceRect)), for: &sourceRect)
-            }
-        }
-        public static func pull(axis: RectAxis, anchor: RectAxisAnchor) -> RectBasedConstraint { return Pull(axis: axis, anchor: anchor) }
-        internal struct Pull: RectBasedConstraint {
-            let axis: RectAxis
-            let anchor: RectAxisAnchor
-
-            public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                let anchorPosition = anchor.get(for: rect, in: axis)
-                axis.set(size: max(0, axis.get(maxOf: sourceRect) - anchorPosition),
-                         for: &sourceRect)
-                axis.set(origin: anchorPosition, for: &sourceRect)
-            }
-        }
-    }
-    public struct Center {
-        public static func align(axis: RectAxis, anchor: RectAxisAnchor) -> RectBasedConstraint { return Align(axis: axis, anchor: anchor) }
-        internal struct Align: RectBasedConstraint {
-            let axis: RectAxis
-            let anchor: RectAxisAnchor
-
-            public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-                axis.set(origin: anchor.get(for: rect, in: axis) - axis.get(sizeAt: sourceRect) * 0.5, for: &sourceRect)
-            }
-        }
-        //        public static func limit(axis: RectAxis, anchor: RectAxisAnchor, limit limitAnchor: RectAxisAnchor) -> RectBasedConstraint { return Limit(axis: axis, anchor: anchor, limitAnchor: limitAnchor) }
-        //        internal struct Limit: RectBasedConstraint {
-        //            let axis: RectAxis
-        //            let anchor: RectAxisAnchor
-        //            let limitAnchor: RectAxisAnchor
-        //
-        //            public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-        //                let anchorPosition = anchor.value(for: rect, in: axis)
-        //                let limitAnchorPosition = limitAnchor.value(for: sourceRect, in: axis)
-        //                axis.set(size: max(0, min(axis.get(sizeAt: sourceRect), max( - anchorPosition))),
-        //                         for: &sourceRect)
-        //                axis.set(origin: max(anchorPosition, axis.get(minOf: sourceRect)), for: &sourceRect)
-        //            }
-        //        }
-        //        public static func pull(axis: RectAxis, anchor: RectAxisAnchor, pull pullAnchor: RectAxisAnchor) -> RectBasedConstraint { return Pull(axis: axis, anchor: anchor, pullAnchor: pullAnchor) }
-        //        internal struct Pull: RectBasedConstraint {
-        //            let axis: RectAxis
-        //            let anchor: RectAxisAnchor
-        //            let pullAnchor: RectAxisAnchor
-        //
-        //            public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-        //                let anchorPosition = anchor.value(for: rect, in: axis)
-        //                axis.set(size: max(0, abs(pullAnchor.value(for: sourceRect, in: axis) - anchorPosition)),
-        //                         for: &sourceRect)
-        //                axis.set(origin: anchorPosition, for: &sourceRect)
-        //            }
-        //        }
-    }
+struct AnyAnchor<Metric: Equatable>: AnyRectAnchor /*, OptionSet*/ {
+    fileprivate let getter: (CGRect) -> Metric
+    //    fileprivate let setter: (Metric, inout CGRect)
+    //    func set(value: Metric, for rect: inout CGRect) { setter(value, &rect) }
+    func get(for rect: CGRect) -> Metric { return getter(rect) }
 }
 
 struct _RectAnchor {
@@ -578,41 +332,4 @@ struct _RectAnchor {
     static var sizeHorizontal = AnyAnchor<CGFloat>(getter: CGRectAxis.horizontal.get(sizeAt:))
     static var sizeVertical = AnyAnchor<CGFloat>(getter: CGRectAxis.vertical.get(sizeAt:))
     static var size = AnyAnchor<CGSize>(getter: { $0.size })//CGSize(width: CGRectAxis.horizontal.get(sizeAt: $0), height: CGRectAxis.vertical.get(sizeAt: $0)) })
-}
-struct AnyAnchor<Metric: Equatable>: AnyRectAnchor /*, OptionSet*/ {
-    fileprivate let getter: (CGRect) -> Metric
-    //    fileprivate let setter: (Metric, inout CGRect)
-    //    func set(value: Metric, for rect: inout CGRect) { setter(value, &rect) }
-    func get(for rect: CGRect) -> Metric { return getter(rect) }
-}
-
-public protocol RectAxisAnchor {
-    //    func set(value: CGFloat, for rect: inout CGRect, in axis: RectAxis)
-    func get(for rect: CGRect, in axis: RectAxis) -> CGFloat
-}
-public struct CGRectAxisAnchor {
-    public static var leading: RectAxisAnchor = Leading()
-    struct Leading: RectAxisAnchor {
-        func get(for rect: CGRect, in axis: RectAxis) -> CGFloat {
-            return axis.get(minOf: rect)
-        }
-    }
-    public static var trailing: RectAxisAnchor = Trailing()
-    struct Trailing: RectAxisAnchor {
-        func get(for rect: CGRect, in axis: RectAxis) -> CGFloat {
-            return axis.get(maxOf: rect)
-        }
-    }
-    public static var center: RectAxisAnchor = Center()
-    struct Center: RectAxisAnchor {
-        func get(for rect: CGRect, in axis: RectAxis) -> CGFloat {
-            return axis.get(midOf: rect)
-        }
-    }
-    public static var size: RectAxisAnchor = Size()
-    struct Size: RectAxisAnchor {
-        func get(for rect: CGRect, in axis: RectAxis) -> CGFloat {
-            return axis.get(sizeAt: rect)
-        }
-    }
 }

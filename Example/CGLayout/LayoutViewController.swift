@@ -36,11 +36,18 @@ class LayoutViewController: UIViewController {
         let blueView = UIView(backgroundColor: .blue)
         contentView.addSubview(blueView)
 
+        let purpleView = UIView(backgroundColor: .purple)
+        contentView.addSubview(purpleView)
+
         self.layoutManager = LayoutManager<UIView>(view: contentView, scheme:
             LayoutScheme(blocks: [
                 redView.layoutBlock(with: Layout(x: .left(), y: .top(), width: .fixed(200), height: .fixed(150))),
                 blueView.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(200), height: .fixed(200))),
-                greenView.layoutBlock(with: Layout(x: .left(), y: .bottom(), width: .fixed(150), height: .fixed(200)))
+                greenView.layoutBlock(with: Layout(x: .left(), y: .bottom(), width: .fixed(150), height: .fixed(200))),
+                purpleView.layoutBlock(with: .equal + .left(20...) + .right(20...) + .top(25...) + .bottom(25...), constraints: [
+                    blueView.layoutConstraint(for: [.bottom(.limit(on: .outer))]),
+                    greenView.layoutConstraint(for: [.top(.limit(on: .outer))])
+                ])
             ])
         )
     }

@@ -13,7 +13,7 @@
     <a title="CGLayout  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">CGLayout Docs</a> (57% documented)</p>
+        <p><a href="index.html">CGLayout Docs</a> (58% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -82,6 +82,9 @@
                 <a href="Extensions/EdgeInsets.html">EdgeInsets</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions/Equatable.html">Equatable</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions/LayoutCoordinateSpace.html">LayoutCoordinateSpace</a>
               </li>
               <li class="nav-group-task">
@@ -109,6 +112,12 @@
                 <a href="Extensions/UILabel.html">UILabel</a>
               </li>
               <li class="nav-group-task">
+                <a href="Extensions/UILabel/Baseline.html">– Baseline</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Extensions.html#/UILayoutGuide">UILayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Extensions/UIScrollView.html">UIScrollView</a>
               </li>
               <li class="nav-group-task">
@@ -129,7 +138,7 @@
                 <a href="Protocols/ElementInLayoutTime.html">ElementInLayoutTime</a>
               </li>
               <li class="nav-group-task">
-                <a href="Protocols/Extended.html">Extended</a>
+                <a href="Protocols/Extensible.html">Extensible</a>
               </li>
               <li class="nav-group-task">
                 <a href="Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a>
@@ -177,12 +186,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/AnyRectBasedLayout.html">AnyRectBasedLayout</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/Baseline.html">Baseline</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/BaselineLayoutConstraint.html">BaselineLayoutConstraint</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/Bottom.html">Bottom</a>
@@ -367,12 +370,19 @@
 <span class="p">])</span>
 </code></pre>
 
-<p>To define block for <q>view</q> element use <code><a href="Classes/LayoutBlock.html">LayoutBlock</a></code> entity, or just use convenience getter method <code>func layoutBlock(with:constraints:)</code>.</p>
+<p>To define block for &ldquo;view&rdquo; element use <code><a href="Classes/LayoutBlock.html">LayoutBlock</a></code> entity, or just use convenience getter methods  <code>func layoutBlock(with:constraints:)</code>.</p>
 <pre class="highlight swift"><code><span class="n">titleLabel</span><span class="o">.</span><span class="nf">layoutBlock</span><span class="p">(</span>
     <span class="nv">with</span><span class="p">:</span> <span class="kt">Layout</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="o">.</span><span class="nf">center</span><span class="p">(),</span> <span class="nv">y</span><span class="p">:</span> <span class="o">.</span><span class="nf">top</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="nv">width</span><span class="p">:</span> <span class="o">.</span><span class="nf">scaled</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">height</span><span class="p">:</span> <span class="o">.</span><span class="nf">fixed</span><span class="p">(</span><span class="mi">120</span><span class="p">)),</span>
     <span class="nv">constraints</span><span class="p">:</span> <span class="p">[</span>
         <span class="n">logoImageView</span><span class="o">.</span><span class="nf">layoutConstraint</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="nf">bottom</span><span class="p">(</span><span class="o">.</span><span class="nf">limit</span><span class="p">(</span><span class="nv">on</span><span class="p">:</span> <span class="o">.</span><span class="n">inner</span><span class="p">))])</span>
     <span class="p">]</span>
+<span class="p">)</span>
+<span class="c1">/// or using anchors</span>
+<span class="n">titleLabel</span><span class="o">.</span><span class="nf">layoutBlock</span><span class="p">(</span>
+    <span class="nv">with</span><span class="p">:</span> <span class="kt">Layout</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="o">.</span><span class="nf">center</span><span class="p">(),</span> <span class="nv">y</span><span class="p">:</span> <span class="o">.</span><span class="nf">top</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="nv">width</span><span class="p">:</span> <span class="o">.</span><span class="nf">scaled</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">height</span><span class="p">:</span> <span class="o">.</span><span class="nf">fixed</span><span class="p">(</span><span class="mi">120</span><span class="p">)),</span>
+    <span class="nv">constraints</span><span class="p">:</span> <span class="p">{</span> <span class="n">anchors</span> <span class="k">in</span>
+        <span class="n">anchors</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="nf">equal</span><span class="p">(</span><span class="nv">to</span><span class="p">:</span> <span class="n">logoImageView</span><span class="o">.</span><span class="n">layoutAnchors</span><span class="o">.</span><span class="n">bottom</span><span class="p">)</span>
+    <span class="p">}</span>
 <span class="p">)</span>
 </code></pre>
 
@@ -398,7 +408,7 @@ For example we have this configuration:</p>
 </p>
 
 <p>You have to carefully approach the creation of blocks, because anchors and based on them constraints not have priority and is applying sequentially.
-Constraints should operate actual frames, therefore next layout block must have constraints with <q>views</q>, that will not change frame.</p>
+Constraints should operate actual frames, therefore next layout block must have constraints with &ldquo;views&rdquo;, that will not change frame.</p>
 
 <p>Layout anchors are limiters, that is oriented on frame properties (such as sides, size, position).
 Any side-based anchors have three base implementations: alignment, limitation(cropping), pulling. Each this implementation have dependency on working space: inner and outer.
@@ -412,7 +422,7 @@ Framework provides such default implementations:</p>
 <li><code><a href="Structs/LayoutConstraint.html">LayoutConstraint</a></code>: simple associated constraint that uses <code>var frame</code> of passed element to constrain source rect. Use him to build dependency on external workspace.</li>
 <li><code><a href="Structs/AdjustLayoutConstraint.html">AdjustLayoutConstraint</a></code>: associated constraint to adjust size of source space. Only elements conform to <code>protocol AdjustableLayoutElement</code>  can use it.</li>
 <li><code><a href="Structs/ContentLayoutConstraint.html">ContentLayoutConstraint</a></code>: associated constraint that uses internal bounds to constrain, defined in &lsquo;layoutBounds&rsquo; property of <code>protocol LayoutElement</code>. Use it if you need to create dependency on internal workspace. For example, element inside <code>UIScrollView</code>.</li>
-<li><code><a href="Structs/BaselineLayoutConstraint.html">BaselineLayoutConstraint</a></code>: associated constraint that depended on base line. Only elements conform to <code>protocol TextPresentedElement</code> can use it.</li>
+<li><code>BaselineLayoutConstraint</code>: associated constraint that depended on base line. Only elements conform to <code>protocol TextPresentedElement</code> can use it.</li>
 <li><code><a href="Structs/AnonymConstraint.html">AnonymConstraint</a></code>: constraint to restrict source space independently from external environment.</li>
 <li><code><a href="Classes/MutableLayoutConstraint.html">MutableLayoutConstraint</a></code>: Layout constraint that creates possibility to change active state
 You can find all this constraints through convenience functions in related elements. Use him to build layout blocks.</li>
@@ -422,7 +432,7 @@ You can find all this constraints through convenience functions in related eleme
 <pre class="highlight swift"><code><span class="n">weatherLabel</span><span class="o">.</span><span class="nf">layoutBlock</span><span class="p">(</span>
     <span class="nv">with</span><span class="p">:</span> <span class="kt">Layout</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="o">.</span><span class="nf">left</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="nv">y</span><span class="p">:</span> <span class="o">.</span><span class="nf">top</span><span class="p">(),</span> <span class="nv">width</span><span class="p">:</span> <span class="o">.</span><span class="nf">scaled</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="nv">height</span><span class="p">:</span> <span class="o">.</span><span class="nf">scaled</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span>
     <span class="nv">constraints</span><span class="p">:</span> <span class="p">[</span>
-        <span class="n">weatherImageView</span><span class="o">.</span><span class="nf">layoutConstraint</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="p">[</span><span class="n">topLimit</span><span class="p">,</span> <span class="n">rightLimit</span><span class="p">,</span> <span class="n">heightEqual</span><span class="p">]),</span>
+        <span class="n">weatherImageView</span><span class="o">.</span><span class="nf">layoutConstraint</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="nf">top</span><span class="p">(</span><span class="o">.</span><span class="nf">limit</span><span class="p">(</span><span class="o">.</span><span class="n">inner</span><span class="p">)),</span> <span class="o">.</span><span class="nf">right</span><span class="p">(</span><span class="o">.</span><span class="nf">limit</span><span class="p">(</span><span class="o">.</span><span class="n">outer</span><span class="p">)),</span> <span class="o">.</span><span class="nf">height</span><span class="p">()]),</span>
         <span class="n">weatherLabel</span><span class="o">.</span><span class="nf">adjustLayoutConstraint</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="nf">width</span><span class="p">()])</span>
     <span class="p">]</span>
 <span class="p">)</span>
@@ -493,8 +503,8 @@ it, simply add the following line to your Podfile:</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2018-06-29)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2019-12-10)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

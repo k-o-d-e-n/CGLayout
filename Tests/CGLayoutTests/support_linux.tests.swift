@@ -10,69 +10,6 @@ import Foundation
 
 @testable import CGLayout
 
-/// The container does not know which child is being added,
-/// but the child knows exactly where it is being added
-
-class ContainerEnterPoint {
-    func add(to view: View) {
-        fatalError("Not implemented")
-    }
-}
-class AnyEnterPoint<C: LayoutElement>: ContainerEnterPoint {    
-    let child: C
-
-    init(_ child: C) {
-        self.child = child
-    }
-}
-class ViewEnterPoint: AnyEnterPoint<View> {
-    override func add(to view: View) {
-        view.addSubview(child)
-    }
-}
-class LayoutGuideEnterPoint: AnyEnterPoint<LayoutGuide<View>> {
-    override func add(to view: View) {
-        view.add(layoutGuide: child)
-    }
-}
-
-protocol EnterPoint {
-    associatedtype Container
-    func add(to container: Container)
-}
-
-struct AnyEnter<Child, Container> {
-    let child: Child
-}
-extension AnyEnter: EnterPoint where Child: View, Container: View {
-    func add(to container: Container) {
-        container.addSubview(child)
-    }
-}
-extension LayoutGuide: EnterPoint where Super: View {
-    typealias Container = View
-    func add(to container: View) {
-        container.add(layoutGuide: self)
-    }
-}
-// extension LayoutGuide: EnterPoint where Super: Layer {
-//     // typealias Container = Layer
-//     func add(to container: Layer) {
-//         container.add(layoutGuide: self)
-//     }
-// }
-extension AnyEnter where Child: LayoutGuide<View>, Container: View { // TODO: EnterPoint redundant conformane resolved in swift 4.2
-    func add(to container: Container) {
-        container.add(layoutGuide: child)
-    }
-}
-extension AnyEnter where Child: View, Container == Window {
-    func add(to container: Container) {
-        container.addSubview(child)
-        print("Added \(child) to window \(container)")
-    }
-}
-
 protocol ChildItem {
     func add<C>(to item: C)
 }
@@ -299,11 +236,7 @@ class View: Container, ElementInLayoutTime, LayoutElementsContainer {
         child.add(to: self)
     }
 
-    func addChild(from enterPoint: ContainerEnterPoint) {
-        enterPoint.add(to: self)
-    }
-
-    func addChild<P: EnterPoint>(from point: P) where P.Container == View {
+    func addChild<P: EnterPointProtocol>(from point: P) where P.Container == View {
         point.add(to: self)
     }
 
@@ -431,7 +364,7 @@ class Window: View {
     //     set {}
     //     get { return self }
     // }
-    override func addChild<P: EnterPoint>(from point: P) where P.Container == Window {
+    override func addChild<P: EnterPointProtocol>(from point: P) where P.Container == Window {
         point.add(to: self)
     }
 }

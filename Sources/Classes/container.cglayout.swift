@@ -186,3 +186,81 @@ extension _Enter where Container: UIView {
 }
 
 #endif
+
+
+/// The container does not know which child is being added,
+/// but the child knows exactly where it is being added
+
+protocol EnterPointProtocol {
+    associatedtype Container
+    func add(to container: Container)
+}
+
+struct EnterPointImpl<Child, Container> {
+    let child: Child
+}
+
+#if os(iOS)
+extension EnterPointImpl: EnterPointProtocol where Child: UIView, Container: UIView {
+    func add(to container: Container) {
+        container.addSubview(child)
+    }
+}
+//extension EnterPoint: EnterPointProtocol where Child: LayoutGuide<UIView>, Container: UIView { // conflict
+//    func add(to container: Container) {
+//        container.add(layoutGuide: child)
+//    }
+//}
+
+extension StackLayoutGuide where Parent: UIView {
+    var views: Views { return Views(stackLayoutGuide: self) }
+    struct Views: ChildrenProtocol {
+        let stackLayoutGuide: StackLayoutGuide<Parent>
+        func add(_ child: UIView) {
+            stackLayoutGuide.ownerElement?.addSubview(child)
+            stackLayoutGuide.items.append(.uiView(child))
+        }
+    }
+
+    var layers: Layers { return Layers(stackLayoutGuide: self) }
+    struct Layers: ChildrenProtocol {
+        let stackLayoutGuide: StackLayoutGuide<Parent>
+        func add(_ child: CALayer) {
+            stackLayoutGuide.ownerElement?.layer.addSublayer(child)
+            stackLayoutGuide.items.append(.caLayer(child))
+        }
+    }
+
+    var layoutGuides: LayoutGuides { return LayoutGuides(stackLayoutGuide: self) }
+    struct LayoutGuides: ChildrenProtocol {
+        let stackLayoutGuide: StackLayoutGuide<Parent>
+        func add(_ child: LayoutGuide<UIView>) {
+            stackLayoutGuide.ownerElement?.add(layoutGuide: child)
+            stackLayoutGuide.items.append(.layoutGuide(child))
+        }
+    }
+}
+
+protocol ChildrenProtocol {
+    associatedtype Child
+    func add(_ child: Child)
+}
+struct Children<Child, Container> {
+    let container: Container
+}
+extension Children where Child: UIView, Container: UIView {
+    func add(_ child: Child) {
+        container.addSubview(child)
+    }
+}
+extension Children where Child: CALayer, Container: UIView {
+    func add(_ child: Child) {
+        container.layer.addSublayer(child)
+    }
+}
+extension UIView {
+    var children: Children<UIView, UIView> { return Children(container: self) }
+    var sublayers: Children<CALayer, UIView> { return Children(container: self) }
+}
+
+#endif

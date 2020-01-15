@@ -35,7 +35,13 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
         didSet { superElement = ownerElement; didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
-    var frame: CGRect { didSet { if oldValue != frame { bounds = contentRect(forFrame: frame) } } }
+    var frame: CGRect {
+        didSet {
+//            if oldValue != frame { bounds = contentRect(forFrame: frame) }
+            // TODO: Temporary calls always, because content does not layout on equal
+            bounds = contentRect(forFrame: frame)
+        }
+    }
     open /// Internal coordinate space of layout entity
     var bounds: CGRect { didSet { layout() } }
     open /// Layout element that maintained this layout entity
@@ -60,6 +66,10 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
         // subclass override
     }
 
+    open func add(to owner: Super) {
+        self.ownerElement = owner
+    }
+
     /// Defines rect for `bounds` property. Calls on change `frame`.
     ///
     /// - Parameter frame: New frame value.
@@ -78,7 +88,7 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
 }
 extension LayoutGuide: CustomDebugStringConvertible {
     public var debugDescription: String {
-        return "\(self) {\n  - frame: \(frame)\n  - bounds: \(bounds)\n  - super: \(String(describing: superElement ?? nil))\n\(debugContentOfDescription)\n}"
+        return "\(ObjectIdentifier(self)) {\n  - frame: \(frame)\n  - bounds: \(bounds)\n  - super: \(String(describing: superElement ?? nil))\n\(debugContentOfDescription)\n}"
     }
 }
 
@@ -286,7 +296,9 @@ open class ViewPlaceholder<View: UIView>: LayoutPlaceholder<View, UIView> {
     }
 }
 extension ViewPlaceholder: AdjustableLayoutElement where View: AdjustableLayoutElement {
-    open var contentConstraint: RectBasedConstraint { return isElementLoaded ? element.contentConstraint : LayoutAnchor.Constantly(value: .zero) }
+    open var contentConstraint: RectBasedConstraint {
+        return isElementLoaded ? element.contentConstraint : LayoutAnchor.Constantly(value: .zero)
+    }
 }
 
 // MARK: UILayoutGuide -> UIViewPlaceholder

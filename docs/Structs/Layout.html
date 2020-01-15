@@ -14,7 +14,7 @@
     <a title="Layout Structure Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">CGLayout Docs</a> (57% documented)</p>
+        <p><a href="../index.html">CGLayout Docs</a> (58% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -83,6 +83,9 @@
                 <a href="../Extensions/EdgeInsets.html">EdgeInsets</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions/Equatable.html">Equatable</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions/LayoutCoordinateSpace.html">LayoutCoordinateSpace</a>
               </li>
               <li class="nav-group-task">
@@ -110,6 +113,12 @@
                 <a href="../Extensions/UILabel.html">UILabel</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions/UILabel/Baseline.html">– Baseline</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/UILayoutGuide">UILayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions/UIScrollView.html">UIScrollView</a>
               </li>
               <li class="nav-group-task">
@@ -130,7 +139,7 @@
                 <a href="../Protocols/ElementInLayoutTime.html">ElementInLayoutTime</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Protocols/Extended.html">Extended</a>
+                <a href="../Protocols/Extensible.html">Extensible</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a>
@@ -178,12 +187,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AnyRectBasedLayout.html">AnyRectBasedLayout</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/Baseline.html">Baseline</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/BaselineLayoutConstraint.html">BaselineLayoutConstraint</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/Bottom.html">Bottom</a>
@@ -344,7 +347,7 @@
             <h1>Layout</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Layout</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Layout</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/Extensible.html">Extensible</a></span></code></pre>
 
                 </div>
               </div>
@@ -357,9 +360,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout6LayoutVA2C9AlignmentV9alignment_AC7FillingV7fillingtcfc"></a>
+                    <a name="/s:8CGLayout6LayoutV9alignment7fillingA2C9AlignmentV_AC7FillingVtcfc"></a>
                     <a name="//apple_ref/swift/Method/init(alignment:filling:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout6LayoutVA2C9AlignmentV9alignment_AC7FillingV7fillingtcfc">init(alignment:filling:)</a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV9alignment7fillingA2C9AlignmentV_AC7FillingVtcfc">init(alignment:filling:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -367,7 +370,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Designed initializer</p>
+                        <p>Designed public initializer</p>
 
                       </div>
                       <div class="declaration">
@@ -415,9 +418,35 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout15RectBasedLayoutP04formD0ySC6CGRectVz4rect_AF2intF"></a>
+                    <a name="/s:8CGLayout10ExtensibleP5buildyx9ConformedQzFZ"></a>
+                    <a name="//apple_ref/swift/Method/build(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout10ExtensibleP5buildyx9ConformedQzFZ">build(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">build</span><span class="p">(</span><span class="n">_</span> <span class="nv">base</span><span class="p">:</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout15RectBasedLayoutP04formD04rect2inySo6CGRectVz_AHtF"></a>
                     <a name="//apple_ref/swift/Method/formLayout(rect:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout15RectBasedLayoutP04formD0ySC6CGRectVz4rect_AF2intF">formLayout(rect:in:)</a>
+                    <a class="token" href="#/s:8CGLayout15RectBasedLayoutP04formD04rect2inySo6CGRectVz_AHtF">formLayout(rect:in:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -433,7 +462,7 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">formLayout</span><span class="p">(</span><span class="nv">rect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="k">in</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">formLayout</span><span class="p">(</span><span class="nv">rect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">,</span> <span class="k">in</span> <span class="nv">source</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -533,9 +562,11 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
               <div class="task-name-container">
                 <a name="/Layout"></a>
                 <a name="//apple_ref/swift/Section/Layout" class="dashAnchor"></a>
-                <a href="#/Layout">
-                  <h3 class="section-name">Layout</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Layout"></a>
+                  <h3 class="section-name"><p>Layout</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -552,13 +583,18 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Layout behavior, that makes passed rect equally to space rect</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    Don&rsquo;t use this layout in combination with other, this can lead to unexpected behavior.
+
+</div>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">equal</span><span class="p">:</span> <span class="kt">Layout</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="k">var</span> <span class="nv">equal</span><span class="p">:</span> <span class="kt">Layout</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -568,9 +604,9 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout6LayoutV5equalAA09RectBasedB0_pSC6CGRectVFZ"></a>
+                    <a name="/s:8CGLayout6LayoutV5equalyACSo6CGRectVFZ"></a>
                     <a name="//apple_ref/swift/Method/equal(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout6LayoutV5equalAA09RectBasedB0_pSC6CGRectVFZ">equal(_:)</a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV5equalyACSo6CGRectVFZ">equal(_:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -585,30 +621,53 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">equal</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Protocols/RectBasedLayout.html">RectBasedLayout</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="kd">func</span> <span class="nf">equal</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Layout2"></a>
-                <a name="//apple_ref/swift/Section/Layout" class="dashAnchor"></a>
-                <a href="#/Layout2">
-                  <h3 class="section-name">Layout</h3>
-                </a>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout6LayoutVA2C9AlignmentV10HorizontalV1x_AE8VerticalV1yAC7FillingVAFV5widthAmIV6heighttcfc"></a>
+                    <a name="/s:8CGLayout6LayoutV7nothingACvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/nothing" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV7nothingACvpZ">nothing</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This layout do nothing.
+Use this if you create compound layout and you need begin with old frame</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    Be careful if you use it in layout block.
+Any parameters that won&rsquo;t overrided for this, will have no effect for constraints.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="k">var</span> <span class="nv">nothing</span><span class="p">:</span> <span class="kt">Layout</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout6LayoutV1x1y5width6heightA2C9AlignmentV10HorizontalV_AI8VerticalVAC7FillingVAJVAoLVtcfc"></a>
                     <a name="//apple_ref/swift/Method/init(x:y:width:height:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout6LayoutVA2C9AlignmentV10HorizontalV1x_AE8VerticalV1yAC7FillingVAFV5widthAmIV6heighttcfc">init(x:y:width:height:)</a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV1x1y5width6heightA2C9AlignmentV10HorizontalV_AI8VerticalVAC7FillingVAJVAoLVtcfc">init(x:y:width:height:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -623,7 +682,7 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">,</span> <span class="nv">width</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Horizontal</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Structs/Layout.html#/s:8CGLayout6LayoutV5equalACvpZ">equal</a></span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Vertical</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Structs/Layout.html#/s:8CGLayout6LayoutV5equalACvpZ">equal</a></span><span class="p">,</span> <span class="nv">width</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Horizontal</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Structs/Layout.html#/s:8CGLayout6LayoutV5equalACvpZ">equal</a></span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Vertical</span> <span class="o">=</span> <span class="o">.</span><span class="n"><a href="../Structs/Layout.html#/s:8CGLayout6LayoutV5equalACvpZ">equal</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -688,9 +747,9 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout6LayoutV4withA2C7FillingV8VerticalV6height_tF"></a>
+                    <a name="/s:8CGLayout6LayoutV4with6heightA2C7FillingV8VerticalV_tF"></a>
                     <a name="//apple_ref/swift/Method/with(height:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout6LayoutV4withA2C7FillingV8VerticalV6height_tF">with(height:)</a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV4with6heightA2C7FillingV8VerticalV_tF">with(height:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -705,7 +764,7 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">with</span><span class="p">(</span><span class="nv">height</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">with</span><span class="p">(</span><span class="nv">height</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
 
                         </div>
                       </div>
@@ -715,9 +774,9 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout6LayoutV4withA2C7FillingV10HorizontalV5width_tF"></a>
+                    <a name="/s:8CGLayout6LayoutV4with5widthA2C7FillingV10HorizontalV_tF"></a>
                     <a name="//apple_ref/swift/Method/with(width:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout6LayoutV4withA2C7FillingV10HorizontalV5width_tF">with(width:)</a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV4with5widthA2C7FillingV10HorizontalV_tF">with(width:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -732,7 +791,7 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">with</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">with</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Filling.html">Filling</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
 
                         </div>
                       </div>
@@ -742,9 +801,9 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout6LayoutV4withA2C9AlignmentV8VerticalV1y_tF"></a>
+                    <a name="/s:8CGLayout6LayoutV4with1yA2C9AlignmentV8VerticalV_tF"></a>
                     <a name="//apple_ref/swift/Method/with(y:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout6LayoutV4withA2C9AlignmentV8VerticalV1y_tF">with(y:)</a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV4with1yA2C9AlignmentV8VerticalV_tF">with(y:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -759,7 +818,7 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">with</span><span class="p">(</span><span class="nv">y</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">with</span><span class="p">(</span><span class="nv">y</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Vertical</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
 
                         </div>
                       </div>
@@ -769,9 +828,9 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout6LayoutV4withA2C9AlignmentV10HorizontalV1x_tF"></a>
+                    <a name="/s:8CGLayout6LayoutV4with1xA2C9AlignmentV10HorizontalV_tF"></a>
                     <a name="//apple_ref/swift/Method/with(x:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout6LayoutV4withA2C9AlignmentV10HorizontalV1x_tF">with(x:)</a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV4with1xA2C9AlignmentV10HorizontalV_tF">with(x:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -786,7 +845,142 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">with</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">with</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="kt"><a href="../Structs/Layout/Alignment.html">Alignment</a></span><span class="o">.</span><span class="kt">Horizontal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout6LayoutV4leftyACs16PartialRangeFromVy12CoreGraphics7CGFloatVGFZ"></a>
+                    <a name="//apple_ref/swift/Method/left(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV4leftyACs16PartialRangeFromVy12CoreGraphics7CGFloatVGFZ">left(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">left</span><span class="p">(</span><span class="n">_</span> <span class="nv">space</span><span class="p">:</span> <span class="kt">PartialRangeFrom</span><span class="o">&lt;</span><span class="kt">CGFloat</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout6LayoutV5rightyACs16PartialRangeFromVy12CoreGraphics7CGFloatVGFZ"></a>
+                    <a name="//apple_ref/swift/Method/right(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV5rightyACs16PartialRangeFromVy12CoreGraphics7CGFloatVGFZ">right(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">right</span><span class="p">(</span><span class="n">_</span> <span class="nv">space</span><span class="p">:</span> <span class="kt">PartialRangeFrom</span><span class="o">&lt;</span><span class="kt">CGFloat</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout6LayoutV6bottomyACs16PartialRangeFromVy12CoreGraphics7CGFloatVGFZ"></a>
+                    <a name="//apple_ref/swift/Method/bottom(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV6bottomyACs16PartialRangeFromVy12CoreGraphics7CGFloatVGFZ">bottom(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">bottom</span><span class="p">(</span><span class="n">_</span> <span class="nv">space</span><span class="p">:</span> <span class="kt">PartialRangeFrom</span><span class="o">&lt;</span><span class="kt">CGFloat</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout6LayoutV3topyACs16PartialRangeFromVy12CoreGraphics7CGFloatVGFZ"></a>
+                    <a name="//apple_ref/swift/Method/top(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV3topyACs16PartialRangeFromVy12CoreGraphics7CGFloatVGFZ">top(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">top</span><span class="p">(</span><span class="n">_</span> <span class="nv">space</span><span class="p">:</span> <span class="kt">PartialRangeFrom</span><span class="o">&lt;</span><span class="kt">CGFloat</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:8CGLayout6LayoutV1poiyA2C_ACtFZ"></a>
+                    <a name="//apple_ref/swift/Method/+(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:8CGLayout6LayoutV1poiyA2C_ACtFZ">+(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="kd">func</span> <span class="o">+</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">Layout</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">Layout</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Layout</span></code></pre>
 
                         </div>
                       </div>
@@ -798,8 +992,8 @@ Attention: Apply layout for view frame using code as layout(rect: &amp;view.fram
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2018-06-29)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2019-12-10)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

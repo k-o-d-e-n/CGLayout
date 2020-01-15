@@ -9,10 +9,33 @@
 import UIKit
 import CGLayout
 
+struct IfBetween: RectBasedLayout {
+    let axis: RectAxis
+    let space: ClosedRange<CGFloat>
+    let modifier: (CGFloat) -> CGFloat
+    func formLayout(rect: inout CGRect, in source: CGRect) {
+        let size = axis.get(sizeAt: source)
+        if space.contains(size) {
+            axis.set(size: modifier(size), for: &rect)
+        }
+    }
+}
+
+extension Layout.Filling.Vertical {
+    static func `if`(between: ClosedRange<CGFloat>, modifier: @escaping (CGFloat) -> CGFloat) -> Layout.Filling.Vertical {
+        return .build(IfBetween(axis: CGRectAxis.vertical, space: between, modifier: modifier))
+    }
+}
+extension Layout.Filling.Horizontal {
+    static func `if`(between: ClosedRange<CGFloat>, modifier: @escaping (CGFloat) -> CGFloat) -> Layout.Filling.Horizontal {
+        return .build(IfBetween(axis: CGRectAxis.horizontal, space: between, modifier: modifier))
+    }
+}
+
 class TextCell: UITableViewCell {
     weak var label: UILabel!
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let label = UILabel()
         label.lineBreakMode = .byWordWrapping
@@ -42,42 +65,90 @@ struct ReuseLayoutBlock {
 }
 
 class TableViewController: UITableViewController {
-    let strings = "Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной \"рыбой\" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых используется Lorem Ipsum".components(separatedBy: ". ")
+    let strings = "Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной \"рыбой\" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset. С образцами Lorem Ipsum в 60-х годах. В более недавнее время, программы электронной вёрстки типа Aldus PageMaker. В шаблонах которых используется Lorem Ipsum".components(separatedBy: ". ")
 
     let bottomView = UIView()
     let bottomView2 = UIView()
-    let layoutGuide = LayoutGuide<UITableView>(frame: UIScreen.main.bounds.insetBy(dx: 0, dy: 100))
-    lazy var bottomViewBlock: LayoutBlock<UIView> = self.bottomView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .fixed(100), height: .fixed(50)),
-                                                                                constraints: [self.layoutGuide.layoutConstraint(for: [.bottom(.limit(on: .inner))]),
-                                                                                              self.view.layoutConstraint(for: [.bottom(.pull(from: .inner))])])
-    lazy var bottomView2Block: LayoutBlock<UIView> = self.bottomView2.layoutBlock(with: Layout(x: .center(), y: .top(), width: .fixed(50), height: .fixed(50)),
-                                                                                  constraints: [self.layoutGuide.layoutConstraint(for: [.bottom(.limit(on: .inner))]),
-                                                                                                self.tableView.contentLayoutConstraint(for: [.bottom(.align(by: .outer))])])
+    let bottomView3 = UIView()
+    let top1View = UIView()
+    let layoutGuide = LayoutGuide<UITableView>(frame: UIScreen.main.bounds.insetBy(dx: 0, dy: 200))
+    lazy var scheme = self.buildScheme()
 
     @available(iOS 10.0, *)
     lazy var blocks: [ReuseLayoutBlock] = self.strings.map {
-        ReuseLayoutBlock(layout: Layout.equal,
-                         targetConstraints: [Inset(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20))],
-                         contentConstraints: [Inset(UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)),
-                                              $0.layoutConstraint(attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]),
-                                              Inset(UIEdgeInsets(top: -10, left: 0, bottom: -10, right: 0))])
+        ReuseLayoutBlock(
+            layout: Layout.equal,
+            targetConstraints: [Inset(UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20))],
+            contentConstraints: [
+                Inset(UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)),
+                $0.layoutConstraint(attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]),
+                Inset(UIEdgeInsets(top: -10, left: 0, bottom: -10, right: 0))
+            ]
+        )
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.register(TextCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        top1View.backgroundColor = .black
         bottomView.backgroundColor = .red
         bottomView2.backgroundColor = .yellow
+        bottomView3.backgroundColor = .green
+        bottomView3.layer.borderWidth = 1
+        tableView.addSubview(top1View)
         tableView.addSubview(bottomView)
         tableView.addSubview(bottomView2)
+        tableView.addSubview(bottomView3)
         tableView.add(layoutGuide: layoutGuide)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        bottomViewBlock.layout()
-        bottomView2Block.layout()
+        scheme.layout(in: view.frame)
+    }
+
+    private func buildScheme() -> LayoutScheme {
+        let topLayoutGuideConstraint: LayoutConstraint
+        if #available(iOS 11.0, tvOS 11.0, *) {
+            topLayoutGuideConstraint = view.safeAreaLayoutGuide.layoutConstraint(for: [.top(.pull(from: .inner))])
+        } else {
+            topLayoutGuideConstraint = navigationController!.navigationBar.layoutConstraint(for: [.bottom(.pull(from: .outer))])
+        }
+        return LayoutScheme(blocks: [
+            top1View.layoutBlock( // pull to refresh
+                with: Layout(
+                    x: .center(), y: .center(),
+                    width: .scaled(0.8) + .if(between: 375...767, modifier: { $0 * 0.6 }) + .if(between: 768...1366, modifier: { $0 * 0.4 }),
+                    height: .scaled(0.8) + .if(between: 0...50, modifier: { $0 * 0.5 })
+                ),
+                constraints: [
+                    topLayoutGuideConstraint,
+                    tableView.contentLayoutConstraint(for: [.top(.pull(from: .outer))])
+                ]
+            ),
+            bottomView.layoutBlock( // red
+                with: Layout(x: .center(), y: .bottom(), width: .fixed(100), height: .fixed(50)),
+                constraints: [
+                    view.layoutConstraint(for: [.bottom(.limit(on: .inner))]),
+                    layoutGuide.layoutConstraint(for: [.bottom(.limit(on: .inner))])
+                ]
+            ),
+            bottomView2.layoutBlock( // yellow
+                with: Layout(x: .center(), y: .top(), width: .fixed(50), height: .fixed(50)),
+                constraints: [
+                    layoutGuide.layoutConstraint(for: [.bottom(.limit(on: .inner))]),
+                    tableView.contentLayoutConstraint(for: [.bottom(.align(by: .outer))])
+                ]
+            ),
+            bottomView3.layoutBlock( // green
+                with: Layout(x: .center(), y: .top(between: 0...10), width: .fixed(50), height: .between(30...70)),
+                constraints: [
+                    bottomView2.layoutConstraint(for: [.bottom(.align(by: .outer))]),
+                    view.layoutConstraint(for: [.bottom(.limit(on: .inner))])
+                ]
+            )
+        ])
     }
 
     // MARK: - Table view data source
@@ -117,15 +188,4 @@ class TableViewController: UITableViewController {
             return 100
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

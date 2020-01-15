@@ -94,13 +94,16 @@ public struct StackDistribution: RectBasedDistribution {
     var filling: Filling
     
     public func distribute(rects: [CGRect], in sourceRect: CGRect, along axis: RectAxis) -> [CGRect] {
+        guard rects.count > 0 else { return rects }
         let fill: CGFloat = {
             let count = CGFloat(rects.count)
-            switch self.filling {
-            case .equal(let val):
+            switch (self.filling, self.spacing) {
+            case (.equal(let val), _):
                 return val
-            case .equally:
-                return axis.get(sizeAt: sourceRect) / count 
+            case (.equally, .equal(let space)):
+                return (axis.get(sizeAt: sourceRect) - (count - 1) * space) / count
+            case (.equally, .equally):
+                return axis.get(sizeAt: sourceRect) / count
             }
         }()
 
@@ -122,14 +125,15 @@ public struct StackDistribution: RectBasedDistribution {
         }()
 
         let alignedRects = filledRects.map { alignment.layout(rect: $0, in: sourceRect) }
-        switch direction {
-        case .fromLeading:
-            return distributeFromLeading(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
-        case .fromTrailing:
-            return distributeFromTrailing(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
-        case .fromCenter:
+        guard direction != .fromCenter else {
             let leftDistributedRects = distributeFromLeading(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
             return alignByCenter(rects: leftDistributedRects, in: sourceRect, along: axis)
+        }
+        let rtl = CGLConfiguration.default.isRTLMode && axis.isHorizontal
+        if (direction == .fromLeading && !rtl) || (direction == .fromTrailing && rtl) {
+            return distributeFromLeading(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
+        } else {
+            return distributeFromTrailing(rects: alignedRects, in: sourceRect, along: axis, spacing: spacing)
         }
     }
 }
@@ -152,10 +156,12 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         didSet { alignment = alignment.by(axis: axis.transverse()) }
     }
 
-    private var distribution: StackDistribution = StackDistribution(spacing: .equally, 
-                                                                    alignment: .center(), 
-                                                                    direction: .fromLeading,
-                                                                    filling: .equally)
+    private var distribution: StackDistribution = StackDistribution(
+        spacing: .equally,
+        alignment: .center(),
+        direction: .fromLeading,
+        filling: .equally
+    )
     public var spacing: StackDistribution.Spacing {
         set { distribution.spacing = newValue }
         get { return distribution.spacing }
@@ -182,7 +188,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             let blockFrame = block.frame
             snapshotFrame = snapshotFrame?.union(blockFrame) ?? blockFrame
             return blockFrame
-        }, snapshotFrame: snapshotFrame ?? .zero)
+        }, frame: snapshotFrame ?? .zero)
     }
     public var currentRect: CGRect {
         let items = self.items()
@@ -215,7 +221,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     func apply(snapshot: LayoutSnapshotProtocol) {
         var iterator = items().makeIterator()
         for child in snapshot.childSnapshots {
-            iterator.next()?.frame = child.snapshotFrame
+            iterator.next()?.frame = child.frame
         }
     }
 
@@ -247,7 +253,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
             completedRects.insert((iterator.next()!, current), at: 0)
             snapRect = snapRect?.union(current) ?? current
         }
-        return LayoutSnapshot(childSnapshots: frames, snapshotFrame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
+        return LayoutSnapshot(childSnapshots: frames, frame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
     }
 }
 
@@ -280,7 +286,7 @@ open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent
         }
     }
 
-    public convenience init(items: [Enter<Parent>] = []) {
+    public convenience init(items: [Enter<Parent>]) {
         self.init(frame: .zero)
         self.items = items
     }
@@ -314,7 +320,7 @@ open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent
     /// - Returns: A new size that fits the receiver’s content
     func sizeThatFits(_ size: CGSize) -> CGSize {
         let sourceRect = CGRect(origin: .zero, size: size)
-        var result = scheme.snapshot(for: insetAnchor?.constrained(sourceRect: sourceRect, by: .zero) ?? sourceRect).snapshotFrame.distanceFromOrigin
+        var result = scheme.snapshot(for: insetAnchor?.constrained(sourceRect: sourceRect, by: .zero) ?? sourceRect).frame.distanceFromOrigin
         result.width += contentInsets.right
         result.height += contentInsets.bottom
         return result
@@ -461,6 +467,90 @@ extension StackLayoutGuide where Parent: CALayer {
     ///   - index: Index in list.
     public func insertArrangedElement(_ element: CALayer, at index: Int) {
         insertArrangedElement(using: .caLayer(element), at: index)
+    }
+}
+#endif
+#if os(macOS)
+extension StackLayoutGuide where Parent: NSView {
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter element: Layout guide for addition.
+    public func addArrangedElement<T: NSView>(_ element: LayoutGuide<T>) { insertArrangedElement(element, at: items.count) }
+    /// Inserts a element to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - element: Layout guide for addition
+    ///   - index: Index in list.
+    public func insertArrangedElement<T: NSView>(_ element: LayoutGuide<T>, at index: Int) {
+        ownerElement?.addChildElement(unsafeBitCast(element, to: LayoutGuide<NSView>.self))
+        items.insert(element, at: index)
+    }
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter element: Layout guide for removing.
+    public func removeArrangedElement<T: NSView>(_ element: LayoutGuide<T>) {
+        guard removeItem(element), ownerElement === element.superElement else { return }
+        element.removeFromSuperElement()
+    }
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter element: Layout guide for addition.
+    public func addArrangedElement<T: CALayer>(_ element: LayoutGuide<T>) { insertArrangedElement(element, at: items.count) }
+    /// Inserts a element to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - element: Layout guide for addition
+    ///   - index: Index in list.
+    public func insertArrangedElement<T: CALayer>(_ element: LayoutGuide<T>, at index: Int) {
+        ownerElement?.addChildElement(unsafeBitCast(element, to: LayoutGuide<CALayer>.self))
+        items.insert(element, at: index)
+    }
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter element: Layout guide for removing.
+    public func removeArrangedElement<T: CALayer>(_ element: LayoutGuide<T>) {
+        guard removeItem(element), ownerElement?.layer === element.superElement else { return }
+        element.removeFromSuperElement()
+    }
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter element: View for addition.
+    public func addArrangedElement(_ element: NSView) { insertArrangedElement(element, at: items.count) }
+    /// Inserts a element to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - element: View for addition
+    ///   - index: Index in list.
+    public func insertArrangedElement(_ element: NSView, at index: Int) {
+        ownerElement?.addChildElement(element)
+        items.insert(element, at: index)
+    }
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter element: View for removing.
+    public func removeArrangedElement(_ element: NSView) {
+        guard removeItem(element), ownerElement === element.superElement else { return }
+        element.removeFromSuperElement()
+    }
+    /// Adds a layout guide to the end of the `arrangedItems` list.
+    ///
+    /// - Parameter element: Layer for addition.
+    public func addArrangedElement(_ element: CALayer) { insertArrangedElement(element, at: items.count) }
+    /// Inserts a element to arrangedItems list at specific index.
+    ///
+    /// - Parameters:
+    ///   - element: Layer for addition
+    ///   - index: Index in list.
+    public func insertArrangedElement(_ element: CALayer, at index: Int) {
+        ownerElement?.addChildElement(element)
+        items.insert(element, at: index)
+    }
+    /// Removes from `arrangedItems` list and from hierarchy.
+    ///
+    /// - Parameter element: Layer for removing.
+    public func removeArrangedElement(_ element: CALayer) {
+        guard removeItem(element), ownerElement?.layer === element.superElement else { return }
+        element.removeFromSuperElement()
     }
 }
 #endif

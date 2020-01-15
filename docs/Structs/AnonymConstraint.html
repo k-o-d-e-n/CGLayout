@@ -14,7 +14,7 @@
     <a title="AnonymConstraint Structure Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">CGLayout Docs</a> (57% documented)</p>
+        <p><a href="../index.html">CGLayout Docs</a> (58% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -83,6 +83,9 @@
                 <a href="../Extensions/EdgeInsets.html">EdgeInsets</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions/Equatable.html">Equatable</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions/LayoutCoordinateSpace.html">LayoutCoordinateSpace</a>
               </li>
               <li class="nav-group-task">
@@ -110,6 +113,12 @@
                 <a href="../Extensions/UILabel.html">UILabel</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Extensions/UILabel/Baseline.html">– Baseline</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions.html#/UILayoutGuide">UILayoutGuide</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Extensions/UIScrollView.html">UIScrollView</a>
               </li>
               <li class="nav-group-task">
@@ -130,7 +139,7 @@
                 <a href="../Protocols/ElementInLayoutTime.html">ElementInLayoutTime</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Protocols/Extended.html">Extended</a>
+                <a href="../Protocols/Extensible.html">Extensible</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Protocols/LayoutBlockProtocol.html">LayoutBlockProtocol</a>
@@ -178,12 +187,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AnyRectBasedLayout.html">AnyRectBasedLayout</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/Baseline.html">Baseline</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/BaselineLayoutConstraint.html">BaselineLayoutConstraint</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/Bottom.html">Bottom</a>
@@ -348,7 +351,7 @@
 
                 </div>
               </div>
-            <p>Layout constraint for independent changing source space. Use him with anchors that not describes rect side (for example <code><a href="../Enums/LayoutAnchor.html#/s:8CGLayout12LayoutAnchorO6insetsACSC12NSEdgeInsetsVcACmF">LayoutAnchor.insets</a></code> or <code>LayoutAnchor.Size</code>).</p>
+            <p>Layout constraint for independent changing source space. Use him with anchors that not describes rect side (for example <code>LayoutAnchor.insets</code> or <code>LayoutAnchor.Size</code>).</p>
 
           </section>
           <section class="section task-group-section">
@@ -357,9 +360,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout16AnonymConstraintVACSayAA09RectBasedC0_pG7anchors_SC6CGRectVAHcSg09constrainD0tcfc"></a>
+                    <a name="/s:8CGLayout16AnonymConstraintV7anchors13constrainRectACSayAA0f5BasedC0_pG_So6CGRectVAIcSgtcfc"></a>
                     <a name="//apple_ref/swift/Method/init(anchors:constrainRect:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout16AnonymConstraintVACSayAA09RectBasedC0_pG7anchors_SC6CGRectVAHcSg09constrainD0tcfc">init(anchors:constrainRect:)</a>
+                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV7anchors13constrainRectACSayAA0f5BasedC0_pG_So6CGRectVAIcSgtcfc">init(anchors:constrainRect:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -374,7 +377,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">anchors</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">],</span> <span class="nv">constrainRect</span><span class="p">:</span> <span class="p">((</span><span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">anchors</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/RectBasedConstraint.html">RectBasedConstraint</a></span><span class="p">],</span> <span class="nv">constrainRect</span><span class="p">:</span> <span class="p">((</span><span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -438,9 +441,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout16AnonymConstraintV13layoutElementSbyXl2is_tF"></a>
+                    <a name="/s:8CGLayout16AnonymConstraintV13layoutElement2isSbyXl_tF"></a>
                     <a name="//apple_ref/swift/Method/layoutElement(is:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV13layoutElementSbyXl2is_tF">layoutElement(is:)</a>
+                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV13layoutElement2isSbyXl_tF">layoutElement(is:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -465,9 +468,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout16AnonymConstraintV13constrainRectSC6CGRectVAF3for_AA13LayoutElement_p2intF"></a>
+                    <a name="/s:8CGLayout16AnonymConstraintV13constrainRect3for2inSo6CGRectVAH_AA13LayoutElement_ptF"></a>
                     <a name="//apple_ref/swift/Method/constrainRect(for:in:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV13constrainRectSC6CGRectVAF3for_AA13LayoutElement_p2intF">constrainRect(for:in:)</a>
+                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV13constrainRect3for2inSo6CGRectVAH_AA13LayoutElement_ptF">constrainRect(for:in:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -482,7 +485,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainRect</span><span class="p">(</span><span class="k">for</span> <span class="nv">currentSpace</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="k">in</span> <span class="nv">coordinateSpace</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutElement.html">LayoutElement</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">constrainRect</span><span class="p">(</span><span class="k">for</span> <span class="nv">currentSpace</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">,</span> <span class="k">in</span> <span class="nv">coordinateSpace</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutElement.html">LayoutElement</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span></code></pre>
 
                         </div>
                       </div>
@@ -527,9 +530,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout16AnonymConstraintV13formConstrainySC6CGRectVz10sourceRect_AF2bytF"></a>
+                    <a name="/s:8CGLayout16AnonymConstraintV13formConstrain10sourceRect2byySo6CGRectVz_AHtF"></a>
                     <a name="//apple_ref/swift/Method/formConstrain(sourceRect:by:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV13formConstrainySC6CGRectVz10sourceRect_AF2bytF">formConstrain(sourceRect:by:)</a>
+                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV13formConstrain10sourceRect2byySo6CGRectVz_AHtF">formConstrain(sourceRect:by:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -544,7 +547,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">formConstrain</span><span class="p">(</span><span class="nv">sourceRect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">by</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">formConstrain</span><span class="p">(</span><span class="nv">sourceRect</span><span class="p">:</span> <span class="k">inout</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">,</span> <span class="n">by</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -585,9 +588,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout16AnonymConstraintV7convertSC6CGRectVAF12rectIfNeeded_AA13LayoutElement_p2totF"></a>
+                    <a name="/s:8CGLayout16AnonymConstraintV7convert12rectIfNeeded2toSo6CGRectVAH_AA13LayoutElement_ptF"></a>
                     <a name="//apple_ref/swift/Method/convert(rectIfNeeded:to:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV7convertSC6CGRectVAF12rectIfNeeded_AA13LayoutElement_p2totF">convert(rectIfNeeded:to:)</a>
+                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV7convert12rectIfNeeded2toSo6CGRectVAH_AA13LayoutElement_ptF">convert(rectIfNeeded:to:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -602,7 +605,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">convert</span><span class="p">(</span><span class="n">rectIfNeeded</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="n">to</span> <span class="nv">coordinateSpace</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutElement.html">LayoutElement</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGRect</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">convert</span><span class="p">(</span><span class="n">rectIfNeeded</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">,</span> <span class="n">to</span> <span class="nv">coordinateSpace</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LayoutElement.html">LayoutElement</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span></code></pre>
 
                         </div>
                       </div>
@@ -650,17 +653,19 @@
               <div class="task-name-container">
                 <a name="/Additional%20constraints"></a>
                 <a name="//apple_ref/swift/Section/Additional constraints" class="dashAnchor"></a>
-                <a href="#/Additional%20constraints">
-                  <h3 class="section-name">Additional constraints</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Additional%20constraints"></a>
+                  <h3 class="section-name"><p>Additional constraints</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:8CGLayout16AnonymConstraintVACySC6CGRectVzc9transform_tcfc"></a>
+                    <a name="/s:8CGLayout16AnonymConstraintV9transformACySo6CGRectVzc_tcfc"></a>
                     <a name="//apple_ref/swift/Method/init(transform:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:8CGLayout16AnonymConstraintVACySC6CGRectVzc9transform_tcfc">init(transform:)</a>
+                    <a class="token" href="#/s:8CGLayout16AnonymConstraintV9transformACySo6CGRectVzc_tcfc">init(transform:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -675,7 +680,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">transform</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="k">inout</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="nf">init</span><span class="p">(</span><span class="nv">transform</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="k">inout</span> <span class="kt"><a href="../Typealiases.html#/s:8CGLayout6CGRecta">CGRect</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -687,8 +692,8 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2018 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2018-06-29)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/k-o-d-e-n/CGLayout" target="_blank" rel="external">Koryttsev Denis</a>. All rights reserved. (Last updated: 2019-12-10)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

@@ -1,5 +1,5 @@
 output: docs
-swift_version: 4.1
+swift_version: 4.2
 exclude: Sources/Classes/evolution.cglayout/*
 xcodebuild_arguments:
     - "-project"

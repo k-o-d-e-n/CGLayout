@@ -9,6 +9,21 @@
 import UIKit
 import CGLayout
 
+extension UIView {
+    convenience init(backgroundColor: UIColor) {
+        self.init()
+        self.backgroundColor = backgroundColor
+    }
+}
+
+extension UILabel {
+    convenience init(text: String) {
+        self.init()
+        self.text = text
+        self.numberOfLines = 0
+    }
+}
+
 class LabelPlaceholder: ViewPlaceholder<UILabel> {
     var font: UIFont?
     var textColor: UIColor?
@@ -35,220 +50,55 @@ class LabelPlaceholder: ViewPlaceholder<UILabel> {
 
 class ViewController: UIViewController {
     var scrollView: UIScrollView { return view as! UIScrollView }
-    var subviews: [UIView] = []
-    let pulledView: UIView = UIView()
-    let centeredView: UIView = UIView()
-    let navigationBarBackView = UIView()
-    let subview = UIView()
+    var elements: [UIView] = []
 
-    lazy var stackScheme: StackLayoutScheme = { [unowned self] in
-        var stack = StackLayoutScheme { Array(self.subviews[0..<7]) }
-        stack.axis = CGRectAxis.vertical
-        stack.spacing = .equal(10)
-//        stack.distribution = .fromBottom(spacing: 10)
-        stack.direction = .fromTrailing
-        stack.alignment = .leading(215)
-//        stack.filling = .custom(Layout.Filling(horizontal: .boxed(235), vertical: .fixed(50)))
-        stack.filling = .equal(50)
-
-        return stack
-    }()
-    lazy var stackLayoutGuide: StackLayoutGuide<UIView> = {
-        let stack = StackLayoutGuide<UIView>(frame: .zero)
-        stack.scheme.axis = CGRectAxis.vertical
-        stack.contentInsets.top = 5
-//        stack.scheme.distribution = .fromTop(spacing: 5)
-        stack.scheme.direction = .fromLeading
-        stack.scheme.alignment = .leading(2)
-//        stack.scheme.filling = .custom(Layout.Filling(horizontal: .boxed(4), vertical: .fixed(20)))
-        stack.scheme.filling = .equal(20)
-
-        return stack
-    }()
-    lazy var substackLayoutGuide: StackLayoutGuide<UIView> = {
-        let stack = StackLayoutGuide<UIView>(frame: .zero)
-//        stack.scheme.distribution = .equalSpacingHorizontal()
-        stack.scheme.direction = .fromCenter
-        stack.scheme.spacing = .equally
-//        stack.scheme.filling = .custom(Layout.Filling(horizontal: .fixed(20), vertical: .scaled(1)))
-        stack.scheme.filling = .equal(20)
-
-        return stack
-    }()
-    lazy var labelStack: StackLayoutGuide<UIView> = {
-        let stack = StackLayoutGuide<UIView>(frame: .zero)
-        stack.scheme.axis = CGRectAxis.vertical
-//        stack.scheme.distribution = .fromTop(spacing: 2)
-        stack.scheme.direction = .fromLeading
-//        stack.scheme.filling = .autoDimension(default: Layout.Filling(horizontal: .scaled(1), vertical: .fixed(1)))
-        stack.scheme.filling = .equal(1)
-        stack.contentInsets.bottom = 2
-
-        return stack
-    }()
-    lazy var scrollLayoutGuide: ScrollLayoutGuide<UIView> = {
-        return ScrollLayoutGuide(contentItem: self.labelStack, direction: .vertical)
-    }()
-
-    lazy var latestItemLayout = Layout(alignment: Layout.Alignment(horizontal: .left(15), vertical: .top(10)),
-                                       filling: Layout.Filling(horizontal: .boxed(20), vertical: .fixed(30)))
-    lazy var pulledLayout = Layout(x: .left(15), y: .top(10),
-                                   width: .boxed(25), height: .boxed(20))
-    lazy var bottomConstraint = Bottom.limit(on: .inner)
-    lazy var rightConstraint = Right.limit(on: .outer)
-
-    lazy var labelPlaceholder: LabelPlaceholder = LabelPlaceholder(font: .systemFont(ofSize: 24), textColor: .red)
+    lazy var scheme: LayoutScheme = self.buildScheme()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        subviews = (0..<10).map { i -> UIView in
-            let view = UIView()
-            view.backgroundColor = UIColor(white: (1 - (1 / max(0.5,CGFloat(i)))), alpha: 1 / max(0.5,CGFloat(i)))
-            return view
-        }
-        subviews.forEach(view.addSubview)
-        view.addSubview(pulledView)
-        pulledView.backgroundColor = .red
-        view.addSubview(centeredView)
-        centeredView.backgroundColor = .yellow
-        view.addSubview(navigationBarBackView)
-        navigationBarBackView.backgroundColor = .black
-        subview.backgroundColor = .red
-        pulledView.addSubview(subview)
-
-        view.add(layoutGuide: labelPlaceholder)
-        pulledView.add(layoutGuide: stackLayoutGuide)
-        pulledView.add(layoutGuide: labelStack)
-        pulledView.add(layoutGuide: scrollLayoutGuide)
-        stackLayoutGuide.addArrangedElement(UIView(backgroundColor: .brown))
-        stackLayoutGuide.addArrangedElement(UIView(backgroundColor: .yellow))
-        stackLayoutGuide.addArrangedElement(CALayer(backgroundColor: .green))
-        stackLayoutGuide.addArrangedElement(substackLayoutGuide)
-        substackLayoutGuide.addArrangedElement(UIView(backgroundColor: .brown))
-        substackLayoutGuide.addArrangedElement(CALayer(backgroundColor: .yellow))
-        substackLayoutGuide.addArrangedElement(UIView(backgroundColor: .green))
-
-        labelStack.addArrangedElement(UILabel(text: "Some string"))
-        labelStack.addArrangedElement(CALayer(backgroundColor: .black))
-        labelStack.addArrangedElement(UILabel(text: "Lorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне."))
-        labelStack.addArrangedElement(CALayer(backgroundColor: .black))
-        labelStack.addArrangedElement(UILabel(text: "В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов."))
-        labelStack.addArrangedElement(CALayer(backgroundColor: .black))
-
-        scrollView.contentSize.height = view.frame.height.advanced(by: 2)
+        scrollView.contentSize.height = view.frame.height
         scrollView.contentSize.width = view.frame.width
 
-        /// CALayer can insert by any index (work as zIndex)
-//        let testlayer = CALayer(frame: view.bounds)
-//        testlayer.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25).cgColor
-//        view.layer.insertSublayer(testlayer, at: .max)
+        self.elements = (0..<10).map { (i) -> UIView in
+            let view = buildView(UIView.self, bg: UIColor(white: CGFloat(i) / 10, alpha: 1))
+            view.translatesAutoresizingMaskIntoConstraints = false
+            scrollView.addSubview(view)
+            return view
+        }
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        let constrainedRect = CGRect(origin: .zero, size: CGSize(width: 200, height: 0))
-        stackScheme.layout()
-        var preview = self.subviews[0..<7].last
-        let lastPreview = self.subviews[0..<7].last
-        subviews[7..<10].forEach { subview in
-            let constraints: [ConstrainRect] = [(lastPreview!.frame, [bottomConstraint]), (constrainedRect, [rightConstraint])]
-            let constraint: [ConstrainRect] = preview === lastPreview ? [] : [(preview!.frame, [rightConstraint])]
-            latestItemLayout.apply(for: subview, use: constraints + constraint)
-            preview = subview
-        }
-
-        let topConstraint: RectBasedConstraint = traitCollection.verticalSizeClass == .compact ? Top.pull(from: .outer) : Top.limit(on: .outer)
-
-        labelPlaceholder.layoutBlock(with: Layout(x: .right(), y: .top(), width: .scaled(0.6), height: .fixed(100)), constraints: [(topLayoutGuide as! UIView).layoutConstraint(for: [.bottom(.align(by: .outer))])]).layout()
-
-        pulledLayout.apply(for: pulledView, use: [
-            ((topLayoutGuide as! UIView).frame, [Bottom.limit(on: .outer)]),
-            (labelPlaceholder.frame, [Left.limit(on: .outer)]),
-            (subviews[1].frame, [Left.limit(on: .outer)]),
-            (subviews.first!.frame, [topConstraint])
-        ])
-        Layout.equal.apply(for: stackLayoutGuide)
-
-        subviews[7].semanticContentAttribute = .forceRightToLeft
-//        let centeredViewLayout = centeredView.layoutBlock(with: Layout(x: .center(), y: .bottom(), width: .scaled(1), height: .scaled(1)),
-//                                                          constraints: [subviews[7].anchorSizeConstraint(for: [.scaled(centeredView.superview!.anchors.size.anchor,
-//                                                                                                                       by: subviews[7].anchors.size.anchor,
-//                                                                                                                       scale: 0.5)]),
-//                                                                        subviews[7].anchorPointConstraint(for: [.align(centeredView.superview!.anchors.leading.anchor,
-//                                                                                                                       by: subviews[7].anchors.leading.anchor)])])
-
-        let centeredViewLayout = centeredView.block { (anchors) in
-            /// anchors should contains reference on view. `align` method should be mutating and to store binded anchors
-//            anchors.center.align(by: subviews[7].anchors.center)
-//            anchors.size.scaled(by: subviews[7].anchors.size, scale: 0.5)
-            anchors.width.scaled(by: subviews[7].layoutAnchors.width, scale: 0.5)
-            anchors.height.scaled(by: subviews[7].layoutAnchors.height, scale: 0.5)
-//            anchors.size.equal(to: CGSize(width: 50, height: 20))
-//            anchors.origin.align(by: subviews[7].anchors.origin)
-            anchors.left.align(by: subviews[7].layoutAnchors.left)
-            anchors.right.align(by: subviews[7].layoutAnchors.right)
-            anchors.bottom.pull(to: subviews[7].layoutAnchors.bottom)
-        }
-
-        /// centeredView.layoutBlock(with: layout, constraints: [.align(.bottom, by: subview.bottom), .limit(.left, on: subview.right)])
-        /// centeredView.anchors.bottom.align(by: subview.anchors.bottom) // -> LayoutConstraint contains only one limiter. // anchors should contains reference on view.
-        /// centeredView.layoutBlock(constraints: [.align(.bottom, by: .bottom, on: subview)]) // -> LayoutBlock
-
-//        centeredView.anchors.size.set(CGSize(width: 20, height: 30), for: &centeredView.frame)
-//        centeredView.anchors.center.horizontal.offset(rect: &centeredView.frame, by: subviews[7].anchors.center.horizontal.get(for: subviews[7].frame))
-//        centeredView.anchors.bottom.offset(rect: &centeredView.frame, by: subviews[7].anchors.bottom.get(for: subviews[7].frame))
-        
-        // layout using only constraints and constrain to view (UINavigationController.view) from other hierarchy space.
-        if let navigation = navigationController {
-            navigationBarBackView.layoutBlock(with: Layout.equal, constraints: [navigation.navigationBar.layoutConstraint(for: [.equally])]).layout()
-        }
-
-        let subviewLayout = subview.layoutBlock(with: Layout(x: .center(), y: .center(), width: .fixed(50), height: .fixed(1)),
-                                                constraints: [centeredView.layoutConstraint(for: [.equally])])
-        let subviewScheme = LayoutScheme(blocks: [centeredViewLayout, subviewLayout])
-        let snapshotSubview = subviewScheme.snapshot(for: view.bounds, constrainRects: [(subviews[7], subviews[7].frame)]) /// example use constrain rects 
-        subviewScheme.apply(snapshot: snapshotSubview)
-
-        scrollLayoutGuide.layoutBlock(with: Layout.equal,
-                                      constraints: [pulledView.layoutConstraint(for: [.size(.height()), .size(.width())])]).layout()
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:)))
-        pan.require(toFail: scrollView.panGestureRecognizer)
-        pulledView.addGestureRecognizer(pan)
+        scheme.layout()
     }
 
-    var start: CGPoint = .zero
-    @objc func panGesture(_ recognizer: UIPanGestureRecognizer) {
-        var position: CGPoint = .zero
-        let translation = recognizer.translation(in: recognizer.view)
-        if recognizer.state == .began {
-            start = scrollLayoutGuide.contentOffset
-            position = start
-        } else {
-            position = CGPoint(x: start.x - translation.x, y: start.y - translation.y)
-        }
+    private func buildScheme() -> LayoutScheme {
+        let borderLayer = CALayer()
+        borderLayer.borderWidth = 1
+        view.layer.addSublayer(borderLayer)
 
-        scrollLayoutGuide.contentOffset = position
-    }
-
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        labelPlaceholder.element.text = "Placeholder label"
-    }
-}
-
-extension UIView {
-    convenience init(backgroundColor: UIColor) {
-        self.init()
-        self.backgroundColor = backgroundColor
-    }
-}
-
-extension UILabel {
-    convenience init(text: String) {
-        self.init()
-        self.text = text
-        self.numberOfLines = 0
+        let initial: (blocks: [LayoutBlockProtocol], last: UIView?) = ([], nil)
+        return LayoutScheme(
+            blocks: elements.reduce(into: initial) { (blocks, view) -> Void in
+                var constraints: [LayoutConstraintProtocol] = []
+                if let last = blocks.last {
+                    constraints.append(last.layoutConstraint(for: [.top(.limit(on: .outer))]))
+                } else {
+                    constraints.append(scrollView.layoutConstraint(for: [.bottom(.limit(on: .inner))]))
+                }
+                blocks.blocks += [
+                    view.layoutBlock(
+                        with: Layout(x: .equal, y: blocks.last == nil ? .bottom() : .bottom(between: 0...10), width: .equal, height: .fixed(50)) + .top(0...),
+                        constraints: constraints
+                    )
+                ]
+                blocks.last = view
+            }.blocks + [
+                borderLayer.layoutBlock(constraints: [
+                    scrollView.contentLayoutConstraint(for: [.equally])
+                ])
+            ]
+        )
     }
 }

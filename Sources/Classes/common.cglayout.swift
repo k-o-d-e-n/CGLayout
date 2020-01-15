@@ -28,14 +28,16 @@ internal func debugLog(_ message: String, _ file: String = #file, _ line: Int = 
     }
 }
 
-internal func debugWarning(_ message: String) {
-    debugWarning(true, message)
+internal func debugWarning(_ message: @autoclosure () -> String) {
+    debugWarning(true, message())
 }
 
-internal func debugWarning(_ condition: @autoclosure () -> Bool, _ message: String) {
+internal func debugWarning(_ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String) {
     debugAction {
         if condition() {
-            debugPrint("CGLayout WARNING: \(message)")
+            if ProcessInfo.processInfo.arguments.contains("CGL_LOG_WARNINGS") {
+                debugPrint("CGLayout WARNING: \(message())")
+            }
             if ProcessInfo.processInfo.arguments.contains("CGL_THROW_ON_WARNING") { fatalError() }
         }
     }
@@ -110,7 +112,7 @@ extension CGRect {
 
 func EdgeInsetsInsetRect(_ rect: CGRect, _ edgeInsets: EdgeInsets) -> CGRect {
     #if os(iOS) || os(tvOS)
-        return UIEdgeInsetsInsetRect(rect, edgeInsets)
+        return rect.inset(by: edgeInsets)
     #else
         return CGRect(x: rect.origin.x + edgeInsets.left, y: rect.origin.y + edgeInsets.top,
                       width: rect.size.width - edgeInsets.horizontal, height: rect.size.height - edgeInsets.vertical)
@@ -133,18 +135,6 @@ extension EdgeInsets {
     public static var zero: EdgeInsets { return EdgeInsets(top: 0, left: 0, bottom: 0, right: 0) }
 #endif
 }
-
-#if os(iOS) || os(tvOS)
-@available(iOS 9.0, *)
-extension UILayoutGuide: LayoutElement {
-    public var layoutBounds: CGRect { return bounds }
-    public var inLayoutTime: ElementInLayoutTime { return _MainThreadItemInLayoutTime(item: self) }
-    public var frame: CGRect { get { return layoutFrame } set {} }
-    public var bounds: CGRect { get { return CGRect(origin: .zero, size: layoutFrame.size) } set {} }
-    public var superElement: LayoutElement? { return owningView }
-    public func removeFromSuperElement() { owningView.map { $0.removeLayoutGuide(self) } }
-}
-#endif
 
 #if os(macOS) || os(iOS) || os(tvOS)
 public extension CALayer {

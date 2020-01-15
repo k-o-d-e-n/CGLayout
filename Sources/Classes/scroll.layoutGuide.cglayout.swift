@@ -68,13 +68,36 @@ open class ScrollLayoutGuide<Super: LayoutElement>: LayoutGuide<Super> {
     }
 }
 public extension ScrollLayoutGuide {
+    func decelerate(start: CGPoint, translation: CGPoint?, velocity: CGPoint) -> ScrollAnimationDeceleration<Super>? {
+        guard let translation = translation else {
+            return ScrollAnimationDeceleration(scrollGuide: self, velocity: velocity, bounces: true)
+        }
+        var targetPosition = contentOffset
+        let newBoundsOriginX: CGFloat = start.x - translation.x
+        let minBoundsOriginX: CGFloat = 0.0
+        let maxBoundsOriginX: CGFloat = contentSize.width - bounds.size.width
+        let constrainedBoundsOriginX: CGFloat = max(minBoundsOriginX, min(newBoundsOriginX, maxBoundsOriginX))
+        let rubberBandedX: CGFloat = rubberBandDistance(newBoundsOriginX - constrainedBoundsOriginX, bounds.width)
+        targetPosition.x = constrainedBoundsOriginX + rubberBandedX
+        let newBoundsOriginY: CGFloat = start.y - translation.y
+        let minBoundsOriginY: CGFloat = 0.0
+        let maxBoundsOriginY: CGFloat = contentSize.height - bounds.size.height
+        let constrainedBoundsOriginY: CGFloat = max(minBoundsOriginY, min(newBoundsOriginY, maxBoundsOriginY))
+        let rubberBandedY: CGFloat = rubberBandDistance(newBoundsOriginY - constrainedBoundsOriginY, bounds.height)
+        targetPosition.y = constrainedBoundsOriginY + rubberBandedY
+        self.contentOffset = targetPosition
+
+        return nil
+    }
+}
+public extension ScrollLayoutGuide {
     /// Convinience initializer for adjustable layout elements.
     /// Initializes layout guide with layout block constrained to calculated size of element.
     ///
     /// - Parameters:
     ///   - contentItem: Item that defines content
     ///   - direction: Scroll direction
-    public convenience init<Item: AdjustableLayoutElement>(contentItem: Item, direction: ScrollDirection) {
+    convenience init<Item: AdjustableLayoutElement>(contentItem: Item, direction: ScrollDirection) {
         self.init(layout: contentItem.layoutBlock(with: Layout.equal, constraints: [contentItem.adjustLayoutConstraint(for: direction.constraints)]))
     }
 }
@@ -104,6 +127,14 @@ public struct ScrollDirection: OptionSet {
     public static var both: ScrollDirection = ScrollDirection(constraints: [.height(), .width()], rawValue: 0)
 }
 
+
+private func rubberBandDistance(_ offset: CGFloat, _ dimension: CGFloat) -> CGFloat {
+    let constant: CGFloat = 0.55
+    let result: CGFloat = (constant * abs(offset) * dimension) / (dimension + constant * abs(offset))
+    // The algorithm expects a positive offset, so we have to negate the result if the offset was negative.
+    return offset < 0.0 ? -result : result
+}
+
 func LinearInterpolation(t: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
     if t <= 0 {
         return start
@@ -124,14 +155,13 @@ func QuadraticEaseOut(t: CGFloat, start: CGFloat, end: CGFloat) -> CGFloat {
         return end
     }
     else {
-        return LinearInterpolation(t: 2 * t - t * t, start: start, end: end)
+        return LinearInterpolation(t: t * (2 - t), start: start, end: end)
+//        return start - (t * (2 - t)) * (start - end)
     }
 }
 
 protocol ScrollAnimation {
     var beginTime: TimeInterval { get set }
-    func animateX()
-    func animateY()
 }
 
 struct ScrollAnimationDecelerationComponent {
@@ -142,12 +172,50 @@ struct ScrollAnimationDecelerationComponent {
     var returnFrom: CGFloat
     var bounced: Bool
     var bouncing: Bool
+
+    mutating func bounce(t: TimeInterval, to: CGFloat) -> Bool {
+        if bounced && returnTime != 0 {
+            let returnBounceTime: TimeInterval = min(1, ((t - returnTime) / returnAnimationDuration))
+            self.position = QuadraticEaseOut(t: CGFloat(returnBounceTime), start: returnFrom, end: to)
+            return returnBounceTime == 1
+        }
+        else if abs(to - position) > 0 {
+            let F: CGFloat = Spring(velocity: velocity, position: position, restPosition: to, tightness: springTightness, dampening: springDampening)
+
+            let oldVelocity = self.velocity
+            self.velocity += F * CGFloat(physicsTimeStep)
+//            print("v:", velocity, oldVelocity)
+            let oldPosition = self.position
+            self.position += -velocity * CGFloat(physicsTimeStep)
+//            print("p:", oldPosition, self.position)
+            self.bounced = true
+            if abs(velocity - oldVelocity) < 0.5 {
+                self.returnFrom = position
+                self.returnTime = t
+            }
+            return false
+        }
+        else {
+            return true
+        }
+    }
+
+    mutating func animateBounce(_ offset: inout CGFloat, begin beginTime: TimeInterval, to targetOffset: CGFloat) {
+        let currentTime: TimeInterval = Date.timeIntervalSinceReferenceDate
+        bouncing = true
+        decelerateTime = beginTime
+        while bouncing && currentTime >= decelerateTime {
+            bouncing = !bounce(t: decelerateTime, to: targetOffset)
+            decelerateTime += physicsTimeStep
+            offset = position
+        }
+    }
 }
 
 private let minimumBounceVelocityBeforeReturning: CGFloat = 100
-private let returnAnimationDuration: TimeInterval = 0.33
-private let physicsTimeStep: TimeInterval = 1 / 120.0
-private let springTightness: CGFloat = 7
+private let returnAnimationDuration: TimeInterval = 0.6
+private let physicsTimeStep: TimeInterval = 1 / 60.0
+private let springTightness: CGFloat = 0.3
 private let springDampening: CGFloat = 15
 
 private func Clamp(v: CGFloat, min: CGFloat, max: CGFloat) -> CGFloat {
@@ -161,29 +229,7 @@ private func ClampedVelocty(v: CGFloat) -> CGFloat {
 
 private func Spring(velocity: CGFloat, position: CGFloat, restPosition: CGFloat, tightness: CGFloat, dampening: CGFloat) -> CGFloat {
     let d: CGFloat = position - restPosition
-    return (-tightness * d) - (dampening * velocity)
-}
-
-private func BounceComponent(t: TimeInterval, c: inout ScrollAnimationDecelerationComponent, to: CGFloat) -> Bool {
-    if c.bounced && c.returnTime != 0 {
-        let returnBounceTime: TimeInterval = min(1, ((t - c.returnTime) / returnAnimationDuration))
-        c.position = QuadraticEaseOut(t: CGFloat(returnBounceTime), start: c.returnFrom, end: to)
-        return returnBounceTime == 1
-    }
-    else if abs(to - c.position) > 0 {
-        let F: CGFloat = Spring(velocity: c.velocity, position: c.position, restPosition: to, tightness: springTightness, dampening: springDampening)
-        c.velocity += F * CGFloat(physicsTimeStep)
-        c.position += -c.velocity * CGFloat(physicsTimeStep)
-        c.bounced = true
-        if abs(c.velocity) < minimumBounceVelocityBeforeReturning {
-            c.returnFrom = c.position
-            c.returnTime = t
-        }
-        return false
-    }
-    else {
-        return true
-    }
+    return (-tightness * d) - (dampening * velocity) / 1
 }
 
 extension ScrollLayoutGuide {
@@ -227,25 +273,34 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
     private(set) weak var scrollGuide: ScrollLayoutGuide<Item>!
     var beginTime: TimeInterval = Date.timeIntervalSinceReferenceDate
 
-    public init(scrollGuide sg: ScrollLayoutGuide<Item>, velocity v: CGPoint) {
+    let timeInterval: CGFloat = 1/60
+    let startVelocity: CGPoint
+
+    public var bounces: Bool
+    public init(scrollGuide sg: ScrollLayoutGuide<Item>, velocity v: CGPoint, bounces: Bool) {
         self.scrollGuide = sg
 
-        startVelocity = v
-        lastMomentumTime = beginTime
-        x = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
-                                                 position: scrollGuide.contentOffset.x,
-                                                 velocity: startVelocity.x,
-                                                 returnTime: 0,
-                                                 returnFrom: 0,
-                                                 bounced: false,
-                                                 bouncing: false)
-        y = ScrollAnimationDecelerationComponent(decelerateTime: beginTime,
-                                                 position: scrollGuide.contentOffset.y,
-                                                 velocity: startVelocity.y,
-                                                 returnTime: 0,
-                                                 returnFrom: 0,
-                                                 bounced: false,
-                                                 bouncing: false)
+        self.bounces = bounces
+        self.startVelocity = v
+        self.lastMomentumTime = beginTime
+        self.x = ScrollAnimationDecelerationComponent(
+            decelerateTime: beginTime,
+            position: scrollGuide.contentOffset.x,
+            velocity: startVelocity.x,
+            returnTime: 0,
+            returnFrom: 0,
+            bounced: false,
+            bouncing: false
+        )
+        self.y = ScrollAnimationDecelerationComponent(
+            decelerateTime: beginTime,
+            position: scrollGuide.contentOffset.y,
+            velocity: startVelocity.y,
+            returnTime: 0,
+            returnFrom: 0,
+            bounced: false,
+            bouncing: false
+        )
         if x.velocity == 0 {
             x.bounced = true
             x.returnTime = beginTime
@@ -258,68 +313,39 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
         }
     }
 
-    func animateY() {
-        let currentTime: TimeInterval = Date.timeIntervalSinceReferenceDate
-        y.bouncing = true
-        while y.bouncing && currentTime >= beginTime {
-            let confinedOffset = scrollGuide._confinedContentOffset(CGPoint(x: x.position, y: y.position))
-            y.bouncing = !BounceComponent(t: beginTime, c: &y, to: confinedOffset.y)
-            beginTime += physicsTimeStep
-            scrollGuide.contentOffset.y = y.position//min(max(-scrollGuide.bounds.height, y.position), scrollGuide.layoutBounds.maxY - scrollGuide.bounds.height)
+    /// Returns true if animation completed
+    public func step() -> Bool {
+        func stopIfNeeded() -> Bool {
+            return abs(x.velocity) <= 0.001 && abs(y.velocity) <= 0.001
         }
-    }
-
-    func animateX() {
-        let currentTime: TimeInterval = Date.timeIntervalSinceReferenceDate
-        x.bouncing = true
-        while x.bouncing && currentTime >= beginTime {
-            let confinedOffset = scrollGuide._confinedContentOffset(CGPoint(x: x.position, y: y.position))
-            x.bouncing = !BounceComponent(t: beginTime, c: &x, to: confinedOffset.x)
-            beginTime += physicsTimeStep
-            scrollGuide.contentOffset.x = min(max(-scrollGuide.bounds.width/2, x.position), scrollGuide.layoutBounds.maxX - scrollGuide.bounds.width/2)
-        }
-    }
-
-    let timeInterval: CGFloat = 1/60
-    let startVelocity: CGPoint
-    var needBouncing = true
-
-    public func step(_ timer: Timer) {
-        func stopIfNeeded() {
-            if abs(x.velocity) <= 0.001 && abs(y.velocity) <= 0.001 {
-                timer.invalidate()
-            }
+        guard let guide = scrollGuide else {
+            return true
         }
 
-        guard let guide = scrollGuide, (abs(x.velocity) >= 0.001 && abs(y.velocity) >= 0.001) else {
-            timer.invalidate()
-            return
-        }
-
-        var offset = guide.contentOffset
-        if needBouncing {
-            if !x.bouncing {
-                offset.x += -x.velocity * timeInterval
-            }
-            if !y.bouncing {
-                offset.y += -y.velocity * timeInterval
-            }
-
-            guide.contentOffset = offset
-            if (offset.x < 0 || offset.x > scrollGuide.contentSize.width - scrollGuide.frame.width) {
+        let offset = guide.contentOffset
+        x.position = offset.x
+        y.position = offset.y
+        if bounces {
+            let confinedOffset = guide._confinedContentOffset(guide.contentOffset)
+            if (x.position < 0 || x.position > guide.contentSize.width - guide.frame.width) {
                 x.position = offset.x
-                animateX()
-                stopIfNeeded()
+                x.animateBounce(&guide.contentOffset.x, begin: beginTime, to: confinedOffset.x)
+            } else if !x.bounced {
+                x.position += -x.velocity * timeInterval
+                guide.contentOffset.x = x.position
             }
-            if (offset.y < 0 || offset.y > scrollGuide.contentSize.height - scrollGuide.frame.height) {
+            if (y.position < 0 || y.position > guide.contentSize.height - guide.frame.height) {
                 y.position = offset.y
-                animateY()
-                stopIfNeeded()
+                y.animateBounce(&guide.contentOffset.y, begin: beginTime, to: confinedOffset.y)
+            } else if !y.bounced {
+                y.position += -y.velocity * timeInterval
+                guide.contentOffset.y = y.position
             }
+            beginTime = y.decelerateTime
         } else {
-            offset.x += -x.velocity * timeInterval
-            offset.y += -y.velocity * timeInterval
-            guide._setRestrainedContentOffset(offset)
+            x.position += -x.velocity * timeInterval
+            y.position += -y.velocity * timeInterval
+            guide._setRestrainedContentOffset(CGPoint(x: x.position, y: y.position))
         }
 
         lastMomentumTime = Date.timeIntervalSinceReferenceDate
@@ -331,5 +357,6 @@ public class ScrollAnimationDeceleration<Item: LayoutElement>: ScrollAnimation {
         if !y.bouncing {
             y.velocity = startVelocity.y * drag
         }
+        return stopIfNeeded()
     }
 }
