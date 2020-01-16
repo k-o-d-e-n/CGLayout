@@ -162,14 +162,9 @@ public final class LayoutBlock<Item: LayoutElement>: LayoutBlockProtocol {
     func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier : CGRect]) -> LayoutSnapshotProtocol {
         guard let item = item, let inLayout = self.item?.inLayoutTime, let superItem = inLayout.superElement else { fatalError(LayoutBlock.message(forNotActive: self)) }
 
-        let source = constraints.lazy.filter { $0.isActive }.reduce(sourceRect) { (result, constraint) -> CGRect in
-            let rect = constraint.isIndependent ? nil : constraint.elementIdentifier.flatMap { completedRects[$0] }
-
-            debugWarning(!constraint.isIndependent && rect == nil, "Constraint operates with not actual frame of element: \(constraint)")
-
-            let constrainRect = rect.map { constraint.convert(rectIfNeeded: $0, to: superItem) } /// converts rect to current coordinate space if needed
-                ?? constraint.constrainRect(for: result, in: superItem)
-            return result.constrainedBy(rect: constrainRect, use: constraint)
+        let source = constraints.lazy.filter { $0.isActive }.reduce(into: sourceRect) { (result, constraint) -> Void in
+            let rect = constraint.elementIdentifier.flatMap { completedRects[$0] }
+            constraint.formConstrain(sourceRect: &result, by: rect, in: superItem)
         }
         let frame = itemLayout.layout(rect: inLayout.frame, in: source)
         completedRects[ObjectIdentifier(item)] = frame
@@ -203,6 +198,7 @@ public struct LayoutScheme: LayoutBlockProtocol {
 
     public /// Snapshot for current state without recalculating
     var currentSnapshot: LayoutSnapshotProtocol {
+        guard blocks.count > 0 else { fatalError(LayoutScheme.message(forNotActive: self)) }
         var snapshotFrame: CGRect!
         return LayoutSnapshot(childSnapshots: blocks.map { block in
             let blockFrame = block.currentSnapshot.frame
@@ -217,7 +213,9 @@ public struct LayoutScheme: LayoutBlockProtocol {
 
     public var currentRect: CGRect {
         guard blocks.count > 0 else { fatalError(LayoutScheme.message(forNotActive: self)) }
-        return blocks.reduce(nil) { return $0?.union($1.currentRect) ?? $1.currentRect }!
+        return blocks[1...].reduce(into: blocks[0].currentRect) { res, next in
+            res = res.union(next.currentRect)
+        }
     }
 
     public /// Calculate and apply frames layout elements.
