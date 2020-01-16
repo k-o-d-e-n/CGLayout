@@ -948,31 +948,10 @@ extension Tests {
 #endif
 }
 
-// Container
+// MARK: Container
 
-#if os(iOS)
 extension Tests {
-    func testEnterPoint() {
-        let window = Window(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
-        let view = View(frame: .zero)
-
-        let point = EnterPoint<View, Window>(child: view)
-        point.add(to: window)
-
-        XCTAssertTrue(window.subviews.contains(where: { $0 === view }))
-        XCTAssertTrue(window.layer.sublayers?.contains(where: { $0 === view.layer }) == true)
-    }
-    func testChildren() {
-        let window = Window(frame: CGRect(x: 230, y: 305, width: 200, height: 100))
-        let view = View(frame: .zero)
-
-        window.children.add(view)
-
-        XCTAssertTrue(window.subviews.contains(where: { $0 === view }))
-        XCTAssertTrue(window.layer.sublayers?.contains(where: { $0 === view.layer }) == true)
-    }
 }
-#endif
 
 // MARK: Stack scheme, layout guide
 
@@ -1050,12 +1029,9 @@ extension Tests {
         stackGuide.scheme.filling = .equal(30)
         stackGuide.scheme.spacing = .equal(5)
 
-//        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
-//        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
-//        stackGuide.addArrangedElement(View(frame: .random(in: stackGuide.bounds)))
-        stackGuide.views.add(View(frame: .random(in: stackGuide.bounds)))
-        stackGuide.views.add(View(frame: .random(in: stackGuide.bounds)))
-        stackGuide.views.add(View(frame: .random(in: stackGuide.bounds)))
+        stackGuide.addArranged(element: .uiView(View(frame: .random(in: stackGuide.bounds))))
+        stackGuide.addArranged(element: .uiView(View(frame: .random(in: stackGuide.bounds))))
+        stackGuide.addArranged(element: .uiView(View(frame: .random(in: stackGuide.bounds))))
 
         XCTAssertTrue(CGSize(width: 100, height: 200) == stackGuide.sizeThatFits(stackGuide.bounds.size))
     }
@@ -1065,23 +1041,62 @@ extension Tests {
         view.add(layoutGuide: stackGuide)
 
         let subview = View(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedElement(subview)
+        stackGuide.addArranged(element: .uiView(subview))
         let sublayer = Layer(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedElement(sublayer)
+        stackGuide.addArranged(element: .caLayer(sublayer))
         let layoutGuide = LayoutGuide<Layer>(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedElement(layoutGuide)
+        stackGuide.addArranged(element: .layoutGuide(layoutGuide))
 
         XCTAssertTrue(subview.superElement === view)
         XCTAssertTrue(sublayer.superElement === view.layer)
         XCTAssertTrue(layoutGuide.ownerElement === view.layer)
 
-        stackGuide.removeArrangedElement(subview)
-        stackGuide.removeArrangedElement(sublayer)
-        stackGuide.removeArrangedElement(layoutGuide)
+        stackGuide.removeArranged(element: subview)
+        stackGuide.removeArranged(element: sublayer)
+        stackGuide.removeArranged(element: layoutGuide)
 
         XCTAssertNil(subview.superElement)
         XCTAssertNil(sublayer.superElement)
         XCTAssertNil(layoutGuide.ownerElement)
+        XCTAssertEqual(stackGuide.arrangedItems.count, 0)
+    }
+    func testStackLayoutGuideAddLayoutItemsUsingEnterPoint() {
+        let view = View()
+        let stackGuide = StackLayoutGuide<View>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        view.add(layoutGuide: stackGuide)
+
+        let subview = View(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArranged(element: .uiView(subview))
+        let sublayer = Layer(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArranged(element: .caLayer(sublayer))
+        let layoutGuide = LayoutGuide<Layer>(frame: .random(in: stackGuide.bounds))
+        stackGuide.addArranged(element: .layoutGuide(layoutGuide))
+
+        XCTAssertTrue(subview.superElement === view)
+        XCTAssertTrue(sublayer.superElement === view.layer)
+        XCTAssertTrue(layoutGuide.ownerElement === view.layer)
+        XCTAssertEqual(stackGuide.arrangedItems.count, 3)
+    }
+    func testStackLayoutGuideInitialize() {
+        let view = View(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        let subview = View(frame: .random(in: view.bounds))
+        let sublayer = Layer(frame: .random(in: view.bounds))
+        let layoutGuide = LayoutGuide<Layer>(frame: .random(in: view.bounds))
+
+        let stackGuide = StackLayoutGuide<View>(items: [.uiView(subview), .caLayer(sublayer), .layoutGuide(layoutGuide)])
+        stackGuide.frame = view.bounds
+
+        view.add(layoutGuide: stackGuide)
+        XCTAssertTrue(subview.superElement === view)
+        XCTAssertTrue(sublayer.superElement === view.layer)
+        XCTAssertTrue(layoutGuide.ownerElement === view.layer)
+
+        stackGuide.removeFromSuperElement()
+
+        XCTAssertNil(subview.superElement)
+        XCTAssertNil(sublayer.superElement)
+        XCTAssertNil(layoutGuide.ownerElement)
+        XCTAssertEqual(stackGuide.arrangedItems.count, 3)
     }
     func testRemoveStackLayoutFromSuperItem() {
         let view = View()
@@ -1089,17 +1104,35 @@ extension Tests {
         view.add(layoutGuide: stackGuide)
 
         let subview = View(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedElement(subview)
+        stackGuide.addArranged(element: .uiView(subview))
         let sublayer = Layer(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedElement(sublayer)
+        stackGuide.addArranged(element: .caLayer(sublayer))
         let layoutGuide = LayoutGuide<Layer>(frame: .random(in: stackGuide.bounds))
-        stackGuide.addArrangedElement(layoutGuide)
+        stackGuide.addArranged(element: .layoutGuide(layoutGuide))
 
         stackGuide.removeFromSuperElement()
 
         XCTAssertNil(subview.superElement)
         XCTAssertNil(sublayer.superElement)
         XCTAssertNil(layoutGuide.ownerElement)
+        XCTAssertEqual(stackGuide.arrangedItems.count, 3)
+    }
+    func testStackLayoutGuideAppendThroughChildren() {
+        let view = View()
+        let stackGuide = StackLayoutGuide<View>(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 200)))
+        view.add(layoutGuide: stackGuide)
+
+        let subview = View(frame: .random(in: stackGuide.bounds))
+        stackGuide.views.add(subview)
+        let sublayer = Layer(frame: .random(in: stackGuide.bounds))
+        stackGuide.layers.add(sublayer)
+        let layoutGuide = LayoutGuide<View>(frame: .random(in: stackGuide.bounds))
+        stackGuide.layoutGuides.add(layoutGuide)
+
+        XCTAssertTrue(subview.superElement === view)
+        XCTAssertTrue(sublayer.superElement === view.layer)
+        XCTAssertTrue(layoutGuide.ownerElement === view)
+        XCTAssertEqual(stackGuide.arrangedItems.count, 3)
     }
     #endif
 }

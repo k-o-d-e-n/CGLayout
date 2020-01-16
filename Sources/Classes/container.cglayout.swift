@@ -14,119 +14,115 @@ import Cocoa
 import Foundation
 #endif
 
-public protocol LayoutElementsContainer: LayoutElement {
-    func addChildElement<SubItem: LayoutElement>(_ subItem: SubItem)
+protocol EnterPoint {
+    associatedtype Container
+
+    var child: LayoutElement { get }
+
+    func add(to container: Container)
 }
 
-#if os(macOS) || os(iOS) || os(tvOS)
-extension CALayer: LayoutElementsContainer {
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : LayoutElement {
-        debugFatalError(true, "\(self) cannot add subitem \(subItem). Reason: Undefined type of subitem")
-
-        // TODO: Implement addition subitem with type cast
-    }
-
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {
-        add(layoutGuide: subItem)
-    }
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
-        addSublayer(subItem)
-    }
-}
-#endif
-#if os(iOS) || os(tvOS)
-extension CALayer {
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : UIView {
-        addSublayer(subItem.layer)
-        debugWarning("Adds 'UIView' element to 'CALayer' element directly has ambiguous behavior")
-    }
+protocol ContainerManagement {
+    associatedtype Child
+    associatedtype Container
+    func add(_ child: Child, to container: Container)
 }
 
-extension UIView: LayoutElementsContainer {
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : LayoutElement {
-        debugFatalError(true, "\(self) cannot add subitem \(subItem). Reason: Undefined type of subitem")
+struct Enter<Container>: EnterPoint {
+    let base: _AnyEnterPoint<Container>
+    var child: LayoutElement { return base.child }
 
-        // TODO: Implement addition subitem with type cast
+    init<Point: EnterPoint>(_ base: Point) where Point.Container == Container {
+        self.base = _Enter(base)
     }
 
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {
-        layer.add(layoutGuide: subItem)
+    init<Management: ContainerManagement>(_ element: Management.Child, managedBy management: Management) where Management.Child: LayoutElement, Management.Container == Container {
+        self.base = _Enter(Enter.Any.init(element: element, management: management))
     }
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<UIView> {
-        add(layoutGuide: subItem)
+
+    func add(to container: Container) {
+        base.add(to: container)
     }
-    @available(iOS 9.0, *)
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : UILayoutGuide {
-        addLayoutGuide(subItem)
-    }
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
-        layer.addSublayer(subItem)
-    }
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : UIView {
-        addSubview(subItem)
+
+    private struct `Any`<Management: ContainerManagement>: EnterPoint where Management.Child: LayoutElement, Management.Container == Container {
+        let element: Management.Child
+        let management: Management
+        var child: LayoutElement { element }
+        func add(to container: Container) {
+            management.add(element, to: container)
+        }
     }
 }
-#endif
 
-#if os(macOS)
-extension NSView: LayoutElementsContainer {
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : LayoutElement {
-        debugFatalError(true, "\(self) cannot add subitem \(subItem). Reason: Undefined type of subitem")
-
-        // TODO: Implement addition subitem with type cast
-    }
-
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<CALayer> {
-        layer?.add(layoutGuide: subItem)
-    }
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : LayoutGuide<NSView> {
-        add(layoutGuide: subItem)
-    }
-    @available(macOS 10.11, *)
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : NSLayoutGuide {
-        addLayoutGuide(subItem)
-    }
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : CALayer {
-        layer?.addSublayer(subItem)
-    }
-    public func addChildElement<SubItem>(_ subItem: SubItem) where SubItem : NSView {
-        addSubview(subItem)
+class _AnyEnterPoint<Container>: EnterPoint {
+    var child: LayoutElement { fatalError("Unimplemented") }
+    func add(to container: Container) {
+        fatalError("Unimplemented")
     }
 }
-#endif
+final class _Enter<Base: EnterPoint>: _AnyEnterPoint<Base.Container> {
+    private let base: Base
+    override var child: LayoutElement { base.child }
+    init(_ base: Base) {
+        self.base = base
+    }
+    override func add(to container: Base.Container) {
+        base.add(to: container)
+    }
+}
 
 
 /// The container does not know which child is being added,
 /// but the child knows exactly where it is being added
 
-protocol EnterPointProtocol {
-    associatedtype Container
-    func add(to container: Container)
-}
-
-struct EnterPoint<Child, Container> {
-    let child: Child
+protocol ChildrenProtocol {
+    associatedtype Child
+    func add(_ child: Child)
+  //func remove(_ child: Child)
 }
 
 #if os(iOS)
-extension EnterPoint: EnterPointProtocol where Child: UIView, Container: UIView {
-    func add(to container: Container) {
-        container.addSubview(child)
+extension UIView {
+    struct SublayerManagement<Container: UIView>: ContainerManagement {
+        func add(_ child: CALayer, to container: Container) {
+            container.layer.addSublayer(child)
+        }
     }
 }
-//extension EnterPoint: EnterPointProtocol where Child: LayoutGuide<UIView>, Container: UIView { // conflict
-//    func add(to container: Container) {
-//        container.add(layoutGuide: child)
-//    }
-//}
 
-extension StackLayoutGuide where Parent: UIView {
+extension CALayer {
+    struct Layers: ChildrenProtocol {
+        let layer: CALayer
+        func add(_ child: CALayer) {
+            layer.addSublayer(layer)
+        }
+    }
+}
+
+public extension UIView {
+    var sublayers: Layers { return Layers(base: CALayer.Layers(layer: layer)) }
+    struct Layers: ChildrenProtocol {
+        let base: CALayer.Layers
+        func add(_ child: CALayer) {
+            base.add(child)
+        }
+    }
+    var layoutGuides: LayoutGuides { return LayoutGuides(view: self) }
+    struct LayoutGuides: ChildrenProtocol {
+        let view: UIView
+        func add(_ child: LayoutGuide<UIView>) {
+            child.add(to: view)
+        }
+    }
+}
+
+public extension StackLayoutGuide where Parent: UIView {
     var views: Views { return Views(stackLayoutGuide: self) }
     struct Views: ChildrenProtocol {
         let stackLayoutGuide: StackLayoutGuide<Parent>
         func add(_ child: UIView) {
             stackLayoutGuide.ownerElement?.addSubview(child)
-            stackLayoutGuide.items.append(child)
+            stackLayoutGuide.items.append(.uiView(child))
         }
     }
 
@@ -135,7 +131,7 @@ extension StackLayoutGuide where Parent: UIView {
         let stackLayoutGuide: StackLayoutGuide<Parent>
         func add(_ child: CALayer) {
             stackLayoutGuide.ownerElement?.layer.addSublayer(child)
-            stackLayoutGuide.items.append(child)
+            stackLayoutGuide.items.append(.caLayer(child))
         }
     }
 
@@ -144,31 +140,8 @@ extension StackLayoutGuide where Parent: UIView {
         let stackLayoutGuide: StackLayoutGuide<Parent>
         func add(_ child: LayoutGuide<UIView>) {
             stackLayoutGuide.ownerElement?.add(layoutGuide: child)
-            stackLayoutGuide.items.append(child)
+            stackLayoutGuide.items.append(.layoutGuide(child))
         }
     }
 }
-
-protocol ChildrenProtocol {
-    associatedtype Child
-    func add(_ child: Child)
-}
-struct Children<Child, Container> {
-    let container: Container
-}
-extension Children where Child: UIView, Container: UIView {
-    func add(_ child: Child) {
-        container.addSubview(child)
-    }
-}
-extension Children where Child: CALayer, Container: UIView {
-    func add(_ child: Child) {
-        container.layer.addSublayer(child)
-    }
-}
-extension UIView {
-    var children: Children<UIView, UIView> { return Children(container: self) }
-    var sublayers: Children<CALayer, UIView> { return Children(container: self) }
-}
-
 #endif

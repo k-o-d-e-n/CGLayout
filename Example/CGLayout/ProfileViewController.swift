@@ -48,11 +48,11 @@ class ProfileViewController: UIViewController {
             }
         )
         let hrb1Button = buildView(UIButton.self, bg: .black)
-        headerRightGroupGuide.addArrangedElement(hrb1Button)
+        headerRightGroupGuide.addArranged(element: .uiView(hrb1Button))
         let hrb2Button = buildView(UIButton.self, bg: .lightGray)
-        headerRightGroupGuide.addArrangedElement(hrb2Button)
+        headerRightGroupGuide.addArranged(element: .uiView(hrb2Button))
         let hrb3Button = buildView(UIButton.self, bg: .lightGray)
-        headerRightGroupGuide.addArrangedElement(hrb3Button)
+        headerRightGroupGuide.addArranged(element: .uiView(hrb3Button))
 
         let header = LayoutScheme(blocks: [
             headerView.layoutBlock { (anchors) in
@@ -129,11 +129,11 @@ class ProfileViewController: UIViewController {
         let btn1Button = buildView(UIButton.self, bg: .black)
         btn1Button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .caption1)
         btn1Button.setTitle("CHANGE", for: .normal)
-        buttonsGroupGuide.addArrangedElement(btn1Button)
+        buttonsGroupGuide.addArranged(element: .uiView(btn1Button))
         let btn2Button = buildView(UIButton.self, bg: .lightGray)
         btn2Button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .caption1)
         btn2Button.setTitle("DELETE", for: .normal)
-        buttonsGroupGuide.addArrangedElement(btn2Button)
+        buttonsGroupGuide.addArranged(element: .uiView(btn2Button))
 
         let socialGroupGuide = StackLayoutGuide<UIView>() // cannot calcute size based on elements
         socialGroupGuide.scheme.direction = .fromCenter
@@ -147,11 +147,11 @@ class ProfileViewController: UIViewController {
             anchors.height.equal(to: 40)
         }
         let scl1Button = buildView(UIButton.self, bg: .black)
-        socialGroupGuide.addArrangedElement(scl1Button)
+        socialGroupGuide.addArranged(element: .uiView(scl1Button))
         let scl2Button = buildView(UIButton.self, bg: .lightGray)
-        socialGroupGuide.addArrangedElement(scl2Button)
+        socialGroupGuide.addArranged(element: .uiView(scl2Button))
         let scl3Button = buildView(UIButton.self, bg: .lightGray)
-        socialGroupGuide.addArrangedElement(scl3Button)
+        socialGroupGuide.addArranged(element: .uiView(scl3Button))
 
         let title1Label = buildView(UILabel.self, bg: .gray)
         title1Label.font = UIFont.preferredFont(forTextStyle: .title3)

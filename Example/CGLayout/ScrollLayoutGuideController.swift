@@ -61,7 +61,7 @@ class ScrollLayoutGuideController: UIViewController {
 
         view.add(layoutGuide: scrollLayoutGuide)
         view.add(layoutGuide: content.guide)
-        subviews.forEach({ view.addChildElement($0) })
+        subviews.forEach({ view.addSubview($0) })
 
         view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
 
@@ -140,7 +140,7 @@ final class UIScrollViewController: UIViewController {
         (view as! UIScrollView).contentSize = content.guide.bounds.size
 
         view.add(layoutGuide: content.guide)
-        subviews.forEach({ view.addChildElement($0) })
+        subviews.forEach({ view.addSubview($0) })
     }
 
     override func viewDidLayoutSubviews() {
