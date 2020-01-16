@@ -230,7 +230,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     /// - Parameter sourceRect: Source space for layout
     /// - Returns: Snapshot contained frames layout items
     func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
-        var completedFrames: [(AnyObject, CGRect)] = []
+        var completedFrames: [ObjectIdentifier: CGRect] = [:]
         return snapshot(for: sourceRect, completedRects: &completedFrames)
     }
 
@@ -241,21 +241,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     ///   - sourceRect: Source space for layout. For not top level blocks rect should be define available bounds of block
     ///   - completedRects: `LayoutItem` items with corrected frame
     /// - Returns: Frame of this block
-    func snapshot(for sourceRect: CGRect, completedRects: inout [(AnyObject, CGRect)]) -> LayoutSnapshotProtocol {
-        let subItems = items()
-        let frames = distribution.distribute(
-            rects: subItems.map { $0.inLayoutTime.frame }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
-            in: sourceRect,
-            along: axis
-        )
-        var iterator = subItems.makeIterator()
-        let snapshotFrame = frames.reduce(into: frames.first) { snapRect, current in
-            completedRects.insert((iterator.next()!, current), at: 0)
-            snapRect = snapRect?.union(current) ?? current
-        }
-        return LayoutSnapshot(childSnapshots: frames, frame: snapshotFrame ?? CGRect(origin: sourceRect.origin, size: .zero))
-    }
-    public func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier : CGRect]) -> LayoutSnapshotProtocol {
+    func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier : CGRect]) -> LayoutSnapshotProtocol {
         let subItems = items()
         let frames = distribution.distribute(
             rects: subItems.map { $0.inLayoutTime.frame }, // TODO: Alignment center is fail, apply for source rect, that may have big size.
