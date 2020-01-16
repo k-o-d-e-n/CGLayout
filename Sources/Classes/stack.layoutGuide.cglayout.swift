@@ -260,9 +260,9 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
 /// StackLayoutGuide layout guide for arranging items in ordered list. It's analogue UIStackView.
 /// For configure layout parameters use property `scheme`.
 /// Attention: before addition items to stack, need add stack layout guide to super layout element using `func add(layoutGuide:)` method.
-open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent>, AdjustableLayoutElement, AdaptiveLayoutElement {
+open class StackLayoutGuide<Parent: LayoutElement>: LayoutGuide<Parent>, AdjustableLayoutElement, AdaptiveLayoutElement {
     private var insetAnchor: RectBasedConstraint?
-    internal var items: [Enter<Parent>] = []
+    internal var items: [Element] = []
     /// StackLayoutScheme entity for configuring axis, distribution and other parameters.
     open lazy var scheme: StackLayoutScheme = StackLayoutScheme { [unowned self] in self.arrangedItems }
     /// The list of items arranged by the stack layout guide
@@ -281,12 +281,12 @@ open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent
         /// while stack layout guide cannot add subitems
         didSet {
             if let owner = ownerElement {
-                items.forEach(owner.addChild)
+                items.forEach({ $0.add(to: owner) })
             }
         }
     }
 
-    public convenience init(items: [Enter<Parent>]) {
+    public convenience init(items: [Element]) {
         self.init(frame: .zero)
         self.items = items
     }
@@ -331,226 +331,152 @@ open class StackLayoutGuide<Parent: LayoutElementsContainer>: LayoutGuide<Parent
     }
 }
 extension StackLayoutGuide {
+    public struct Element {
+        let base: _AnyEnterPoint<Parent>
+        var child: LayoutElement { return base.child }
+
+        init<Point: EnterPoint>(_ base: Point) where Point.Container == Parent {
+            self.base = _Enter(base)
+        }
+
+        func add(to container: Parent) {
+            base.add(to: container)
+        }
+    }
     /// Adds an element to the end of the `arrangedItems` list.
     ///
     /// - Parameter point: Enter point.
-    public func addArrangedElement(using point: Enter<Parent>) {
-        insertArrangedElement(using: point, at: items.count)
+    public func addArranged(element: Element) {
+        insertArranged(element: element, at: items.count)
     }
     /// Inserts an element to arrangedItems list at specific index.
     ///
     /// - Parameters:
     ///   - point: Enter point
     ///   - index: Index in list.
-    public func insertArrangedElement(using point: Enter<Parent>, at index: Int) {
-        items.insert(point, at: index)
+    public func insertArranged(element: Element, at index: Int) {
+        items.insert(element, at: index)
         if let owner = ownerElement {
-            owner.addChild(using: point)
+            element.add(to: owner)
         }
     }
     /// Removes element from `arrangedItems` list and from hierarchy.
     ///
     /// - Parameter element: Layout element for removing.
-    public func removeArrangedElement(_ element: LayoutElement) {
+    public func removeArranged(element: LayoutElement) {
         removeItem(element)?.removeFromSuperElement()
     }
 }
-#if os(iOS) || os(tvOS)
-extension Enter where Container: UIView {
-    static func caLayer<C: CALayer>(_ child: C) -> Enter<Container> {
-        return Enter(child) { (child, container) in
-            container.layer.addSublayer(child)
-        }
-    }
-    static func uiView<C: UIView>(_ child: C) -> Enter<Container> {
-        return Enter(child) { (child, container) in
-            container.addSubview(child)
-        }
-    }
-    static func layoutGuide<LG, C: UIView>(_ child: LG) -> Enter<Container> where LG: LayoutGuide<C> {
-        return Enter(child) { (child, container) in
-            container.add(layoutGuide: child)
-        }
-    }
-    static func layoutGuide<LG, C: CALayer>(_ child: LG) -> Enter<Container> where LG: LayoutGuide<C> {
-        return Enter(child) { (child, container) in
-            container.layer.add(layoutGuide: child)
-        }
-    }
-}
 
-extension StackLayoutGuide where Parent: UIView {
-    /// Adds a layout guide to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: Layout guide for addition.
-    public func addArrangedElement<T: UIView>(_ element: LayoutGuide<T>) { insertArrangedElement(element, at: items.count) }
-    /// Inserts an element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: Layout guide for addition
-    ///   - index: Index in list.
-    public func insertArrangedElement<T: UIView>(_ element: LayoutGuide<T>, at index: Int) {
-        insertArrangedElement(using: .layoutGuide(element), at: index)
+#if os(macOS) || os(iOS) || os(tvOS)
+public extension StackLayoutGuide.Element where Parent: CALayer {
+    static func caLayer<C: CALayer>(_ child: C) -> Self {
+        return Self(Sublayer<Parent>(layer: child))
     }
-    /// Adds a layout guide to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: Layout guide for addition.
-    public func addArrangedElement<T: CALayer>(_ element: LayoutGuide<T>) { insertArrangedElement(element, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: Layout guide for addition
-    ///   - index: Index in list.
-    public func insertArrangedElement<T: CALayer>(_ element: LayoutGuide<T>, at index: Int) {
-        insertArrangedElement(using: .layoutGuide(element), at: index)
+    private struct Sublayer<L: CALayer>: EnterPoint {
+        let layer: CALayer
+        var child: LayoutElement { layer }
+        func add(to container: L) {
+            container.addSublayer(layer)
+        }
     }
-    /// Adds an element to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: View for addition.
-    public func addArrangedElement(_ element: UIView) { insertArrangedElement(element, at: items.count) }
-    /// Inserts an element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: View for addition
-    ///   - index: Index in list.
-    public func insertArrangedElement(_ element: UIView, at index: Int) {
-        insertArrangedElement(using: .uiView(element), at: index)
+    static func layoutGuide<LG, C: CALayer>(_ child: LG) -> Self where LG: LayoutGuide<C> {
+        return Self(LayoutGuideSublayer<C, Parent>(lg: child))
     }
-    /// Adds an element to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: Layer for addition.
-    public func addArrangedElement(_ element: CALayer) { insertArrangedElement(element, at: items.count) }
-    /// Inserts an element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: Layer for addition
-    ///   - index: Index in list.
-    public func insertArrangedElement(_ element: CALayer, at index: Int) {
-        insertArrangedElement(using: .caLayer(element), at: index)
+    private struct LayoutGuideSublayer<Owner: CALayer, L: CALayer>: EnterPoint {
+        let lg: LayoutGuide<Owner>
+        var child: LayoutElement { lg }
+        func add(to container: L) {
+            container.add(layoutGuide: lg)
+        }
     }
 }
 #endif
-#if os(macOS) || os(iOS) || os(tvOS)
-extension Enter where Container: CALayer {
-    static func caLayer<C: CALayer>(_ child: C) -> Enter<Container> {
-        return Enter(child) { (child, container) in
-            container.addSublayer(child)
+#if os(iOS) || os(tvOS)
+public extension StackLayoutGuide.Element where Parent: UIView {
+    static func caLayer<C: CALayer>(_ child: C) -> Self {
+        return Self(Layer<Parent>(layer: child))
+    }
+    private struct Layer<V: UIView>: EnterPoint {
+        let layer: CALayer
+        var child: LayoutElement { layer }
+        func add(to container: V) {
+            container.layer.addSublayer(layer)
         }
     }
-    static func layoutGuide<LG, C: CALayer>(_ child: LG) -> Enter<Container> where LG: LayoutGuide<C> {
-        return Enter(child) { (child, container) in
-            container.add(layoutGuide: child)
+    static func uiView<C: UIView>(_ child: C) -> Self {
+        return Self(View<Parent>(view: child))
+    }
+    private struct View<V: UIView>: EnterPoint {
+        let view: UIView
+        var child: LayoutElement { view }
+        func add(to container: V) {
+            container.addSubview(view)
         }
     }
-}
-extension StackLayoutGuide where Parent: CALayer {
-    /// Adds a layout guide to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: Layout guide for addition.
-    public func addArrangedElement<T: CALayer>(_ element: LayoutGuide<T>) { insertArrangedElement(element, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: Layout element.
-    ///   - index: Index in list.
-    public func insertArrangedElement<T: CALayer>(_ element: LayoutGuide<T>, at index: Int) {
-        insertArrangedElement(using: .layoutGuide(element), at: index)
+    static func layoutGuide<LG, C: UIView>(_ child: LG) -> Self where LG: LayoutGuide<C> {
+        return Self(LayoutGuideView<C, Parent>(lg: child))
     }
-    /// Adds an element to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: CALayer for addition.
-    public func addArrangedElement(_ item: CALayer) { insertArrangedElement(item, at: items.count) }
-    /// Inserts an element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: Layout element.
-    ///   - index: Index in list.
-    public func insertArrangedElement(_ element: CALayer, at index: Int) {
-        insertArrangedElement(using: .caLayer(element), at: index)
+    private struct LayoutGuideView<Owner: UIView, V: UIView>: EnterPoint {
+        let lg: LayoutGuide<Owner>
+        var child: LayoutElement { lg }
+        func add(to container: V) {
+            container.add(layoutGuide: lg)
+        }
+    }
+    static func layoutGuide<LG, C: CALayer>(_ child: LG) -> Self where LG: LayoutGuide<C> {
+        return Self(LayoutGuideLayer<C, Parent>(lg: child))
+    }
+    private struct LayoutGuideLayer<Owner: CALayer, V: UIView>: EnterPoint {
+        let lg: LayoutGuide<Owner>
+        var child: LayoutElement { lg }
+        func add(to container: V) {
+            container.layer.add(layoutGuide: lg)
+        }
     }
 }
 #endif
 #if os(macOS)
-extension StackLayoutGuide where Parent: NSView {
-    /// Adds a layout guide to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: Layout guide for addition.
-    public func addArrangedElement<T: NSView>(_ element: LayoutGuide<T>) { insertArrangedElement(element, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: Layout guide for addition
-    ///   - index: Index in list.
-    public func insertArrangedElement<T: NSView>(_ element: LayoutGuide<T>, at index: Int) {
-        ownerElement?.addChildElement(unsafeBitCast(element, to: LayoutGuide<NSView>.self))
-        items.insert(element, at: index)
+public extension StackLayoutGuide.Element where Parent: NSView {
+    static func caLayer<C: CALayer>(_ child: C) -> Self {
+        return Self(Layer<Parent>(layer: child))
     }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: Layout guide for removing.
-    public func removeArrangedElement<T: NSView>(_ element: LayoutGuide<T>) {
-        guard removeItem(element), ownerElement === element.superElement else { return }
-        element.removeFromSuperElement()
+    private struct Layer<V: NSView>: EnterPoint {
+        let layer: CALayer
+        var child: LayoutElement { layer }
+        func add(to container: V) {
+            container.layer?.addSublayer(layer)
+        }
     }
-    /// Adds a layout guide to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: Layout guide for addition.
-    public func addArrangedElement<T: CALayer>(_ element: LayoutGuide<T>) { insertArrangedElement(element, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: Layout guide for addition
-    ///   - index: Index in list.
-    public func insertArrangedElement<T: CALayer>(_ element: LayoutGuide<T>, at index: Int) {
-        ownerElement?.addChildElement(unsafeBitCast(element, to: LayoutGuide<CALayer>.self))
-        items.insert(element, at: index)
+    static func uiView<C: NSView>(_ child: C) -> Self {
+        return Self(View<Parent>(view: child))
     }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: Layout guide for removing.
-    public func removeArrangedElement<T: CALayer>(_ element: LayoutGuide<T>) {
-        guard removeItem(element), ownerElement?.layer === element.superElement else { return }
-        element.removeFromSuperElement()
+    private struct View<V: NSView>: EnterPoint {
+        let view: NSView
+        var child: LayoutElement { view }
+        func add(to container: V) {
+            container.addSubview(view)
+        }
     }
-    /// Adds a layout guide to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: View for addition.
-    public func addArrangedElement(_ element: NSView) { insertArrangedElement(element, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: View for addition
-    ///   - index: Index in list.
-    public func insertArrangedElement(_ element: NSView, at index: Int) {
-        ownerElement?.addChildElement(element)
-        items.insert(element, at: index)
+    static func layoutGuide<LG, C: NSView>(_ child: LG) -> Self where LG: LayoutGuide<C> {
+        return Self(LayoutGuideView<C, Parent>(lg: child))
     }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: View for removing.
-    public func removeArrangedElement(_ element: NSView) {
-        guard removeItem(element), ownerElement === element.superElement else { return }
-        element.removeFromSuperElement()
+    private struct LayoutGuideView<Owner: NSView, V: NSView>: EnterPoint {
+        let lg: LayoutGuide<Owner>
+        var child: LayoutElement { lg }
+        func add(to container: V) {
+            container.add(layoutGuide: lg)
+        }
     }
-    /// Adds a layout guide to the end of the `arrangedItems` list.
-    ///
-    /// - Parameter element: Layer for addition.
-    public func addArrangedElement(_ element: CALayer) { insertArrangedElement(element, at: items.count) }
-    /// Inserts a element to arrangedItems list at specific index.
-    ///
-    /// - Parameters:
-    ///   - element: Layer for addition
-    ///   - index: Index in list.
-    public func insertArrangedElement(_ element: CALayer, at index: Int) {
-        ownerElement?.addChildElement(element)
-        items.insert(element, at: index)
+    static func layoutGuide<LG, C: CALayer>(_ child: LG) -> Self where LG: LayoutGuide<C> {
+        return Self(LayoutGuideLayer<C, Parent>(lg: child))
     }
-    /// Removes from `arrangedItems` list and from hierarchy.
-    ///
-    /// - Parameter element: Layer for removing.
-    public func removeArrangedElement(_ element: CALayer) {
-        guard removeItem(element), ownerElement?.layer === element.superElement else { return }
-        element.removeFromSuperElement()
+    private struct LayoutGuideLayer<Owner: CALayer, V: NSView>: EnterPoint {
+        let lg: LayoutGuide<Owner>
+        var child: LayoutElement { lg }
+        func add(to container: V) {
+            container.layer?.add(layoutGuide: lg)
+        }
     }
 }
 #endif
