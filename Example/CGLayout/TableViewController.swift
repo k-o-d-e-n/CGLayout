@@ -60,7 +60,7 @@ struct ReuseLayoutBlock {
         return contentConstraints.reduce(rect) { $1.constrained(sourceRect: $0, by: rect) }
     }
     func apply(for item: LayoutElement) {
-        layout.apply(for: item, use: [(item.superElement!.bounds, targetConstraints)])
+        layout.apply(for: item, in: item.superElement!.layoutBounds, use: [(item.superElement!.bounds, targetConstraints)])
     }
 }
 

@@ -94,7 +94,7 @@ public class SecondViewController: UIViewController {
         } else if UIDevice.current.orientation.isLandscape, let snapshot = landscapeSnapshot {
             layoutScheme.apply(snapshot: snapshot)
         } else {
-            layoutScheme.layout()
+            layoutScheme.layout(in: view.layoutBounds)
         }
         #endif
         #if os(tvOS)

@@ -32,7 +32,7 @@ public class LayoutManager<Item: LayoutElement>: NSObject {
 
     private func scheduleLayout() {
         RunLoop.current.perform {
-            self.scheme.layout()
+            self.scheme.layout(in: self.item.layoutBounds)
             self.isNeedLayout = false
         }
     }
@@ -52,7 +52,7 @@ public extension LayoutManager where Item: UIView {
         self.scheme = scheme
         self.deinitialization = { lm in view.removeObserver(lm, forKeyPath: "layer.bounds") }
         view.addObserver(self, forKeyPath: "layer.bounds", options: [], context: nil)
-        scheme.layout()
+        scheme.layout(in: view.layoutBounds)
     }
 }
 
@@ -69,13 +69,13 @@ open class AutolayoutViewController: UIViewController {
 
     override open func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        internalLayout.layout()
+        internalLayout.layout(in: view.layoutBounds)
         update(scheme: &layoutScheme)
         layout()
     }
 
     open func layout() {
-        layoutScheme.layout()
+        layoutScheme.layout(in: view.layoutBounds)
     }
 
     open func update(scheme: inout LayoutScheme) {
@@ -151,7 +151,7 @@ open class ScrollLayoutViewController: AutolayoutViewController {
     open override func viewDidLayoutSubviews() {
         // skips super call
         if isNeedCalculateContent || !isScrolling {
-            internalLayout.layout()
+            internalLayout.layout(in: scrollView.layoutBounds)
             update(scheme: &layoutScheme)
             layout()
             isNeedCalculateContent = false

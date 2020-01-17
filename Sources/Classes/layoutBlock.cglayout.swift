@@ -38,10 +38,6 @@ public protocol LayoutBlockProtocol {
     var currentSnapshot: LayoutSnapshotProtocol { get }
     var currentRect: CGRect { get }
 
-    /// Calculate and apply frames layout items.
-    /// Should be call when parent `LayoutElement` element has corrected bounds. Else result unexpected.
-    func layout()
-
     /// Calculate and apply frames layout items in custom space.
     ///
     /// - Parameter sourceRect: Source space
@@ -123,14 +119,6 @@ public final class LayoutBlock<Item: LayoutElement>: LayoutBlockProtocol {
         self.item = element
         self.itemLayout = layout
         self.constraints = constraints
-    }
-
-    public /// Calculate and apply frames layout elements.
-    /// Should be call when parent `LayoutElement` element has corrected bounds. Else result unexpected.
-    func layout() {
-        guard let item = item else { return debugWarning(LayoutBlock.message(forSkipped: self)) }
-
-        itemLayout.apply(for: item, use: constraints.lazy.filter { $0.isActive })
     }
 
     public /// Calculate and apply frames layout elements in custom space.
@@ -218,12 +206,6 @@ public struct LayoutScheme: LayoutBlockProtocol {
     public var currentRect: CGRect {
         guard blocks.count > 0 else { fatalError(LayoutScheme.message(forNotActive: self)) }
         return blocks.reduce(nil) { return $0?.union($1.currentRect) ?? $1.currentRect }!
-    }
-
-    public /// Calculate and apply frames layout elements.
-    /// Should be call when parent `LayoutElement` element has corrected bounds. Else result unexpected.
-    func layout() {
-        blocks.forEach { $0.layout() }
     }
 
     public /// Calculate and apply frames layout elements.

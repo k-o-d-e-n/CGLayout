@@ -70,7 +70,7 @@ class ViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scheme.layout()
+        scheme.layout(in: view.layoutBounds)
     }
 
     private func buildScheme() -> LayoutScheme {
