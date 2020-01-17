@@ -22,26 +22,13 @@ public protocol LayoutConstraintProtocol: RectBasedConstraint {
     var elementIdentifier: ObjectIdentifier? { get }
     /// Flag, defines that constraint may be used for layout
     var isActive: Bool { get }
-    /// Flag that constraint not required other calculations. It`s true for size-based constraints.
-    var isIndependent: Bool { get }
-    /// Return rectangle for constrain source rect
-    ///
-    /// - Parameter currentSpace: Source rect in current state
-    /// - Parameter coordinateSpace: Working coordinate space
-    /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect
-    /// Converts rect from constraint coordinate space to destination coordinate space if needed.
+
+    /// Main function for constrain source space by other rect
     ///
     /// - Parameters:
-    ///   - rect: Initial rect
-    ///   - coordinateSpace: Destination coordinate space
-    /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect
-}
-extension LayoutConstraintProtocol {
-    internal func constrain(sourceRect: inout CGRect, in coordinateSpace: LayoutElement) {
-        formConstrain(sourceRect: &sourceRect, by: constrainRect(for: sourceRect, in: coordinateSpace))
-    }
+    ///   - sourceRect: Source space
+    ///   - rect: Rect for constrain
+    func formConstrain(sourceRect: inout CGRect, by rect: CGRect?, in coordinateSpace: LayoutElement)
 }
 public extension LayoutConstraintProtocol {
     /// Returns constraint with possibility to change active state
@@ -73,27 +60,15 @@ extension LayoutConstraint: LayoutConstraintProtocol {
     /// Flag, defines that constraint may be used for layout
     public var isActive: Bool { return inLayoutTimeItem?.superElement != nil }
 
-    public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
-    var isIndependent: Bool { return false }
-
-    public /// Return rectangle for constrain source rect
-    ///
-    /// - Parameter currentSpace: Source rect in current state
-    /// - Parameter coordinateSpace: Working coordinate space
-    /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect {
-        guard let layoutItem = inLayoutTimeItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
-
-        return convert(rectIfNeeded: layoutItem.frame, to: coordinateSpace)
-    }
-
     public /// Main function for constrain source space by other rect
     ///
     /// - Parameters:
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
     func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-        sourceRect = sourceRect.constrainedBy(rect: rect, use: constraints)
+        constraints.forEach { (constraint) in
+            constraint.formConstrain(sourceRect: &sourceRect, by: rect)
+        }
     }
 
     public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
@@ -106,6 +81,11 @@ extension LayoutConstraint: LayoutConstraintProtocol {
         guard let superLayoutItem = inLayoutTimeItem?.superElement else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
 
         return coordinateSpace === superLayoutItem ? rect : coordinateSpace.convert(rect: rect, from: superLayoutItem)
+    }
+
+    public func formConstrain(sourceRect: inout CGRect, by rect: CGRect?, in coordinateSpace: LayoutElement) {
+        guard let item = inLayoutTimeItem else { fatalError("Constraint has not access to layout item or him super item. /n\(self)") }
+        formConstrain(sourceRect: &sourceRect, by: convert(rectIfNeeded: rect ?? item.frame, to: coordinateSpace))
     }
 }
 
@@ -122,21 +102,9 @@ public struct AdjustLayoutConstraint {
     }
 }
 extension AdjustLayoutConstraint: LayoutConstraintProtocol {
-    public var elementIdentifier: ObjectIdentifier? { return item.map(ObjectIdentifier.init) }
+    public var elementIdentifier: ObjectIdentifier? { return nil }
     public /// Flag, defines that constraint may be used for layout
     var isActive: Bool { return item?.inLayoutTime.superElement != nil }
-
-    public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
-    var isIndependent: Bool { return true }
-
-    public /// Return rectangle for constrain source rect
-    ///
-    /// - Parameter currentSpace: Source rect in current state
-    /// - Parameter coordinateSpace: Working coordinate space
-    /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect {
-        return currentSpace
-    }
 
     public /// Main function for constrain source space by other rect
     ///
@@ -147,18 +115,14 @@ extension AdjustLayoutConstraint: LayoutConstraintProtocol {
         guard let item = item else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
 
         let adjustedRect = item.contentConstraint.constrained(sourceRect: rect, by: rect)
-        sourceRect = sourceRect.constrainedBy(rect: adjustedRect, use: anchors)
+        anchors.forEach { (constraint) in
+            constraint.formConstrain(sourceRect: &sourceRect, by: adjustedRect)
+        }
         alignment.formLayout(rect: &sourceRect, in: rect)
     }
 
-    public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
-    ///
-    /// - Parameters:
-    ///   - rect: Initial rect
-    ///   - coordinateSpace: Destination coordinate space
-    /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect {
-        return rect
+    public func formConstrain(sourceRect: inout CGRect, by rect: CGRect?, in coordinateSpace: LayoutElement) {
+        formConstrain(sourceRect: &sourceRect, by: rect ?? sourceRect)
     }
 }
 
@@ -182,27 +146,15 @@ extension ContentLayoutConstraint: LayoutConstraintProtocol {
     /// Flag, defines that constraint may be used for layout
     public var isActive: Bool { return inLayoutTimeItem?.superElement != nil }
 
-    public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
-    var isIndependent: Bool { return false }
-
-    public /// Return rectangle for constrain source rect
-    ///
-    /// - Parameter currentSpace: Source rect in current state
-    /// - Parameter coordinateSpace: Working coordinate space
-    /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect {
-        guard let layoutItem = inLayoutTimeItem else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
-
-        return convert(rectIfNeeded: layoutItem.layoutBounds, to: coordinateSpace)
-    }
-
     public /// Main function for constrain source space by other rect
     ///
     /// - Parameters:
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
     func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-        sourceRect = sourceRect.constrainedBy(rect: rect, use: constraints)
+        constraints.forEach { (constraint) in
+            constraint.formConstrain(sourceRect: &sourceRect, by: rect)
+        }
     }
 
     public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
@@ -216,6 +168,11 @@ extension ContentLayoutConstraint: LayoutConstraintProtocol {
 
         return coordinateSpace === item ? rect : coordinateSpace.convert(rect: rect, from: item)
     }
+
+    public func formConstrain(sourceRect: inout CGRect, by rect: CGRect?, in coordinateSpace: LayoutElement) {
+        guard let layoutItem = inLayoutTimeItem else { fatalError("Constraint has not access to layout element or him super element. /n\(self)") }
+        formConstrain(sourceRect: &sourceRect, by: convert(rectIfNeeded: rect ?? layoutItem.layoutBounds, to: coordinateSpace))
+    }
 }
 
 /// Layout constraint that creates possibility to change active state.
@@ -228,6 +185,7 @@ public class MutableLayoutConstraint: LayoutConstraintProtocol {
         set { _active = newValue }
         get { return _active && base.isActive }
     }
+    public var elementIdentifier: ObjectIdentifier? { return base.elementIdentifier }
 
     /// Designed initializer
     ///
@@ -245,27 +203,9 @@ public class MutableLayoutConstraint: LayoutConstraintProtocol {
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
     func formConstrain(sourceRect: inout CGRect, by rect: CGRect) { base.formConstrain(sourceRect: &sourceRect, by: rect) }
-
-    public /// Converts rect from constraint coordinate space to destination coordinate space if needed.
-    ///
-    /// - Parameters:
-    ///   - rect: Initial rect
-    ///   - coordinateSpace: Destination coordinate space
-    /// - Returns: Converted rect
-    func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect { return base.convert(rectIfNeeded: rect, to: coordinateSpace) }
-
-    public /// Return rectangle for constrain source rect
-    ///
-    /// - Parameter currentSpace: Source rect in current state
-    /// - Parameter coordinateSpace: Working coordinate space
-    /// - Returns: Rect for constrain
-    func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect { return base.constrainRect(for: currentSpace, in: coordinateSpace) }
-
-    public /// Flag that constraint not required other calculations. It`s true for size-based constraints.
-    var isIndependent: Bool { return base.isIndependent }
-
-    public
-    var elementIdentifier: ObjectIdentifier? { return base.elementIdentifier }
+    public func formConstrain(sourceRect: inout CGRect, by rect: CGRect?, in coordinateSpace: LayoutElement) {
+        base.formConstrain(sourceRect: &sourceRect, by: rect, in: coordinateSpace)
+    }
 }
 
 // MARK: Additional constraints
@@ -283,17 +223,6 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     public var elementIdentifier: ObjectIdentifier? { return nil }
     public /// Flag, defines that constraint may be used for layout
     var isActive: Bool { return true }
-    /// Flag that constraint not required other calculations. It`s true for size-based constraints.
-    public var isIndependent: Bool { return true }
-
-    /// Return rectangle for constrain source rect
-    ///
-    /// - Parameter currentSpace: Source rect in current state
-    /// - Parameter coordinateSpace: Working coordinate space
-    /// - Returns: Rect for constrain
-    public func constrainRect(for currentSpace: CGRect, in coordinateSpace: LayoutElement) -> CGRect {
-        return constrainRect?(currentSpace) ?? currentSpace
-    }
 
     /// Main function for constrain source space by other rect
     ///
@@ -301,17 +230,12 @@ public struct AnonymConstraint: LayoutConstraintProtocol {
     ///   - sourceRect: Source space
     ///   - rect: Rect for constrain
     public func formConstrain(sourceRect: inout CGRect, by rect: CGRect) {
-        sourceRect = anchors.reduce(sourceRect) { $1.constrained(sourceRect: $0, by: rect) }
+        anchors.forEach { (constraint) in
+            constraint.formConstrain(sourceRect: &sourceRect, by: rect)
+        }
     }
-
-    /// Converts rect from constraint coordinate space to destination coordinate space if needed.
-    ///
-    /// - Parameters:
-    ///   - rect: Initial rect
-    ///   - coordinateSpace: Destination coordinate space
-    /// - Returns: Converted rect
-    public func convert(rectIfNeeded rect: CGRect, to coordinateSpace: LayoutElement) -> CGRect {
-        return rect
+    public func formConstrain(sourceRect: inout CGRect, by rect: CGRect?, in coordinateSpace: LayoutElement) {
+        formConstrain(sourceRect: &sourceRect, by: constrainRect?(rect ?? sourceRect) ?? sourceRect)
     }
 }
 public extension AnonymConstraint {
