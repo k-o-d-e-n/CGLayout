@@ -23,8 +23,6 @@ import Foundation
 /// If you use subclass LayoutGuide, that manages `LayoutElement` elements, than you should use
 /// `layout(in: frame)` method for apply layout, otherwise elements will be have wrong position.
 open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime {
-    public /// Internal layout space of super element
-    var superLayoutBounds: CGRect { return superElement!.layoutBounds }
     public /// Entity that represents element in layout time
     var inLayoutTime: ElementInLayoutTime { return self }
     public /// Internal space for layout subelements
@@ -32,7 +30,7 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
 
     /// Layout element where added this layout guide. For addition use `func add(layoutGuide:)`.
     open internal(set) weak var ownerElement: Super? {
-        didSet { superElement = ownerElement; didAddToOwner() }
+        didSet { didAddToOwner() }
     }
     open /// External representation of layout entity in coordinate space
     var frame: CGRect {
@@ -45,7 +43,7 @@ open class LayoutGuide<Super: LayoutElement>: LayoutElement, ElementInLayoutTime
     open /// Internal coordinate space of layout entity
     var bounds: CGRect { didSet { layout() } }
     open /// Layout element that maintained this layout entity
-    weak var superElement: LayoutElement?
+    var superElement: LayoutElement? { return ownerElement }
     open /// Removes layout element from hierarchy
     func removeFromSuperElement() { ownerElement = nil }
 

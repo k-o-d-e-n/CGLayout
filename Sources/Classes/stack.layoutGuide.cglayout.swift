@@ -140,7 +140,7 @@ public struct StackDistribution: RectBasedDistribution {
 
 /// Defines layout for arranged items
 public struct StackLayoutScheme: LayoutBlockProtocol {
-    private var items: () -> [LayoutElement]
+    private let items: () -> [LayoutElement]
 
     public /// Flag, defines that block will be used for layout
     var isActive: Bool { return true }
@@ -200,7 +200,7 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
     /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
     func layout() {
         let subItems = items()
-        guard let sourceRect = subItems.first?.superElement!.frame else { return }
+        guard let sourceRect = subItems.first?.superElement!.bounds else { return } // TODO: Incorrect, must use `layoutBounds` of `StackLayoutGuide`
 
         layout(in: sourceRect)
     }

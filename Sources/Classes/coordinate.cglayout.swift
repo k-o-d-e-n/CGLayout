@@ -27,7 +27,6 @@ public protocol LayoutCoordinateSpace {
     func convert(rect: CGRect, from item: LayoutElement) -> CGRect
 
     var bounds: CGRect { get }
-    var frame: CGRect { get }
 }
 #if os(iOS) || os(tvOS)
 extension LayoutCoordinateSpace where Self: UICoordinateSpace, Self: LayoutElement {
