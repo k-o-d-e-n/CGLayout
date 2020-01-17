@@ -196,15 +196,6 @@ public struct StackLayoutScheme: LayoutBlockProtocol {
         return items.reduce(nil) { return $0?.union($1.frame) ?? $1.frame }!
     }
 
-    public /// Calculate and apply frames layout items.
-    /// Should be call when parent `LayoutItem` item has corrected bounds. Else result unexpected.
-    func layout() {
-        let subItems = items()
-        guard let sourceRect = subItems.first?.superElement!.bounds else { return } // TODO: Incorrect, must use `layoutBounds` of `StackLayoutGuide`
-
-        layout(in: sourceRect)
-    }
-
     public /// Calculate and apply frames layout items in custom space.
     ///
     /// - Parameter sourceRect: Source space
