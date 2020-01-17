@@ -65,16 +65,6 @@ public extension RectBasedLayout {
             result = result.constrainedBy(rect: constrained.rect, use: constrained.constraints)
         })
     }
-    /// Use for layout `LayoutElement` entity in constrained source space using constraints. Must call only on main thread.
-    ///
-    /// - Parameters:
-    ///   - element: Element for layout
-    ///   - sourceRect: Source space
-    ///   - constraints: Array of constraint elements
-    func apply(for item: LayoutElement, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol]) {
-        debugFatalError(item.superElement == nil, "Layout element is not in hierarchy")
-        item.frame = layout(rect: item.frame, from: item.superElement!, in: sourceRect, use: constraints)
-    }
     /// Calculates frame of `LayoutElement` entity in constrained source space using constraints.
     ///
     /// - Parameters:

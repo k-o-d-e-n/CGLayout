@@ -56,7 +56,6 @@ internal struct _MainThreadSizeThatFitsConstraint: RectBasedConstraint {
 
 internal struct _MainThreadItemInLayoutTime<Item: LayoutElement>: ElementInLayoutTime {
     var layoutBounds: CGRect { return syncGuard(mainThread: { item.layoutBounds }) }
-    var superLayoutBounds: CGRect { return syncGuard(mainThread: { item.superElement!.layoutBounds }) }
     var superElement: LayoutElement? { return syncGuard(mainThread: { item.superElement }) }
     var frame: CGRect {
         set {
