@@ -104,8 +104,10 @@ public extension RectBasedLayout {
     ///   - sourceRect: Space for layout
     ///   - constraints: Array of constraint elements
     /// - Returns: Corrected frame of layout element
-    func layout(rect: CGRect, from item: LayoutElement, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol] = []) -> CGRect {
-        return layout(rect: rect, in: constraints.reduce(into: sourceRect) { $1.constrain(sourceRect: &$0, in: item) })
+    func layout(rect: CGRect, from coordinateSpace: LayoutElement, in sourceRect: CGRect, use constraints: [LayoutConstraintProtocol] = []) -> CGRect {
+        return layout(rect: rect, in: constraints.reduce(into: sourceRect) { res, constraint in
+            constraint.formConstrain(sourceRect: &res, by: nil, in: coordinateSpace)
+        })
     }
 }
 
