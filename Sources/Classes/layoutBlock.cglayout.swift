@@ -38,10 +38,6 @@ public protocol LayoutBlockProtocol {
     var currentSnapshot: LayoutSnapshotProtocol { get }
     var currentRect: CGRect { get }
 
-    /// Calculate and apply frames layout items.
-    /// Should be call when parent `LayoutElement` element has corrected bounds. Else result unexpected.
-    func layout()
-
     /// Calculate and apply frames layout items in custom space.
     ///
     /// - Parameter sourceRect: Source space
@@ -89,7 +85,7 @@ public final class LayoutBlock<Item: LayoutElement>: LayoutBlockProtocol {
     private var constraints: [LayoutConstraintProtocol]
     public private(set) weak var item: Item?
 
-    public var isActive: Bool { return item?.superElement != nil }
+    public var isActive: Bool { return item?.superElement != nil } // TODO: Definition active state through rendering state is not enough
 
     public func setItem(_ item: Item?) {
         guard Thread.isMainThread else { fatalError(LayoutBlock.message(forMutating: self)) }
@@ -125,21 +121,15 @@ public final class LayoutBlock<Item: LayoutElement>: LayoutBlockProtocol {
         self.constraints = constraints
     }
 
-    public /// Calculate and apply frames layout elements.
-    /// Should be call when parent `LayoutElement` element has corrected bounds. Else result unexpected.
-    func layout() {
-        guard let item = item else { return debugWarning(LayoutBlock.message(forSkipped: self)) }
-
-        itemLayout.apply(for: item, use: constraints.lazy.filter { $0.isActive })
-    }
-
     public /// Calculate and apply frames layout elements in custom space.
     ///
     /// - Parameter sourceRect: Source space
     func layout(in sourceRect: CGRect) {
-        guard let item = item else { return debugWarning(LayoutBlock.message(forSkipped: self)) }
+        guard var inLayoutTime = item?.inLayoutTime, let coordinateSpace = inLayoutTime.superElement else { return debugWarning(LayoutBlock.message(forSkipped: self)) }
 
-        itemLayout.apply(for: item, in: sourceRect, use: constraints.lazy.filter { $0.isActive })
+        itemLayout.formLayout(rect: &inLayoutTime.frame, in: constraints.lazy.filter { $0.isActive }.reduce(into: sourceRect, { (res, constraint) in
+            constraint.formConstrain(sourceRect: &res, by: nil, in: coordinateSpace)
+        }))
     }
 
     public /// Returns snapshot for all `LayoutElement` elements in block. Attention: in during calculating snapshot frames of layout elements must not changed.
@@ -147,9 +137,11 @@ public final class LayoutBlock<Item: LayoutElement>: LayoutBlockProtocol {
     /// - Parameter sourceRect: Source space for layout
     /// - Returns: Snapshot contained frames layout elements
     func snapshot(for sourceRect: CGRect) -> LayoutSnapshotProtocol {
-        guard let inLayout = item?.inLayoutTime, let superItem = inLayout.superElement else { fatalError(LayoutBlock.message(forNotActive: self)) }
+        guard let inLayout = item?.inLayoutTime, let coordinateSpace = inLayout.superElement else { fatalError(LayoutBlock.message(forNotActive: self)) }
 
-        return itemLayout.layout(rect: inLayout.frame, from: superItem, in: sourceRect, use: constraints.lazy.filter { $0.isActive })
+        return itemLayout.layout(rect: inLayout.frame, in: constraints.lazy.filter { $0.isActive }.reduce(into: sourceRect, { (res, constraint) in
+            constraint.formConstrain(sourceRect: &res, by: nil, in: coordinateSpace)
+        }))
     }
 
     public /// Method for perform layout calculation in child blocks. Does not call this method directly outside `LayoutBlockProtocol` object.
@@ -160,11 +152,11 @@ public final class LayoutBlock<Item: LayoutElement>: LayoutBlockProtocol {
     ///   - completedRects: `LayoutElement` elements with corrected frame
     /// - Returns: Frame of this block
     func snapshot(for sourceRect: CGRect, completedRects: inout [ObjectIdentifier : CGRect]) -> LayoutSnapshotProtocol {
-        guard let item = item, let inLayout = self.item?.inLayoutTime, let superItem = inLayout.superElement else { fatalError(LayoutBlock.message(forNotActive: self)) }
+        guard let item = self.item, let inLayout = self.item?.inLayoutTime, let coordinateSpace = inLayout.superElement else { fatalError(LayoutBlock.message(forNotActive: self)) }
 
         let source = constraints.lazy.filter { $0.isActive }.reduce(into: sourceRect) { (result, constraint) -> Void in
             let rect = constraint.elementIdentifier.flatMap { completedRects[$0] }
-            constraint.formConstrain(sourceRect: &result, by: rect, in: superItem)
+            constraint.formConstrain(sourceRect: &result, by: rect, in: coordinateSpace)
         }
         let frame = itemLayout.layout(rect: inLayout.frame, in: source)
         completedRects[ObjectIdentifier(item)] = frame
@@ -216,12 +208,6 @@ public struct LayoutScheme: LayoutBlockProtocol {
         return blocks[1...].reduce(into: blocks[0].currentRect) { res, next in
             res = res.union(next.currentRect)
         }
-    }
-
-    public /// Calculate and apply frames layout elements.
-    /// Should be call when parent `LayoutElement` element has corrected bounds. Else result unexpected.
-    func layout() {
-        blocks.forEach { $0.layout() }
     }
 
     public /// Calculate and apply frames layout elements.

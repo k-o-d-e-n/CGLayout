@@ -70,7 +70,7 @@ class ScrollLayoutGuideController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scheme.layout()
+        scheme.layout(in: view.layoutBounds)
     }
 
     var start: CGPoint = .zero
@@ -145,6 +145,6 @@ final class UIScrollViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scheme.layout()
+        scheme.layout(in: view.layoutBounds)
     }
 }

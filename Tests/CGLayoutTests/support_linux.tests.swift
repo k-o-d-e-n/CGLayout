@@ -112,8 +112,6 @@ final class Layer: Container, ElementInLayoutTime {
     weak var superElement: LayoutElement?
     /// Entity that represents item in layout time
     var inLayoutTime: ElementInLayoutTime { return self }
-    /// Internal layout space of super item
-    var superLayoutBounds: CGRect { return superElement!.bounds }
 
     init(frame: CGRect) {
         self.frame = frame
@@ -185,8 +183,6 @@ class View: Container, ElementInLayoutTime, LayoutElementsContainer {
     weak var superElement: LayoutElement?
     /// Entity that represents item in layout time
     var inLayoutTime: ElementInLayoutTime { return self }
-    /// Internal layout space of super item
-    var superLayoutBounds: CGRect { return superElement!.bounds }
 
     init(layer: Layer) {
         self.layer = layer

@@ -789,7 +789,7 @@ extension Tests {
 
         XCTAssertFalse(snapshot.childSnapshots.map { $0.frame } == subviews.map { $0.frame })
 
-        scheme.layout()
+        scheme.layout(in: superview.layoutBounds)
 
         XCTAssertTrue(snapshot.childSnapshots.map { $0.frame } == subviews.map { $0.frame })
     }
@@ -812,7 +812,7 @@ extension Tests {
             let scheme = LayoutScheme(blocks: blocks)
 
             if i == 0 {
-                scheme.layout()
+                scheme.layout(in: superview.layoutBounds)
                 framesAfterLayoutDirectly = subviews.map { $0.frame }
             } else {
                 let snapshot = scheme.snapshot(for: bounds)
@@ -835,7 +835,7 @@ extension Tests {
         }
         let scheme = LayoutScheme(blocks: blocks)
 
-        scheme.layout()
+        scheme.layout(in: superview.layoutBounds)
 
         let snapshot = scheme.currentSnapshot
 
@@ -1150,7 +1150,7 @@ extension Tests {
 
         let viewLayout = view.layoutBlock(constraints: [label.baselineLayoutConstraint(for: [.bottom(.align(by: .inner))])])
 
-        viewLayout.layout()
+        viewLayout.layout(in: window.layoutBounds)
 
         XCTAssertEqual(view.frame.maxY, label.baselineElement.frame.maxY)
     }
@@ -1164,7 +1164,7 @@ extension Tests {
 
         let label1Layout = label1.baselineElement.layoutBlock(constraints: [label2.baselineLayoutConstraint(for: [.top(.align(by: .inner))])])
 
-        label1Layout.layout()
+        label1Layout.layout(in: window.layoutBounds)
 
         XCTAssertEqual(label1.baselineElement.frame.maxY, label2.baselineElement.frame.maxY)
     }
