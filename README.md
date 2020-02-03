@@ -73,7 +73,6 @@ Framework provides such default implementations:
 - `LayoutConstraint`: simple associated constraint that uses `var frame` of passed element to constrain source rect. Use him to build dependency on external workspace.
 - `AdjustLayoutConstraint`: associated constraint to adjust size of source space. Only elements conform to `protocol AdjustableLayoutElement`  can use it.
 - `ContentLayoutConstraint`: associated constraint that uses internal bounds to constrain, defined in 'layoutBounds' property of `protocol LayoutElement`. Use it if you need to create dependency on internal workspace. For example, element inside `UIScrollView`.
-- `BaselineLayoutConstraint`: associated constraint that depended on base line. Only elements conform to `protocol TextPresentedElement` can use it.
 - `AnonymConstraint`: constraint to restrict source space independently from external environment.
 - `MutableLayoutConstraint`: Layout constraint that creates possibility to change active state.  
 You can find all this constraints through convenience functions in related elements. Use him to build layout blocks.
