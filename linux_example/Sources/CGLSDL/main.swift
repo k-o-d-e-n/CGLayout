@@ -30,8 +30,6 @@ if renderDrivers.isEmpty == false {
 
 
 func main() throws {
-    var isRunning = true
-    
     try SDL.initialize(subSystems: [.video])
     defer { SDL.quit() }
     
@@ -46,33 +44,38 @@ func main() throws {
     let framesPerSecond = try window.displayMode().refreshRate
     print("Running at \(framesPerSecond) FPS")
 
-    var frame = 0
     var event = SDL_Event()
-    var needsDisplay = true
+    let frameInterval = 1000 / UInt32(framesPerSecond)
+    var lastWheelEventTimestamp: UInt32 = 0
 
     try application.boot(in: window)
     
-    while isRunning {
+    while application.isRunning {
+        #if os(Linux)
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.001))
+        #endif
+
         SDL_PollEvent(&event)
         
-        // increment ticker
-        frame += 1
         let startTime = SDL_GetTicks()
         let eventType = SDL_EventType(rawValue: event.type)
         
         switch eventType {
         case SDL_QUIT, SDL_APP_TERMINATING:
-            isRunning = false
+            application.unboot()
         case SDL_KEYDOWN:
             application.keyDidPress(event.key)
-            needsDisplay = true
+            // print("key_down")
         case SDL_MOUSEWHEEL:
+            guard event.wheel.timestamp != lastWheelEventTimestamp else { break }
+            lastWheelEventTimestamp = event.wheel.timestamp
             application.mouseWheel(event.wheel)
-            needsDisplay = true
+            // print("mouse_wheel")
         case SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP:
-            print("mouse btn", event.button)
+            application.mouseButton(event.button)
+            // print("mouse btn"/* , event.button */)
         case SDL_FINGERUP, SDL_FINGERDOWN, SDL_FINGERMOTION:
-            print("finger", event.tfinger)
+            print("finger"/*, event.tfinger*/)
         case SDL_WINDOWEVENT:
             switch SDL_WindowEventID(UInt32(event.window.event)) {
             case SDL_WINDOWEVENT_SHOWN:
@@ -84,11 +87,11 @@ func main() throws {
             case SDL_WINDOWEVENT_MOVED:
                 break;
             case SDL_WINDOWEVENT_RESIZED:
-                needsDisplay = true
-                break;
+                application.windowDidResize()
+                print("window_resized")
             case SDL_WINDOWEVENT_SIZE_CHANGED:
-                needsDisplay = true
-                break;
+                application.windowDidResize()
+                print("window_size_changed")
             case SDL_WINDOWEVENT_MINIMIZED:
                 break;
             case SDL_WINDOWEVENT_MAXIMIZED:
@@ -117,18 +120,16 @@ func main() throws {
             break
         }
         
-        if needsDisplay {
+        if application.needsDisplay {
             let size = window.size
             let rect = CGRect(x: 0, y: 0, width: CGFloat(size.width), height: CGFloat(size.height))
             try application.display(in: rect)
-            
-            needsDisplay = false
         }
         
         // sleep to save energy
         let frameDuration = SDL_GetTicks() - startTime
-        if frameDuration < 1000 / UInt32(framesPerSecond) {
-            SDL_Delay((1000 / UInt32(framesPerSecond)) - frameDuration)
+        if frameDuration < frameInterval {
+            SDL_Delay(frameInterval - frameDuration)
         }
     }
 }
