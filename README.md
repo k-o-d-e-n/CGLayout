@@ -1,5 +1,7 @@
 # CGLayout
 
+# [DEPRECATED] Replaced with new implementation - [LayoutUI](https://github.com/k-o-d-e-n/LayoutUI)
+
 [![Version](https://img.shields.io/cocoapods/v/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
 [![License](https://img.shields.io/cocoapods/l/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
 [![Platform](https://img.shields.io/cocoapods/p/CGLayout.svg?style=flat)](http://cocoapods.org/pods/CGLayout)
